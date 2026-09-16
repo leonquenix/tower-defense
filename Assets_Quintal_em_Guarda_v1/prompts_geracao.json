@@ -1,0 +1,327 @@
+{
+  "tool": "OpenAI image_gen — built-in tool",
+  "version": "v001",
+  "date": "2026-09-15",
+  "assets": [
+    {
+      "id": "tower_dardo_L0",
+      "category": "torres",
+      "file": "torres/tower_dardo_L0_v001.png",
+      "prompt": "Use case: stylized-concept. Production asset for the original 2D Roblox tower defense Quintal em Guarda.\nInput image 1 is ONLY a character/style reference. Create one independent single sprite, not a crop, not a sheet, no other characters.\nStyle: charming handcrafted toy, bold dark navy #19283F contour, clean large flat color shapes and at most two cel-shaded bands, slight paper/wood texture, painted light from upper left. Maintain the recognizable design in the lower character lineup of the reference but simplify tiny details for legibility at 128 pixels. Camera slightly elevated three-quarter front, upright whole body, faces a little right, feet at bottom. No pedestal and no ground shadow.\nComposition: square 1024x1024 PNG. Exactly one centered character fitting within x=140..884 and y=100..900, feet baseline y=900, entire silhouette and appendages visible with empty margin.\nBACKGROUND MUST BE ACTUAL TRANSPARENT ALPHA. No solid white background, no checkerboard drawn into the image, no scenery, no ground, no text, no numbers, no labels, no frame, no watermark. Only the opaque painted toy with transparent pixels around it.\nSubject: DARDO at L0 base level: small orange wooden fox with triangular ears, cream muzzle and belly, large bushy orange tail with cream tip, compact angular wooden legs, cute black eyes. Both hands hold one simple small wooden elastic-band dart launcher crossbow, cyan dart tip, dark teal tiny scarf. Plain base equipment only, matching the fox in the reference. No metallic armor, no multiple barrels, no drum.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-7e02460e-c99e-4810-9e52-cf6f13bdefef.png"
+    },
+    {
+      "id": "tower_voltz_L0",
+      "category": "torres",
+      "file": "torres/tower_voltz_L0_v001.png",
+      "prompt": "Use case: stylized-concept. Production asset for the original 2D Roblox tower defense Quintal em Guarda.\nInput image 1 is ONLY a character/style reference. Create one independent single sprite, not a crop, not a sheet, no other characters.\nStyle: charming handcrafted toy, bold dark navy #19283F contour, clean large flat color shapes and at most two cel-shaded bands, slight paper/wood texture, painted light from upper left. Maintain the recognizable design in the lower character lineup of the reference but simplify tiny details for legibility at 128 pixels. Camera slightly elevated three-quarter front, upright whole body, faces a little right, feet at bottom. No pedestal and no ground shadow.\nComposition: square 1024x1024 PNG. Exactly one centered character fitting within x=140..884 and y=100..900, feet baseline y=900, entire silhouette and appendages visible with empty margin.\nBACKGROUND MUST BE ACTUAL TRANSPARENT ALPHA. No solid white background, no checkerboard drawn into the image, no scenery, no ground, no text, no numbers, no labels, no frame, no watermark. Only the opaque painted toy with transparent pixels around it.\nSubject: VOLTZ at L0 base level: adorable small cyan wind-up robot with large rounded rectangular head, dark navy face visor with two glowing cyan oval eyes, single thin antenna with small cyan ball on top, dark steel vertical spring coil torso and two squat cyan feet. One simple coil, base equipment only, no arm attachments, no extra rings or lightning arcs. Match robot in reference.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-fbdc157f-a23a-409b-96d3-29d3a30539ed.png"
+    },
+    {
+      "id": "tower_pipoca_L0",
+      "category": "torres",
+      "file": "torres/tower_pipoca_L0_v001.png",
+      "prompt": "Use case: stylized-concept. Production asset for the original 2D Roblox tower defense Quintal em Guarda.\nInput image 1 is ONLY a character/style reference. Create one independent single sprite, not a crop, not a sheet, no other characters.\nStyle: charming handcrafted toy, bold dark navy #19283F contour, clean large flat color shapes and at most two cel-shaded bands, slight paper/wood texture, painted light from upper left. Maintain the recognizable design in the lower character lineup of the reference but simplify tiny details for legibility at 128 pixels. Camera slightly elevated three-quarter front, upright whole body, faces a little right, feet at bottom. No pedestal and no ground shadow.\nComposition: square 1024x1024 PNG. Exactly one centered character fitting within x=140..884 and y=100..900, feet baseline y=900, entire silhouette and appendages visible with empty margin.\nBACKGROUND MUST BE ACTUAL TRANSPARENT ALPHA. No solid white background, no checkerboard drawn into the image, no scenery, no ground, no text, no numbers, no labels, no frame, no watermark. Only the opaque painted toy with transparent pixels around it.\nSubject: PIPOCA at L0 base level: cute yellow wind-up turtle with rounded dark olive-green segmented shell, four squat yellow feet, smiling round yellow head, and golden wind-up key behind its shell. One short wide dark wooden mortar tube sticks diagonally up from shell. Match turtle in the reference, simplified base equipment. No armor reinforcements, no flags. Turtle should have broad low silhouette.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-f5c51f1e-0276-4356-a9f1-c822d7f38b78.png"
+    },
+    {
+      "id": "tower_lupa_L0",
+      "category": "torres",
+      "file": "torres/tower_lupa_L0_v001.png",
+      "prompt": "Use case: stylized-concept. Production asset for the original 2D Roblox tower defense Quintal em Guarda.\nInput image 1 is ONLY a character/style reference. Create one independent single sprite, not a crop, not a sheet, no other characters.\nStyle: charming handcrafted toy, bold dark navy #19283F contour, clean large flat color shapes and at most two cel-shaded bands, slight paper/wood texture, painted light from upper left. Maintain the recognizable design in the lower character lineup of the reference but simplify tiny details for legibility at 128 pixels. Camera slightly elevated three-quarter front, upright whole body, faces a little right, feet at bottom. No pedestal and no ground shadow.\nComposition: square 1024x1024 PNG. Exactly one centered character fitting within x=140..884 and y=100..900, feet baseline y=900, entire silhouette and appendages visible with empty margin.\nBACKGROUND MUST BE ACTUAL TRANSPARENT ALPHA. No solid white background, no checkerboard drawn into the image, no scenery, no ground, no text, no numbers, no labels, no frame, no watermark. Only the opaque painted toy with transparent pixels around it.\nSubject: LUPA at L0 base level: upright tall cardboard owl, large friendly dark eyes surrounded by cream eye patches, folded triangular cardboard eyebrows and wings, tan amber brown paper feathers, small golden folded cardboard feet. Holds one short brass and dark-brown telescope pointing a little right, camera sees both face and lens. Base equipment only, no tripod support and no luminous marker. Match owl in reference.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-e0a1be77-283a-42af-90e6-dd96db6553db.png"
+    },
+    {
+      "id": "tower_goma_L0",
+      "category": "torres",
+      "file": "torres/tower_goma_L0_v001.png",
+      "prompt": "Use case: stylized-concept. Production asset for the original 2D Roblox tower defense Quintal em Guarda.\nInput image 1 is ONLY a character/style reference. Create one independent single sprite, not a crop, not a sheet, no other characters.\nStyle: charming handcrafted toy, bold dark navy #19283F contour, clean large flat color shapes and at most two cel-shaded bands, slight paper/wood texture, painted light from upper left. Maintain the recognizable design in the lower character lineup of the reference but simplify tiny details for legibility at 128 pixels. Camera slightly elevated three-quarter front, upright whole body, faces a little right, feet at bottom. No pedestal and no ground shadow.\nComposition: square 1024x1024 PNG. Exactly one centered character fitting within x=140..884 and y=100..900, feet baseline y=900, entire silhouette and appendages visible with empty margin.\nBACKGROUND MUST BE ACTUAL TRANSPARENT ALPHA. No solid white background, no checkerboard drawn into the image, no scenery, no ground, no text, no numbers, no labels, no frame, no watermark. Only the opaque painted toy with transparent pixels around it.\nSubject: GOMA at L0 base level: one squat rounded pale blue glass glue jar with cork lid containing a cute smiling mint green slime creature. Black eyes and tiny happy mouth on solid pale mint face. Stubby round slime lobes at bottom. No label or text, no paper tag, no spout, no band, no upgrades. Paint the interior of the glass in pale blue and pale mint as mostly opaque clear graphic shapes so it remains legible; only the surrounding empty background is transparent. Match jar in reference.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-85a33c8a-9409-4cc5-9469-617e082dea8a.png"
+    },
+    {
+      "id": "tower_maestro_L0",
+      "category": "torres",
+      "file": "torres/tower_maestro_L0_v001.png",
+      "prompt": "Use case: stylized-concept. Production asset for the original 2D Roblox tower defense Quintal em Guarda.\nInput image 1 is ONLY a character/style reference. Create one independent single sprite, not a crop, not a sheet, no other characters.\nStyle: charming handcrafted toy, bold dark navy #19283F contour, clean large flat color shapes and at most two cel-shaded bands, slight paper/wood texture, painted light from upper left. Maintain the recognizable design in the lower character lineup of the reference but simplify tiny details for legibility at 128 pixels. Camera slightly elevated three-quarter front, upright whole body, faces a little right, feet at bottom. No pedestal and no ground shadow.\nComposition: square 1024x1024 PNG. Exactly one centered character fitting within x=140..884 and y=100..900, feet baseline y=900, entire silhouette and appendages visible with empty margin.\nBACKGROUND MUST BE ACTUAL TRANSPARENT ALPHA. No solid white background, no checkerboard drawn into the image, no scenery, no ground, no text, no numbers, no labels, no frame, no watermark. Only the opaque painted toy with transparent pixels around it.\nSubject: MAESTRO at L0 base level: cute coral radio crab toy with a smiling dark face in central compact rounded body, two small round black speaker cones on left and right with coral rims, little coral claws, short articulated crab feet and golden wind-up key above body. Match reference crab. Base equipment only: no large front dial, no central horn, no extra speaker wings. Symmetrical readable broad silhouette.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-4fbb3d1e-2b7b-46f5-b38c-b7ef1102d73f.png"
+    },
+    {
+      "id": "tower_lupa_L1",
+      "category": "torres",
+      "file": "torres/tower_lupa_L1_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L1 upgraded game sprite of lupa for Quintal em Guarda. Image 1 is the exact base sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Add one visible small wooden-and-brass support bracket from owl body holding the existing short telescope. Keep the cardboard owl face, feathers, proportions and feet unchanged.",
+      "reference": "torres/tower_lupa_L0_v001.png",
+      "sourceGeneratedFile": "exec-f5f740a3-75bb-4892-8e88-22bf03f2100f.png"
+    },
+    {
+      "id": "tower_goma_L1",
+      "category": "torres",
+      "file": "torres/tower_goma_L1_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L1 upgraded game sprite of goma for Quintal em Guarda. Image 1 is the exact base sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Add a broad dark teal band around the lower third of the jar. Keep cork lid, mint slime face and pale blue glass, no spouts. Band has no letters or symbols.",
+      "reference": "torres/tower_goma_L0_v001.png",
+      "sourceGeneratedFile": "exec-67a6772f-469f-4600-b450-69a891ddf08f.png"
+    },
+    {
+      "id": "tower_voltz_L1",
+      "category": "torres",
+      "file": "torres/tower_voltz_L1_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L1 upgraded game sprite of voltz for Quintal em Guarda. Image 1 is the exact base sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Add one prominent golden ring encircling the middle of the steel spring torso. Keep single small antenna ball, cyan head, visor eyes and feet unchanged.",
+      "reference": "torres/tower_voltz_L0_v001.png",
+      "sourceGeneratedFile": "exec-b4c22a18-3cba-4e1f-82ad-5bc629a095d2.png"
+    },
+    {
+      "id": "tower_dardo_L1",
+      "category": "torres",
+      "file": "torres/tower_dardo_L1_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L1 upgraded game sprite of dardo for Quintal em Guarda. Image 1 is the exact base sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Add a visibly distinct teal wrist brace on the forearm holding the launcher. Keep simple single launcher, face, scarf, tail, body shape and pose.",
+      "reference": "torres/tower_dardo_L0_v001.png",
+      "sourceGeneratedFile": "exec-4629717a-2846-4015-a4c9-52e620f4f5aa.png"
+    },
+    {
+      "id": "tower_pipoca_L1",
+      "category": "torres",
+      "file": "torres/tower_pipoca_L1_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L1 upgraded game sprite of pipoca for Quintal em Guarda. Image 1 is the exact base sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Add broad teal-metal reinforcement band around the green shell and two large simple bolt heads. Keep the original short mortar tube, yellow smiling head, feet and wind-up key.",
+      "reference": "torres/tower_pipoca_L0_v001.png",
+      "sourceGeneratedFile": "exec-3f76e7f0-cc20-472c-8cc0-4099c0eadd0f.png"
+    },
+    {
+      "id": "tower_maestro_L1",
+      "category": "torres",
+      "file": "torres/tower_maestro_L1_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L1 upgraded game sprite of maestro for Quintal em Guarda. Image 1 is the exact base sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Add one large simple golden circular radio dial centered on lower front of coral body below smiling mouth. Keep the two small speakers, crab claws, feet and wind-up key.",
+      "reference": "torres/tower_maestro_L0_v001.png",
+      "sourceGeneratedFile": "exec-3c249237-3c49-4e14-8376-1697f65d88f2.png"
+    },
+    {
+      "id": "tower_voltz_L2",
+      "category": "torres",
+      "file": "torres/tower_voltz_L2_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L2 upgraded game sprite of voltz for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Keep golden middle ring; visibly widen the spring coil torso into a stout coil with thicker dark steel loops. Keep single small antenna ball and original cyan head and feet.",
+      "reference": "torres/tower_voltz_L1_v001.png",
+      "sourceGeneratedFile": "exec-2f073c49-b65f-4e39-9aaa-78ab4b7dacad.png"
+    },
+    {
+      "id": "tower_lupa_L2",
+      "category": "torres",
+      "file": "torres/tower_lupa_L2_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L2 upgraded game sprite of lupa for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Retain telescope support bracket; replace telescope with a noticeably wider and longer brass-rimmed telescope. Keep owl cardboard silhouette and large eyes unchanged.",
+      "reference": "torres/tower_lupa_L1_v001.png",
+      "sourceGeneratedFile": "exec-d1935a76-ad92-476b-ab0d-e21cff4c8a59.png"
+    },
+    {
+      "id": "tower_goma_L2",
+      "category": "torres",
+      "file": "torres/tower_goma_L2_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L2 upgraded game sprite of goma for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Keep the lower dark teal band, add one short chunky cyan glue pouring spout attached to upper right side below cork. Spout is clearly visible, pointed diagonally outward. Keep mint face unobstructed.",
+      "reference": "torres/tower_goma_L1_v001.png",
+      "sourceGeneratedFile": "exec-395963a3-166b-416e-ab66-70d54343bfc0.png"
+    },
+    {
+      "id": "tower_pipoca_L2",
+      "category": "torres",
+      "file": "torres/tower_pipoca_L2_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L2 upgraded game sprite of pipoca for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Retain shell reinforcing band. Add a prominent brass ring around mortar opening and one small hand-crank on side of the tube. Keep yellow smiling turtle, olive shell and winding key.",
+      "reference": "torres/tower_pipoca_L1_v001.png",
+      "sourceGeneratedFile": "exec-9932edb4-b31e-432e-9966-95edf7613dbd.png"
+    },
+    {
+      "id": "tower_dardo_L2",
+      "category": "torres",
+      "file": "torres/tower_dardo_L2_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L2 upgraded game sprite of dardo for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Retain the teal wrist brace. Replace single launcher with a compact double wooden elastic launcher, two clearly readable short parallel dart channels. Keep face, scarf, tail and pose.",
+      "reference": "torres/tower_dardo_L1_v001.png",
+      "sourceGeneratedFile": "exec-227d0cc7-5106-439f-8a29-d339164dec86.png"
+    },
+    {
+      "id": "tower_maestro_L2",
+      "category": "torres",
+      "file": "torres/tower_maestro_L2_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L2 upgraded game sprite of maestro for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve the character identity, face, colors, materials, dark navy contour, cel shading, camera angle, body proportions, framing, canvas and feet alignment. Change ONLY the equipment described below. One complete toy character centered with generous transparent margin, not a sheet. No labels, text, numbers, watermark, pedestal, ground, shadows, particles or background. Deliver PNG with actual transparent alpha surrounding the entire character, not a checkerboard pattern. Keep all appendages visible.\nEquipment change: Keep golden front dial; enlarge both side speakers into chunky black speaker cones with thick coral rims, while retaining compact crab body, face, claws, feet and wind-up key.",
+      "reference": "torres/tower_maestro_L1_v001.png",
+      "sourceGeneratedFile": "exec-acbedead-16b3-4212-97f3-de685f8688fb.png"
+    },
+    {
+      "id": "tower_lupa_L3A",
+      "category": "torres",
+      "file": "torres/tower_lupa_L3A_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3A final specialization sprite of lupa for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: OLHO DE AGUIA specialization. Retain support bracket, extend telescope to an elegant long narrow lens with a large cyan front lens, add a single tall triangular cardboard feather on owl head. Clearly long-range precision shape. Preserve owl face.",
+      "reference": "torres/tower_lupa_L2_v001.png",
+      "sourceGeneratedFile": "exec-4f6ab979-27d9-4672-af48-9436be73a636.png"
+    },
+    {
+      "id": "tower_goma_L3A",
+      "category": "torres",
+      "file": "torres/tower_goma_L3A_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3A final specialization sprite of goma for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: POCA specialization. Keep lower band; replace single spout with exactly two short broad cyan pouring spouts, one on each upper side of the jar. Keep cork lid, mint slime, wide puddle-like low silhouette but no actual puddle or ground.",
+      "reference": "torres/tower_goma_L2_v001.png",
+      "sourceGeneratedFile": "exec-925b47f5-3280-4b9e-9515-5fba9d6be39e.png"
+    },
+    {
+      "id": "tower_maestro_L3A",
+      "category": "torres",
+      "file": "torres/tower_maestro_L3A_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3A final specialization sprite of maestro for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: ORQUESTRA specialization. Keep golden dial, open and spread both enlarged side speakers outward on short coral hinge arms like wide musical wings. Add one small gold trim band per speaker. Very broad symmetrical silhouette with entire speakers in frame. No central horn.",
+      "reference": "torres/tower_maestro_L2_v001.png",
+      "sourceGeneratedFile": "exec-c917cff7-48c4-4dfe-8aa1-5a42325a3030.png"
+    },
+    {
+      "id": "tower_dardo_L3A",
+      "category": "torres",
+      "file": "torres/tower_dardo_L3A_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3A final specialization sprite of dardo for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: RAJADA specialization. Retain double wooden launcher and teal wrist brace; add one small golden wooden cylindrical feeding drum under the launcher, three tiny visible dart tips at drum, slight eager forward lean. Make rapid-fire toy mechanism visibly distinct. No armor-piercing silver spear.",
+      "reference": "torres/tower_dardo_L2_v001.png",
+      "sourceGeneratedFile": "exec-241d433a-4024-4d96-bf9a-9e5584eaae3e.png"
+    },
+    {
+      "id": "tower_pipoca_L3A",
+      "category": "torres",
+      "file": "torres/tower_pipoca_L3A_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3A final specialization sprite of pipoca for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: FESTIVAL specialization. Retain shell reinforcement and crank, greatly flare the mortar opening into a wide bell-shaped colorful toy nozzle, add only two small coral and cream triangular pennants attached beside the mortar. Broad explosion silhouette, joyful, no confetti around character.",
+      "reference": "torres/tower_pipoca_L2_v001.png",
+      "sourceGeneratedFile": "exec-31f9a6f9-a2eb-4c63-8ffb-378155c55fee.png"
+    },
+    {
+      "id": "tower_voltz_L3A",
+      "category": "torres",
+      "file": "torres/tower_voltz_L3A_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3A final specialization sprite of voltz for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: TEMPESTADE specialization. Keep wide coil and gold ring; replace single antenna with a clear forked three-prong antenna, exactly three rounded cyan balls at tips. Balanced trident silhouette with NO lightning effects or floating particles. Keep face eyes and feet.",
+      "reference": "torres/tower_voltz_L2_v001.png",
+      "sourceGeneratedFile": "exec-b2e5b3d6-fca7-4117-b941-8f34c7fe47f1.png"
+    },
+    {
+      "id": "tower_lupa_L3B",
+      "category": "torres",
+      "file": "torres/tower_lupa_L3B_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3B final specialization sprite of lupa for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: OBSERVADORA specialization. Retain support bracket, replace telescope with a compact twin-lens binocular instrument, two separate cyan front lenses side by side; attach one tiny golden marker lamp beside it. No long head feather, no single long sniper lens. Keep owl identity.",
+      "reference": "torres/tower_lupa_L2_v001.png",
+      "sourceGeneratedFile": "exec-cba2005c-2d44-4b5a-a608-b55ca6e8bbb6.png"
+    },
+    {
+      "id": "tower_voltz_L3B",
+      "category": "torres",
+      "file": "torres/tower_voltz_L3B_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3B final specialization sprite of voltz for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: ALTA TENSAO specialization. Keep gold ring; thicken spring coil further, replace small antenna ball with exactly one very large cyan energy sphere on a sturdy short stem. Clear one-sphere silhouette. No extra antenna prongs, no lightning.",
+      "reference": "torres/tower_voltz_L2_v001.png",
+      "sourceGeneratedFile": "exec-b1fd97f5-dccd-4b17-869d-da317c2d9291.png"
+    },
+    {
+      "id": "tower_pipoca_L3B",
+      "category": "torres",
+      "file": "torres/tower_pipoca_L3B_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3B final specialization sprite of pipoca for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: DEMOLIDORA specialization. Retain shell reinforcement and crank, extend mortar into a visibly longer dark toy tube reinforced with a silver rim and hinged metal cap folded open, silver shoulder plate on shell. No flags, no tank treads, no realistic military weapon.",
+      "reference": "torres/tower_pipoca_L2_v001.png",
+      "sourceGeneratedFile": "exec-0c8b0883-0fe1-4dc4-8a94-5c320064c525.png"
+    },
+    {
+      "id": "tower_dardo_L3B",
+      "category": "torres",
+      "file": "torres/tower_dardo_L3B_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3B final specialization sprite of dardo for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: FURA LATA specialization. Retain teal wrist brace and compact double wooden mechanism, add a clearly larger silver pointed dart head and short compact sight above launcher, a small steel reinforcing plate at front. Preserve charming wooden toy and recognizable face/tail. No feeding drum.",
+      "reference": "torres/tower_dardo_L2_v001.png",
+      "sourceGeneratedFile": "exec-df10e8c9-4155-40c0-8ede-929af5f613d2.png"
+    },
+    {
+      "id": "tower_goma_L3B",
+      "category": "torres",
+      "file": "torres/tower_goma_L3B_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3B final specialization sprite of goma for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: SUPERCOLA specialization. Keep lower band and single side spout; reinforce the cork lid with a bold dark teal metal rim, add one large solid mint glue droplet standing on top of the lid. Preserve readable face, no second spout, no detached liquid or background.",
+      "reference": "torres/tower_goma_L2_v001.png",
+      "sourceGeneratedFile": "exec-4489ab79-833f-40c2-91f4-5650012559f6.png"
+    },
+    {
+      "id": "map_oficina_ground",
+      "category": "fases",
+      "file": "fases/map_oficina_ground_v001.png",
+      "prompt": "Use case: stylized-concept. One production environment floor layer for Quintal em Guarda, an original 2D handcrafted toy tower defense.\nImage 1 is a STYLE reference only. Match its cozy handcrafted paper-and-wood color language, simplified into flat 2D game art with low contrast, navy contour only around the outer silhouette, two painted shadow bands maximum.\nComposition: a single large horizontal rectangular floor patch, aspect ratio 16:10, viewed EXACTLY FROM DIRECTLY OVERHEAD, not tilted, no isometric perspective, no visible vertical sidewalls. On a wide PNG canvas the rectangle occupies almost the entire canvas with a narrow 3% TRANSPARENT ALPHA margin outside its deckled outline. The entire rectangular interior is opaque floor material, continuous, spacious, very low contrast and buildable. There is no path painted here; the game renders its exact grid path above this floor. No towers, no enemies, no lighthouse, no roads, no rivers, no platforms, no holes, no large props, no frame-like UI, no words, no numbers, no grid, no checkerboard. Only floor material. Use real transparent pixels OUTSIDE the rectangular piece, not a white matte. This is one reusable map terrain layer, not a scene screenshot.\nSubject: OFICINA DE LATA floor: muted blue-gray painted wooden workbench surface, very subtle broad plank seams running horizontally, quiet scuffs in desaturated cyan and navy, rounded paper-cut outer corners. Only a few very tiny painted screw marks at extreme edge, no tools or objects. Center remains nearly uniform quiet slate blue.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-e7e0ae61-5b3a-49ed-a463-036cd8643b7c.png"
+    },
+    {
+      "id": "map_jardim_ground",
+      "category": "fases",
+      "file": "fases/map_jardim_ground_v001.png",
+      "prompt": "Use case: stylized-concept. One production environment floor layer for Quintal em Guarda, an original 2D handcrafted toy tower defense.\nImage 1 is a STYLE reference only. Match its cozy handcrafted paper-and-wood color language, simplified into flat 2D game art with low contrast, navy contour only around the outer silhouette, two painted shadow bands maximum.\nComposition: a single large horizontal rectangular floor patch, aspect ratio 16:10, viewed EXACTLY FROM DIRECTLY OVERHEAD, not tilted, no isometric perspective, no visible vertical sidewalls. On a wide PNG canvas the rectangle occupies almost the entire canvas with a narrow 3% TRANSPARENT ALPHA margin outside its deckled outline. The entire rectangular interior is opaque floor material, continuous, spacious, very low contrast and buildable. There is no path painted here; the game renders its exact grid path above this floor. No towers, no enemies, no lighthouse, no roads, no rivers, no platforms, no holes, no large props, no frame-like UI, no words, no numbers, no grid, no checkerboard. Only floor material. Use real transparent pixels OUTSIDE the rectangular piece, not a white matte. This is one reusable map terrain layer, not a scene screenshot.\nSubject: JARDIM DE PAPEL floor: softly textured teal-green paper lawn, broad subtle irregular patches of emerald and desaturated mint, very sparse tiny cut-paper grass tufts and tiny scattered cream petals concentrated along the extreme edge, a warm inviting handmade tabletop-garden feeling. Center remains nearly uniform quiet teal lawn.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-67a60d7a-6ce9-46da-a0aa-fe1983d29b31.png"
+    },
+    {
+      "id": "map_sotao_ground",
+      "category": "fases",
+      "file": "fases/map_sotao_ground_v001.png",
+      "prompt": "Use case: stylized-concept. One production environment floor layer for Quintal em Guarda, an original 2D handcrafted toy tower defense.\nImage 1 is a STYLE reference only. Match its cozy handcrafted paper-and-wood color language, simplified into flat 2D game art with low contrast, navy contour only around the outer silhouette, two painted shadow bands maximum.\nComposition: a single large horizontal rectangular floor patch, aspect ratio 16:10, viewed EXACTLY FROM DIRECTLY OVERHEAD, not tilted, no isometric perspective, no visible vertical sidewalls. On a wide PNG canvas the rectangle occupies almost the entire canvas with a narrow 3% TRANSPARENT ALPHA margin outside its deckled outline. The entire rectangular interior is opaque floor material, continuous, spacious, very low contrast and buildable. There is no path painted here; the game renders its exact grid path above this floor. No towers, no enemies, no lighthouse, no roads, no rivers, no platforms, no holes, no large props, no frame-like UI, no words, no numbers, no grid, no checkerboard. Only floor material. Use real transparent pixels OUTSIDE the rectangular piece, not a white matte. This is one reusable map terrain layer, not a scene screenshot.\nSubject: SOTAO DAS ESTRELAS floor: dark desaturated plum-brown wooden attic floor with broad subtle horizontal planks, an inset almost-flat deep navy woven-fabric patch blending across the center, sparse very small faded gold paper-star motifs along the outer edge. Cozy bedtime theatrical night mood, never black or scary. Center is quiet and continuous for gameplay.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-29ab70b4-4317-45d4-9400-9c87c2d7db26.png"
+    },
+    {
+      "id": "tower_maestro_L3B",
+      "category": "torres",
+      "file": "torres/tower_maestro_L3B_v001.png",
+      "prompt": "Use case: precise-object-edit. Create the L3B final specialization sprite of maestro for Quintal em Guarda. Image 1 is the exact previous-level sprite to edit. Preserve character identity, face, color palette, handmade material, dark navy contour, cel shading and camera angle. Change the equipment as specified. One complete toy character, not a sheet. IMPORTANT: fit the upgraded silhouette fully within central 84% of canvas, with at least 8% TRANSPARENT margin on all four sides; reduce whole character scale slightly if wider or taller equipment needs room. No clipping. Feet rest close to 90% canvas height. No text, labels, watermark, pedestal, ground, cast shadows, attack effects, particles or scenery. Output PNG with ACTUAL transparent alpha outside the character, not white or checkerboard.\nEquipment: SOLO specialization. Keep golden dial and side speakers close to body, add one compact prominent central golden trumpet-shaped horn above head below wind-up key; do not hide the eyes. Strong central silhouette, no spread-out speaker wings.",
+      "reference": "torres/tower_maestro_L2_v001.png",
+      "sourceGeneratedFile": "exec-ca13d298-a6b3-44d3-80c8-509d440e0c38.png"
+    },
+    {
+      "id": "prop_oficina_parafuso",
+      "category": "cenario",
+      "file": "cenario/prop_oficina_parafuso_v001.png",
+      "prompt": "Use case: stylized-concept. One production transparent environment sprite for Quintal em Guarda, original 2D toy tower defense. Image 1 is style reference only. Handcrafted paper/cardboard/wood toy material, large clean flat color shapes, dark navy #19283F outlines, at most two cel-shaded bands, light from upper left, subtle handmade texture. Slightly elevated three-quarter view matching the pieces in reference. Single isolated cohesive object, centered full object on square canvas with generous empty margin. No label, text, watermark, pedestal, ground, cast shadow or surrounding scenery. ACTUAL TRANSPARENT ALPHA background around silhouette; do not draw a checkerboard or white backdrop. No unrelated objects.\nSubject: One chunky oversized toy screw with blue-gray steel hexagonal head, short broad spiraling thread and rounded end, lying diagonally. One gold washer rests around its stem as part of the same object. Simple readable shape, not photorealistic.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-292823a8-c504-46f3-908e-dba24eb42c18.png"
+    },
+    {
+      "id": "prop_jardim_pedra_papelao",
+      "category": "cenario",
+      "file": "cenario/prop_jardim_pedra_papelao_v001.png",
+      "prompt": "Use case: stylized-concept. One production transparent environment sprite for Quintal em Guarda, original 2D toy tower defense. Image 1 is style reference only. Handcrafted paper/cardboard/wood toy material, large clean flat color shapes, dark navy #19283F outlines, at most two cel-shaded bands, light from upper left, subtle handmade texture. Slightly elevated three-quarter view matching the pieces in reference. Single isolated cohesive object, centered full object on square canvas with generous empty margin. No label, text, watermark, pedestal, ground, cast shadow or surrounding scenery. ACTUAL TRANSPARENT ALPHA background around silhouette; do not draw a checkerboard or white backdrop. No unrelated objects.\nSubject: One cohesive small cluster of exactly three faceted cardboard rocks, one medium rock and two smaller at its foot. Warm gray cardboard faces, tan exposed corrugated edges, one tiny teal folded paper leaf tucked between rocks. No ground patch.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-5aee2a97-aba2-4cc5-b95e-99623b96a225.png"
+    },
+    {
+      "id": "prop_sotao_livros",
+      "category": "cenario",
+      "file": "cenario/prop_sotao_livros_v001.png",
+      "prompt": "Use case: stylized-concept. One production transparent environment sprite for Quintal em Guarda, original 2D toy tower defense. Image 1 is style reference only. Handcrafted paper/cardboard/wood toy material, large clean flat color shapes, dark navy #19283F outlines, at most two cel-shaded bands, light from upper left, subtle handmade texture. Slightly elevated three-quarter view matching the pieces in reference. Single isolated cohesive object, centered full object on square canvas with generous empty margin. No label, text, watermark, pedestal, ground, cast shadow or surrounding scenery. ACTUAL TRANSPARENT ALPHA background around silhouette; do not draw a checkerboard or white backdrop. No unrelated objects.\nSubject: One compact stack of three old toy storybooks with dark navy, muted plum and teal covers, cream chunky paper edges and a golden moon-shaped emblem embossed on top cover. No letters, no readable writing, no extra objects.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-9225a346-2157-48da-9e3f-6025f5aeb70c.png"
+    },
+    {
+      "id": "prop_sotao_estrela_papel",
+      "category": "cenario",
+      "file": "cenario/prop_sotao_estrela_papel_v001.png",
+      "prompt": "Use case: stylized-concept. One production transparent environment sprite for Quintal em Guarda, original 2D toy tower defense. Image 1 is style reference only. Handcrafted paper/cardboard/wood toy material, large clean flat color shapes, dark navy #19283F outlines, at most two cel-shaded bands, light from upper left, subtle handmade texture. Slightly elevated three-quarter view matching the pieces in reference. Single isolated cohesive object, centered full object on square canvas with generous empty margin. No label, text, watermark, pedestal, ground, cast shadow or surrounding scenery. ACTUAL TRANSPARENT ALPHA background around silhouette; do not draw a checkerboard or white backdrop. No unrelated objects.\nSubject: One large folded golden five-point paper star ornament, with simple triangular fold facets, dark navy outline, tiny coral loop at top. Friendly rounded points, no eyes or face, no string extending off canvas.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-d48da515-e18a-4987-abd1-aa881afd2a9a.png"
+    },
+    {
+      "id": "prop_jardim_planta_papel",
+      "category": "cenario",
+      "file": "cenario/prop_jardim_planta_papel_v001.png",
+      "prompt": "Use case: stylized-concept. One production transparent environment sprite for Quintal em Guarda, original 2D toy tower defense. Image 1 is style reference only. Handcrafted paper/cardboard/wood toy material, large clean flat color shapes, dark navy #19283F outlines, at most two cel-shaded bands, light from upper left, subtle handmade texture. Slightly elevated three-quarter view matching the pieces in reference. Single isolated cohesive object, centered full object on square canvas with generous empty margin. No label, text, watermark, pedestal, ground, cast shadow or surrounding scenery. ACTUAL TRANSPARENT ALPHA background around silhouette; do not draw a checkerboard or white backdrop. No unrelated objects.\nSubject: One small garden plant made of folded teal paper leaves with one coral paper pinwheel flower and golden center. Leaves fan out from one short dark green stem; no pot, no ground patch. Simple big readable leaves.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-8cf724b6-73fd-435a-bb1e-1bae720e0d85.png"
+    },
+    {
+      "id": "prop_oficina_caixa_ferramentas",
+      "category": "cenario",
+      "file": "cenario/prop_oficina_caixa_ferramentas_v001.png",
+      "prompt": "Use case: stylized-concept. One production transparent environment sprite for Quintal em Guarda, original 2D toy tower defense. Image 1 is style reference only. Handcrafted paper/cardboard/wood toy material, large clean flat color shapes, dark navy #19283F outlines, at most two cel-shaded bands, light from upper left, subtle handmade texture. Slightly elevated three-quarter view matching the pieces in reference. Single isolated cohesive object, centered full object on square canvas with generous empty margin. No label, text, watermark, pedestal, ground, cast shadow or surrounding scenery. ACTUAL TRANSPARENT ALPHA background around silhouette; do not draw a checkerboard or white backdrop. No unrelated objects.\nSubject: One closed coral and dark teal small toy toolbox with chunky rounded rectangular body, arched handle on top, two golden catches and a cream blank inset panel. Cardboard and tin materials, no letters, no tools scattered around.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-5f6fbe5d-6c95-4910-aab5-d946456711db.png"
+    },
+    {
+      "id": "base_farol_pilha",
+      "category": "cenario",
+      "file": "cenario/base_farol_pilha_v001.png",
+      "prompt": "Use case: stylized-concept. One production transparent environment sprite for Quintal em Guarda, original 2D toy tower defense. Image 1 is style reference only. Handcrafted paper/cardboard/wood toy material, large clean flat color shapes, dark navy #19283F outlines, at most two cel-shaded bands, light from upper left, subtle handmade texture. Slightly elevated three-quarter view matching the pieces in reference. Single isolated cohesive object, centered full object on square canvas with generous empty margin. No label, text, watermark, pedestal, ground, cast shadow or surrounding scenery. ACTUAL TRANSPARENT ALPHA background around silhouette; do not draw a checkerboard or white backdrop. No unrelated objects.\nSubject: The FAROL DE PILHA defense base: one small whimsical cylindrical toy lighthouse made from stacked battery-shaped cardboard sections, alternating cream and coral broad stripes, rounded coral roof, small golden light window brightly lit but no glow outside silhouette, tiny gold finial and small coral flag. A short dark teal base ring belongs to the lighthouse; no rock pedestal, no ground patch. Match lighthouse in upper-right of style reference. All silhouette visible.",
+      "reference": "../Pacote_Claude_Code/arte/prancha_conceito.png",
+      "sourceGeneratedFile": "exec-91e58a7c-21ff-4c08-a87c-c92811d4d63a.png"
+    }
+  ]
+}

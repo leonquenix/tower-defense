@@ -1,0 +1,308 @@
+{
+  "grid": [
+    16,
+    10
+  ],
+  "note": "Montagem visual estática. Posições de torres são exemplos válidos, não estratégia testada.",
+  "maps": [
+    {
+      "id": "jardim",
+      "name": "Jardim de Papel",
+      "unlock": "tutorial",
+      "hpMultiplier": 1,
+      "path": [
+        [
+          0,
+          2
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          9,
+          6
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          13,
+          3
+        ],
+        [
+          13,
+          8
+        ],
+        [
+          15,
+          8
+        ]
+      ],
+      "blocked": [
+        [
+          1,
+          8
+        ],
+        [
+          2,
+          8
+        ],
+        [
+          11,
+          0
+        ],
+        [
+          12,
+          0
+        ],
+        [
+          0,
+          9
+        ]
+      ],
+      "boss": "aspirador",
+      "previewPlacements": [
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          10,
+          5
+        ],
+        [
+          11,
+          5
+        ]
+      ],
+      "pathColors": [
+        "#ffe1a0",
+        "#ceac71"
+      ],
+      "propKeys": [
+        "prop_jardim_planta_papel",
+        "prop_jardim_pedra_papelao"
+      ]
+    },
+    {
+      "id": "oficina",
+      "name": "Oficina de Lata",
+      "unlock": "win:jardim:normal",
+      "hpMultiplier": 1.12,
+      "path": [
+        [
+          0,
+          7
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          11,
+          7
+        ],
+        [
+          11,
+          3
+        ],
+        [
+          15,
+          3
+        ]
+      ],
+      "blocked": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          14,
+          9
+        ],
+        [
+          15,
+          9
+        ],
+        [
+          8,
+          9
+        ]
+      ],
+      "boss": "rei_ferrugem",
+      "previewPlacements": [
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          9,
+          6
+        ],
+        [
+          10,
+          6
+        ]
+      ],
+      "pathColors": [
+        "#f7eac9",
+        "#c6bba7"
+      ],
+      "propKeys": [
+        "prop_oficina_caixa_ferramentas",
+        "prop_oficina_parafuso"
+      ]
+    },
+    {
+      "id": "sotao",
+      "name": "Sótão das Estrelas",
+      "unlock": "win:oficina:normal",
+      "hpMultiplier": 1.25,
+      "path": [
+        [
+          0,
+          1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          8
+        ],
+        [
+          10,
+          8
+        ],
+        [
+          10,
+          2
+        ],
+        [
+          14,
+          2
+        ],
+        [
+          14,
+          6
+        ],
+        [
+          15,
+          6
+        ]
+      ],
+      "blocked": [
+        [
+          8,
+          0
+        ],
+        [
+          9,
+          0
+        ],
+        [
+          6,
+          9
+        ],
+        [
+          7,
+          9
+        ],
+        [
+          15,
+          0
+        ]
+      ],
+      "boss": "breu",
+      "previewPlacements": [
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          7,
+          4
+        ],
+        [
+          8,
+          4
+        ],
+        [
+          12,
+          5
+        ],
+        [
+          13,
+          5
+        ]
+      ],
+      "pathColors": [
+        "#dad4ed",
+        "#9f9cb2"
+      ],
+      "propKeys": [
+        "prop_sotao_livros",
+        "prop_sotao_estrela_papel"
+      ]
+    }
+  ]
+}

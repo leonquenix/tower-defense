@@ -1,0 +1,9 @@
+# Espelho legível de rokit.toml (a especificação técnica cita toolchain.toml).
+# Fonte de verdade das versões: rokit.toml. Script reproduzível: tools/bootstrap_toolchain.sh
+[tools]
+rojo = "7.5.1"
+lune = "0.9.3"
+stylua = "2.1.0"
+luau-lsp = "1.69.0"
+selene = "0.31.0"
+python = ">=3.9 (Pillow >= 10 para exports)"

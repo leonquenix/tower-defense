@@ -1,0 +1,1173 @@
+{
+  "schemaVersion": 1,
+  "project": "Quintal em Guarda",
+  "documentVersion": "1.1",
+  "pathBase": "directory containing this file (Tower Defense root)",
+  "sourceAssetCount": 40,
+  "assets": [
+    {
+      "assetKey": "base_farol_pilha",
+      "displayName": "Farol de Pilha",
+      "category": "cenario",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/base_farol_pilha_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5013,
+        0.9737
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "d18695cac5ba571d3abaee0eb73fdd7f404ad8ea8ed480145c4a6a2c1c3cac0e",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": null,
+        "targetFrameHeight": null,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "prop_jardim_pedra_papelao",
+      "displayName": "Pedras de papelão",
+      "category": "cenario",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_jardim_pedra_papelao_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5572,
+        0.8541
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "e711989c9f2d5200b2fb32b5fad3d1db2c87e5961e2844046fc8bbe3792e6bef",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": null,
+        "targetFrameHeight": null,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "prop_jardim_planta_papel",
+      "displayName": "Planta de papel",
+      "category": "cenario",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_jardim_planta_papel_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.3095,
+        0.9043
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "3032e5960494703a2c3e07bf503899e65ef0061f7df2880e1d718047cb6a4f66",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": null,
+        "targetFrameHeight": null,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "prop_oficina_caixa_ferramentas",
+      "displayName": "Caixa de ferramentas",
+      "category": "cenario",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_oficina_caixa_ferramentas_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.2794,
+        0.8868
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "f5a8afb997e943e3b4ab51e2bb44411ef78391140aa6755b815ba709c91d2332",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": null,
+        "targetFrameHeight": null,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "prop_oficina_parafuso",
+      "displayName": "Parafuso e arruela",
+      "category": "cenario",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_oficina_parafuso_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.7843,
+        0.8812
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "586a219eca566c938c90ce6d5c4c5a8d4488d0e3a02fedcffda3ba01996fbc0e",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": null,
+        "targetFrameHeight": null,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "prop_sotao_estrela_papel",
+      "displayName": "Estrela de papel",
+      "category": "cenario",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_sotao_estrela_papel_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4913,
+        0.9458
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "777e1c25e43f2da1cdf88f965a9485a4d6b497da2219a615c7fe5e112b457168",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": null,
+        "targetFrameHeight": null,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "prop_sotao_livros",
+      "displayName": "Livros do sótão",
+      "category": "cenario",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_sotao_livros_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5284,
+        0.9721
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "b435d1dc3cd98f2f8b6f63434f7774b688c7d843439a45b56215123e13dc3858",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": null,
+        "targetFrameHeight": null,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "map_jardim_ground",
+      "displayName": "Jardim de Papel — chão",
+      "category": "fases",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/fases/map_jardim_ground_v001.png",
+      "sourceWidth": 1586,
+      "sourceHeight": 992,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5,
+        0.5
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "99af6a72a3e1ae898b272ae32d1894ff4d124072a011fd577cf816415e22aacb",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": null,
+        "targetFrameHeight": null,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "map_oficina_ground",
+      "displayName": "Oficina de Lata — chão",
+      "category": "fases",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/fases/map_oficina_ground_v001.png",
+      "sourceWidth": 1586,
+      "sourceHeight": 992,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5,
+        0.5
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "52f4861ea5f2f50ebee59148872beb437a97d989b208146abef2f80239fa4258",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": null,
+        "targetFrameHeight": null,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "map_sotao_ground",
+      "displayName": "Sótão das Estrelas — chão",
+      "category": "fases",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/fases/map_sotao_ground_v001.png",
+      "sourceWidth": 1586,
+      "sourceHeight": 992,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5,
+        0.5
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "92f578945c690ccbb7b25865f6f4772ccb49d289c89562ecbeaa7cac93a6f8f2",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": null,
+        "targetFrameHeight": null,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L0",
+      "displayName": "Dardo · L0",
+      "category": "torres",
+      "towerId": "dardo",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L0_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4969,
+        0.9402
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "97b9edae4e2b167cafd5b1b6019b3289bad5a02ab75c2cac46e3509ff72963b9",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L1",
+      "displayName": "Dardo · L1",
+      "category": "torres",
+      "towerId": "dardo",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L1_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.498,
+        0.941
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "ce89d5780a36b68c3b10c38eebf0e49491c1effcd0e47567d7cba9cfc927de99",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L2",
+      "displayName": "Dardo · L2",
+      "category": "torres",
+      "towerId": "dardo",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L2_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4915,
+        0.9553
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "fab1c6570b4ce1d17503009bdb7887d5cf7795d86376f1aeb46486f0ee84229e",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L3A",
+      "displayName": "Dardo · L3A · Rajada",
+      "category": "torres",
+      "towerId": "dardo",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L3A_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4784,
+        0.9378
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "82dda5f9f99bf716f832eef91fa26780285daa178fc1c260461da6b3f6692f7c",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L3B",
+      "displayName": "Dardo · L3B · Fura lata",
+      "category": "torres",
+      "towerId": "dardo",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L3B_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4663,
+        0.933
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "1bafb03e10d3e765d3ee98acd8c3a326bb78efa2056ba4966bb1fe131800b0db",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L0",
+      "displayName": "Goma · L0",
+      "category": "torres",
+      "towerId": "goma",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L0_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4991,
+        0.8876
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "1fae7bdcc1e4c22b469200d7f81edc98bd1f018e5deb7a2724e102765727f94c",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L1",
+      "displayName": "Goma · L1",
+      "category": "torres",
+      "towerId": "goma",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L1_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4988,
+        0.9147
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "2b44f753d8fde2f752b86b0e78a8f1b31a0ec83fb3502cf650779399c2468bb4",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L2",
+      "displayName": "Goma · L2",
+      "category": "torres",
+      "towerId": "goma",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L2_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4993,
+        0.9155
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "a47a29da3f1a62ce04383a7afedc449204e519aff1d0cf0a081ce3f39fa5e73b",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L3A",
+      "displayName": "Goma · L3A · Poça",
+      "category": "torres",
+      "towerId": "goma",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L3A_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4997,
+        0.9147
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "03a20e80d357ed0b0c2d19e0e00761d193f0aa59b78508579f73e23121c8b68a",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L3B",
+      "displayName": "Goma · L3B · Supercola",
+      "category": "torres",
+      "towerId": "goma",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L3B_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5005,
+        0.9282
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "6c8dd96ada927aa84eb5fb81a823ca0e48fdd38d0601e9fc5af29295e2544441",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L0",
+      "displayName": "Lupa · L0",
+      "category": "torres",
+      "towerId": "lupa",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L0_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4509,
+        0.9346
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "4629b2ae358e5dad6345ebbf8feda0a7994089cd1e2524c03b8a33e9040b387a",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L1",
+      "displayName": "Lupa · L1",
+      "category": "torres",
+      "towerId": "lupa",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L1_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4516,
+        0.9354
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "e18233d7292deaca4b04c723412d78b255545e2ea523b98596988020cb028f09",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L2",
+      "displayName": "Lupa · L2",
+      "category": "torres",
+      "towerId": "lupa",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L2_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4158,
+        0.9362
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "efb777d321261f21f42b2c530e0512224baab56e4929c92e70e6ece0fb647d00",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L3A",
+      "displayName": "Lupa · L3A · Olho de águia",
+      "category": "torres",
+      "towerId": "lupa",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L3A_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4049,
+        0.9187
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "d522c0df2c83522a50d1b89c45f343b035bf0b350efe6bbba6fe9307060f435b",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L3B",
+      "displayName": "Lupa · L3B · Observadora",
+      "category": "torres",
+      "towerId": "lupa",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L3B_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.4186,
+        0.9226
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "7f5d31de1ce2b837febb0b309e3ce6c07e37740f8ffe49c41a508891e70467c2",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L0",
+      "displayName": "Maestro · L0",
+      "category": "torres",
+      "towerId": "maestro",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L0_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.6403,
+        0.8604
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "4cd399f7cb0decf2f9ebcf71ecd05869b39facba840b4d69eb1aac1c80287fc0",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L1",
+      "displayName": "Maestro · L1",
+      "category": "torres",
+      "towerId": "maestro",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L1_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.638,
+        0.8604
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "9e6841ed55eb9e88e1662deb1c5e539bfe51326bcd85aef52a7b08b7b0cf757e",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L2",
+      "displayName": "Maestro · L2",
+      "category": "torres",
+      "towerId": "maestro",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L2_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.6501,
+        0.8604
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "4b64574efbfef1e55f1d97b4ba323ad6c5ba89a73135e6b497be866fe713780e",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L3A",
+      "displayName": "Maestro · L3A · Orquestra",
+      "category": "torres",
+      "towerId": "maestro",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L3A_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.6088,
+        0.8254
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "8af1656699005d2aa7b4a3fc60a64245176aed972fbd638bd326cece84d51348",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L3B",
+      "displayName": "Maestro · L3B · Solo",
+      "category": "torres",
+      "towerId": "maestro",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L3B_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5593,
+        0.8955
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "0a6ea107452e2f30ec2f3033f4f20f578e45c9d9f3f15305f5084ca1e1d4c8cc",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L0",
+      "displayName": "Pipoca · L0",
+      "category": "torres",
+      "towerId": "pipoca",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L0_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5534,
+        0.9203
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "d7198d031face2fa24aab3d9be075dfdcf3f215c1a22b5458d7b05e561f267ca",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L1",
+      "displayName": "Pipoca · L1",
+      "category": "torres",
+      "towerId": "pipoca",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L1_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5532,
+        0.9211
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "0df99c28bd4495cec779224fbe5c061fc33fda397e73fba763d0b3a5b1a948de",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L2",
+      "displayName": "Pipoca · L2",
+      "category": "torres",
+      "towerId": "pipoca",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L2_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5522,
+        0.9219
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "80402dd30cababf95e51587ae243670e23196a99fdd3b89dd4c96af914c64e65",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L3A",
+      "displayName": "Pipoca · L3A · Festival",
+      "category": "torres",
+      "towerId": "pipoca",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L3A_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5514,
+        0.9896
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "79afde4acedd326cc58204f145f96eaf7d8479e3978f23a305ab557087e0aa35",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L3B",
+      "displayName": "Pipoca · L3B · Demolidora",
+      "category": "torres",
+      "towerId": "pipoca",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L3B_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5655,
+        0.9506
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "4ba39a194b78cdb6e556dbdb93df335c6c76fde59962526d0c8468ef9d620094",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L0",
+      "displayName": "Voltz · L0",
+      "category": "torres",
+      "towerId": "voltz",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L0_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5545,
+        0.9482
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "625c4b758c7d1a3a950d0abcd2bc476e00063bbb5059dfb83994e2a621125d64",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L1",
+      "displayName": "Voltz · L1",
+      "category": "torres",
+      "towerId": "voltz",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L1_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5553,
+        0.9657
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "adf2d2f6562d009165e682db03eb91ef6855903c51fa3a3b109f3b64a3c99dff",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L2",
+      "displayName": "Voltz · L2",
+      "category": "torres",
+      "towerId": "voltz",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L2_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5509,
+        0.9841
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "27780cd5bef93390314e3b62db8c92aef6ddc498944208366d13e6558cac6d44",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L3A",
+      "displayName": "Voltz · L3A · Tempestade",
+      "category": "torres",
+      "towerId": "voltz",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L3A_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5446,
+        0.9809
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "0d9de3336044af5dfc356e2e7f04bcf246462f9b45eaa4c6b93d07cff640b80b",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L3B",
+      "displayName": "Voltz · L3B · Alta tensão",
+      "category": "torres",
+      "towerId": "voltz",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L3B_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5465,
+        0.9809
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "8d79e0df6f6eec4cb807d9d59d3809d3260ee053ed99171710df13a18561eeed",
+      "normalization": {
+        "status": "not_exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    }
+  ],
+  "towers": {
+    "dardo": {
+      "L0": "tower_dardo_L0",
+      "L1": "tower_dardo_L1",
+      "L2": "tower_dardo_L2",
+      "L3A": "tower_dardo_L3A",
+      "L3B": "tower_dardo_L3B"
+    },
+    "pipoca": {
+      "L0": "tower_pipoca_L0",
+      "L1": "tower_pipoca_L1",
+      "L2": "tower_pipoca_L2",
+      "L3A": "tower_pipoca_L3A",
+      "L3B": "tower_pipoca_L3B"
+    },
+    "lupa": {
+      "L0": "tower_lupa_L0",
+      "L1": "tower_lupa_L1",
+      "L2": "tower_lupa_L2",
+      "L3A": "tower_lupa_L3A",
+      "L3B": "tower_lupa_L3B"
+    },
+    "goma": {
+      "L0": "tower_goma_L0",
+      "L1": "tower_goma_L1",
+      "L2": "tower_goma_L2",
+      "L3A": "tower_goma_L3A",
+      "L3B": "tower_goma_L3B"
+    },
+    "voltz": {
+      "L0": "tower_voltz_L0",
+      "L1": "tower_voltz_L1",
+      "L2": "tower_voltz_L2",
+      "L3A": "tower_voltz_L3A",
+      "L3B": "tower_voltz_L3B"
+    },
+    "maestro": {
+      "L0": "tower_maestro_L0",
+      "L1": "tower_maestro_L1",
+      "L2": "tower_maestro_L2",
+      "L3A": "tower_maestro_L3A",
+      "L3B": "tower_maestro_L3B"
+    }
+  },
+  "maps": {
+    "jardim": {
+      "groundAssetKey": "map_jardim_ground",
+      "gameplayConfig": "Pacote_Claude_Code/dados/balanceamento_v1.json",
+      "pathSource": "maps entry selected by id",
+      "decorativePreview": "Assets_Quintal_em_Guarda_v1/layout_fases.json"
+    },
+    "oficina": {
+      "groundAssetKey": "map_oficina_ground",
+      "gameplayConfig": "Pacote_Claude_Code/dados/balanceamento_v1.json",
+      "pathSource": "maps entry selected by id",
+      "decorativePreview": "Assets_Quintal_em_Guarda_v1/layout_fases.json"
+    },
+    "sotao": {
+      "groundAssetKey": "map_sotao_ground",
+      "gameplayConfig": "Pacote_Claude_Code/dados/balanceamento_v1.json",
+      "pathSource": "maps entry selected by id",
+      "decorativePreview": "Assets_Quintal_em_Guarda_v1/layout_fases.json"
+    }
+  },
+  "baseAssetKey": "base_farol_pilha",
+  "notIncluded": [
+    "enemy sprites",
+    "boss sprites",
+    "drawn animation frames",
+    "final atlases",
+    "audio",
+    "skins",
+    "Roblox upload IDs"
+  ]
+}

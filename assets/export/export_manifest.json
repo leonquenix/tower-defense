@@ -1,0 +1,1882 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/export_assets.py",
+  "anchorConvention": "pés/apoio em (0.5, 0.82) de um quadro quadrado; escala uniforme por família de torre",
+  "alphaThreshold": 128,
+  "assets": {
+    "base_farol_pilha": {
+      "category": "cenario",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/base_farol_pilha_v001.png",
+      "sourceSha256": "d18695cac5ba571d3abaee0eb73fdd7f404ad8ea8ed480145c4a6a2c1c3cac0e",
+      "sourceBounds": [
+        338,
+        18,
+        918,
+        1222
+      ],
+      "sourceFeet": [
+        628.0,
+        1221
+      ],
+      "scale256": 0.161197,
+      "exports": {
+        "prop256": {
+          "file": "assets/export/props/base_farol_pilha_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "39987c7456c5a74fdae9abbf294f2b306a956a40963c989a010be83d2aaec167"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds256": [
+        81,
+        16,
+        175,
+        210
+      ],
+      "clipped": false
+    },
+    "map_jardim_ground": {
+      "category": "fases",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/fases/map_jardim_ground_v001.png",
+      "sourceSha256": "99af6a72a3e1ae898b272ae32d1894ff4d124072a011fd577cf816415e22aacb",
+      "exports": {
+        "master1600": {
+          "file": "assets/export/grounds/map_jardim_ground_1600x1000.png",
+          "width": 1600,
+          "height": 1000,
+          "sha256": "aeecd7ba6d48f145c15deff5f0b624761a29d15eff34eb257e0f107de69ce5e6"
+        },
+        "upload1024": {
+          "file": "assets/export/grounds/map_jardim_ground_1024x640.png",
+          "width": 1024,
+          "height": 640,
+          "sha256": "a75a3ffd63f3be6305e51ad7c9812b80f89a59cba491ba6d2db5a4dbdc40efe6"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "backingColor": [
+        67,
+        167,
+        135
+      ],
+      "coverScale": 1.008827,
+      "crop": [
+        0,
+        0
+      ]
+    },
+    "map_oficina_ground": {
+      "category": "fases",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/fases/map_oficina_ground_v001.png",
+      "sourceSha256": "52f4861ea5f2f50ebee59148872beb437a97d989b208146abef2f80239fa4258",
+      "exports": {
+        "master1600": {
+          "file": "assets/export/grounds/map_oficina_ground_1600x1000.png",
+          "width": 1600,
+          "height": 1000,
+          "sha256": "6c7f045bca0ff9cbeae4c64fe345b7705268adc833d0e49c5d79208107a3d3f1"
+        },
+        "upload1024": {
+          "file": "assets/export/grounds/map_oficina_ground_1024x640.png",
+          "width": 1024,
+          "height": 640,
+          "sha256": "6500096d6c331dd2b3cd16876e6fdac2ca9d400da6f4033f448d5c10aaed7b12"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "backingColor": [
+        98,
+        123,
+        147
+      ],
+      "coverScale": 1.008827,
+      "crop": [
+        0,
+        0
+      ]
+    },
+    "map_sotao_ground": {
+      "category": "fases",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/fases/map_sotao_ground_v001.png",
+      "sourceSha256": "92f578945c690ccbb7b25865f6f4772ccb49d289c89562ecbeaa7cac93a6f8f2",
+      "exports": {
+        "master1600": {
+          "file": "assets/export/grounds/map_sotao_ground_1600x1000.png",
+          "width": 1600,
+          "height": 1000,
+          "sha256": "7e4f8bad37767a8a3de626b836ef7f3f75030a7d30add89e1e7ddfe609538eca"
+        },
+        "upload1024": {
+          "file": "assets/export/grounds/map_sotao_ground_1024x640.png",
+          "width": 1024,
+          "height": 640,
+          "sha256": "9f71eb4e52130deee311694004679c9bbb890349ae9662200b006daf480aac21"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "backingColor": [
+        67,
+        58,
+        75
+      ],
+      "coverScale": 1.008827,
+      "crop": [
+        0,
+        0
+      ]
+    },
+    "prop_jardim_pedra_papelao": {
+      "category": "cenario",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_jardim_pedra_papelao_v001.png",
+      "sourceSha256": "e711989c9f2d5200b2fb32b5fad3d1db2c87e5961e2844046fc8bbe3792e6bef",
+      "sourceBounds": [
+        194,
+        206,
+        1061,
+        1072
+      ],
+      "sourceFeet": [
+        627.5,
+        1071
+      ],
+      "scale256": 0.224185,
+      "exports": {
+        "prop256": {
+          "file": "assets/export/props/prop_jardim_pedra_papelao_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "5ae5bb8e85eaa39afe4b1f8a14496458daf8fc81fa2738501c38c2d2bf14d61f"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds256": [
+        30,
+        16,
+        225,
+        210
+      ],
+      "clipped": false
+    },
+    "prop_jardim_planta_papel": {
+      "category": "cenario",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_jardim_planta_papel_v001.png",
+      "sourceSha256": "3032e5960494703a2c3e07bf503899e65ef0061f7df2880e1d718047cb6a4f66",
+      "sourceBounds": [
+        75,
+        87,
+        1178,
+        1135
+      ],
+      "sourceFeet": [
+        626.5,
+        1134
+      ],
+      "scale256": 0.185215,
+      "exports": {
+        "prop256": {
+          "file": "assets/export/props/prop_jardim_planta_papel_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "b5d17308fc6e50d7b70c630468804486f7adfb862abee5af5bc9f0af07d0fba2"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds256": [
+        26,
+        16,
+        230,
+        210
+      ],
+      "clipped": false
+    },
+    "prop_oficina_caixa_ferramentas": {
+      "category": "cenario",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_oficina_caixa_ferramentas_v001.png",
+      "sourceSha256": "f5a8afb997e943e3b4ab51e2bb44411ef78391140aa6755b815ba709c91d2332",
+      "sourceBounds": [
+        44,
+        149,
+        1212,
+        1113
+      ],
+      "sourceFeet": [
+        628.0,
+        1112
+      ],
+      "scale256": 0.191781,
+      "exports": {
+        "prop256": {
+          "file": "assets/export/props/prop_oficina_caixa_ferramentas_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "136f8f5fd9980afecec3841456d5d1936247d1bd8791afb37e8a64d0961a2f90"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds256": [
+        17,
+        26,
+        240,
+        210
+      ],
+      "clipped": false
+    },
+    "prop_oficina_parafuso": {
+      "category": "cenario",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_oficina_parafuso_v001.png",
+      "sourceSha256": "586a219eca566c938c90ce6d5c4c5a8d4488d0e3a02fedcffda3ba01996fbc0e",
+      "sourceBounds": [
+        134,
+        161,
+        1122,
+        1106
+      ],
+      "sourceFeet": [
+        628.0,
+        1105
+      ],
+      "scale256": 0.205424,
+      "exports": {
+        "prop256": {
+          "file": "assets/export/props/prop_oficina_parafuso_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "9c426221ddd5a22fba0d4bdb571bcedbcadfe51cf23ed7da8379e49654f05f6b"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds256": [
+        27,
+        16,
+        230,
+        210
+      ],
+      "clipped": false
+    },
+    "prop_sotao_estrela_papel": {
+      "category": "cenario",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_sotao_estrela_papel_v001.png",
+      "sourceSha256": "777e1c25e43f2da1cdf88f965a9485a4d6b497da2219a615c7fe5e112b457168",
+      "sourceBounds": [
+        68,
+        61,
+        1186,
+        1187
+      ],
+      "sourceFeet": [
+        627.0,
+        1186
+      ],
+      "scale256": 0.172373,
+      "exports": {
+        "prop256": {
+          "file": "assets/export/props/prop_sotao_estrela_papel_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "44e9b9934265019cf1377d6630ca2bb13cfe9dc04887d16bc3d8f7c7f7497fa1"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds256": [
+        32,
+        16,
+        224,
+        210
+      ],
+      "clipped": false
+    },
+    "prop_sotao_livros": {
+      "category": "cenario",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_sotao_livros_v001.png",
+      "sourceSha256": "b435d1dc3cd98f2f8b6f63434f7774b688c7d843439a45b56215123e13dc3858",
+      "sourceBounds": [
+        85,
+        109,
+        1177,
+        1220
+      ],
+      "sourceFeet": [
+        631.0,
+        1219
+      ],
+      "scale256": 0.174703,
+      "exports": {
+        "prop256": {
+          "file": "assets/export/props/prop_sotao_livros_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "8855f784c14f74aa6e9592f015a7f976491ae2f1813a31bb30345585bde39fc1"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds256": [
+        33,
+        16,
+        223,
+        210
+      ],
+      "clipped": false
+    },
+    "tower_dardo_L0": {
+      "category": "torres",
+      "towerId": "dardo",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L0_v001.png",
+      "sourceSha256": "97b9edae4e2b167cafd5b1b6019b3289bad5a02ab75c2cac46e3509ff72963b9",
+      "sourceBounds": [
+        141,
+        153,
+        1182,
+        1180
+      ],
+      "sourceFeet": [
+        670.5,
+        1179
+      ],
+      "familyScale512": 0.356143,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_dardo_L0_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "56a98bf0555da9f5f604f7852e56c84c1b68234ef261c69a9107e32bd9725421"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_dardo_L0_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "56269cac1fcafe2ed030b4a69b0d17edd3ebb1be5def9fcdbb0d877169136128"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_dardo_L0_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "a29975b5ed48b4df0388169034235f43ac7119d7f34ed485bc482e62faff35d1"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        67,
+        54,
+        438,
+        421
+      ],
+      "clipped": false,
+      "contentHeight128": 91.8,
+      "contentWidth128": 92.8
+    },
+    "tower_dardo_L1": {
+      "category": "torres",
+      "towerId": "dardo",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L1_v001.png",
+      "sourceSha256": "ce89d5780a36b68c3b10c38eebf0e49491c1effcd0e47567d7cba9cfc927de99",
+      "sourceBounds": [
+        139,
+        151,
+        1183,
+        1181
+      ],
+      "sourceFeet": [
+        671.0,
+        1180
+      ],
+      "familyScale512": 0.356143,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_dardo_L1_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "10c675106b3b9f5e028939faee8180275d9d45097580812d587772fcd8517d36"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_dardo_L1_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "8a4f5117edc8e883e9e8f67ce18f560a374dfdb0ac3b9e53aa89a58ec7fb9f79"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_dardo_L1_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "b9c43ff76ed72c2990d70ba553f32a5526de3a5ea2b13cce9a1c27668f576236"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        67,
+        54,
+        439,
+        421
+      ],
+      "clipped": false,
+      "contentHeight128": 91.8,
+      "contentWidth128": 93.0
+    },
+    "tower_dardo_L2": {
+      "category": "torres",
+      "towerId": "dardo",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L2_v001.png",
+      "sourceSha256": "fab1c6570b4ce1d17503009bdb7887d5cf7795d86376f1aeb46486f0ee84229e",
+      "sourceBounds": [
+        88,
+        109,
+        1202,
+        1199
+      ],
+      "sourceFeet": [
+        660.0,
+        1198
+      ],
+      "familyScale512": 0.356143,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_dardo_L2_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "76876ec7c21b96cb9a2438262d33a4b2868fb86997b6b5ed8f38721144ceec3e"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_dardo_L2_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "e7359bb8e21b6e02d638285743af645535290a3e0b470cca8a7e1a50edc97f0c"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_dardo_L2_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "d7d1cb8918a6c0062c651680601f99f011ef575a0a4abf56f8ba5aa23983a553"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        52,
+        32,
+        449,
+        421
+      ],
+      "clipped": false,
+      "contentHeight128": 97.2,
+      "contentWidth128": 99.2
+    },
+    "tower_dardo_L3A": {
+      "category": "torres",
+      "towerId": "dardo",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L3A_v001.png",
+      "sourceSha256": "82dda5f9f99bf716f832eef91fa26780285daa178fc1c260461da6b3f6692f7c",
+      "sourceBounds": [
+        81,
+        123,
+        1200,
+        1177
+      ],
+      "sourceFeet": [
+        649.5,
+        1176
+      ],
+      "familyScale512": 0.356143,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_dardo_L3A_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "f8f72accaeb033cb7d99dd67571c55958325b7ed12c7c2f7cfde3421276a7f28"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_dardo_L3A_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "0a1d8da985efd28f652b34f41cdbb18220597ab917fda07de71c1a5945072f29"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_dardo_L3A_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "9c87ea0009f608bf97874a4611481843f1ab14a12f691df00c71e1354dd67f5c"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        54,
+        45,
+        453,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 93.8,
+      "contentWidth128": 99.8
+    },
+    "tower_dardo_L3B": {
+      "category": "torres",
+      "towerId": "dardo",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L3B_v001.png",
+      "sourceSha256": "1bafb03e10d3e765d3ee98acd8c3a326bb78efa2056ba4966bb1fe131800b0db",
+      "sourceBounds": [
+        86,
+        112,
+        1203,
+        1171
+      ],
+      "sourceFeet": [
+        631.5,
+        1170
+      ],
+      "familyScale512": 0.356143,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_dardo_L3B_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "dc33ff597cf1f86dce7e95f4e7896c15af058f5504546291ddbc32685589955b"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_dardo_L3B_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "a2a0b1651ab2f2b44d3abe0ff98837cb9d372db862d194e26d3868b28281d2a4"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_dardo_L3B_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "16117c75109cf4606b1312a38270d11f913b1a73fed549829d0cbd8d41749092"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        62,
+        43,
+        460,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 94.2,
+      "contentWidth128": 99.5
+    },
+    "tower_goma_L0": {
+      "category": "torres",
+      "towerId": "goma",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L0_v001.png",
+      "sourceSha256": "1fae7bdcc1e4c22b469200d7f81edc98bd1f018e5deb7a2724e102765727f94c",
+      "sourceBounds": [
+        229,
+        154,
+        1025,
+        1114
+      ],
+      "sourceFeet": [
+        627.5,
+        1113
+      ],
+      "familyScale512": 0.356143,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_goma_L0_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "79baccd6c4a535ee70ec1a324cb6682441adae72467f3de849ef4e33e1f1ab0e"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_goma_L0_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "0c77b613006b49f04f08b2418be5dc48e55e185a611d78fc83f0ab2cc34d8649"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_goma_L0_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "f15498b0f8e9c7ef6b342bbab76d19ff63b70f47e14e1fd878a6fabea220bac5"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        114,
+        78,
+        398,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 85.5,
+      "contentWidth128": 71.0
+    },
+    "tower_goma_L1": {
+      "category": "torres",
+      "towerId": "goma",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L1_v001.png",
+      "sourceSha256": "2b44f753d8fde2f752b86b0e78a8f1b31a0ec83fb3502cf650779399c2468bb4",
+      "sourceBounds": [
+        217,
+        152,
+        1036,
+        1148
+      ],
+      "sourceFeet": [
+        625.5,
+        1147
+      ],
+      "familyScale512": 0.356143,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_goma_L1_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "548cf724efb33d00d943f9b3ef8b091408e32115d420c05d4f8dd885d98ec5b4"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_goma_L1_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "a06e26663e97c9f1dfa16d677a43ee69523619691a4a29aeb72517171849bb8b"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_goma_L1_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "7785a2dbcb59e833ca285cee21981fa12145c5edff0f91ba09b74474368ba36b"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        110,
+        65,
+        402,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 88.8,
+      "contentWidth128": 73.0
+    },
+    "tower_goma_L2": {
+      "category": "torres",
+      "towerId": "goma",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L2_v001.png",
+      "sourceSha256": "a47a29da3f1a62ce04383a7afedc449204e519aff1d0cf0a081ce3f39fa5e73b",
+      "sourceBounds": [
+        215,
+        149,
+        1153,
+        1149
+      ],
+      "sourceFeet": [
+        626.5,
+        1148
+      ],
+      "familyScale512": 0.356143,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_goma_L2_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "6de2b169e14f8b366b95771d3025359abaa093fbf439d92a58c0a1302860a374"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_goma_L2_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "d90f8027322b530511fd477f3816ba3951098ae9a20379be3074918e48c927dc"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_goma_L2_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "8a1528b150f2291f233b86863f56c5525a2fd757240275db88da75dcd653c13d"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        110,
+        64,
+        444,
+        421
+      ],
+      "clipped": false,
+      "contentHeight128": 89.2,
+      "contentWidth128": 83.5
+    },
+    "tower_goma_L3A": {
+      "category": "torres",
+      "towerId": "goma",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L3A_v001.png",
+      "sourceSha256": "03a20e80d357ed0b0c2d19e0e00761d193f0aa59b78508579f73e23121c8b68a",
+      "sourceBounds": [
+        110,
+        148,
+        1144,
+        1148
+      ],
+      "sourceFeet": [
+        627.0,
+        1147
+      ],
+      "familyScale512": 0.356143,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_goma_L3A_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "4f01bb0ccffc86058a5a0722a01d2a2a70d13dcaea88af141840f8bf328dc24e"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_goma_L3A_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "125b9e6e845dc7f7989c7067f91c9ae7f7f59de048653ee78efc53dc2a3f4917"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_goma_L3A_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "4fa1d5a2e23098594d1c7d2b4f22aa405bb6b3d7474350fa03ec2c304309dc12"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        72,
+        64,
+        441,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 89.0,
+      "contentWidth128": 92.2
+    },
+    "tower_goma_L3B": {
+      "category": "torres",
+      "towerId": "goma",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L3B_v001.png",
+      "sourceSha256": "6c8dd96ada927aa84eb5fb81a823ca0e48fdd38d0601e9fc5af29295e2544441",
+      "sourceBounds": [
+        242,
+        75,
+        1115,
+        1165
+      ],
+      "sourceFeet": [
+        627.5,
+        1164
+      ],
+      "familyScale512": 0.356143,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_goma_L3B_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "5319ea957f9c6634df6f828f391c6d61f95277940166567c63987eca813a3646"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_goma_L3B_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "2ee5ce8fe1446f5b50c41f70b95a794316e8faf5d68e93c9945a778e100328dc"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_goma_L3B_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "20651931340ee8da78a0a520fcac3e6beb87e1880094dfb70107ffa146345bd3"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        119,
+        32,
+        430,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 97.0,
+      "contentWidth128": 77.8
+    },
+    "tower_lupa_L0": {
+      "category": "torres",
+      "towerId": "lupa",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L0_v001.png",
+      "sourceSha256": "4629b2ae358e5dad6345ebbf8feda0a7994089cd1e2524c03b8a33e9040b387a",
+      "sourceBounds": [
+        196,
+        138,
+        1169,
+        1173
+      ],
+      "sourceFeet": [
+        590.0,
+        1172
+      ],
+      "familyScale512": 0.326293,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_lupa_L0_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "b7c8f8aee0c3db70d9cbdbbfef0ea7a6fb97cd059a99f6b43543a1d6907dde45"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_lupa_L0_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "48dc5fa163f8f690126ce2abbd03d7ee68c9919144987a841659cc890c612ab4"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_lupa_L0_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "a0d6344fe7282313e8b4dfcdd289da39e2b48d32a70c4a8fb88bb5058b6b7c52"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        127,
+        82,
+        444,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 84.5,
+      "contentWidth128": 79.2
+    },
+    "tower_lupa_L1": {
+      "category": "torres",
+      "towerId": "lupa",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L1_v001.png",
+      "sourceSha256": "e18233d7292deaca4b04c723412d78b255545e2ea523b98596988020cb028f09",
+      "sourceBounds": [
+        195,
+        137,
+        1171,
+        1174
+      ],
+      "sourceFeet": [
+        591.0,
+        1173
+      ],
+      "familyScale512": 0.326293,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_lupa_L1_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "cb3480c414c58be4176e695319eb5c15950a197aae6b12ef482a69cfd73ef4fe"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_lupa_L1_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "ab139bd822e633b0470382a9320501fbb9931f0b0d81de28671d22c3906f9358"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_lupa_L1_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "a6b4f3f3fa4aa9c3141e364a53fcf6e37b6dca859d0d77fc612b9175cbc2df21"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        126,
+        82,
+        445,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 84.5,
+      "contentWidth128": 79.8
+    },
+    "tower_lupa_L2": {
+      "category": "torres",
+      "towerId": "lupa",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L2_v001.png",
+      "sourceSha256": "efb777d321261f21f42b2c530e0512224baab56e4929c92e70e6ece0fb647d00",
+      "sourceBounds": [
+        141,
+        136,
+        1218,
+        1175
+      ],
+      "sourceFeet": [
+        546.5,
+        1174
+      ],
+      "familyScale512": 0.326293,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_lupa_L2_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "9e71c6ef09fdc21a8bb5a1a7b1d8a21fd455b9d9a10aaed556f10dc0cc192983"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_lupa_L2_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "cd5ba6a3e69aeb1818bd1e707af5cd0a56490bd9f7f800837b9c0edf0a8a5553"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_lupa_L2_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "e4825c2d23b9c7e4e04d29e92825205d5420a954ea6afc870710976a11bda709"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        124,
+        81,
+        475,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 84.8,
+      "contentWidth128": 87.8
+    },
+    "tower_lupa_L3A": {
+      "category": "torres",
+      "towerId": "lupa",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L3A_v001.png",
+      "sourceSha256": "d522c0df2c83522a50d1b89c45f343b035bf0b350efe6bbba6fe9307060f435b",
+      "sourceBounds": [
+        175,
+        82,
+        1210,
+        1153
+      ],
+      "sourceFeet": [
+        523.5,
+        1152
+      ],
+      "familyScale512": 0.326293,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_lupa_L3A_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "2b5160b3b2e5fef03efe96f892b2de6989b457fa8eadc4fb6f89433d3ee62eba"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_lupa_L3A_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "dcb08afb68cbf2fd795e97e89e21966b08da660b64df14562a0201c6c572f367"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_lupa_L3A_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "049524e3e218649cdb8e765fcd417cf8ec3b140362112ffe3450b796a42fdab0"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        142,
+        71,
+        480,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 87.2,
+      "contentWidth128": 84.5
+    },
+    "tower_lupa_L3B": {
+      "category": "torres",
+      "towerId": "lupa",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L3B_v001.png",
+      "sourceSha256": "7f5d31de1ce2b837febb0b309e3ce6c07e37740f8ffe49c41a508891e70467c2",
+      "sourceBounds": [
+        152,
+        144,
+        1116,
+        1158
+      ],
+      "sourceFeet": [
+        550.0,
+        1157
+      ],
+      "familyScale512": 0.326293,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_lupa_L3B_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "6a8af30b20a49f6c82beacd5bcfb4bb56380614d507ce6c27d4de2e6c0880ee9"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_lupa_L3B_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "f7fba9058c512837e6333824a451d4f069dd7fcdce07472812032ccffdd2ad32"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_lupa_L3B_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "159395826d59db231e1581c3a6a2b568b0a7d1046e19b563229d047aa6d76168"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        127,
+        89,
+        441,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 82.8,
+      "contentWidth128": 78.5
+    },
+    "tower_maestro_L0": {
+      "category": "torres",
+      "towerId": "maestro",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L0_v001.png",
+      "sourceSha256": "4cd399f7cb0decf2f9ebcf71ecd05869b39facba840b4d69eb1aac1c80287fc0",
+      "sourceBounds": [
+        86,
+        214,
+        1193,
+        1080
+      ],
+      "sourceFeet": [
+        679.0,
+        1079
+      ],
+      "familyScale512": 0.338113,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_maestro_L0_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "a672b80714597de53108274e48008ecb3bf09c8a8d66b20613b4fd3e6f423648"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_maestro_L0_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "dc0b537af6ebd983e14dfe8a51e3de69dc857ed12edc25f601bb1735e59b40d5"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_maestro_L0_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "457f28fcb712d4fffc4b6687ba0b2f3b2b0fa1cbd6627bcf72188c264768d65d"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        55,
+        128,
+        429,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 73.0,
+      "contentWidth128": 93.5
+    },
+    "tower_maestro_L1": {
+      "category": "torres",
+      "towerId": "maestro",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L1_v001.png",
+      "sourceSha256": "9e6841ed55eb9e88e1662deb1c5e539bfe51326bcd85aef52a7b08b7b0cf757e",
+      "sourceBounds": [
+        85,
+        214,
+        1194,
+        1080
+      ],
+      "sourceFeet": [
+        678.0,
+        1079
+      ],
+      "familyScale512": 0.338113,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_maestro_L1_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "2b97d0e2b6c0d54ec0b2640e588d6b96d95999d19c916191f1fa0ced2fa01950"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_maestro_L1_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "83a106c165c6b6dfe2825141577f8b691bf63c7328040c514a597dcc77cbcb70"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_maestro_L1_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "1b814917d8d017ad5cbdee69bc1ae842f2113fc9cccc023b4c9a32478fa7196f"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        56,
+        127,
+        431,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 73.2,
+      "contentWidth128": 93.8
+    },
+    "tower_maestro_L2": {
+      "category": "torres",
+      "towerId": "maestro",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L2_v001.png",
+      "sourceSha256": "4b64574efbfef1e55f1d97b4ba323ad6c5ba89a73135e6b497be866fe713780e",
+      "sourceBounds": [
+        19,
+        213,
+        1244,
+        1080
+      ],
+      "sourceFeet": [
+        681.5,
+        1079
+      ],
+      "familyScale512": 0.338113,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_maestro_L2_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "44cde020302fe53db0374be47e72ce7065bff957c2131006d639d282ebeebad8"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_maestro_L2_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "347ea3dcea8d13a62a85c5b602317c6b6fb1512a6e2b488cac0525645869b0c6"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_maestro_L2_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "0b39ced48a1167b7fec4f353132d7c97b75d1670d38b2010b315f43c28ac1d49"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        33,
+        127,
+        447,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 73.2,
+      "contentWidth128": 103.5
+    },
+    "tower_maestro_L3A": {
+      "category": "torres",
+      "towerId": "maestro",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L3A_v001.png",
+      "sourceSha256": "8af1656699005d2aa7b4a3fc60a64245176aed972fbd638bd326cece84d51348",
+      "sourceBounds": [
+        17,
+        303,
+        1240,
+        1036
+      ],
+      "sourceFeet": [
+        658.0,
+        1035
+      ],
+      "familyScale512": 0.338113,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_maestro_L3A_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "73fb5b326acaa2929adb9ab0695906032452126fa724a5e4c42433fc90885c9c"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_maestro_L3A_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "0383fd7ea46b543c3a5883dcb0161813d870ab2b7d384dae4ab4bcc6fecb7a7d"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_maestro_L3A_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "1eaaccc88b527fd4dd5a553847eff32fccf270182c6d7d2a5c892ea4c0a17dca"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        40,
+        173,
+        453,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 61.8,
+      "contentWidth128": 103.2
+    },
+    "tower_maestro_L3B": {
+      "category": "torres",
+      "towerId": "maestro",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L3B_v001.png",
+      "sourceSha256": "0a6ea107452e2f30ec2f3033f4f20f578e45c9d9f3f15305f5084ca1e1d4c8cc",
+      "sourceBounds": [
+        180,
+        163,
+        1093,
+        1124
+      ],
+      "sourceFeet": [
+        661.5,
+        1123
+      ],
+      "familyScale512": 0.338113,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_maestro_L3B_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "8da0d967c4c864392b0e7f4862c780145f5fde14fb51bf5fffd70bfb601c3d01"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_maestro_L3B_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "4b7abed1e90cef8bffeb4ff6c3f40eb2f8a7255d65a2717de1f8e9103b79ecb2"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_maestro_L3B_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "cab1a4c1a334cce7258da44dbf5ab94f1c7510a1c719f333280c12e4d00a2cc2"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        93,
+        95,
+        402,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 81.2,
+      "contentWidth128": 77.2
+    },
+    "tower_pipoca_L0": {
+      "category": "torres",
+      "towerId": "pipoca",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L0_v001.png",
+      "sourceSha256": "d7198d031face2fa24aab3d9be075dfdcf3f215c1a22b5458d7b05e561f267ca",
+      "sourceBounds": [
+        149,
+        151,
+        1181,
+        1155
+      ],
+      "sourceFeet": [
+        691.0,
+        1154
+      ],
+      "familyScale512": 0.3284,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_pipoca_L0_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "9a2474be2596013ee71b67be3a64e3a0ead31693990ea22c9ebc3a8353d8862f"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_pipoca_L0_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "98096747ddd78e7ca316fbace02efd70a77687b5a3a8d4f23b3769d725f533b7"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_pipoca_L0_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "6911f76d7b71b32175d6d74489d8a486856fd71e4c10e38d49133bfb5fe96fb5"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        78,
+        91,
+        417,
+        421
+      ],
+      "clipped": false,
+      "contentHeight128": 82.5,
+      "contentWidth128": 84.8
+    },
+    "tower_pipoca_L1": {
+      "category": "torres",
+      "towerId": "pipoca",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L1_v001.png",
+      "sourceSha256": "0df99c28bd4495cec779224fbe5c061fc33fda397e73fba763d0b3a5b1a948de",
+      "sourceBounds": [
+        148,
+        149,
+        1183,
+        1156
+      ],
+      "sourceFeet": [
+        691.0,
+        1155
+      ],
+      "familyScale512": 0.3284,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_pipoca_L1_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "539775d51f46b53a9ccc95fe96dc7e077432cef7dda3fa08292ec96c2c82a8d9"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_pipoca_L1_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "7d3a4b1539a0338bb30d577b1527193e3886935bb2e08b025fe69397841184ea"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_pipoca_L1_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "97c172c781b09a2e62b35aa40f0874a87fde328a7fc538bfce3d11b2818ec463"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        78,
+        90,
+        418,
+        421
+      ],
+      "clipped": false,
+      "contentHeight128": 82.8,
+      "contentWidth128": 85.0
+    },
+    "tower_pipoca_L2": {
+      "category": "torres",
+      "towerId": "pipoca",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L2_v001.png",
+      "sourceSha256": "80402dd30cababf95e51587ae243670e23196a99fdd3b89dd4c96af914c64e65",
+      "sourceBounds": [
+        146,
+        146,
+        1183,
+        1157
+      ],
+      "sourceFeet": [
+        691.5,
+        1156
+      ],
+      "familyScale512": 0.3284,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_pipoca_L2_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "8ee1e1d22805aa3f48ad094d11e392d7960a8f44d552de06ec58454051425edb"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_pipoca_L2_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "a2ae6843879b7cf9649802d624eef6d23db754c4947709d6e429f899f02e85a2"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_pipoca_L2_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "a33f00c1283bc437c4b7a43ec88ca2bfa586139210f204e9182a84d128f2a098"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        77,
+        88,
+        418,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 83.0,
+      "contentWidth128": 85.2
+    },
+    "tower_pipoca_L3A": {
+      "category": "torres",
+      "towerId": "pipoca",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L3A_v001.png",
+      "sourceSha256": "79afde4acedd326cc58204f145f96eaf7d8479e3978f23a305ab557087e0aa35",
+      "sourceBounds": [
+        150,
+        60,
+        1158,
+        1242
+      ],
+      "sourceFeet": [
+        615.5,
+        1241
+      ],
+      "familyScale512": 0.3284,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_pipoca_L3A_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "5b197e09558bfc7c8997451c1351efd253c14a519f80c5d099d7996c94fef2a7"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_pipoca_L3A_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "9654c06ca52e3f52fc3c0c35678bfd9989cd7b776e0097a2bf6c073ce789f045"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_pipoca_L3A_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "bd6246ef75b4b5cd6841c9679aede4eea8a02b6b351587b3750a4242701191bc"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        103,
+        32,
+        435,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 97.0,
+      "contentWidth128": 83.0
+    },
+    "tower_pipoca_L3B": {
+      "category": "torres",
+      "towerId": "pipoca",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L3B_v001.png",
+      "sourceSha256": "4ba39a194b78cdb6e556dbdb93df335c6c76fde59962526d0c8468ef9d620094",
+      "sourceBounds": [
+        175,
+        35,
+        1167,
+        1193
+      ],
+      "sourceFeet": [
+        767.5,
+        1192
+      ],
+      "familyScale512": 0.3284,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_pipoca_L3B_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "06b546e48405be305832acdbf849c85930d7a6e91bcdcbe7bb01913d1eaa7b46"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_pipoca_L3B_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "24603208e3c52b489dea26b2da55658ec553c762694d7ccf4aaff9c130b84859"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_pipoca_L3B_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "ff6b6d3b616fd7d9ad7a0b980f0406fb3532aa14f303286bd90d6ff5e5c2fcfe"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        62,
+        39,
+        387,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 95.2,
+      "contentWidth128": 81.2
+    },
+    "tower_voltz_L0": {
+      "category": "torres",
+      "towerId": "voltz",
+      "state": "L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L0_v001.png",
+      "sourceSha256": "625c4b758c7d1a3a950d0abcd2bc476e00063bbb5059dfb83994e2a621125d64",
+      "sourceBounds": [
+        354,
+        97,
+        916,
+        1190
+      ],
+      "sourceFeet": [
+        638.5,
+        1189
+      ],
+      "familyScale512": 0.333482,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_voltz_L0_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "d08f04b63f9afe689b01800bebd41281867889f921969709a85a0818fa357a77"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_voltz_L0_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "bdc3b3621c76c31d1fcce2fe51789c66aa9e66a4b056a082fe70c00e32e5fea8"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_voltz_L0_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "f46190d57b3402f132ed90a63444edc956aa3b05767339ea50a8e5a4533907b4"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        161,
+        55,
+        348,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 91.2,
+      "contentWidth128": 46.8
+    },
+    "tower_voltz_L1": {
+      "category": "torres",
+      "towerId": "voltz",
+      "state": "L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L1_v001.png",
+      "sourceSha256": "adf2d2f6562d009165e682db03eb91ef6855903c51fa3a3b109f3b64a3c99dff",
+      "sourceBounds": [
+        352,
+        97,
+        916,
+        1212
+      ],
+      "sourceFeet": [
+        639.5,
+        1211
+      ],
+      "familyScale512": 0.333482,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_voltz_L1_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "d3038a3871054facc28c6d93ad31af1546957129cbbf99b01b14b3a778aca7a3"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_voltz_L1_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "56ce99606514330f5185b4e2e81e9cfd5ef82678f6b7e8e1f5d020c566b1e827"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_voltz_L1_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "df94b4cc055c95a852c939f4946623b8f04ac7094188b62341270ef6a9e54523"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        160,
+        48,
+        348,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 93.0,
+      "contentWidth128": 47.0
+    },
+    "tower_voltz_L2": {
+      "category": "torres",
+      "towerId": "voltz",
+      "state": "L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L2_v001.png",
+      "sourceSha256": "27780cd5bef93390314e3b62db8c92aef6ddc498944208366d13e6558cac6d44",
+      "sourceBounds": [
+        352,
+        96,
+        917,
+        1235
+      ],
+      "sourceFeet": [
+        639.5,
+        1234
+      ],
+      "familyScale512": 0.333482,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_voltz_L2_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "3d7517a704e3e3ec5f568073d699e1a879b2eab2bdb72977061a9e0a51c4283e"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_voltz_L2_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "44a244b85c427f8f0fee45ae8405d33a506db34d500e52af5a46dddc945ad64d"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_voltz_L2_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "36bad1feec3c0c521fac0db2be3ef727d242b2c30ad70f7dba9c7ac4bf99f640"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        160,
+        40,
+        349,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 95.0,
+      "contentWidth128": 47.2
+    },
+    "tower_voltz_L3A": {
+      "category": "torres",
+      "towerId": "voltz",
+      "state": "L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L3A_v001.png",
+      "sourceSha256": "0d9de3336044af5dfc356e2e7f04bcf246462f9b45eaa4c6b93d07cff640b80b",
+      "sourceBounds": [
+        353,
+        67,
+        915,
+        1231
+      ],
+      "sourceFeet": [
+        637.5,
+        1230
+      ],
+      "familyScale512": 0.333482,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_voltz_L3A_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "79ac17ea2afa44e6029318977d1a23a22bc8987d11822940db3f7158c2d1a154"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_voltz_L3A_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "9587b447482a817761db7e5ececb60924f2bd8cb5e2c7805c54614e7019927cd"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_voltz_L3A_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "52af00a4b5fe6435b80708c6a82e14c42282a5c0ff80a7a881b43d17174dc733"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        161,
+        32,
+        348,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 97.0,
+      "contentWidth128": 46.8
+    },
+    "tower_voltz_L3B": {
+      "category": "torres",
+      "towerId": "voltz",
+      "state": "L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L3B_v001.png",
+      "sourceSha256": "8d79e0df6f6eec4cb807d9d59d3809d3260ee053ed99171710df13a18561eeed",
+      "sourceBounds": [
+        352,
+        106,
+        915,
+        1231
+      ],
+      "sourceFeet": [
+        638.5,
+        1230
+      ],
+      "familyScale512": 0.333482,
+      "exports": {
+        "source512": {
+          "file": "assets/export/source512/tower_voltz_L3B_512.png",
+          "width": 512,
+          "height": 512,
+          "sha256": "d548eb44de6199d1334dc3d1dc59bb065025a7bf51ae4d6ea627b5c698d013ff"
+        },
+        "game128": {
+          "file": "assets/export/game/tower_voltz_L3B_128.png",
+          "width": 128,
+          "height": 128,
+          "sha256": "e62900c66ab1a824404763b7954af18da944201b683e67259097a86c6b958d77"
+        },
+        "portrait256": {
+          "file": "assets/export/portraits/tower_voltz_L3B_256.png",
+          "width": 256,
+          "height": 256,
+          "sha256": "27aad493fa7d227a2f96792afc5c36e2d7695ce981dac0fdbb463e38772cb336"
+        }
+      },
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "normalizedBounds512": [
+        160,
+        45,
+        348,
+        420
+      ],
+      "clipped": false,
+      "contentHeight128": 93.8,
+      "contentWidth128": 47.0
+    }
+  }
+}

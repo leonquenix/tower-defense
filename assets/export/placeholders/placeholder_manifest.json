@@ -1,0 +1,116 @@
+{
+  "status": "placeholder_procedural",
+  "note": "Visuais provisórios gerados por tools/generate_placeholder_enemies.py. Substituir pelos 96 + 48 quadros desenhados.",
+  "assets": {
+    "enemy_fiapo": {
+      "file": "assets/export/placeholders/enemy_fiapo_placeholder_128.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "placeholder": true
+    },
+    "enemy_corrisco": {
+      "file": "assets/export/placeholders/enemy_corrisco_placeholder_128.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "placeholder": true
+    },
+    "enemy_bolota": {
+      "file": "assets/export/placeholders/enemy_bolota_placeholder_128.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "placeholder": true
+    },
+    "enemy_latinha": {
+      "file": "assets/export/placeholders/enemy_latinha_placeholder_128.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "placeholder": true
+    },
+    "enemy_nevoa": {
+      "file": "assets/export/placeholders/enemy_nevoa_placeholder_128.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "placeholder": true
+    },
+    "enemy_remendo": {
+      "file": "assets/export/placeholders/enemy_remendo_placeholder_128.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "placeholder": true
+    },
+    "enemy_casulo": {
+      "file": "assets/export/placeholders/enemy_casulo_placeholder_128.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "placeholder": true
+    },
+    "enemy_brutamontes": {
+      "file": "assets/export/placeholders/enemy_brutamontes_placeholder_128.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "placeholder": true
+    },
+    "boss_aspirador": {
+      "file": "assets/export/placeholders/boss_aspirador_placeholder_256.png",
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        0.9
+      ],
+      "placeholder": true
+    },
+    "boss_rei_ferrugem": {
+      "file": "assets/export/placeholders/boss_rei_ferrugem_placeholder_256.png",
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        0.9
+      ],
+      "placeholder": true
+    },
+    "boss_breu": {
+      "file": "assets/export/placeholders/boss_breu_placeholder_256.png",
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        0.9
+      ],
+      "placeholder": true
+    }
+  }
+}

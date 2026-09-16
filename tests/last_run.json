@@ -1,0 +1,441 @@
+{
+  "elapsedSeconds": 0.02012887500313809,
+  "failed": 0,
+  "failures": {},
+  "passed": 88,
+  "suites": [
+    {
+      "name": "Grid",
+      "tests": [
+        {
+          "name": "valida limites e inteiros",
+          "ok": true
+        },
+        {
+          "name": "converte célula para virtual e de volta",
+          "ok": true
+        },
+        {
+          "name": "reconhece adjacência ortogonal apenas",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Path",
+      "tests": [
+        {
+          "name": "calcula comprimento total do Jardim",
+          "ok": true
+        },
+        {
+          "name": "interpola posições ao longo do caminho",
+          "ok": true
+        },
+        {
+          "name": "marca células do caminho",
+          "ok": true
+        },
+        {
+          "name": "rejeita caminhos diagonais",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Combat / fórmula de dano",
+      "tests": [
+        {
+          "name": "T07: Dardo L3B ignora integralmente a armadura de Latinha",
+          "ok": true
+        },
+        {
+          "name": "armadura reduz dano físico e respeita o limite de 0,80",
+          "ok": true
+        },
+        {
+          "name": "Demolidora ignora metade da armadura",
+          "ok": true
+        },
+        {
+          "name": "energia ignora armadura e sofre resistência de energia",
+          "ok": true
+        },
+        {
+          "name": "bônus contra chefe só vale para chefes e multiplica com Circuito e marca",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Combat / efeitos",
+      "tests": [
+        {
+          "name": "T08: lentidões não se somam; vale a maior ativa",
+          "ok": true
+        },
+        {
+          "name": "T09: Supercola (45%) em chefe reduz velocidade em 15,75%",
+          "ok": true
+        },
+        {
+          "name": "lentidão é limitada a 50%",
+          "ok": true
+        },
+        {
+          "name": "marcas não se somam e renovam duração",
+          "ok": true
+        },
+        {
+          "name": "T10: dois Maestros de 12% e 25% cobrem Dardo -> intervalo dividido por 1,25",
+          "ok": true
+        },
+        {
+          "name": "poeira do Aspirador divide por 0,75 depois da aura",
+          "ok": true
+        },
+        {
+          "name": "upgrade preserva a fração de cooldown",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Combat / alvos",
+      "tests": [
+        {
+          "name": "First escolhe maior s, empate pelo menor ID",
+          "ok": true
+        },
+        {
+          "name": "Last escolhe menor s",
+          "ok": true
+        },
+        {
+          "name": "Strongest escolhe maior vida, empate pelo menor ID",
+          "ok": true
+        },
+        {
+          "name": "Closest escolhe menor distância",
+          "ok": true
+        },
+        {
+          "name": "alcance inclui igualdade",
+          "ok": true
+        },
+        {
+          "name": "explosão inclui primário e mais próximos até maxTargets",
+          "ok": true
+        },
+        {
+          "name": "T13: Voltz L0 acerta dois alvos: 20 e 15",
+          "ok": true
+        },
+        {
+          "name": "corrente nunca repete entidade e respeita chainRadius",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Circuits",
+      "tests": [
+        {
+          "name": "pareia Dardo e Goma ortogonalmente adjacentes",
+          "ok": true
+        },
+        {
+          "name": "diagonal não conta",
+          "ok": true
+        },
+        {
+          "name": "pares incompatíveis não conectam",
+          "ok": true
+        },
+        {
+          "name": "T11: três torres disputam um Circuito -> pares determinísticos por ID, sem dupla conexão",
+          "ok": true
+        },
+        {
+          "name": "ordem por menor ID e depois maior ID",
+          "ok": true
+        },
+        {
+          "name": "prévia mostra o par que seria ativado",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Rewards",
+      "tests": [
+        {
+          "name": "T20: bounty 10 com três participantes -> 4,3,3 com cursor giratório",
+          "ok": true
+        },
+        {
+          "name": "venda devolve 70% arredondado para baixo (T06: 450 -> 315)",
+          "ok": true
+        },
+        {
+          "name": "botões por resultado",
+          "ok": true
+        },
+        {
+          "name": "domínio exige 30 s colocada e cinco ondas em derrota",
+          "ok": true
+        },
+        {
+          "name": "marcos de domínio",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Simulation / comandos",
+      "tests": [
+        {
+          "name": "T01: colocar Dardo com 650 sucatas deixa 400 e uma torre L0",
+          "ok": true
+        },
+        {
+          "name": "T03: dois jogadores compram a mesma célula -> só a primeira é aceita",
+          "ok": true
+        },
+        {
+          "name": "T04: colocar sobre caminho, bloqueio ou fora do mapa é rejeitado sem gasto",
+          "ok": true
+        },
+        {
+          "name": "T05: comprar L2 diretamente de L0 -> INVALID_STATE",
+          "ok": true
+        },
+        {
+          "name": "T06: Dardo L0+L1 comprados e vendidos -> investido 450, devolução 315",
+          "ok": true
+        },
+        {
+          "name": "P10: vender torre alheia -> NOT_OWNER",
+          "ok": true
+        },
+        {
+          "name": "torre não equipada é recusada; treino libera todas",
+          "ok": true
+        },
+        {
+          "name": "limites por pessoa e por espécie",
+          "ok": true
+        },
+        {
+          "name": "saldo insuficiente é recusado sem gasto",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Simulation / vida e chefes",
+      "tests": [
+        {
+          "name": "T18: Fiapo no Jardim Normal com quatro pessoas tem vida ceil(24 x 3,1) = 75",
+          "ok": true
+        },
+        {
+          "name": "T19: Aspirador no Jardim Desafio solo tem vida ceil(7000 x 1,45) = 10150",
+          "ok": true
+        },
+        {
+          "name": "mapa multiplica vida comum mas não a do chefe",
+          "ok": true
+        },
+        {
+          "name": "Desafio aumenta velocidade em 10%",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Simulation / Circuitos e efeitos em partida",
+      "tests": [
+        {
+          "name": "T12: vender parceiro conectado remove o bônus no mesmo passo",
+          "ok": true
+        },
+        {
+          "name": "Pega e acerta: Dardo causa 15% a mais em alvo lento",
+          "ok": true
+        },
+        {
+          "name": "T17: dois jogadores usam Pulso no mesmo passo -> um efeito e uma recarga",
+          "ok": true
+        },
+        {
+          "name": "Pulso causa 180 x coop de energia e aplica lentidão",
+          "ok": true
+        },
+        {
+          "name": "Pulso fora da onda é recusado",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Simulation / Casulo, Remendo e recompensas",
+      "tests": [
+        {
+          "name": "T14: Casulo morto cria três Fiapos sem bounty; um bounty de Casulo",
+          "ok": true
+        },
+        {
+          "name": "T15: Casulo que vaza causa um leak e nenhum filho",
+          "ok": true
+        },
+        {
+          "name": "Remendo cura aliados comuns a cada 3 s, sem curar chefes ou outros Remendos",
+          "ok": true
+        },
+        {
+          "name": "bounty de Fiapo (8) com dois participantes divide 4 e 4",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Simulation / partida curta até vitória e derrota",
+      "tests": [
+        {
+          "name": "T16: base zera no passo em que o último inimigo morreria -> derrota prevalece",
+          "ok": true
+        },
+        {
+          "name": "sem torres, o Jardim é perdido antes da onda 20",
+          "ok": true
+        },
+        {
+          "name": "tutorial: três ondas com equipe inicial guiada termina em vitória e 180 botões",
+          "ok": true
+        },
+        {
+          "name": "tutorial não inicia onda pelo cronômetro; só com Pronto",
+          "ok": true
+        },
+        {
+          "name": "2x exige unanimidade e tutorial fica em 1x",
+          "ok": true
+        },
+        {
+          "name": "participante ausente há 30 s deixa de contar para unanimidade",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Protocol / validação de envelope",
+      "tests": [
+        {
+          "name": "aceita PlaceTower bem formado",
+          "ok": true
+        },
+        {
+          "name": "P09: rejeita NaN, infinito, strings enormes e campos desconhecidos",
+          "ok": true
+        },
+        {
+          "name": "P08: não existe ação que aceite preço, dano ou recompensa",
+          "ok": true
+        },
+        {
+          "name": "rejeita tabelas profundas e chaves extras no envelope",
+          "ok": true
+        },
+        {
+          "name": "exige campos obrigatórios e aceita opcionais ausentes",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Protocol / limite de taxa e deduplicação",
+      "tests": [
+        {
+          "name": "balde permite rajada e recupera com o tempo",
+          "ok": true
+        },
+        {
+          "name": "T02: repetir requestId devolve a resposta anterior",
+          "ok": true
+        },
+        {
+          "name": "sequência antiga fora da janela é STALE_REQUEST",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "ProfileSchema",
+      "tests": [
+        {
+          "name": "perfil padrão possui as três torres iniciais equipadas",
+          "ok": true
+        },
+        {
+          "name": "P07: migração v1 -> v2 é idempotente",
+          "ok": true
+        },
+        {
+          "name": "perfil de versão futura não é tocado",
+          "ok": true
+        },
+        {
+          "name": "P05: repetir o mesmo matchId não paga duas vezes",
+          "ok": true
+        },
+        {
+          "name": "resultado mais antigo que 30 dias não é reprocessado",
+          "ok": true
+        },
+        {
+          "name": "ledger cheio preserva proteção e recusa aplicar",
+          "ok": true
+        },
+        {
+          "name": "P06: tutorial concluído duas vezes concede 180 uma única vez (chave tutorial-v1)",
+          "ok": true
+        },
+        {
+          "name": "marcos de domínio são registrados uma vez",
+          "ok": true
+        },
+        {
+          "name": "compra de torre exige botões e não repete",
+          "ok": true
+        },
+        {
+          "name": "loadout aceita até quatro torres distintas possuídas",
+          "ok": true
+        },
+        {
+          "name": "desbloqueio de mapas segue a campanha",
+          "ok": true
+        },
+        {
+          "name": "sanitiza configurações",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Localization",
+      "tests": [
+        {
+          "name": "inglês cobre todas as chaves do português",
+          "ok": true
+        },
+        {
+          "name": "substitui parâmetros",
+          "ok": true
+        }
+      ]
+    }
+  ],
+  "timestamp": "2026-09-16T15:46:44Z"
+}

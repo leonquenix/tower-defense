@@ -1,0 +1,7 @@
+.toolchain/
+build/*.rbxl
+build/*.rbxlx
+build/*.rbxm
+build/sourcemap.json
+__pycache__/
+.DS_Store

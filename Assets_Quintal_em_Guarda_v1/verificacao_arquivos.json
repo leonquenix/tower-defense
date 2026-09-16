@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "pngFiles": 40,
+  "allRGBA": true,
+  "allHaveActualTransparentPixels": true,
+  "fullyOpaqueMatteBackgrounds": 0,
+  "clippedAtCanvasEdge": [],
+  "scope": "File readability, dimensions, alpha, bounds, filenames and hashes. Art visually reviewed during generation; Studio integration not tested.",
+  "uniqueFiles": 40,
+  "towerStateCoverage": "6 towers × 5 states",
+  "galleryLinks": "all resolve",
+  "previewCoordinates": "all sample towers outside paths and blocked cells",
+  "browserPreview": "Not executed: local-file URL blocked by browser policy. HTML links and JavaScript syntax checked instead."
+}

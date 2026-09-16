@@ -1,0 +1,767 @@
+{
+  "schemaVersion": 1,
+  "pathBase": "Tower Defense root",
+  "purpose": "Fill only after export and upload. Do not invent IDs. Generate Config/Assets.luau from this file.",
+  "assets": [
+    {
+      "assetKey": "base_farol_pilha",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/base_farol_pilha_v001.png",
+      "exportFile": "assets/export/props/base_farol_pilha_256.png",
+      "robloxAssetId": 79969401785343,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 256,
+      "uploadedHeight": 256,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "39987c7456c5a74fdae9abbf294f2b306a956a40963c989a010be83d2aaec167"
+    },
+    {
+      "assetKey": "prop_jardim_pedra_papelao",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_jardim_pedra_papelao_v001.png",
+      "exportFile": "assets/export/props/prop_jardim_pedra_papelao_256.png",
+      "robloxAssetId": 84869589534779,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 256,
+      "uploadedHeight": 256,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "5ae5bb8e85eaa39afe4b1f8a14496458daf8fc81fa2738501c38c2d2bf14d61f"
+    },
+    {
+      "assetKey": "prop_jardim_planta_papel",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_jardim_planta_papel_v001.png",
+      "exportFile": "assets/export/props/prop_jardim_planta_papel_256.png",
+      "robloxAssetId": 135451723775452,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 256,
+      "uploadedHeight": 256,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "b5d17308fc6e50d7b70c630468804486f7adfb862abee5af5bc9f0af07d0fba2"
+    },
+    {
+      "assetKey": "prop_oficina_caixa_ferramentas",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_oficina_caixa_ferramentas_v001.png",
+      "exportFile": "assets/export/props/prop_oficina_caixa_ferramentas_256.png",
+      "robloxAssetId": 130847642521965,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 256,
+      "uploadedHeight": 256,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "136f8f5fd9980afecec3841456d5d1936247d1bd8791afb37e8a64d0961a2f90"
+    },
+    {
+      "assetKey": "prop_oficina_parafuso",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_oficina_parafuso_v001.png",
+      "exportFile": "assets/export/props/prop_oficina_parafuso_256.png",
+      "robloxAssetId": 112950339246150,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 256,
+      "uploadedHeight": 256,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "9c426221ddd5a22fba0d4bdb571bcedbcadfe51cf23ed7da8379e49654f05f6b"
+    },
+    {
+      "assetKey": "prop_sotao_estrela_papel",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_sotao_estrela_papel_v001.png",
+      "exportFile": "assets/export/props/prop_sotao_estrela_papel_256.png",
+      "robloxAssetId": 73246036719896,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 256,
+      "uploadedHeight": 256,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "44e9b9934265019cf1377d6630ca2bb13cfe9dc04887d16bc3d8f7c7f7497fa1"
+    },
+    {
+      "assetKey": "prop_sotao_livros",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/cenario/prop_sotao_livros_v001.png",
+      "exportFile": "assets/export/props/prop_sotao_livros_256.png",
+      "robloxAssetId": 103066089999426,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 256,
+      "uploadedHeight": 256,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "8855f784c14f74aa6e9592f015a7f976491ae2f1813a31bb30345585bde39fc1"
+    },
+    {
+      "assetKey": "map_jardim_ground",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/fases/map_jardim_ground_v001.png",
+      "exportFile": "assets/export/grounds/map_jardim_ground_1600x1000.png",
+      "robloxAssetId": 85989711027737,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 1024,
+      "uploadedHeight": 640,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "aeecd7ba6d48f145c15deff5f0b624761a29d15eff34eb257e0f107de69ce5e6",
+      "uploadFile": "assets/export/grounds/map_jardim_ground_1024x640.png",
+      "backingColor": [
+        67,
+        167,
+        135
+      ]
+    },
+    {
+      "assetKey": "map_oficina_ground",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/fases/map_oficina_ground_v001.png",
+      "exportFile": "assets/export/grounds/map_oficina_ground_1600x1000.png",
+      "robloxAssetId": 122169788486851,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 1024,
+      "uploadedHeight": 640,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "6c7f045bca0ff9cbeae4c64fe345b7705268adc833d0e49c5d79208107a3d3f1",
+      "uploadFile": "assets/export/grounds/map_oficina_ground_1024x640.png",
+      "backingColor": [
+        98,
+        123,
+        147
+      ]
+    },
+    {
+      "assetKey": "map_sotao_ground",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/fases/map_sotao_ground_v001.png",
+      "exportFile": "assets/export/grounds/map_sotao_ground_1600x1000.png",
+      "robloxAssetId": 104964394590324,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 1024,
+      "uploadedHeight": 640,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "7e4f8bad37767a8a3de626b836ef7f3f75030a7d30add89e1e7ddfe609538eca",
+      "uploadFile": "assets/export/grounds/map_sotao_ground_1024x640.png",
+      "backingColor": [
+        67,
+        58,
+        75
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L0_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L0_128.png",
+      "robloxAssetId": 109049378155335,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "56269cac1fcafe2ed030b4a69b0d17edd3ebb1be5def9fcdbb0d877169136128",
+      "portraitExportFile": "assets/export/portraits/tower_dardo_L0_256.png",
+      "portraitRobloxAssetId": 119867848039219
+    },
+    {
+      "assetKey": "tower_dardo_L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L1_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L1_128.png",
+      "robloxAssetId": 107353491140749,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "8a4f5117edc8e883e9e8f67ce18f560a374dfdb0ac3b9e53aa89a58ec7fb9f79",
+      "portraitExportFile": "assets/export/portraits/tower_dardo_L1_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_dardo_L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L2_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L2_128.png",
+      "robloxAssetId": 136390139230697,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "e7359bb8e21b6e02d638285743af645535290a3e0b470cca8a7e1a50edc97f0c",
+      "portraitExportFile": "assets/export/portraits/tower_dardo_L2_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_dardo_L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L3A_128.png",
+      "robloxAssetId": 112094368119729,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "0a1d8da985efd28f652b34f41cdbb18220597ab917fda07de71c1a5945072f29",
+      "portraitExportFile": "assets/export/portraits/tower_dardo_L3A_256.png",
+      "portraitRobloxAssetId": 77890368353314
+    },
+    {
+      "assetKey": "tower_dardo_L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L3B_128.png",
+      "robloxAssetId": 127099354530622,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "a2a0b1651ab2f2b44d3abe0ff98837cb9d372db862d194e26d3868b28281d2a4",
+      "portraitExportFile": "assets/export/portraits/tower_dardo_L3B_256.png",
+      "portraitRobloxAssetId": 119526494492898
+    },
+    {
+      "assetKey": "tower_goma_L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L0_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L0_128.png",
+      "robloxAssetId": 119881300831714,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "0c77b613006b49f04f08b2418be5dc48e55e185a611d78fc83f0ab2cc34d8649",
+      "portraitExportFile": "assets/export/portraits/tower_goma_L0_256.png",
+      "portraitRobloxAssetId": 115281024400066
+    },
+    {
+      "assetKey": "tower_goma_L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L1_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L1_128.png",
+      "robloxAssetId": 101596025650618,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "a06e26663e97c9f1dfa16d677a43ee69523619691a4a29aeb72517171849bb8b",
+      "portraitExportFile": "assets/export/portraits/tower_goma_L1_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_goma_L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L2_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L2_128.png",
+      "robloxAssetId": 70776480079949,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "d90f8027322b530511fd477f3816ba3951098ae9a20379be3074918e48c927dc",
+      "portraitExportFile": "assets/export/portraits/tower_goma_L2_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_goma_L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L3A_128.png",
+      "robloxAssetId": 104682311502671,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "125b9e6e845dc7f7989c7067f91c9ae7f7f59de048653ee78efc53dc2a3f4917",
+      "portraitExportFile": "assets/export/portraits/tower_goma_L3A_256.png",
+      "portraitRobloxAssetId": 80311326480751
+    },
+    {
+      "assetKey": "tower_goma_L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L3B_128.png",
+      "robloxAssetId": 108710162818500,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "2ee5ce8fe1446f5b50c41f70b95a794316e8faf5d68e93c9945a778e100328dc",
+      "portraitExportFile": "assets/export/portraits/tower_goma_L3B_256.png",
+      "portraitRobloxAssetId": 99855392713474
+    },
+    {
+      "assetKey": "tower_lupa_L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L0_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L0_128.png",
+      "robloxAssetId": 77463591269226,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "48dc5fa163f8f690126ce2abbd03d7ee68c9919144987a841659cc890c612ab4",
+      "portraitExportFile": "assets/export/portraits/tower_lupa_L0_256.png",
+      "portraitRobloxAssetId": 120597573757686
+    },
+    {
+      "assetKey": "tower_lupa_L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L1_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L1_128.png",
+      "robloxAssetId": 89146742413789,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "ab139bd822e633b0470382a9320501fbb9931f0b0d81de28671d22c3906f9358",
+      "portraitExportFile": "assets/export/portraits/tower_lupa_L1_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_lupa_L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L2_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L2_128.png",
+      "robloxAssetId": 119707686743885,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "cd5ba6a3e69aeb1818bd1e707af5cd0a56490bd9f7f800837b9c0edf0a8a5553",
+      "portraitExportFile": "assets/export/portraits/tower_lupa_L2_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_lupa_L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L3A_128.png",
+      "robloxAssetId": 122434067391535,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "dcb08afb68cbf2fd795e97e89e21966b08da660b64df14562a0201c6c572f367",
+      "portraitExportFile": "assets/export/portraits/tower_lupa_L3A_256.png",
+      "portraitRobloxAssetId": 132822243380673
+    },
+    {
+      "assetKey": "tower_lupa_L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L3B_128.png",
+      "robloxAssetId": 137602180826011,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "f7fba9058c512837e6333824a451d4f069dd7fcdce07472812032ccffdd2ad32",
+      "portraitExportFile": "assets/export/portraits/tower_lupa_L3B_256.png",
+      "portraitRobloxAssetId": 137477907676246
+    },
+    {
+      "assetKey": "tower_maestro_L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L0_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L0_128.png",
+      "robloxAssetId": 116299318295400,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "dc0b537af6ebd983e14dfe8a51e3de69dc857ed12edc25f601bb1735e59b40d5",
+      "portraitExportFile": "assets/export/portraits/tower_maestro_L0_256.png",
+      "portraitRobloxAssetId": 95316772901632
+    },
+    {
+      "assetKey": "tower_maestro_L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L1_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L1_128.png",
+      "robloxAssetId": 110358295570735,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "83a106c165c6b6dfe2825141577f8b691bf63c7328040c514a597dcc77cbcb70",
+      "portraitExportFile": "assets/export/portraits/tower_maestro_L1_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_maestro_L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L2_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L2_128.png",
+      "robloxAssetId": 86540446416732,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "347ea3dcea8d13a62a85c5b602317c6b6fb1512a6e2b488cac0525645869b0c6",
+      "portraitExportFile": "assets/export/portraits/tower_maestro_L2_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_maestro_L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L3A_128.png",
+      "robloxAssetId": 104417017607556,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "0383fd7ea46b543c3a5883dcb0161813d870ab2b7d384dae4ab4bcc6fecb7a7d",
+      "portraitExportFile": "assets/export/portraits/tower_maestro_L3A_256.png",
+      "portraitRobloxAssetId": 124096693686275
+    },
+    {
+      "assetKey": "tower_maestro_L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L3B_128.png",
+      "robloxAssetId": 76659270108148,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "4b7abed1e90cef8bffeb4ff6c3f40eb2f8a7255d65a2717de1f8e9103b79ecb2",
+      "portraitExportFile": "assets/export/portraits/tower_maestro_L3B_256.png",
+      "portraitRobloxAssetId": 125941647327754
+    },
+    {
+      "assetKey": "tower_pipoca_L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L0_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L0_128.png",
+      "robloxAssetId": 106846770955664,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "98096747ddd78e7ca316fbace02efd70a77687b5a3a8d4f23b3769d725f533b7",
+      "portraitExportFile": "assets/export/portraits/tower_pipoca_L0_256.png",
+      "portraitRobloxAssetId": 88097207003308
+    },
+    {
+      "assetKey": "tower_pipoca_L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L1_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L1_128.png",
+      "robloxAssetId": 97923583387387,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "7d3a4b1539a0338bb30d577b1527193e3886935bb2e08b025fe69397841184ea",
+      "portraitExportFile": "assets/export/portraits/tower_pipoca_L1_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_pipoca_L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L2_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L2_128.png",
+      "robloxAssetId": 70870540800205,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "a2ae6843879b7cf9649802d624eef6d23db754c4947709d6e429f899f02e85a2",
+      "portraitExportFile": "assets/export/portraits/tower_pipoca_L2_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_pipoca_L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L3A_128.png",
+      "robloxAssetId": 100316279692581,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "9654c06ca52e3f52fc3c0c35678bfd9989cd7b776e0097a2bf6c073ce789f045",
+      "portraitExportFile": "assets/export/portraits/tower_pipoca_L3A_256.png",
+      "portraitRobloxAssetId": 91337554625020
+    },
+    {
+      "assetKey": "tower_pipoca_L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L3B_128.png",
+      "robloxAssetId": 119379098334799,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "24603208e3c52b489dea26b2da55658ec553c762694d7ccf4aaff9c130b84859",
+      "portraitExportFile": "assets/export/portraits/tower_pipoca_L3B_256.png",
+      "portraitRobloxAssetId": 134009875421983
+    },
+    {
+      "assetKey": "tower_voltz_L0",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L0_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L0_128.png",
+      "robloxAssetId": 71826619386011,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "bdc3b3621c76c31d1fcce2fe51789c66aa9e66a4b056a082fe70c00e32e5fea8",
+      "portraitExportFile": "assets/export/portraits/tower_voltz_L0_256.png",
+      "portraitRobloxAssetId": 127380082820816
+    },
+    {
+      "assetKey": "tower_voltz_L1",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L1_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L1_128.png",
+      "robloxAssetId": 117676850585023,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "56ce99606514330f5185b4e2e81e9cfd5ef82678f6b7e8e1f5d020c566b1e827",
+      "portraitExportFile": "assets/export/portraits/tower_voltz_L1_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_voltz_L2",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L2_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L2_128.png",
+      "robloxAssetId": 84100633287020,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "44a244b85c427f8f0fee45ae8405d33a506db34d500e52af5a46dddc945ad64d",
+      "portraitExportFile": "assets/export/portraits/tower_voltz_L2_256.png",
+      "portraitRobloxAssetId": null
+    },
+    {
+      "assetKey": "tower_voltz_L3A",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L3A_128.png",
+      "robloxAssetId": 89914590558945,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "9587b447482a817761db7e5ececb60924f2bd8cb5e2c7805c54614e7019927cd",
+      "portraitExportFile": "assets/export/portraits/tower_voltz_L3A_256.png",
+      "portraitRobloxAssetId": 84725709725727
+    },
+    {
+      "assetKey": "tower_voltz_L3B",
+      "sourceFile": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L3B_128.png",
+      "robloxAssetId": 126725093370127,
+      "status": "uploaded",
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "uploadedWidth": 128,
+      "uploadedHeight": 128,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "checkedInStudio": false,
+      "exportSha256": "e62900c66ab1a824404763b7954af18da944201b683e67259097a86c6b958d77",
+      "portraitExportFile": "assets/export/portraits/tower_voltz_L3B_256.png",
+      "portraitRobloxAssetId": 83141527644561
+    }
+  ],
+  "schemaNotes": "Campos adicionais: exportSha256, portraitExportFile, portraitRobloxAssetId, uploadFile, backingColor. Status: pending_upload | exported_pending_upload | uploaded. checkedInStudio só após carregamento verificado.",
+  "uploadLog": "assets/export/upload_log.json"
+}

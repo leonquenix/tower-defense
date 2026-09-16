@@ -1,0 +1,357 @@
+{
+  "project": "Quintal em Guarda",
+  "documentVersion": "1.1",
+  "pathBase": "Tower Defense root",
+  "inventoryExcludesItself": true,
+  "fileCount": 69,
+  "pngCount": 43,
+  "gameAssetPngCount": 40,
+  "referencePngCount": 3,
+  "files": [
+    {
+      "file": "00_COMECE_AQUI.md",
+      "bytes": 2546,
+      "sha256": "5c40012c749620bf1caa6bb8f9ef124eec2628c9c4175123bbb474512bfb3011"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/CATALOGO.html",
+      "bytes": 22651,
+      "sha256": "710a4e2b5a2734ca97a23a299daf0aab70afd380ab12628f7e73222da5fe5cf8"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/LEIA_PRIMEIRO.md",
+      "bytes": 4425,
+      "sha256": "d709f183dcf244a00fdabfc6a82cea0bc1c7758575488e992087deed753fec39"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/PREVIA_FASES.html",
+      "bytes": 6156,
+      "sha256": "8cfa37ccac9cc5444bb03822d3264cb234d1b2d809dae8bd929faf60d5a252ee"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/PROMPT_CLAUDE_INTEGRACAO.md",
+      "bytes": 2518,
+      "sha256": "391c0d5ee3fcd7307b101a209a59c9ff35ba71c2d48d5d84391f96fbd7d86caf"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/cenario/base_farol_pilha_v001.png",
+      "bytes": 836405,
+      "sha256": "d18695cac5ba571d3abaee0eb73fdd7f404ad8ea8ed480145c4a6a2c1c3cac0e"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/cenario/prop_jardim_pedra_papelao_v001.png",
+      "bytes": 990225,
+      "sha256": "e711989c9f2d5200b2fb32b5fad3d1db2c87e5961e2844046fc8bbe3792e6bef"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/cenario/prop_jardim_planta_papel_v001.png",
+      "bytes": 1179991,
+      "sha256": "3032e5960494703a2c3e07bf503899e65ef0061f7df2880e1d718047cb6a4f66"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/cenario/prop_oficina_caixa_ferramentas_v001.png",
+      "bytes": 1470830,
+      "sha256": "f5a8afb997e943e3b4ab51e2bb44411ef78391140aa6755b815ba709c91d2332"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/cenario/prop_oficina_parafuso_v001.png",
+      "bytes": 1060056,
+      "sha256": "586a219eca566c938c90ce6d5c4c5a8d4488d0e3a02fedcffda3ba01996fbc0e"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/cenario/prop_sotao_estrela_papel_v001.png",
+      "bytes": 1088091,
+      "sha256": "777e1c25e43f2da1cdf88f965a9485a4d6b497da2219a615c7fe5e112b457168"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/cenario/prop_sotao_livros_v001.png",
+      "bytes": 1731215,
+      "sha256": "b435d1dc3cd98f2f8b6f63434f7774b688c7d843439a45b56215123e13dc3858"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/fases/map_jardim_ground_v001.png",
+      "bytes": 2715205,
+      "sha256": "99af6a72a3e1ae898b272ae32d1894ff4d124072a011fd577cf816415e22aacb"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/fases/map_oficina_ground_v001.png",
+      "bytes": 1946458,
+      "sha256": "52f4861ea5f2f50ebee59148872beb437a97d989b208146abef2f80239fa4258"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/fases/map_sotao_ground_v001.png",
+      "bytes": 2220752,
+      "sha256": "92f578945c690ccbb7b25865f6f4772ccb49d289c89562ecbeaa7cac93a6f8f2"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/layout_fases.json",
+      "bytes": 4130,
+      "sha256": "e36eb3e92c711ca86035fb9f3d7cff8d4e83921a5d16922ecaeacf55984e1e55"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/manifesto_assets.json",
+      "bytes": 43444,
+      "sha256": "32efa4fd8f02ec26546f75bad000f3ab4f2e2feaca1a7104dc8c3ea4694c4a3d"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/prompts_geracao.json",
+      "bytes": 55400,
+      "sha256": "0565512f10857264727d7562b69f92507b92bd517217aa50c0b75cd7d225942b"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L0_v001.png",
+      "bytes": 1130637,
+      "sha256": "97b9edae4e2b167cafd5b1b6019b3289bad5a02ab75c2cac46e3509ff72963b9"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L1_v001.png",
+      "bytes": 1073685,
+      "sha256": "ce89d5780a36b68c3b10c38eebf0e49491c1effcd0e47567d7cba9cfc927de99"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L2_v001.png",
+      "bytes": 1159979,
+      "sha256": "fab1c6570b4ce1d17503009bdb7887d5cf7795d86376f1aeb46486f0ee84229e"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L3A_v001.png",
+      "bytes": 1132736,
+      "sha256": "82dda5f9f99bf716f832eef91fa26780285daa178fc1c260461da6b3f6692f7c"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_dardo_L3B_v001.png",
+      "bytes": 1082027,
+      "sha256": "1bafb03e10d3e765d3ee98acd8c3a326bb78efa2056ba4966bb1fe131800b0db"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L0_v001.png",
+      "bytes": 1110667,
+      "sha256": "1fae7bdcc1e4c22b469200d7f81edc98bd1f018e5deb7a2724e102765727f94c"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L1_v001.png",
+      "bytes": 1043715,
+      "sha256": "2b44f753d8fde2f752b86b0e78a8f1b31a0ec83fb3502cf650779399c2468bb4"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L2_v001.png",
+      "bytes": 1029397,
+      "sha256": "a47a29da3f1a62ce04383a7afedc449204e519aff1d0cf0a081ce3f39fa5e73b"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L3A_v001.png",
+      "bytes": 1043826,
+      "sha256": "03a20e80d357ed0b0c2d19e0e00761d193f0aa59b78508579f73e23121c8b68a"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_goma_L3B_v001.png",
+      "bytes": 914988,
+      "sha256": "6c8dd96ada927aa84eb5fb81a823ca0e48fdd38d0601e9fc5af29295e2544441"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L0_v001.png",
+      "bytes": 1173223,
+      "sha256": "4629b2ae358e5dad6345ebbf8feda0a7994089cd1e2524c03b8a33e9040b387a"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L1_v001.png",
+      "bytes": 1149729,
+      "sha256": "e18233d7292deaca4b04c723412d78b255545e2ea523b98596988020cb028f09"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L2_v001.png",
+      "bytes": 1163455,
+      "sha256": "efb777d321261f21f42b2c530e0512224baab56e4929c92e70e6ece0fb647d00"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L3A_v001.png",
+      "bytes": 939988,
+      "sha256": "d522c0df2c83522a50d1b89c45f343b035bf0b350efe6bbba6fe9307060f435b"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_lupa_L3B_v001.png",
+      "bytes": 1083223,
+      "sha256": "7f5d31de1ce2b837febb0b309e3ce6c07e37740f8ffe49c41a508891e70467c2"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L0_v001.png",
+      "bytes": 1106218,
+      "sha256": "4cd399f7cb0decf2f9ebcf71ecd05869b39facba840b4d69eb1aac1c80287fc0"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L1_v001.png",
+      "bytes": 1046433,
+      "sha256": "9e6841ed55eb9e88e1662deb1c5e539bfe51326bcd85aef52a7b08b7b0cf757e"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L2_v001.png",
+      "bytes": 1156254,
+      "sha256": "4b64574efbfef1e55f1d97b4ba323ad6c5ba89a73135e6b497be866fe713780e"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L3A_v001.png",
+      "bytes": 943369,
+      "sha256": "8af1656699005d2aa7b4a3fc60a64245176aed972fbd638bd326cece84d51348"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_maestro_L3B_v001.png",
+      "bytes": 979933,
+      "sha256": "0a6ea107452e2f30ec2f3033f4f20f578e45c9d9f3f15305f5084ca1e1d4c8cc"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L0_v001.png",
+      "bytes": 1150954,
+      "sha256": "d7198d031face2fa24aab3d9be075dfdcf3f215c1a22b5458d7b05e561f267ca"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L1_v001.png",
+      "bytes": 1119082,
+      "sha256": "0df99c28bd4495cec779224fbe5c061fc33fda397e73fba763d0b3a5b1a948de"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L2_v001.png",
+      "bytes": 1132425,
+      "sha256": "80402dd30cababf95e51587ae243670e23196a99fdd3b89dd4c96af914c64e65"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L3A_v001.png",
+      "bytes": 1311681,
+      "sha256": "79afde4acedd326cc58204f145f96eaf7d8479e3978f23a305ab557087e0aa35"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_pipoca_L3B_v001.png",
+      "bytes": 1222760,
+      "sha256": "4ba39a194b78cdb6e556dbdb93df335c6c76fde59962526d0c8468ef9d620094"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L0_v001.png",
+      "bytes": 676686,
+      "sha256": "625c4b758c7d1a3a950d0abcd2bc476e00063bbb5059dfb83994e2a621125d64"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L1_v001.png",
+      "bytes": 650759,
+      "sha256": "adf2d2f6562d009165e682db03eb91ef6855903c51fa3a3b109f3b64a3c99dff"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L2_v001.png",
+      "bytes": 646572,
+      "sha256": "27780cd5bef93390314e3b62db8c92aef6ddc498944208366d13e6558cac6d44"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L3A_v001.png",
+      "bytes": 651308,
+      "sha256": "0d9de3336044af5dfc356e2e7f04bcf246462f9b45eaa4c6b93d07cff640b80b"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/torres/tower_voltz_L3B_v001.png",
+      "bytes": 627877,
+      "sha256": "8d79e0df6f6eec4cb807d9d59d3809d3260ee053ed99171710df13a18561eeed"
+    },
+    {
+      "file": "Assets_Quintal_em_Guarda_v1/verificacao_arquivos.json",
+      "bytes": 629,
+      "sha256": "36ccd17a7c675c30b8a624ed8aa8d0652310df7a89f5d9b9ef4544dd721ff8c8"
+    },
+    {
+      "file": "CLAUDE.md",
+      "bytes": 2418,
+      "sha256": "490e017b304dc0dfe95c35b69f39ddaeb3dbc79c64cf048ee28b145ef3494320"
+    },
+    {
+      "file": "Pacote_Claude_Code/00_LEIA_PRIMEIRO.md",
+      "bytes": 2974,
+      "sha256": "1cbec6ff76f0c06f2fcc6e036554f63a00a826dd92692eeb308d3997c7495353"
+    },
+    {
+      "file": "Pacote_Claude_Code/01_GAME_DESIGN.md",
+      "bytes": 28232,
+      "sha256": "b70e0406091a1728e714646f4852833d8d509371dc23cc00943cb542160e7fc9"
+    },
+    {
+      "file": "Pacote_Claude_Code/02_ESPECIFICACAO_TECNICA.md",
+      "bytes": 25663,
+      "sha256": "2e43881cc2243ebd4ec5f0ea0b8a2feeecddced58b0a012ff3c6ee7571b60aa6"
+    },
+    {
+      "file": "Pacote_Claude_Code/03_DIRECAO_DE_ARTE.md",
+      "bytes": 17673,
+      "sha256": "85cc227dcbd9aec72682da529e4c5c671fde8d66690868f0b5db85403c1b143b"
+    },
+    {
+      "file": "Pacote_Claude_Code/04_TESTES_E_ACEITE.md",
+      "bytes": 5771,
+      "sha256": "a754f63f4fc11c486dadbd5d35155c21f16f20dd4a0e8ee5a075a4babd0a5bc4"
+    },
+    {
+      "file": "Pacote_Claude_Code/05_PROMPT_PARA_CLAUDE_CODE.md",
+      "bytes": 6293,
+      "sha256": "38c330ff798ac031be642fafb40b7b001f3a19dbed9335c213c05ff0d2c70e65"
+    },
+    {
+      "file": "Pacote_Claude_Code/06_CATALOGO_NUMERICO.md",
+      "bytes": 6348,
+      "sha256": "606bf5b6abbc8d1adb35c2a12a72771bea5c01f9b9b990645a074de73433acb8"
+    },
+    {
+      "file": "Pacote_Claude_Code/07_FONTES.md",
+      "bytes": 4373,
+      "sha256": "cecb9c277191e2e454148c7d39e70933bf4901d3a8fa7f92d3c3cc203075659e"
+    },
+    {
+      "file": "Pacote_Claude_Code/08_USO_DE_ASSETS_E_ANIMACOES.md",
+      "bytes": 16649,
+      "sha256": "e9c2745c03d31507bdbed8a11c29f24bd8198d49336ebed490bd2b3b34976165"
+    },
+    {
+      "file": "Pacote_Claude_Code/arte/PROMPT_CONCEITO.txt",
+      "bytes": 2006,
+      "sha256": "4c85e6532cda58f953459d17a72c8c0167658699ac3fc11ec8b053b38bbded23"
+    },
+    {
+      "file": "Pacote_Claude_Code/arte/interface_combate.png",
+      "bytes": 89222,
+      "sha256": "c9be0a1eb640f69db4dc3ed9902a73cfe2cc0e17ed2badfe2fdeaa3f43cfbb6e"
+    },
+    {
+      "file": "Pacote_Claude_Code/arte/paleta.png",
+      "bytes": 37384,
+      "sha256": "2ad91a402df269c2b9778781360f11f63ad47ebcf34ab1f7ebe087193186b6df"
+    },
+    {
+      "file": "Pacote_Claude_Code/arte/prancha_conceito.png",
+      "bytes": 2566492,
+      "sha256": "22d20f285dd491176f70ef3526fb42f40a9238abf1c0360bcfe46d79bbe76998"
+    },
+    {
+      "file": "Pacote_Claude_Code/dados/balanceamento_v1.json",
+      "bytes": 20957,
+      "sha256": "7f8e175ba96578d95f9340704a278be34a72b8a7484497a199322dab884966cb"
+    },
+    {
+      "file": "Quintal_em_Guarda_Documento_Completo.docx",
+      "bytes": 2722754,
+      "sha256": "ac1140c0097c4df1174f77f2b940c639b869232a83481b49bd8165c205746d73"
+    },
+    {
+      "file": "Quintal_em_Guarda_Documento_Completo.pdf",
+      "bytes": 1364866,
+      "sha256": "267f4ebb835fd431123775634a55d2067cf57fca0a24d69926458ce8189a515a"
+    },
+    {
+      "file": "animation_plan.json",
+      "bytes": 4953,
+      "sha256": "72882039a3e0cdf7a6cfc0196834930392e504c5d3606f7074baa1e6f85f225d"
+    },
+    {
+      "file": "asset_index.json",
+      "bytes": 33141,
+      "sha256": "3edb666823e698ae2ce80997b0733449ab4b871b2d51cb3f3be90fa7943a4c34"
+    },
+    {
+      "file": "runtime_asset_registry.json",
+      "bytes": 16326,
+      "sha256": "a017cb80df3838136a2a562b9fe18359775a78346b378ebd8a34d250cc056847"
+    }
+  ]
+}

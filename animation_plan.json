@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "status": "specification_only",
+  "timeBasis": "simulation seconds for combat; real seconds for UI",
+  "eventIdentity": [
+    "entityId",
+    "attackSeq"
+  ],
+  "eventOrdering": "deduplicate; ignore obsolete cosmetic events; server state remains authoritative",
+  "reducedMotion": {
+    "disableIdle": true,
+    "disableRecoil": true,
+    "disableRotation": true,
+    "allowShortOutlineFeedback": true
+  },
+  "lifecycle": [
+    "idle",
+    "action",
+    "restore_visual_transform",
+    "idle"
+  ],
+  "onUpgrade": "cancel current action; change state texture once; preserve logical point and feet; restart presentation",
+  "onRemove": "cancel animations; release pooled effects and connections",
+  "towers": {
+    "dardo": {
+      "status": "specified_not_implemented",
+      "idle": {
+        "periodSimSeconds": 1.6,
+        "scaleYRange": [
+          1,
+          1.015
+        ],
+        "scaleXRange": [
+          1,
+          1
+        ],
+        "rotationDegreesRange": [
+          0,
+          0
+        ]
+      },
+      "action": {
+        "type": "attack_cosmetic",
+        "durationSimSeconds": 0.22,
+        "recoilPixelsAt128": 3,
+        "scaleYMinimum": 1,
+        "scaleUniformMaximum": 1,
+        "minimumPulseIntervalSimSeconds": null,
+        "appliesDamage": false
+      }
+    },
+    "pipoca": {
+      "status": "specified_not_implemented",
+      "idle": {
+        "periodSimSeconds": 2,
+        "scaleYRange": [
+          1,
+          1.015
+        ],
+        "scaleXRange": [
+          1,
+          1
+        ],
+        "rotationDegreesRange": [
+          0,
+          0
+        ]
+      },
+      "action": {
+        "type": "attack_cosmetic",
+        "durationSimSeconds": 0.3,
+        "recoilPixelsAt128": 0,
+        "scaleYMinimum": 0.94,
+        "scaleUniformMaximum": 1,
+        "minimumPulseIntervalSimSeconds": null,
+        "appliesDamage": false
+      }
+    },
+    "lupa": {
+      "status": "specified_not_implemented",
+      "idle": {
+        "periodSimSeconds": 2.4,
+        "scaleYRange": [
+          1,
+          1.008
+        ],
+        "scaleXRange": [
+          1,
+          1
+        ],
+        "rotationDegreesRange": [
+          0,
+          0
+        ]
+      },
+      "action": {
+        "type": "attack_cosmetic",
+        "durationSimSeconds": 0.24,
+        "recoilPixelsAt128": 2,
+        "scaleYMinimum": 1,
+        "scaleUniformMaximum": 1,
+        "minimumPulseIntervalSimSeconds": null,
+        "appliesDamage": false
+      }
+    },
+    "goma": {
+      "status": "specified_not_implemented",
+      "idle": {
+        "periodSimSeconds": 1.8,
+        "scaleYRange": [
+          0.98,
+          1
+        ],
+        "scaleXRange": [
+          1,
+          1.02
+        ],
+        "rotationDegreesRange": [
+          0,
+          0
+        ]
+      },
+      "action": {
+        "type": "attack_cosmetic",
+        "durationSimSeconds": 0.28,
+        "recoilPixelsAt128": 0,
+        "scaleYMinimum": 0.95,
+        "scaleUniformMaximum": 1,
+        "minimumPulseIntervalSimSeconds": null,
+        "appliesDamage": false
+      }
+    },
+    "voltz": {
+      "status": "specified_not_implemented",
+      "idle": {
+        "periodSimSeconds": 1.2,
+        "scaleYRange": [
+          1,
+          1.025
+        ],
+        "scaleXRange": [
+          1,
+          1
+        ],
+        "rotationDegreesRange": [
+          0,
+          0
+        ]
+      },
+      "action": {
+        "type": "attack_cosmetic",
+        "durationSimSeconds": 0.2,
+        "recoilPixelsAt128": 0,
+        "scaleYMinimum": 0.92,
+        "scaleUniformMaximum": 1,
+        "minimumPulseIntervalSimSeconds": null,
+        "appliesDamage": false
+      }
+    },
+    "maestro": {
+      "status": "specified_not_implemented",
+      "idle": {
+        "periodSimSeconds": 1.4,
+        "scaleYRange": [
+          1,
+          1
+        ],
+        "scaleXRange": [
+          1,
+          1
+        ],
+        "rotationDegreesRange": [
+          -1,
+          1
+        ]
+      },
+      "action": {
+        "type": "support_cosmetic_pulse",
+        "durationSimSeconds": 0.3,
+        "recoilPixelsAt128": 0,
+        "scaleYMinimum": 1,
+        "scaleUniformMaximum": 1.03,
+        "minimumPulseIntervalSimSeconds": 1,
+        "appliesDamage": false
+      }
+    }
+  },
+  "drawnAtlas": {
+    "status": "not_produced",
+    "frameWidth": 128,
+    "frameHeight": 128,
+    "atlasWidth": 1024,
+    "atlasHeight": 1024,
+    "columns": 8,
+    "rows": 8,
+    "stateRows": {
+      "L0": 0,
+      "L1": 1,
+      "L2": 2,
+      "L3A": 3,
+      "L3B": 4
+    },
+    "clips": {
+      "idle": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "action": [
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    "unusedRows": [
+      5,
+      6,
+      7
+    ],
+    "baseFPS": 12,
+    "framesPerTower": 40,
+    "framesAllTowers": 240,
+    "sixAtlasesRequired": true,
+    "doNotCountRepeatedStaticImagesAsFinishedAnimation": true
+  }
+}

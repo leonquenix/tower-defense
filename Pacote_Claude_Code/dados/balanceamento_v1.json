@@ -1,0 +1,1170 @@
+{
+  "version": "1.0.0",
+  "status": "seed_balance_not_playtested",
+  "grid": {
+    "columns": 16,
+    "rows": 10,
+    "cellUnits": 1,
+    "virtualWidth": 960,
+    "virtualHeight": 600
+  },
+  "baseHP": 100,
+  "startingCash": 650,
+  "tickRate": 20,
+  "snapshotRate": 10,
+  "towers": [
+    {
+      "id": "dardo",
+      "name": "Dardo",
+      "role": "Ataque direto",
+      "starter": true,
+      "unlock": 0,
+      "damageType": "physical",
+      "target": "first",
+      "perPlayerLimit": 6,
+      "states": {
+        "L0": {
+          "cost": 250,
+          "damage": 10,
+          "interval": 0.8,
+          "range": 2.5
+        },
+        "L1": {
+          "cost": 200,
+          "damage": 16,
+          "interval": 0.75,
+          "range": 2.7
+        },
+        "L2": {
+          "cost": 450,
+          "damage": 28,
+          "interval": 0.7,
+          "range": 2.9
+        },
+        "L3A": {
+          "cost": 900,
+          "damage": 46,
+          "interval": 0.55,
+          "range": 3.1
+        },
+        "L3B": {
+          "cost": 1000,
+          "damage": 42,
+          "interval": 0.75,
+          "range": 3.4,
+          "armorIgnore": 1
+        }
+      },
+      "branchNames": [
+        "Rajada",
+        "Fura lata"
+      ]
+    },
+    {
+      "id": "pipoca",
+      "name": "Pipoca",
+      "role": "Explosão em área",
+      "starter": true,
+      "unlock": 0,
+      "damageType": "physical",
+      "target": "first",
+      "perPlayerLimit": 4,
+      "states": {
+        "L0": {
+          "cost": 450,
+          "damage": 20,
+          "interval": 1.8,
+          "range": 2.8,
+          "splash": 1,
+          "maxTargets": 6
+        },
+        "L1": {
+          "cost": 300,
+          "damage": 34,
+          "interval": 1.7,
+          "range": 3,
+          "splash": 1.1,
+          "maxTargets": 6
+        },
+        "L2": {
+          "cost": 600,
+          "damage": 60,
+          "interval": 1.6,
+          "range": 3.2,
+          "splash": 1.2,
+          "maxTargets": 8
+        },
+        "L3A": {
+          "cost": 1200,
+          "damage": 95,
+          "interval": 1.4,
+          "range": 3.4,
+          "splash": 1.7,
+          "maxTargets": 10
+        },
+        "L3B": {
+          "cost": 1200,
+          "damage": 115,
+          "interval": 1.8,
+          "range": 3.6,
+          "splash": 1.1,
+          "maxTargets": 6,
+          "armorIgnore": 0.5
+        }
+      },
+      "branchNames": [
+        "Festival",
+        "Demolidora"
+      ]
+    },
+    {
+      "id": "lupa",
+      "name": "Lupa",
+      "role": "Dano contra elites",
+      "starter": false,
+      "unlock": 240,
+      "damageType": "physical",
+      "target": "strongest",
+      "perPlayerLimit": 4,
+      "states": {
+        "L0": {
+          "cost": 500,
+          "damage": 55,
+          "interval": 2.5,
+          "range": 5
+        },
+        "L1": {
+          "cost": 350,
+          "damage": 85,
+          "interval": 2.3,
+          "range": 5.3
+        },
+        "L2": {
+          "cost": 700,
+          "damage": 145,
+          "interval": 2.1,
+          "range": 5.6
+        },
+        "L3A": {
+          "cost": 1400,
+          "damage": 280,
+          "interval": 2.2,
+          "range": 6,
+          "bossBonus": 0.25
+        },
+        "L3B": {
+          "cost": 1300,
+          "damage": 170,
+          "interval": 1.6,
+          "range": 6,
+          "mark": 0.1,
+          "markDuration": 3
+        }
+      },
+      "branchNames": [
+        "Olho de águia",
+        "Observadora"
+      ]
+    },
+    {
+      "id": "goma",
+      "name": "Goma",
+      "role": "Lentidão",
+      "starter": true,
+      "unlock": 0,
+      "damageType": "energy",
+      "target": "first",
+      "perPlayerLimit": 4,
+      "states": {
+        "L0": {
+          "cost": 300,
+          "damage": 3,
+          "interval": 1,
+          "range": 2.3,
+          "slow": 0.2,
+          "slowDuration": 1.5
+        },
+        "L1": {
+          "cost": 200,
+          "damage": 5,
+          "interval": 1,
+          "range": 2.5,
+          "slow": 0.25,
+          "slowDuration": 1.8
+        },
+        "L2": {
+          "cost": 400,
+          "damage": 8,
+          "interval": 0.9,
+          "range": 2.7,
+          "slow": 0.3,
+          "slowDuration": 2
+        },
+        "L3A": {
+          "cost": 850,
+          "damage": 10,
+          "interval": 0.9,
+          "range": 3,
+          "slow": 0.3,
+          "slowDuration": 2,
+          "splash": 1,
+          "maxTargets": 5
+        },
+        "L3B": {
+          "cost": 850,
+          "damage": 12,
+          "interval": 0.8,
+          "range": 3,
+          "slow": 0.45,
+          "slowDuration": 2.5
+        }
+      },
+      "branchNames": [
+        "Poça",
+        "Supercola"
+      ]
+    },
+    {
+      "id": "voltz",
+      "name": "Voltz",
+      "role": "Corrente elétrica",
+      "starter": false,
+      "unlock": 600,
+      "damageType": "energy",
+      "target": "first",
+      "perPlayerLimit": 4,
+      "states": {
+        "L0": {
+          "cost": 550,
+          "damage": 20,
+          "interval": 1.3,
+          "range": 2.4,
+          "chains": 2,
+          "chainRadius": 1.5,
+          "chainFalloff": 0.75
+        },
+        "L1": {
+          "cost": 350,
+          "damage": 30,
+          "interval": 1.2,
+          "range": 2.6,
+          "chains": 3,
+          "chainRadius": 1.5,
+          "chainFalloff": 0.75
+        },
+        "L2": {
+          "cost": 650,
+          "damage": 48,
+          "interval": 1.1,
+          "range": 2.8,
+          "chains": 3,
+          "chainRadius": 1.5,
+          "chainFalloff": 0.75
+        },
+        "L3A": {
+          "cost": 1250,
+          "damage": 60,
+          "interval": 1,
+          "range": 3,
+          "chains": 5,
+          "chainRadius": 1.7,
+          "chainFalloff": 0.8
+        },
+        "L3B": {
+          "cost": 1250,
+          "damage": 90,
+          "interval": 1.15,
+          "range": 3,
+          "chains": 2,
+          "chainRadius": 1.5,
+          "chainFalloff": 0.75,
+          "bossBonus": 0.2
+        }
+      },
+      "branchNames": [
+        "Tempestade",
+        "Alta tensão"
+      ]
+    },
+    {
+      "id": "maestro",
+      "name": "Maestro",
+      "role": "Apoio de velocidade",
+      "starter": false,
+      "unlock": 450,
+      "damageType": "none",
+      "target": "none",
+      "perPlayerLimit": 2,
+      "states": {
+        "L0": {
+          "cost": 500,
+          "damage": 0,
+          "interval": 0,
+          "range": 2.2,
+          "haste": 0.08
+        },
+        "L1": {
+          "cost": 300,
+          "damage": 0,
+          "interval": 0,
+          "range": 2.4,
+          "haste": 0.12
+        },
+        "L2": {
+          "cost": 600,
+          "damage": 0,
+          "interval": 0,
+          "range": 2.6,
+          "haste": 0.16
+        },
+        "L3A": {
+          "cost": 1150,
+          "damage": 0,
+          "interval": 0,
+          "range": 3.2,
+          "haste": 0.18
+        },
+        "L3B": {
+          "cost": 1150,
+          "damage": 0,
+          "interval": 0,
+          "range": 2.6,
+          "haste": 0.25
+        }
+      },
+      "branchNames": [
+        "Orquestra",
+        "Solo"
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "id": "fiapo",
+      "name": "Fiapo",
+      "hp": 24,
+      "speed": 1.25,
+      "bounty": 8,
+      "leak": 2,
+      "armor": 0
+    },
+    {
+      "id": "corrisco",
+      "name": "Corrisco",
+      "hp": 32,
+      "speed": 2.05,
+      "bounty": 10,
+      "leak": 3,
+      "armor": 0
+    },
+    {
+      "id": "bolota",
+      "name": "Bolota",
+      "hp": 150,
+      "speed": 0.85,
+      "bounty": 22,
+      "leak": 6,
+      "armor": 0
+    },
+    {
+      "id": "latinha",
+      "name": "Latinha",
+      "hp": 115,
+      "speed": 1,
+      "bounty": 20,
+      "leak": 5,
+      "armor": 0.45
+    },
+    {
+      "id": "nevoa",
+      "name": "Névoa",
+      "hp": 75,
+      "speed": 1.45,
+      "bounty": 17,
+      "leak": 4,
+      "armor": 0,
+      "energyResistance": 0.35
+    },
+    {
+      "id": "remendo",
+      "name": "Remendo",
+      "hp": 180,
+      "speed": 1,
+      "bounty": 28,
+      "leak": 6,
+      "armor": 0,
+      "healPulse": 12,
+      "healRadius": 1.5,
+      "healInterval": 3
+    },
+    {
+      "id": "casulo",
+      "name": "Casulo",
+      "hp": 230,
+      "speed": 0.9,
+      "bounty": 30,
+      "leak": 8,
+      "armor": 0.15,
+      "splitOnDeath": 3
+    },
+    {
+      "id": "brutamontes",
+      "name": "Brutamontes",
+      "hp": 600,
+      "speed": 0.65,
+      "bounty": 65,
+      "leak": 14,
+      "armor": 0.25
+    }
+  ],
+  "waves": [
+    {
+      "wave": 1,
+      "groups": [
+        {
+          "enemy": "fiapo",
+          "count": 12
+        }
+      ],
+      "spawnInterval": 1.1,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 135
+    },
+    {
+      "wave": 2,
+      "groups": [
+        {
+          "enemy": "fiapo",
+          "count": 16
+        }
+      ],
+      "spawnInterval": 1.1,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 150
+    },
+    {
+      "wave": 3,
+      "groups": [
+        {
+          "enemy": "fiapo",
+          "count": 12
+        },
+        {
+          "enemy": "corrisco",
+          "count": 6
+        }
+      ],
+      "spawnInterval": 1.1,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 165
+    },
+    {
+      "wave": 4,
+      "groups": [
+        {
+          "enemy": "fiapo",
+          "count": 20
+        },
+        {
+          "enemy": "bolota",
+          "count": 2
+        }
+      ],
+      "spawnInterval": 1.1,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 180
+    },
+    {
+      "wave": 5,
+      "groups": [
+        {
+          "enemy": "corrisco",
+          "count": 12
+        },
+        {
+          "enemy": "bolota",
+          "count": 4
+        }
+      ],
+      "spawnInterval": 0.85,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 195
+    },
+    {
+      "wave": 6,
+      "groups": [
+        {
+          "enemy": "fiapo",
+          "count": 20
+        },
+        {
+          "enemy": "latinha",
+          "count": 6
+        }
+      ],
+      "spawnInterval": 0.85,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 210
+    },
+    {
+      "wave": 7,
+      "groups": [
+        {
+          "enemy": "corrisco",
+          "count": 16
+        },
+        {
+          "enemy": "latinha",
+          "count": 8
+        }
+      ],
+      "spawnInterval": 0.85,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 225
+    },
+    {
+      "wave": 8,
+      "groups": [
+        {
+          "enemy": "bolota",
+          "count": 6
+        },
+        {
+          "enemy": "nevoa",
+          "count": 12
+        }
+      ],
+      "spawnInterval": 0.85,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 240
+    },
+    {
+      "wave": 9,
+      "groups": [
+        {
+          "enemy": "fiapo",
+          "count": 24
+        },
+        {
+          "enemy": "latinha",
+          "count": 10
+        },
+        {
+          "enemy": "remendo",
+          "count": 2
+        }
+      ],
+      "spawnInterval": 0.85,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 255
+    },
+    {
+      "wave": 10,
+      "groups": [
+        {
+          "enemy": "corrisco",
+          "count": 20
+        },
+        {
+          "enemy": "bolota",
+          "count": 8
+        },
+        {
+          "enemy": "remendo",
+          "count": 3
+        }
+      ],
+      "spawnInterval": 0.85,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 270
+    },
+    {
+      "wave": 11,
+      "groups": [
+        {
+          "enemy": "nevoa",
+          "count": 18
+        },
+        {
+          "enemy": "casulo",
+          "count": 5
+        }
+      ],
+      "spawnInterval": 0.65,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 285
+    },
+    {
+      "wave": 12,
+      "groups": [
+        {
+          "enemy": "latinha",
+          "count": 16
+        },
+        {
+          "enemy": "casulo",
+          "count": 6
+        }
+      ],
+      "spawnInterval": 0.65,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 300
+    },
+    {
+      "wave": 13,
+      "groups": [
+        {
+          "enemy": "corrisco",
+          "count": 24
+        },
+        {
+          "enemy": "brutamontes",
+          "count": 2
+        },
+        {
+          "enemy": "remendo",
+          "count": 4
+        }
+      ],
+      "spawnInterval": 0.65,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 315
+    },
+    {
+      "wave": 14,
+      "groups": [
+        {
+          "enemy": "nevoa",
+          "count": 20
+        },
+        {
+          "enemy": "latinha",
+          "count": 18
+        },
+        {
+          "enemy": "casulo",
+          "count": 6
+        }
+      ],
+      "spawnInterval": 0.65,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 330
+    },
+    {
+      "wave": 15,
+      "groups": [
+        {
+          "enemy": "brutamontes",
+          "count": 4
+        },
+        {
+          "enemy": "remendo",
+          "count": 5
+        },
+        {
+          "enemy": "bolota",
+          "count": 12
+        }
+      ],
+      "spawnInterval": 0.65,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 345
+    },
+    {
+      "wave": 16,
+      "groups": [
+        {
+          "enemy": "corrisco",
+          "count": 30
+        },
+        {
+          "enemy": "casulo",
+          "count": 10
+        },
+        {
+          "enemy": "latinha",
+          "count": 18
+        }
+      ],
+      "spawnInterval": 0.65,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 360
+    },
+    {
+      "wave": 17,
+      "groups": [
+        {
+          "enemy": "brutamontes",
+          "count": 6
+        },
+        {
+          "enemy": "nevoa",
+          "count": 24
+        },
+        {
+          "enemy": "remendo",
+          "count": 6
+        }
+      ],
+      "spawnInterval": 0.65,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 375
+    },
+    {
+      "wave": 18,
+      "groups": [
+        {
+          "enemy": "latinha",
+          "count": 25
+        },
+        {
+          "enemy": "casulo",
+          "count": 12
+        },
+        {
+          "enemy": "brutamontes",
+          "count": 5
+        }
+      ],
+      "spawnInterval": 0.65,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 390
+    },
+    {
+      "wave": 19,
+      "groups": [
+        {
+          "enemy": "corrisco",
+          "count": 32
+        },
+        {
+          "enemy": "brutamontes",
+          "count": 8
+        },
+        {
+          "enemy": "remendo",
+          "count": 7
+        }
+      ],
+      "spawnInterval": 0.65,
+      "groupGap": 2,
+      "bossAfterGroups": false,
+      "income": 405
+    },
+    {
+      "wave": 20,
+      "groups": [
+        {
+          "enemy": "fiapo",
+          "count": 20
+        },
+        {
+          "enemy": "latinha",
+          "count": 14
+        },
+        {
+          "enemy": "remendo",
+          "count": 4
+        }
+      ],
+      "spawnInterval": 0.65,
+      "groupGap": 2,
+      "bossAfterGroups": true,
+      "income": 420
+    }
+  ],
+  "maps": [
+    {
+      "id": "jardim",
+      "name": "Jardim de Papel",
+      "unlock": "tutorial",
+      "hpMultiplier": 1,
+      "path": [
+        [
+          0,
+          2
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          9,
+          6
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          13,
+          3
+        ],
+        [
+          13,
+          8
+        ],
+        [
+          15,
+          8
+        ]
+      ],
+      "blocked": [
+        [
+          1,
+          8
+        ],
+        [
+          2,
+          8
+        ],
+        [
+          11,
+          0
+        ],
+        [
+          12,
+          0
+        ],
+        [
+          0,
+          9
+        ]
+      ],
+      "boss": "aspirador"
+    },
+    {
+      "id": "oficina",
+      "name": "Oficina de Lata",
+      "unlock": "win:jardim:normal",
+      "hpMultiplier": 1.12,
+      "path": [
+        [
+          0,
+          7
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          11,
+          7
+        ],
+        [
+          11,
+          3
+        ],
+        [
+          15,
+          3
+        ]
+      ],
+      "blocked": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          14,
+          9
+        ],
+        [
+          15,
+          9
+        ],
+        [
+          8,
+          9
+        ]
+      ],
+      "boss": "rei_ferrugem"
+    },
+    {
+      "id": "sotao",
+      "name": "Sótão das Estrelas",
+      "unlock": "win:oficina:normal",
+      "hpMultiplier": 1.25,
+      "path": [
+        [
+          0,
+          1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          8
+        ],
+        [
+          10,
+          8
+        ],
+        [
+          10,
+          2
+        ],
+        [
+          14,
+          2
+        ],
+        [
+          14,
+          6
+        ],
+        [
+          15,
+          6
+        ]
+      ],
+      "blocked": [
+        [
+          8,
+          0
+        ],
+        [
+          9,
+          0
+        ],
+        [
+          6,
+          9
+        ],
+        [
+          7,
+          9
+        ],
+        [
+          15,
+          0
+        ]
+      ],
+      "boss": "breu"
+    }
+  ],
+  "bosses": [
+    {
+      "id": "aspirador",
+      "name": "Aspirador Rabugento",
+      "hp": 7000,
+      "speed": 0.4,
+      "armor": 0.15,
+      "leak": 100,
+      "bounty": 0,
+      "mechanic": "dust_pulse",
+      "period": 14,
+      "telegraph": 2,
+      "duration": 4,
+      "radius": 2,
+      "attackSlow": 0.25
+    },
+    {
+      "id": "rei_ferrugem",
+      "name": "Rei Ferrugem",
+      "hp": 8500,
+      "speed": 0.4,
+      "armor": 0.2,
+      "leak": 100,
+      "bounty": 0,
+      "mechanic": "armor_cycle",
+      "period": 14,
+      "telegraph": 2,
+      "duration": 5,
+      "extraArmor": 0.35
+    },
+    {
+      "id": "breu",
+      "name": "Breu debaixo da cama",
+      "hp": 10000,
+      "speed": 0.4,
+      "armor": 0.1,
+      "leak": 100,
+      "bounty": 0,
+      "mechanic": "summon",
+      "period": 16,
+      "telegraph": 2,
+      "summonType": "corrisco",
+      "summonCount": 4
+    }
+  ],
+  "partyMax": 4,
+  "serverMaxPlayers": 12,
+  "loadoutSlots": 4,
+  "playerTowerLimitsByPartySize": [
+    18,
+    12,
+    10,
+    8
+  ],
+  "coopAdditionalHPPerPlayer": 0.7,
+  "preparationSeconds": 15,
+  "intermissionSeconds": 8,
+  "sellRefund": 0.7,
+  "difficulties": {
+    "normal": {
+      "hp": 1,
+      "speed": 1,
+      "winButtons": 120
+    },
+    "desafio": {
+      "hp": 1.45,
+      "speed": 1.1,
+      "winButtons": 160
+    }
+  },
+  "pulse": {
+    "damage": 180,
+    "damageType": "energy",
+    "slow": 0.3,
+    "slowDuration": 3,
+    "cooldown": 60,
+    "startsCharged": true,
+    "scaleDamageWithCoop": true
+  },
+  "effects": {
+    "slowCap": 0.5,
+    "bossSlowStrength": 0.35,
+    "physicalArmorCap": 0.8,
+    "hasteStacking": "maximum",
+    "slowStacking": "maximum",
+    "markStacking": "maximum"
+  },
+  "rewards": {
+    "tutorialButtons": 180,
+    "lossButtonsPerWave": 4,
+    "lossButtonsCap": 60,
+    "masteryWin": 10,
+    "masteryLoss": 4,
+    "masteryLossMinWaves": 5,
+    "masteryMinPlacedSeconds": 30,
+    "masteryMilestones": [
+      30,
+      100,
+      250
+    ]
+  },
+  "circuits": [
+    {
+      "id": "pega_e_acerta",
+      "pair": [
+        "dardo",
+        "goma"
+      ],
+      "effect": "damage_vs_slowed",
+      "value": 0.15
+    },
+    {
+      "id": "mira_explosiva",
+      "pair": [
+        "pipoca",
+        "lupa"
+      ],
+      "effect": "splash_radius_add",
+      "value": 0.2
+    },
+    {
+      "id": "ritmo_eletrico",
+      "pair": [
+        "voltz",
+        "maestro"
+      ],
+      "effect": "chain_falloff_add",
+      "value": 0.1,
+      "cap": 0.9
+    }
+  ],
+  "shop": {
+    "enabledByDefault": false,
+    "founderPassId": null,
+    "proposedRobuxPrice": 149
+  },
+  "tutorial": {
+    "startingCash": 1200,
+    "waves": [
+      [
+        {
+          "enemy": "fiapo",
+          "count": 6
+        }
+      ],
+      [
+        {
+          "enemy": "fiapo",
+          "count": 6
+        },
+        {
+          "enemy": "corrisco",
+          "count": 4
+        }
+      ],
+      [
+        {
+          "enemy": "bolota",
+          "count": 2
+        },
+        {
+          "enemy": "fiapo",
+          "count": 8
+        }
+      ]
+    ],
+    "guidedCells": {
+      "dardo": [
+        3,
+        3
+      ],
+      "goma": [
+        3,
+        4
+      ]
+    }
+  }
+}
