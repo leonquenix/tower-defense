@@ -188,6 +188,8 @@ algo que não foi visto rodando.
 | Tokens e animações | `python3 tools/import_ui_tokens.py` | OK, com checagem de contraste embutida |
 | Ícones | `python3 tools/export_ui_icons.py` | 24 exportados, 24 pendentes de upload (nenhum id inventado) |
 | Cobertura das pranchas | `python3 tools/check_ui_coverage.py` | 49/49 declaradas e validadas contra `telas.json` |
+| Regeneração completa dos módulos gerados | `import_balance` + `update_asset_registry` + `import_ui_tokens` + `export_ui_icons` | sem diferença no repositório: o que está versionado é exatamente o que as ferramentas produzem |
+| Build do lugar | `rojo build default.project.json -o build/QuintalEmGuarda.rbxl` | gerado (287 KB, só código e configuração) |
 
 Specs novos: `07_ui_tokens` (paleta, contraste, receitas de animação, biblioteca de ícones) e
 `08_ui_state` (convites com expiração e cooldown, máquina de estados da conexão, recompensa
