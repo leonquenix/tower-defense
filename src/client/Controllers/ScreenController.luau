@@ -534,6 +534,13 @@ function ScreenController.init(playerGui: PlayerGui)
 	buildScreens()
 	registerScreens()
 
+	-- Uma resposta atrasada atualiza o store mesmo que a tela de origem já tenha fechado.
+	CommandAdapter.observe(function(_, response)
+		if response.ok and typeof(response.profile) == "table" then
+			Store.setProfile(response.profile)
+		end
+	end)
+
 	PlayController.init(hudLayer, {
 		onLeft = function()
 			inMatch = false

@@ -457,6 +457,9 @@ local strings: { [string]: { [string]: string } } = {
 		["hud.trainingNotice"] = "Treino sem recompensa · Sucata ilimitada",
 		["hud.trainingClearConfirm"] = "Remove todos os inimigos e torres criados neste treino. Nada do seu progresso é afetado.",
 		["hud.trainingClearAction"] = "Limpar",
+		["hud.speedVotes"] = "votar {votes}/{total}",
+		["hud.armorPhysicalHint"] = "Armadura reduz o dano físico. Energia (Voltz, Pulso) e Fura lata passam por ela.",
+		["hud.armorEnergyHint"] = "Resistência a energia reduz dano de Voltz e do Pulso. Ataques físicos continuam inteiros.",
 		-- rótulos acessíveis dos ícones (prancha 49)
 		["icon.back"] = "Voltar",
 		["icon.base"] = "Farol",
@@ -924,6 +927,9 @@ local strings: { [string]: { [string]: string } } = {
 		["hud.trainingNotice"] = "Training, no rewards · Unlimited scrap",
 		["hud.trainingClearConfirm"] = "Removes every enemy and tower created in this training. None of your progress is affected.",
 		["hud.trainingClearAction"] = "Clear",
+		["hud.speedVotes"] = "vote {votes}/{total}",
+		["hud.armorPhysicalHint"] = "Armor reduces physical damage. Energy (Voltz, Pulse) and Can-piercer go through it.",
+		["hud.armorEnergyHint"] = "Energy resistance reduces Voltz and Pulse damage. Physical attacks land in full.",
 		-- accessible icon labels (board 49)
 		["icon.back"] = "Back",
 		["icon.base"] = "Lighthouse",

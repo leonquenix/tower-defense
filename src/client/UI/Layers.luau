@@ -117,9 +117,4 @@ function Layers.content(name: string): Frame
 	return Layers.get(name).content
 end
 
--- Bloqueia a entrada nas camadas de baixo enquanto existe um modal aberto.
-function Layers.setModalBlocking(blocking: boolean)
-	layers.modal.content.Active = blocking
-end
-
 return Layers

@@ -1032,14 +1032,4 @@ function Components.emptyState(parent: Instance?, name: string, text: string, pr
 	return holder
 end
 
--- Divisória sutil entre blocos de uma ficha
-function Components.divider(parent: Instance?, order: number): Frame
-	return Components.frame(parent, "Divider" .. order, {
-		Size = UDim2.new(1, 0, 0, 1),
-		BackgroundColor3 = Theme.colors.sageDeep,
-		LayoutOrder = order,
-		Active = false,
-	})
-end
-
 return Components

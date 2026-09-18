@@ -429,14 +429,8 @@ local function handleEvents(view: MatchController.MatchView, events: { Types.Net
 			AudioController.play("boss_spawn", true)
 			lastBossBannerAt = os.clock()
 		elseif e.kind == "bossTelegraph" and e.enemyDefId then
-			hud:setBossBanner(
-				L(
-					"boss.telegraph",
-					{ name = L("enemy." .. e.enemyDefId), ability = L("boss." .. e.enemyDefId .. ".ability") }
-				)
-			)
+			-- o aviso com contagem vive na BossBar (derivado de simTime); aqui só o som
 			AudioController.play("boss_telegraph", true)
-			lastBossBannerAt = os.clock()
 		elseif e.kind == "bossAbility" then
 			AudioController.play("boss_ability", true)
 			task.delay(2, function()

@@ -9,10 +9,12 @@ local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Theme = require(script.Parent.Theme)
 local Ui = require(script.Parent.Ui)
+local Components = require(script.Parent.Parent.UI.Components)
 
 local HudPanels = require(script.Parent.HudPanels)
 local Modal = require(script.Parent.Parent.UI.Modal)
 local Store = require(script.Parent.Parent.UI.Store)
+local Toasts = require(script.Parent.Parent.UI.Toasts)
 local MatchController = require(script.Parent.Parent.Controllers.MatchController)
 local Motion = require(script.Parent.Motion)
 local Responsive = require(script.Parent.Responsive)
@@ -690,6 +692,7 @@ function Hud.new(parent: GuiObject, callbacks: Callbacks, mobile: boolean): Hud
 	})
 	self.wavePreview = wavePreview
 
+	-- anúncio curto da chegada do chefe; vida, aviso e efeito ativo ficam na BossBar
 	self.bossBanner = Ui.label(root, "BossBanner", "", {
 		Size = UDim2.new(0, 10, 0, if mobile then 26 else 34),
 		AutomaticSize = Enum.AutomaticSize.X,
@@ -769,6 +772,8 @@ function Hud.new(parent: GuiObject, callbacks: Callbacks, mobile: boolean): Hud
 	-- ------------------------------------------------------------------
 	-- Painéis contextuais (chefe, alvo, velocidade, opções e conexão)
 	-- ------------------------------------------------------------------
+	-- a fila de avisos desce abaixo da faixa superior para não cobrir nada do HUD
+	Toasts.setTopOffset(if mobile then SIDE_GAP + 8 else TOP_HEIGHT + 24)
 	self.bossBar = HudPanels.bossBar(root, mobile)
 	self.targetMenu = HudPanels.targetMenu(root)
 	self.speedPopover = HudPanels.speedPopover(root)
@@ -969,15 +974,10 @@ function Hud.update(self: Hud, view: MatchController.MatchView, wallet: number, 
 		self.pulseButton:setEnabled(false, if phase == "Wave" then "" else L("hud.pulseReady"))
 		self.pulseButton:setText(L("hud.pulse"), "")
 	elseif pulseReady then
-		if os.clock() < self.pulseArmedUntil then
-			self.pulseButton:setEnabled(true, "")
-			self.pulseButton:setText(L("common.confirm") .. "?", "")
-			self.pulseButton:setKind("primary")
-		else
-			self.pulseButton:setEnabled(true, "")
-			self.pulseButton:setText(L("hud.pulse"), L("hud.pulseReady"))
-			self.pulseButton:setKind("cyan")
-		end
+		-- o primeiro toque abre a confirmação (tela 20); o botão nunca dispara sozinho
+		self.pulseButton:setEnabled(true, "")
+		self.pulseButton:setText(L("hud.pulse"), L("hud.pulseReady"))
+		self.pulseButton:setKind("cyan")
 	else
 		self.pulseButton:setEnabled(
 			false,
@@ -999,9 +999,20 @@ function Hud.update(self: Hud, view: MatchController.MatchView, wallet: number, 
 			end
 		end
 	end
+	-- rótulo da prancha 13: "2x • votar 1/2" quando há grupo; sozinho, só a velocidade
+	local speedVotes = 0
+	for _, participant in ipairs(snapshot.participants) do
+		if participant.connected and participant.speedVote == 2 then
+			speedVotes += 1
+		end
+	end
 	self.speedButton:setText(
 		L("hud.speed", { value = snapshot.speedMultiplier }),
-		if #snapshot.participants > 1 then L("hud.speedHint") .. (if mySpeedVote == 2 then " ✓" else "") else ""
+		if #snapshot.participants > 1
+			then L("hud.speedVotes", { votes = speedVotes, total = activeTotal }) .. (if mySpeedVote == 2
+				then " ✓"
+				else "")
+			else ""
 	)
 	self.speedButton:setEnabled(snapshot.mode ~= "tutorial", if snapshot.mode == "tutorial" then "1x" else nil)
 	self.speedButton:setKind(if snapshot.speedMultiplier == 2 then "primary" else "dark")
@@ -1509,22 +1520,25 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 			if ev.armorBonus > 0 then
 				text ..= " ↑"
 			end
-			add(Ui.label(body, "Armor", text, {
+			local armorLabel = Ui.label(body, "Armor", text, {
 				Size = UDim2.new(1, 0, 0, 20),
 				TextSize = 14,
 				TextColor3 = if ev.armorBonus > 0 then Theme.colors.goldText else Theme.colors.sandDark,
 				ZIndex = 7,
-			}))
+			})
+			add(armorLabel)
+			-- o contrajogo vem da resistência real, numa frase (guia, prancha 45)
+			Components.tooltip(armorLabel, L("hud.armorPhysicalHint"))
 		end
 		if ev.energyResistance > 0 then
-			add(
-				Ui.label(
-					body,
-					"Energy",
-					"◈ " .. L("hud.armorEnergy", { value = math.floor(ev.energyResistance * 100 + 0.5) }),
-					{ Size = UDim2.new(1, 0, 0, 20), TextSize = 14, TextColor3 = Theme.colors.cyan, ZIndex = 7 }
-				)
+			local energyLabel = Ui.label(
+				body,
+				"Energy",
+				"◈ " .. L("hud.armorEnergy", { value = math.floor(ev.energyResistance * 100 + 0.5) }),
+				{ Size = UDim2.new(1, 0, 0, 20), TextSize = 14, TextColor3 = Theme.colors.cyan, ZIndex = 7 }
 			)
+			add(energyLabel)
+			Components.tooltip(energyLabel, L("hud.armorEnergyHint"))
 		end
 		if ev.isBoss and Localization.has("boss." .. ev.defId .. ".ability") then
 			add(
