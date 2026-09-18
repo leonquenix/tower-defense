@@ -48,7 +48,8 @@ Registro de progresso por marco (o que mudou, o que foi verificado, o que falta)
 - Servidor: `RespondInvite` com token, expiração de 30 s e cooldown de 5 s por destinatário; os cosméticos dos marcos de domínio (30/100/250) passaram a ser concedidos de fato em `ProfileSchema.applyMatchResult` e chegam ao cliente pelo resultado.
 - Localização: 247 chaves novas em PT-BR e EN (462 no total), incluindo os rótulos acessíveis dos 24 ícones.
 - Verificado no Studio (sessão de Play, 1090×693): camadas, entrada com perfil indisponível, menu, coleção, detalhe de torre (Lupa 240 botões / 500 sucatas), carregamento, tutorial 1–3, construção com débito só após ACK, venda devolvendo 175, opções em combate e troca PT-BR/EN ao vivo, sem erro no console. Seis defeitos encontrados e corrigidos — ver `docs/TEST_REPORT.md` seção 8.
-- Pendente: upload dos 24 ícones, dois a quatro clientes, perfil persistido, matriz de dispositivos, partida completa até o chefe e estados da loja. A matriz linha a linha está em `docs/UI_COVERAGE.md`.
+- Ícones enviados em 2026-09-18 pela conta logada no Studio (IDs em `assets/export/ui_upload_log.json`), com 24/24 carregando numa sessão de Play.
+- Pendente: moderação dos ícones, dois a quatro clientes, perfil persistido, matriz de dispositivos, partida completa até o chefe e estados da loja. A matriz linha a linha está em `docs/UI_COVERAGE.md`.
 
 ## M6 Candidato — não iniciado (depende de ações externas)
 - Publicação, DataStore em produção, telemetria em produção, desempenho medido em aparelhos nomeados, playtest. Ver `docs/MANUAL_ACTIONS.md`.

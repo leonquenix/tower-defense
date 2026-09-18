@@ -40,4 +40,4 @@ A base fica em `src/client/UI/` (Accessibility, Anim, Focus, Components, Modal, 
 
 `Config/UiTokens.luau`, `Config/UiMotion.luau` e `Config/UiIcons.luau` são **gerados** por `tools/import_ui_tokens.py` e `tools/export_ui_icons.py`; altere o JSON do pacote e rode as ferramentas. O gerador de tokens falha quando um par texto/fundo cai abaixo do contraste mínimo. `tools/check_ui_coverage.py` valida `docs/ui_coverage.json` contra as 49 pranchas e gera `docs/UI_COVERAGE.md`: ao mexer numa tela, atualize a linha dela.
 
-Os 24 ícones ainda **não foram enviados**: `UiIcons` traz `image = nil` e o cliente desenha um glifo de reserva. A tabela de upload (arquivo → chave → campo) está em `docs/MANUAL_ACTIONS.md`. Não invente `rbxassetid`.
+Os 24 ícones foram enviados em 2026-09-18 e `UiIcons` traz os IDs reais; a moderação ainda não foi conferida. O código continua tolerando `image = nil` (glifo de reserva), e a ferramenta nunca inventa `rbxassetid`: sem `assets/export/ui_upload_log.json`, ela volta a emitir `nil`. Tabela e procedimento em `docs/MANUAL_ACTIONS.md`.

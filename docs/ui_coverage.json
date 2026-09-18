@@ -9,395 +9,760 @@
   "boards": {
     "01_entrada": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/Boot.luau"],
-      "states": ["carregando", "demora 10 s", "perfil indisponível", "tentativa pendente"],
+      "modules": [
+        "src/client/UI/Screens/Boot.luau"
+      ],
+      "states": [
+        "carregando",
+        "demora 10 s",
+        "perfil indisponível",
+        "tentativa pendente"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Play no Studio sem acesso a DataStore: a variante de perfil indisponível apareceu com Tentar novamente e Treino."
     },
     "02_inicio": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/MainMenu.luau"],
-      "states": ["perfil pronto", "primeiro acesso (tutorial)", "perfil indisponível", "loja oculta"],
+      "modules": [
+        "src/client/UI/Screens/MainMenu.luau"
+      ],
+      "states": [
+        "perfil pronto",
+        "primeiro acesso (tutorial)",
+        "perfil indisponível",
+        "loja oculta"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Menu renderizado com Jogar dourado único, saldo separado e loja ausente (feature flag desligada)."
     },
     "03_mapas": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/Maps.luau"],
-      "states": ["seleção", "mapa bloqueado", "desafio bloqueado", "integrante sem desbloqueio"],
+      "modules": [
+        "src/client/UI/Screens/Maps.luau"
+      ],
+      "states": [
+        "seleção",
+        "mapa bloqueado",
+        "desafio bloqueado",
+        "integrante sem desbloqueio"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Estados de bloqueio vêm de profile.mapUnlocks; falta exercitar com perfil persistido."
     },
     "04_salas": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/Rooms.luau"],
-      "states": ["carregando", "lista", "vazia", "sala cheia", "já em grupo", "erro"],
+      "modules": [
+        "src/client/UI/Screens/Rooms.luau"
+      ],
+      "states": [
+        "carregando",
+        "lista",
+        "vazia",
+        "sala cheia",
+        "já em grupo",
+        "erro"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Disputa da última vaga exige dois clientes; ver docs/MANUAL_ACTIONS.md."
     },
     "05_grupo": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/PartyScreen.luau"],
-      "states": ["líder", "membro", "prontidão", "vaga livre", "mapa bloqueado para um membro"],
+      "modules": [
+        "src/client/UI/Screens/PartyScreen.luau"
+      ],
+      "states": [
+        "líder",
+        "membro",
+        "prontidão",
+        "vaga livre",
+        "mapa bloqueado para um membro"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Requer dois clientes."
     },
     "06_colecao": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/CollectionScreen.luau"],
-      "states": ["possuída", "equipada", "bloqueada", "equipe cheia", "salvando", "leitura em partida"],
+      "modules": [
+        "src/client/UI/Screens/CollectionScreen.luau"
+      ],
+      "states": [
+        "possuída",
+        "equipada",
+        "bloqueada",
+        "equipe cheia",
+        "salvando",
+        "leitura em partida"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Seis cartas com custo de desbloqueio e de construção, quatro vagas e Salvar com motivo."
     },
     "07_torre": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/TowerDetail.luau"],
-      "states": ["possuída", "bloqueada", "saldo insuficiente", "já equipada"],
+      "modules": [
+        "src/client/UI/Screens/TowerDetail.luau"
+      ],
+      "states": [
+        "possuída",
+        "bloqueada",
+        "saldo insuficiente",
+        "já equipada"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Lupa mostrou 240 botões para desbloquear e 500 sucatas para construir, com Faltam 240 botões."
     },
     "08_cosmeticos": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/Cosmetics.luau"],
-      "states": ["marco alcançado", "marco pendente", "equipado", "arte pendente"],
+      "modules": [
+        "src/client/UI/Screens/Cosmetics.luau"
+      ],
+      "states": [
+        "marco alcançado",
+        "marco pendente",
+        "equipado",
+        "arte pendente"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Concessão por marco exige um resultado salvo; ver pendências."
     },
     "09_loja": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/ShopScreen.luau"],
-      "states": ["consultando", "indisponível", "disponível", "aguardando Roblox", "cancelado", "possuído"],
+      "modules": [
+        "src/client/UI/Screens/ShopScreen.luau"
+      ],
+      "states": [
+        "consultando",
+        "indisponível",
+        "disponível",
+        "aguardando Roblox",
+        "cancelado",
+        "possuído"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Sem passe criado, o servidor responde enabled=false; os demais estados dependem de um passe real."
     },
     "10_opcoes": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/SettingsScreen.luau"],
-      "states": ["sliders", "toggles", "idioma", "falha ao salvar", "aberta em partida"],
+      "modules": [
+        "src/client/UI/Screens/SettingsScreen.luau"
+      ],
+      "states": [
+        "sliders",
+        "toggles",
+        "idioma",
+        "falha ao salvar",
+        "aberta em partida"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Aberta durante a onda 1 do tutorial: o combate seguiu e a troca PT-BR/EN reescreveu moldura, tela e HUD."
     },
     "11_carregamento": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/MatchLoading.luau"],
-      "states": ["progresso real", "imagem falhou", "demora 10 s", "voltar aos 20 s"],
+      "modules": [
+        "src/client/UI/Screens/MatchLoading.luau"
+      ],
+      "states": [
+        "progresso real",
+        "imagem falhou",
+        "demora 10 s",
+        "voltar aos 20 s"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Exibida entre StartMatch e o primeiro snapshot; progresso contou os assets essenciais resolvidos."
     },
     "12_preparacao": {
       "kind": "screen",
-      "modules": ["src/client/View/Hud.luau"],
-      "states": ["preparação", "intervalo", "pronto", "contagem por simTime"],
+      "modules": [
+        "src/client/View/Hud.luau"
+      ],
+      "states": [
+        "preparação",
+        "intervalo",
+        "pronto",
+        "contagem por simTime"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Faixa superior mostrou Farol 100/100, Onda 00/03 e Pronto; a onda começou pelo servidor."
     },
     "13_combate": {
       "kind": "screen",
-      "modules": ["src/client/View/Hud.luau", "src/client/View/HudPanels.luau"],
-      "states": ["onda ativa", "grupo", "opções", "limites"],
+      "modules": [
+        "src/client/View/Hud.luau",
+        "src/client/View/HudPanels.luau"
+      ],
+      "states": [
+        "onda ativa",
+        "grupo",
+        "opções",
+        "limites"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Onda 01/03 com HUD completo; Opções abriu com grupo em leitura, Configurações e Sair."
     },
     "14_posicionar": {
       "kind": "screen",
-      "modules": ["src/client/Controllers/PlayController.luau", "src/client/View/Hud.luau"],
-      "states": ["escolhendo célula", "válida", "pendente", "construída", "rejeitada"],
+      "modules": [
+        "src/client/Controllers/PlayController.luau",
+        "src/client/View/Hud.luau"
+      ],
+      "states": [
+        "escolhendo célula",
+        "válida",
+        "pendente",
+        "construída",
+        "rejeitada"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Construir Dardo debitou 250 de 1.200 e o contador foi para 1/18 só após o ACK."
     },
     "15_posicao_invalida": {
       "kind": "screen",
-      "modules": ["src/client/Controllers/PlayController.luau", "src/client/View/BoardRenderer.luau"],
-      "states": ["caminho", "bloqueada", "ocupada", "limite", "sem saldo"],
+      "modules": [
+        "src/client/Controllers/PlayController.luau",
+        "src/client/View/BoardRenderer.luau"
+      ],
+      "states": [
+        "caminho",
+        "bloqueada",
+        "ocupada",
+        "limite",
+        "sem saldo"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Motivos vêm de evaluateCell; falta percorrer as quatro bordas com zoom e pan."
     },
     "16_torre_selecionada": {
       "kind": "screen",
-      "modules": ["src/client/View/Hud.luau"],
-      "states": ["própria", "aliada (leitura)", "L3 máxima", "comando pendente"],
+      "modules": [
+        "src/client/View/Hud.luau"
+      ],
+      "states": [
+        "própria",
+        "aliada (leitura)",
+        "L3 máxima",
+        "comando pendente"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Dardo L0 abriu com comparação inline e as ações fixas na base do painel."
     },
     "17_especializacao": {
       "kind": "screen",
-      "modules": ["src/client/View/Hud.luau", "src/client/UI/Modal.luau"],
-      "states": ["comparação", "confirmação", "pendente", "saldo insuficiente"],
+      "modules": [
+        "src/client/View/Hud.luau",
+        "src/client/UI/Modal.luau"
+      ],
+      "states": [
+        "comparação",
+        "confirmação",
+        "pendente",
+        "saldo insuficiente"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige chegar a L2 numa partida completa."
     },
     "18_venda": {
       "kind": "screen",
-      "modules": ["src/client/View/Hud.luau", "src/client/UI/Modal.luau"],
-      "states": ["confirmação", "pendente", "sucesso", "torre já removida"],
+      "modules": [
+        "src/client/View/Hud.luau",
+        "src/client/UI/Modal.luau"
+      ],
+      "states": [
+        "confirmação",
+        "pendente",
+        "sucesso",
+        "torre já removida"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Dardo L0 devolveu 175 sucatas; Cancelar era o foco inicial e a seleção foi limpa no sucesso."
     },
     "19_chefe": {
       "kind": "screen",
-      "modules": ["src/client/View/HudPanels.luau"],
-      "states": ["vivo", "aviso com contagem", "efeito ativo"],
+      "modules": [
+        "src/client/View/HudPanels.luau"
+      ],
+      "states": [
+        "vivo",
+        "aviso com contagem",
+        "efeito ativo"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige chegar à onda de chefe ou gerar no treino."
     },
     "20_pulso": {
       "kind": "screen",
-      "modules": ["src/client/Controllers/PlayController.luau", "src/client/UI/Modal.luau"],
-      "states": ["disponível", "confirmação", "pendente", "recarga", "usado por aliado"],
+      "modules": [
+        "src/client/Controllers/PlayController.luau",
+        "src/client/UI/Modal.luau"
+      ],
+      "states": [
+        "disponível",
+        "confirmação",
+        "pendente",
+        "recarga",
+        "usado por aliado"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Confirmação simultânea exige dois clientes."
     },
     "21_tutorial": {
       "kind": "screen",
-      "modules": ["src/client/View/Hud.luau", "src/client/Controllers/PlayController.luau"],
-      "states": ["cinco passos", "repetição", "pular"],
+      "modules": [
+        "src/client/View/Hud.luau",
+        "src/client/Controllers/PlayController.luau"
+      ],
+      "states": [
+        "cinco passos",
+        "repetição",
+        "pular"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Passos 1 a 3 percorridos: colocar Dardo, iniciar onda e a instrução do Circuito com Goma."
     },
     "22_treino": {
       "kind": "screen",
-      "modules": ["src/client/View/Hud.luau"],
-      "states": ["seletor de inimigo", "gerar 1/10", "limpar com confirmação", "indicadores"],
+      "modules": [
+        "src/client/View/Hud.luau"
+      ],
+      "states": [
+        "seletor de inimigo",
+        "gerar 1/10",
+        "limpar com confirmação",
+        "indicadores"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Falta uma sessão de treino completa com chefes."
     },
     "23_vitoria": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/ResultScreen.luau"],
-      "states": ["salvo", "revanche", "destaques"],
+      "modules": [
+        "src/client/UI/Screens/ResultScreen.luau"
+      ],
+      "states": [
+        "salvo",
+        "revanche",
+        "destaques"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige vencer uma partida com perfil persistido."
     },
     "24_derrota": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/ResultScreen.luau"],
-      "states": ["ondas concluídas", "dica", "revanche"],
+      "modules": [
+        "src/client/UI/Screens/ResultScreen.luau"
+      ],
+      "states": [
+        "ondas concluídas",
+        "dica",
+        "revanche"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige perder uma partida."
     },
     "25_recompensa_pendente": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/ResultScreen.luau"],
-      "states": ["pendente", "não registrado", "confirmado", "espera progressiva"],
+      "modules": [
+        "src/client/UI/Screens/ResultScreen.luau"
+      ],
+      "states": [
+        "pendente",
+        "não registrado",
+        "confirmado",
+        "espera progressiva"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige falha de persistência controlada."
     },
     "26_conexao": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/Boot.luau", "src/client/View/HudPanels.luau"],
-      "states": ["perfil indisponível", "sinal instável", "reconciliando"],
+      "modules": [
+        "src/client/UI/Screens/Boot.luau",
+        "src/client/View/HudPanels.luau"
+      ],
+      "states": [
+        "perfil indisponível",
+        "sinal instável",
+        "reconciliando"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Perfil indisponível exercitado; os estados de rede têm cobertura em tests/specs/08_ui_state.spec.luau."
     },
     "27_sair": {
       "kind": "screen",
-      "modules": ["src/client/Controllers/PlayController.luau", "src/client/UI/Modal.luau"],
-      "states": ["confirmação", "pendente"],
+      "modules": [
+        "src/client/Controllers/PlayController.luau",
+        "src/client/UI/Modal.luau"
+      ],
+      "states": [
+        "confirmação",
+        "pendente"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Modal montado pelo mesmo caminho da venda, que foi verificado."
     },
     "28_mobile_combate": {
       "kind": "screen",
-      "modules": ["src/client/View/Hud.luau"],
-      "states": ["colunas laterais", "slots inferiores", "alvos de 44 px"],
+      "modules": [
+        "src/client/View/Hud.luau"
+      ],
+      "states": [
+        "colunas laterais",
+        "slots inferiores",
+        "alvos de 44 px"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige emulação de dispositivo em 844x390."
     },
     "29_mobile_posicionar": {
       "kind": "screen",
-      "modules": ["src/client/View/BoardTransform.luau", "src/client/Controllers/PlayController.luau"],
-      "states": ["região ampliada", "pan com dois dedos", "visão completa"],
+      "modules": [
+        "src/client/View/BoardTransform.luau",
+        "src/client/Controllers/PlayController.luau"
+      ],
+      "states": [
+        "região ampliada",
+        "pan com dois dedos",
+        "visão completa"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige toque real."
     },
     "30_orientacao": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/Orientation.luau"],
-      "states": ["fora de partida", "em partida"],
+      "modules": [
+        "src/client/UI/Screens/Orientation.luau"
+      ],
+      "states": [
+        "fora de partida",
+        "em partida"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige emulação em 390x844."
     },
     "31_estados": {
       "kind": "library",
-      "modules": ["src/client/UI/Components.luau", "src/client/UI/Toasts.luau", "src/client/View/HudPanels.luau"],
-      "states": ["botões", "toasts", "tooltip", "dropdown de alvo", "popover de velocidade"],
+      "modules": [
+        "src/client/UI/Components.luau",
+        "src/client/UI/Toasts.luau",
+        "src/client/View/HudPanels.luau"
+      ],
+      "states": [
+        "botões",
+        "toasts",
+        "tooltip",
+        "dropdown de alvo",
+        "popover de velocidade"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Componentes exercitados pelas telas; não existe página de biblioteca no jogo publicado."
     },
     "32_desbloqueio": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/TowerDetail.luau", "src/client/UI/Modal.luau"],
-      "states": ["confirmação", "pendente", "sem saldo", "já possuída"],
+      "modules": [
+        "src/client/UI/Screens/TowerDetail.luau",
+        "src/client/UI/Modal.luau"
+      ],
+      "states": [
+        "confirmação",
+        "pendente",
+        "sem saldo",
+        "já possuída"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige saldo de botões num perfil persistido."
     },
     "33_convites": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/Invites.luau", "src/client/UI/InviteCards.luau", "src/server/Services/PartyService.luau"],
-      "states": ["convidar", "enviado", "cooldown", "aceito", "recusado", "expirado", "grupo cheio"],
+      "modules": [
+        "src/client/UI/Screens/Invites.luau",
+        "src/client/UI/InviteCards.luau",
+        "src/server/Services/PartyService.luau"
+      ],
+      "states": [
+        "convidar",
+        "enviado",
+        "cooldown",
+        "aceito",
+        "recusado",
+        "expirado",
+        "grupo cheio"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Token, expiração de 30 s e cooldown de 5 s cobertos em tests/specs/08_ui_state.spec.luau; o fluxo real exige dois clientes."
     },
     "34_inimigo": {
       "kind": "screen",
-      "modules": ["src/client/View/Hud.luau"],
-      "states": ["vida", "resistências", "habilidade", "morte fecha a ficha"],
+      "modules": [
+        "src/client/View/Hud.luau"
+      ],
+      "states": [
+        "vida",
+        "resistências",
+        "habilidade",
+        "morte fecha a ficha"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige inimigo vivo no tabuleiro."
     },
     "35_mobile_menu": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/MainMenu.luau"],
-      "states": ["compacto", "texto ampliado sem arte"],
+      "modules": [
+        "src/client/UI/Screens/MainMenu.luau"
+      ],
+      "states": [
+        "compacto",
+        "texto ampliado sem arte"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige emulação em 844x390."
     },
     "36_mobile_detalhe": {
       "kind": "screen",
-      "modules": ["src/client/View/Hud.luau"],
-      "states": ["folha inferior", "recolher"],
+      "modules": [
+        "src/client/View/Hud.luau"
+      ],
+      "states": [
+        "folha inferior",
+        "recolher"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige emulação em 844x390."
     },
     "37_botoes": {
       "kind": "library",
-      "modules": ["src/client/UI/Components.luau"],
-      "states": ["normal", "foco", "pressionado", "indisponível", "pendente", "sucesso", "erro", "selecionado"],
+      "modules": [
+        "src/client/UI/Components.luau"
+      ],
+      "states": [
+        "normal",
+        "foco",
+        "pressionado",
+        "indisponível",
+        "pendente",
+        "sucesso",
+        "erro",
+        "selecionado"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Um único componente cobre os oito estados; foco, pressionado, indisponível e sucesso vistos no Play."
     },
     "38_confirmacoes": {
       "kind": "library",
-      "modules": ["src/client/UI/Modal.luau"],
-      "states": ["venda", "especialização", "substituição de slot", "limpeza do treino", "tutorial repetido"],
+      "modules": [
+        "src/client/UI/Modal.luau"
+      ],
+      "states": [
+        "venda",
+        "especialização",
+        "substituição de slot",
+        "limpeza do treino",
+        "tutorial repetido"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Família única de modais; foco inicial no cancelamento verificado na venda."
     },
     "39_erros": {
       "kind": "library",
-      "modules": ["src/client/UI/Toasts.luau", "src/client/UI/Components.luau"],
-      "states": ["inline", "toast", "motivo no botão", "código desconhecido"],
+      "modules": [
+        "src/client/UI/Toasts.luau",
+        "src/client/UI/Components.luau"
+      ],
+      "states": [
+        "inline",
+        "toast",
+        "motivo no botão",
+        "código desconhecido"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Cobertura de códigos em tests/specs/08_ui_state.spec.luau."
     },
     "40_grupo_estados": {
       "kind": "library",
-      "modules": ["src/client/UI/InviteCards.luau", "src/client/View/HudPanels.luau"],
-      "states": ["convite", "enviado", "expirado", "votação 2x", "voltar a 1x"],
+      "modules": [
+        "src/client/UI/InviteCards.luau",
+        "src/client/View/HudPanels.luau"
+      ],
+      "states": [
+        "convite",
+        "enviado",
+        "expirado",
+        "votação 2x",
+        "voltar a 1x"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige dois clientes."
     },
     "41_boss_estados": {
       "kind": "library",
-      "modules": ["src/client/View/HudPanels.luau"],
-      "states": ["Aspirador", "Rei Ferrugem", "Breu", "efeito ativo"],
+      "modules": [
+        "src/client/View/HudPanels.luau"
+      ],
+      "states": [
+        "Aspirador",
+        "Rei Ferrugem",
+        "Breu",
+        "efeito ativo"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Uma BossBar por chefe ativo; nunca três painéis comparativos."
     },
     "42_recuperacao": {
       "kind": "library",
-      "modules": ["src/client/UI/Screens/Boot.luau", "src/client/UI/Screens/MatchLoading.luau", "src/client/View/HudPanels.luau"],
-      "states": ["imagem faltando", "recarregar", "perfil bloqueado", "resultado não registrado"],
+      "modules": [
+        "src/client/UI/Screens/Boot.luau",
+        "src/client/UI/Screens/MatchLoading.luau",
+        "src/client/View/HudPanels.luau"
+      ],
+      "states": [
+        "imagem faltando",
+        "recarregar",
+        "perfil bloqueado",
+        "resultado não registrado"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Perfil bloqueado por falta de acesso a DataStore levou ao caminho de treino, sem salvar defaults."
     },
     "43_colecao_estados": {
       "kind": "library",
-      "modules": ["src/client/UI/Screens/CollectionScreen.luau"],
-      "states": ["vaga livre", "compra salva", "partida ativa", "cosmético bloqueado"],
+      "modules": [
+        "src/client/UI/Screens/CollectionScreen.luau"
+      ],
+      "states": [
+        "vaga livre",
+        "compra salva",
+        "partida ativa",
+        "cosmético bloqueado"
+      ],
       "implemented": true,
       "studio": true,
       "evidence": "Vaga livre sem alerta e equipe em leitura durante a partida."
     },
     "44_resultados_estados": {
       "kind": "library",
-      "modules": ["src/client/UI/Screens/ResultScreen.luau"],
-      "states": ["um destaque por vez", "fila finita", "revanche aguardando"],
+      "modules": [
+        "src/client/UI/Screens/ResultScreen.luau"
+      ],
+      "states": [
+        "um destaque por vez",
+        "fila finita",
+        "revanche aguardando"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige resultados reais."
     },
     "45_menus_contextuais": {
       "kind": "library",
-      "modules": ["src/client/View/HudPanels.luau", "src/client/UI/Toasts.luau"],
-      "states": ["alvo", "Circuito", "recarga do Pulso", "toast local"],
+      "modules": [
+        "src/client/View/HudPanels.luau",
+        "src/client/UI/Toasts.luau"
+      ],
+      "states": [
+        "alvo",
+        "Circuito",
+        "recarga do Pulso",
+        "toast local"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Os quatro alvos vêm de Catalog.TARGET_MODES, sem tradução alterando o algoritmo."
     },
     "46_loja_estados": {
       "kind": "library",
-      "modules": ["src/client/UI/Screens/ShopScreen.luau"],
-      "states": ["consulta", "falha", "cancelado", "possuído"],
+      "modules": [
+        "src/client/UI/Screens/ShopScreen.luau"
+      ],
+      "states": [
+        "consulta",
+        "falha",
+        "cancelado",
+        "possuído"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige passe real."
     },
     "47_mobile_colecao": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/CollectionScreen.luau"],
-      "states": ["paginada", "equipe fixa", "salvar fixo"],
+      "modules": [
+        "src/client/UI/Screens/CollectionScreen.luau"
+      ],
+      "states": [
+        "paginada",
+        "equipe fixa",
+        "salvar fixo"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige emulação em 844x390."
     },
     "48_mobile_mapas": {
       "kind": "screen",
-      "modules": ["src/client/UI/Screens/Maps.luau"],
-      "states": ["um cartão por vez", "indicador 1 de 3"],
+      "modules": [
+        "src/client/UI/Screens/Maps.luau"
+      ],
+      "states": [
+        "um cartão por vez",
+        "indicador 1 de 3"
+      ],
       "implemented": true,
       "studio": false,
       "evidence": "Exige emulação em 844x390."
     },
     "49_icones": {
       "kind": "library",
-      "modules": ["src/shared/Config/UiIcons.luau", "src/client/UI/Components.luau"],
-      "states": ["24 ícones", "reserva por glifo", "rótulo acessível"],
+      "modules": [
+        "src/shared/Config/UiIcons.luau",
+        "src/client/UI/Components.luau"
+      ],
+      "states": [
+        "24 ícones enviados",
+        "reserva por glifo",
+        "rótulo acessível"
+      ],
       "implemented": true,
       "studio": true,
-      "evidence": "Sem upload, os 24 ícones desenham o glifo de reserva e mantêm o rótulo; nenhum rbxassetid inventado."
+      "evidence": "Os 24 IDs reais estão no registro e carregaram 24/24 numa sessão de Play; sem upload a ferramenta volta a emitir image = nil e o cliente desenha o glifo."
     }
   }
 }

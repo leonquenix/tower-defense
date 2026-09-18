@@ -64,7 +64,7 @@ compartilhados. Upload dos 24 ícones e publicação continuam pendentes — ver
 | 46_loja_estados | Estados da loja | biblioteca | `client/UI/Screens/ShopScreen.luau` | consulta, falha, cancelado, possuído | sim | pendente | Exige passe real. |
 | 47_mobile_colecao | Coleção no celular | tela | `client/UI/Screens/CollectionScreen.luau` | paginada, equipe fixa, salvar fixo | sim | pendente | Exige emulação em 844x390. |
 | 48_mobile_mapas | Mapas no celular | tela | `client/UI/Screens/Maps.luau` | um cartão por vez, indicador 1 de 3 | sim | pendente | Exige emulação em 844x390. |
-| 49_icones | Ícones funcionais | biblioteca | `shared/Config/UiIcons.luau`<br>`client/UI/Components.luau` | 24 ícones, reserva por glifo, rótulo acessível | sim | sim | Sem upload, os 24 ícones desenham o glifo de reserva e mantêm o rótulo; nenhum rbxassetid inventado. |
+| 49_icones | Ícones funcionais | biblioteca | `shared/Config/UiIcons.luau`<br>`client/UI/Components.luau` | 24 ícones enviados, reserva por glifo, rótulo acessível | sim | sim | Os 24 IDs reais estão no registro e carregaram 24/24 numa sessão de Play; sem upload a ferramenta volta a emitir image = nil e o cliente desenha o glifo. |
 
 ## O que ainda não foi exercitado
 

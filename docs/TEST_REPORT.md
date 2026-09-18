@@ -186,7 +186,7 @@ algo que não foi visto rodando.
 | Lint | `selene src/` | 0 erros, 4 avisos (todos anteriores a esta sessão) |
 | Formatação | `stylua --check src/` | conforme |
 | Tokens e animações | `python3 tools/import_ui_tokens.py` | OK, com checagem de contraste embutida |
-| Ícones | `python3 tools/export_ui_icons.py` | 24 exportados, 24 pendentes de upload (nenhum id inventado) |
+| Ícones | `python3 tools/export_ui_icons.py` | 24 exportados e enviados; IDs reais no registro (nenhum id inventado) |
 | Cobertura das pranchas | `python3 tools/check_ui_coverage.py` | 49/49 declaradas e validadas contra `telas.json` |
 | Regeneração completa dos módulos gerados | `import_balance` + `update_asset_registry` + `import_ui_tokens` + `export_ui_icons` | sem diferença no repositório: o que está versionado é exatamente o que as ferramentas produzem |
 | Build do lugar | `rojo build default.project.json -o build/QuintalEmGuarda.rbxl` | gerado (287 KB, só código e configuração) |
@@ -224,6 +224,7 @@ indisponível).
 | Configurações durante a onda (10) | ✅ sliders, toggles com texto, idioma; o combate não pausou e o texto diz isso |
 | Troca PT-BR ↔ EN (10) | ✅ moldura, tela ativa e HUD reescritos ao vivo |
 | Console | ✅ nenhum erro de script durante toda a sessão |
+| Upload dos 24 ícones (49) | ✅ enviados pelo Studio e verificados em Play: **24/24 com `IsLoaded = true`** |
 
 ### 8.3 Defeitos encontrados no Studio e corrigidos nesta sessão
 
@@ -259,6 +260,8 @@ linha a linha, está em `docs/UI_COVERAGE.md`; em resumo:
   de inimigo (34), treino com chefes (22).
 - **Loja**: todos os estados de 09/46 dependem de um passe criado no Creator Hub.
 - **Latência simulada** de 100/300/1000 ms e contagem de pedidos por ação confirmada.
+- **Moderação dos 24 ícones**: o carregamento foi verificado, mas a moderação do Roblox é
+  assíncrona e pode remover um asset depois; conferir no Creator Hub antes do lançamento.
 
 Nenhuma dessas linhas foi marcada como aprovada. A interface está implementada e integrada; a
 validação em dispositivo e com várias pessoas continua sendo trabalho manual descrito em

@@ -25,56 +25,64 @@ Lista objetiva do que depende da conta Roblox, de produção artística ou de de
 12. Revisar os **apoios sugeridos dos 11 inimigos e chefes**: o manifesto marca `anchorRequiresReview` e o export usou a âncora sugerida pelo autor (Corrisco 0,66 por causa do rastro desenhado; Névoa com apoio virtual sob o corpo flutuante). Conferir em `assets/export/review_enemies_light.png`, `review_enemies_dark.png` e no tabuleiro; se algum personagem parecer flutuar ou afundar, ajustar `sourceAnchorSuggested` no manifesto e rodar `tools/export_enemy_assets.py` de novo.
 13. Verificar **movimento reduzido nos inimigos** pela tela de Configurações (a verificação desta sessão usou o remote `SaveSettings` e não mediu o que pretendia — ver TEST_REPORT 7.3). Esperado: ciclos decorativos param; posição lógica, barras e avisos continuam.
 
-## Ícones da interface (24 arquivos, upload pendente)
+## Ícones da interface (24 arquivos) — **enviados em 2026-09-18**
 
 Os 24 ícones funcionais foram exportados em 128×128 com fundo transparente para `assets/export/ui/`
-a partir de `UI_Quintal_em_Guarda_v1/icones/` (originais preservados, nada recortado). **Nenhum
-`rbxassetid` foi inventado**: enquanto o upload não acontecer, `Config/UiIcons.luau` traz `image = nil`
-e o cliente desenha o glifo de reserva mantendo o rótulo textual — nenhum ícone é a única explicação
-de nada, então a interface funciona inteira sem eles.
+a partir de `UI_Quintal_em_Guarda_v1/icones/` (originais preservados, nada recortado) e **enviados ao
+Asset Server pela conta logada no Studio**, com os IDs reais em `assets/export/ui_upload_log.json`,
+`ui_asset_registry.json` e `Config/UiIcons.luau`. Verificado numa sessão de Play: **24/24 com
+`IsLoaded = true`**.
 
-Para publicá-los:
+Os `.svg` não foram enviados: são fonte de manutenção fora do Studio.
 
-1. No Studio, Asset Manager → Images → Import, selecionando os 24 arquivos de `assets/export/ui/`.
-2. Anotar cada ID em `assets/export/ui_upload_log.json` no formato
-   `{"uploads": {"ui/ui_back_128.png": 123456789, ...}}`.
-3. Rodar `python3 tools/export_ui_icons.py`. Ele reescreve `ui_asset_registry.json`
-   (`robloxAssetId` e `status`) e regenera `src/shared/Config/UiIcons.luau`.
-4. Conferir no Play que os glifos deram lugar às imagens (`tests/specs/07_ui_tokens.spec.luau`
-   já garante que qualquer id preenchido tem o formato `rbxassetid://<número>`).
-5. Não enviar os `.svg`: eles são fonte de manutenção fora do Studio.
+O código continua tolerando a ausência de qualquer ícone — sem `image`, o cliente desenha o glifo de
+reserva e mantém o rótulo textual, então nenhum ícone é a única explicação de nada.
 
-Tabela exata de arquivo → chave → campo a preencher:
+**O que ainda depende de você:**
 
-| Fonte (preservada) | Export para upload | Chave em `ui_upload_log.json` | Chave do asset | Campo a preencher | Reserva atual |
+1. **Moderação**: o Roblox modera imagens de forma assíncrona e pode remover um asset depois.
+   Conferir em Creator Hub → Development Items → Images antes do lançamento. `checkedInStudio`
+   segue `false` no registro até essa conferência.
+2. Se a experiência mudar de grupo, os assets precisam ser reenviados ou o grupo precisa de
+   permissão de uso; repetir `tools/export_ui_icons.py` com o novo `ui_upload_log.json`.
+
+Para reenviar (outra conta, outro grupo ou arte revisada), o caminho é o mesmo: anotar cada ID em
+`assets/export/ui_upload_log.json` no formato `{"uploads": {"ui/ui_back_128.png": 123456789, ...}}`
+e rodar `python3 tools/export_ui_icons.py`, que reescreve `ui_asset_registry.json` e regenera
+`src/shared/Config/UiIcons.luau`. A ferramenta nunca inventa ID: sem log, volta para `image = nil`.
+
+Tabela de arquivo → chave → ID enviado:
+
+| Fonte (preservada) | Export enviado | Chave em `ui_upload_log.json` | Chave do asset | ID no Roblox | Reserva sem imagem |
 |---|---|---|---|---|---|
-| `UI_Quintal_em_Guarda_v1/icones/ui_back_v001.png` | `assets/export/ui/ui_back_128.png` | `ui/ui_back_128.png` | `ui_back` | `assets[].robloxAssetId` | `‹` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_base_v001.png` | `assets/export/ui/ui_base_128.png` | `ui/ui_base_128.png` | `ui_base` | `assets[].robloxAssetId` | `⌂` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_buttons_v001.png` | `assets/export/ui/ui_buttons_128.png` | `ui/ui_buttons_128.png` | `ui_buttons` | `assets[].robloxAssetId` | `◉` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_check_v001.png` | `assets/export/ui/ui_check_128.png` | `ui/ui_check_128.png` | `ui_check` | `assets[].robloxAssetId` | `✓` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_close_v001.png` | `assets/export/ui/ui_close_128.png` | `ui/ui_close_128.png` | `ui_close` | `assets[].robloxAssetId` | `✕` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_cooldown_v001.png` | `assets/export/ui/ui_cooldown_128.png` | `ui/ui_cooldown_128.png` | `ui_cooldown` | `assets[].robloxAssetId` | `◷` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_energy_v001.png` | `assets/export/ui/ui_energy_128.png` | `ui/ui_energy_128.png` | `ui_energy` | `assets[].robloxAssetId` | `◈` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_error_v001.png` | `assets/export/ui/ui_error_128.png` | `ui/ui_error_128.png` | `ui_error` | `assets[].robloxAssetId` | `!` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_group_v001.png` | `assets/export/ui/ui_group_128.png` | `ui/ui_group_128.png` | `ui_group` | `assets[].robloxAssetId` | `◍` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_heal_v001.png` | `assets/export/ui/ui_heal_128.png` | `ui/ui_heal_128.png` | `ui_heal` | `assets[].robloxAssetId` | `+` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_lock_v001.png` | `assets/export/ui/ui_lock_128.png` | `ui/ui_lock_128.png` | `ui_lock` | `assets[].robloxAssetId` | `🔒` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_minus_v001.png` | `assets/export/ui/ui_minus_128.png` | `ui/ui_minus_128.png` | `ui_minus` | `assets[].robloxAssetId` | `−` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_physical_v001.png` | `assets/export/ui/ui_physical_128.png` | `ui/ui_physical_128.png` | `ui_physical` | `assets[].robloxAssetId` | `⛨` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_play_v001.png` | `assets/export/ui/ui_play_128.png` | `ui/ui_play_128.png` | `ui_play` | `assets[].robloxAssetId` | `▶` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_plus_v001.png` | `assets/export/ui/ui_plus_128.png` | `ui/ui_plus_128.png` | `ui_plus` | `assets[].robloxAssetId` | `+` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_pulse_v001.png` | `assets/export/ui/ui_pulse_128.png` | `ui/ui_pulse_128.png` | `ui_pulse` | `assets[].robloxAssetId` | `✷` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_scrap_v001.png` | `assets/export/ui/ui_scrap_128.png` | `ui/ui_scrap_128.png` | `ui_scrap` | `assets[].robloxAssetId` | `✦` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_sell_v001.png` | `assets/export/ui/ui_sell_128.png` | `ui/ui_sell_128.png` | `ui_sell` | `assets[].robloxAssetId` | `⌫` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_settings_v001.png` | `assets/export/ui/ui_settings_128.png` | `ui/ui_settings_128.png` | `ui_settings` | `assets[].robloxAssetId` | `⚙` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_speed_v001.png` | `assets/export/ui/ui_speed_128.png` | `ui/ui_speed_128.png` | `ui_speed` | `assets[].robloxAssetId` | `»` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_target_v001.png` | `assets/export/ui/ui_target_128.png` | `ui/ui_target_128.png` | `ui_target` | `assets[].robloxAssetId` | `◎` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_upgrade_v001.png` | `assets/export/ui/ui_upgrade_128.png` | `ui/ui_upgrade_128.png` | `ui_upgrade` | `assets[].robloxAssetId` | `▲` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_volume_v001.png` | `assets/export/ui/ui_volume_128.png` | `ui/ui_volume_128.png` | `ui_volume` | `assets[].robloxAssetId` | `🔊` |
-| `UI_Quintal_em_Guarda_v1/icones/ui_wave_v001.png` | `assets/export/ui/ui_wave_128.png` | `ui/ui_wave_128.png` | `ui_wave` | `assets[].robloxAssetId` | `〜` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_back_v001.png` | `assets/export/ui/ui_back_128.png` | `ui/ui_back_128.png` | `ui_back` | `88491749815381` | `‹` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_base_v001.png` | `assets/export/ui/ui_base_128.png` | `ui/ui_base_128.png` | `ui_base` | `111920601725235` | `⌂` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_buttons_v001.png` | `assets/export/ui/ui_buttons_128.png` | `ui/ui_buttons_128.png` | `ui_buttons` | `101246403255603` | `◉` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_check_v001.png` | `assets/export/ui/ui_check_128.png` | `ui/ui_check_128.png` | `ui_check` | `104059787042270` | `✓` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_close_v001.png` | `assets/export/ui/ui_close_128.png` | `ui/ui_close_128.png` | `ui_close` | `118214159540710` | `✕` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_cooldown_v001.png` | `assets/export/ui/ui_cooldown_128.png` | `ui/ui_cooldown_128.png` | `ui_cooldown` | `82684451501253` | `◷` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_energy_v001.png` | `assets/export/ui/ui_energy_128.png` | `ui/ui_energy_128.png` | `ui_energy` | `131805218762416` | `◈` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_error_v001.png` | `assets/export/ui/ui_error_128.png` | `ui/ui_error_128.png` | `ui_error` | `104020383943624` | `!` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_group_v001.png` | `assets/export/ui/ui_group_128.png` | `ui/ui_group_128.png` | `ui_group` | `101185371000335` | `◍` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_heal_v001.png` | `assets/export/ui/ui_heal_128.png` | `ui/ui_heal_128.png` | `ui_heal` | `83533878039427` | `+` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_lock_v001.png` | `assets/export/ui/ui_lock_128.png` | `ui/ui_lock_128.png` | `ui_lock` | `104319975182301` | `🔒` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_minus_v001.png` | `assets/export/ui/ui_minus_128.png` | `ui/ui_minus_128.png` | `ui_minus` | `139587755350316` | `−` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_physical_v001.png` | `assets/export/ui/ui_physical_128.png` | `ui/ui_physical_128.png` | `ui_physical` | `110488708842551` | `⛨` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_play_v001.png` | `assets/export/ui/ui_play_128.png` | `ui/ui_play_128.png` | `ui_play` | `76972323672777` | `▶` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_plus_v001.png` | `assets/export/ui/ui_plus_128.png` | `ui/ui_plus_128.png` | `ui_plus` | `112814833650940` | `+` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_pulse_v001.png` | `assets/export/ui/ui_pulse_128.png` | `ui/ui_pulse_128.png` | `ui_pulse` | `77488608610057` | `✷` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_scrap_v001.png` | `assets/export/ui/ui_scrap_128.png` | `ui/ui_scrap_128.png` | `ui_scrap` | `93292805807152` | `✦` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_sell_v001.png` | `assets/export/ui/ui_sell_128.png` | `ui/ui_sell_128.png` | `ui_sell` | `101007725063284` | `⌫` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_settings_v001.png` | `assets/export/ui/ui_settings_128.png` | `ui/ui_settings_128.png` | `ui_settings` | `110525661692700` | `⚙` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_speed_v001.png` | `assets/export/ui/ui_speed_128.png` | `ui/ui_speed_128.png` | `ui_speed` | `78000524487354` | `»` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_target_v001.png` | `assets/export/ui/ui_target_128.png` | `ui/ui_target_128.png` | `ui_target` | `94414571956685` | `◎` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_upgrade_v001.png` | `assets/export/ui/ui_upgrade_128.png` | `ui/ui_upgrade_128.png` | `ui_upgrade` | `125880091131026` | `▲` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_volume_v001.png` | `assets/export/ui/ui_volume_128.png` | `ui/ui_volume_128.png` | `ui_volume` | `100558525605931` | `🔊` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_wave_v001.png` | `assets/export/ui/ui_wave_128.png` | `ui/ui_wave_128.png` | `ui_wave` | `126556458277057` | `〜` |
 
-Depois do upload, `status` passa de `exported_pending_upload` para `uploaded` e `checkedInStudio`
-continua `false` até alguém confirmar o carregamento numa sessão de Play.
+`status` já está em `uploaded` para os 24. `checkedInStudio` continua `false`: o carregamento foi
+verificado nesta sessão, mas a marcação só deve mudar depois da conferência de moderação no Creator
+Hub.
 
 ## Testes que exigem pessoas ou dispositivos
 

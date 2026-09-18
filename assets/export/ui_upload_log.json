@@ -1,0 +1,31 @@
+{
+  "uploadedAt": "2026-09-18",
+  "method": "Roblox Studio MCP (upload_image) com a conta logada no Studio; arquivos servidos por http.server local a partir de assets/export/ui",
+  "note": "IDs reais devolvidos pelo Asset Server. A moderação do Roblox é assíncrona: conferir no Creator Hub antes do lançamento.",
+  "uploads": {
+    "ui/ui_back_128.png": 88491749815381,
+    "ui/ui_base_128.png": 111920601725235,
+    "ui/ui_buttons_128.png": 101246403255603,
+    "ui/ui_check_128.png": 104059787042270,
+    "ui/ui_close_128.png": 118214159540710,
+    "ui/ui_cooldown_128.png": 82684451501253,
+    "ui/ui_energy_128.png": 131805218762416,
+    "ui/ui_error_128.png": 104020383943624,
+    "ui/ui_group_128.png": 101185371000335,
+    "ui/ui_heal_128.png": 83533878039427,
+    "ui/ui_lock_128.png": 104319975182301,
+    "ui/ui_minus_128.png": 139587755350316,
+    "ui/ui_physical_128.png": 110488708842551,
+    "ui/ui_play_128.png": 76972323672777,
+    "ui/ui_plus_128.png": 112814833650940,
+    "ui/ui_pulse_128.png": 77488608610057,
+    "ui/ui_scrap_128.png": 93292805807152,
+    "ui/ui_sell_128.png": 101007725063284,
+    "ui/ui_settings_128.png": 110525661692700,
+    "ui/ui_speed_128.png": 78000524487354,
+    "ui/ui_target_128.png": 94414571956685,
+    "ui/ui_upgrade_128.png": 125880091131026,
+    "ui/ui_volume_128.png": 100558525605931,
+    "ui/ui_wave_128.png": 126556458277057
+  }
+}
