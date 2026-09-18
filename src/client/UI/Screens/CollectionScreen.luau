@@ -549,6 +549,15 @@ function CollectionScreen.render(self: CollectionScreen)
 	)
 end
 
+-- Chamado pelo detalhe da torre: equipa no rascunho e mostra a coleção com a vaga preenchida
+-- (ou com a pergunta de qual substituir, quando a equipe já está cheia).
+function CollectionScreen.equipFromDetail(self: CollectionScreen, towerId: string)
+	if self.readOnly then
+		return
+	end
+	equip(self, towerId)
+end
+
 function CollectionScreen.setReadOnly(self: CollectionScreen, value: boolean)
 	self.readOnly = value
 end

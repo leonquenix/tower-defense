@@ -44,6 +44,13 @@ export type Options = {
 
 local sequence = 0
 local openCount = 0
+local host: Instance? = nil
+
+-- Camada ModalGui (DisplayOrder 30). Definida uma vez no boot; as telas continuam chamando
+-- Modal.open com o próprio root, mas o modal sobe para a camada certa.
+function Modal.setHost(frame: Instance)
+	host = frame
+end
 
 function Modal.isOpen(): boolean
 	return openCount > 0
@@ -53,8 +60,9 @@ function Modal.open(parent: Instance, options: Options): Controls
 	sequence += 1
 	openCount += 1
 	local scope = "modal:" .. sequence
+	local target: Instance = host or parent
 
-	local overlay = Components.frame(parent, "Modal_" .. sequence, {
+	local overlay = Components.frame(target, "Modal_" .. sequence, {
 		Size = UDim2.fromScale(1, 1),
 		BackgroundColor3 = Theme.colors.ink,
 		BackgroundTransparency = 1,

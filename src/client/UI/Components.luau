@@ -327,6 +327,9 @@ export type Button = {
 	clearResult: (self: Button) -> (),
 	isAvailable: (self: Button) -> boolean,
 	onActivate: (self: Button, fn: () -> ()) -> (),
+	-- apelidos usados pelo HUD legado (mesma semântica de setAvailable/onActivate)
+	setEnabled: (self: Button, enabled: boolean, reason: string?) -> (),
+	onClick: (self: Button, fn: () -> ()) -> (),
 	destroy: (self: Button) -> (),
 }
 
@@ -564,6 +567,9 @@ function Components.button(parent: Instance?, options: ButtonOptions): Button
 	function self.onActivate(_, fn: () -> ())
 		handler = fn
 	end
+
+	self.setEnabled = self.setAvailable
+	self.onClick = self.onActivate
 
 	local function activate()
 		if not alive or not available or pending then

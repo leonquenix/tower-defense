@@ -20,7 +20,7 @@ local HOLD: { [string]: number } = { success = 2.5, info = 4, error = 4 }
 local MAX_VISIBLE = 3
 local DEDUPE_WINDOW = 1
 
-type Entry = { frame: CanvasGroup, key: string, expiresAt: number }
+type Entry = { frame: CanvasGroup, expiresAt: number }
 
 local host: Frame? = nil
 local active: { Entry } = {}
@@ -124,7 +124,7 @@ function Toasts.show(text: string, kind: Kind?, key: string?)
 		LayoutOrder = 2,
 	})
 
-	local entry: Entry = { frame = frame, key = dedupeKey, expiresAt = now + HOLD[resolvedKind] }
+	local entry: Entry = { frame = frame, expiresAt = now + HOLD[resolvedKind] }
 	table.insert(active, entry)
 	if Accessibility.reducedMotion() then
 		frame.GroupTransparency = 0

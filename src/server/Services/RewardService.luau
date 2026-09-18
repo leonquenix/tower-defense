@@ -21,6 +21,8 @@ export type UserOutcome = {
 	mastery: { [string]: number },
 	milestones: { [string]: { number } },
 	unlocked: { string },
+	-- Cosméticos de domínio concedidos por este resultado (só marcos realmente cruzados).
+	grantedCosmetics: { string },
 }
 
 local function getLedger(): DataStore?
@@ -81,7 +83,8 @@ local function applyToPlayer(
 	record: Types.MatchResultRecord,
 	stats: Types.PlayerMatchStats?
 ): UserOutcome
-	local outcome: UserOutcome = { status = "none", buttons = 0, mastery = {}, milestones = {}, unlocked = {} }
+	local outcome: UserOutcome =
+		{ status = "none", buttons = 0, mastery = {}, milestones = {}, unlocked = {}, grantedCosmetics = {} }
 	local profile = ProfileService.get(player)
 	local session = ProfileService.getSession(player)
 	if not profile or not session then
@@ -116,6 +119,7 @@ local function applyToPlayer(
 	outcome.mastery = masteryForUser
 	outcome.milestones = result.newMilestones
 	outcome.unlocked = result.unlocked
+	outcome.grantedCosmetics = result.grantedCosmetics
 	if not result.applied then
 		outcome.status = if result.reason == "duplicate" then "duplicate" else "pending"
 		return outcome
@@ -197,11 +201,17 @@ function RewardService.settle(
 	for _, participant in ipairs(state.participants) do
 		local player = connectedPlayers[participant.userId]
 		if not player then
-			outcomes[participant.userId] =
-				{ status = "ineligible", buttons = 0, mastery = {}, milestones = {}, unlocked = {} }
+			outcomes[participant.userId] = {
+				status = "ineligible",
+				buttons = 0,
+				mastery = {},
+				milestones = {},
+				unlocked = {},
+				grantedCosmetics = {},
+			}
 		elseif not rewardable then
 			outcomes[participant.userId] =
-				{ status = "none", buttons = 0, mastery = {}, milestones = {}, unlocked = {} }
+				{ status = "none", buttons = 0, mastery = {}, milestones = {}, unlocked = {}, grantedCosmetics = {} }
 			-- remove referência pendente mesmo sem recompensa
 			ProfileService.mutate(player, function(p: Types.Profile)
 				for i = #p.pendingResults, 1, -1 do
