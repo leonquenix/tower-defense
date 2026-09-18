@@ -24,6 +24,7 @@ export type Screen = {
 	statusLabel: TextLabel,
 	setTitle: (self: Screen, text: string, subtitle: string?) -> (),
 	refreshBalance: (self: Screen) -> (),
+	refreshTexts: (self: Screen) -> (),
 	compactHeight: (self: Screen) -> number,
 	show: (self: Screen) -> (),
 	hide: (self: Screen) -> (),
@@ -159,7 +160,17 @@ function Chrome.new(parent: Instance, options: Options): Screen
 		subtitleLabel.Visible = (subtitle or "") ~= ""
 	end
 
+	-- Textos fixos da moldura (Voltar, legenda do saldo) precisam ser reescritos ao trocar o idioma.
+	function self.refreshTexts(_)
+		if backButton then
+			(backButton :: Components.Button):setText(L("common.back"))
+		end
+		balanceChip.caption.Text = L("common.buttons")
+	end
+
 	function self.refreshBalance(_)
+		-- toda tela chama refreshBalance ao desenhar, então a moldura acompanha a troca de idioma
+		self:refreshTexts()
 		local profile = Store.profile()
 		if profile then
 			balanceChip:setValue(tostring(profile.buttons or 0))

@@ -40,6 +40,32 @@ local ERROR: KindStyle = { bg = Theme.colors.surface, fg = Theme.colors.danger, 
 
 local SUCCESS_HOLD = 2.5 -- o selo de sucesso some sozinho; o erro fica até a próxima ação
 
+-- Maiúsculas preservando acentos do português: string.upper só trata ASCII, e títulos de seção
+-- como "BRINQUEDOS EM MISSÃO" precisam do Ã.
+local ACCENT_UPPER: { [string]: string } = {
+	["á"] = "Á",
+	["à"] = "À",
+	["â"] = "Â",
+	["ã"] = "Ã",
+	["é"] = "É",
+	["ê"] = "Ê",
+	["í"] = "Í",
+	["ó"] = "Ó",
+	["ô"] = "Ô",
+	["õ"] = "Õ",
+	["ú"] = "Ú",
+	["ü"] = "Ü",
+	["ç"] = "Ç",
+}
+
+function Components.upper(text: string): string
+	local out = string.upper(text)
+	for lower, upperChar in pairs(ACCENT_UPPER) do
+		out = out:gsub(lower, upperChar)
+	end
+	return out
+end
+
 -- ---------------------------------------------------------------------------
 -- Primitivos
 -- ---------------------------------------------------------------------------
@@ -575,6 +601,8 @@ function Components.button(parent: Instance?, options: ButtonOptions): Button
 		if not alive or not available or pending then
 			return
 		end
+		-- clique/toque também assume o foco de teclado: o anel fica visível e Enter repete a ação
+		Focus.set(button)
 		if result == "error" then
 			result = "none"
 			refresh()

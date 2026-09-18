@@ -107,7 +107,7 @@ function MainMenu.build(self: MainMenu)
 	}, { radius = Theme.sizes.pillCorner, shadow = false })
 	badge.Active = false
 	Components.padding(badge, 14, 4)
-	Components.label(badge, "Text", string.upper(L("app.tagline")), {
+	Components.label(badge, "Text", Components.upper(L("app.tagline")), {
 		Size = UDim2.fromOffset(0, 22),
 		AutomaticSize = Enum.AutomaticSize.X,
 		TextSize = Theme.sizes.caption,
@@ -145,7 +145,7 @@ function MainMenu.build(self: MainMenu)
 	})
 
 	local heroSize = if compact then 34 else 64
-	Components.title(column, "Hero", string.upper(L("app.title")), {
+	Components.title(column, "Hero", Components.upper(L("app.title")), {
 		Size = UDim2.new(1, 0, 0, if compact then 44 else 150),
 		TextSize = Accessibility.scaleText(heroSize),
 		TextWrapped = true,
@@ -292,6 +292,9 @@ function MainMenu.build(self: MainMenu)
 	self.teamPill.Active = false
 	Components.corner(self.teamPill, 999)
 	Components.padding(self.teamPill, 16, 4)
+	-- reconstruir a faixa não pode perder o estado da loja (feature flag do servidor)
+	MainMenu.setShopEnabled(self, self.shopEnabled)
+
 	self.teamPillText = Components.label(self.teamPill, "Text", "", {
 		Size = UDim2.fromOffset(0, 22),
 		AutomaticSize = Enum.AutomaticSize.X,
@@ -352,21 +355,20 @@ function MainMenu.render(self: MainMenu)
 	-- resumo da equipe no selo decorativo: nunca é a única fonte da informação
 	local loadout: { string } = if profile then (profile.loadout or {}) else {}
 	if #loadout == 0 then
-		self.teamPillText.Text = string.upper(L("menu.teamEmpty"))
+		self.teamPillText.Text = Components.upper(L("menu.teamEmpty"))
 	else
 		local names = {}
 		for _, id in ipairs(loadout) do
 			local def = Catalog.getTower(id)
 			table.insert(names, if def then def.name else id)
 		end
-		self.teamPillText.Text = string.upper(L("menu.teamReady", { team = table.concat(names, " · ") }))
+		self.teamPillText.Text = Components.upper(L("menu.teamReady", { team = table.concat(names, " · ") }))
 	end
 end
 
 function MainMenu.relayout(self: MainMenu)
 	if Responsive.isCompact() ~= self.compact then
 		MainMenu.build(self)
-		MainMenu.setShopEnabled(self, self.shopEnabled)
 		if self.root.Visible then
 			MainMenu.render(self)
 		end

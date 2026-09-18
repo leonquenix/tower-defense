@@ -603,6 +603,14 @@ function ScreenController.init(playerGui: PlayerGui)
 	SettingsController.onChanged(function(current)
 		Accessibility.setGamePreferences(current.reducedMotion, current.reducedParticles)
 	end)
+	-- trocar o idioma reescreve o que já está desenhado: moldura, tela ativa e HUD de combate
+	SettingsController.onLocaleChanged(function()
+		mainMenu:build()
+		refreshVisibleScreen()
+		if inMatch then
+			PlayController.rebuildForLocale()
+		end
+	end)
 	Accessibility.setGamePreferences(SettingsController.get().reducedMotion, SettingsController.get().reducedParticles)
 
 	Router.reset("boot")

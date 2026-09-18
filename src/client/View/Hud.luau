@@ -1480,7 +1480,7 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 			add(Ui.label(body, "Armor", text, {
 				Size = UDim2.new(1, 0, 0, 20),
 				TextSize = 14,
-				TextColor3 = if ev.armorBonus > 0 then Theme.colors.gold else Theme.colors.sand,
+				TextColor3 = if ev.armorBonus > 0 then Theme.colors.goldText else Theme.colors.sandDark,
 				ZIndex = 7,
 			}))
 		end
@@ -1520,7 +1520,7 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 					body,
 					"Mark",
 					"◎ +" .. math.floor(ev.mark * 100 + 0.5) .. "%",
-					{ Size = UDim2.new(1, 0, 0, 20), TextSize = 14, TextColor3 = Theme.colors.gold, ZIndex = 7 }
+					{ Size = UDim2.new(1, 0, 0, 20), TextSize = 14, TextColor3 = Theme.colors.goldText, ZIndex = 7 }
 				)
 			)
 		end

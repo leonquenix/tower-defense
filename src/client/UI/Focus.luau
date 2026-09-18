@@ -3,6 +3,11 @@
 --
 -- Contrato do guia:
 --  * Tab percorre as ações visíveis na ordem de leitura da camada ativa; Shift+Tab volta.
+--    Em alguns clientes o Tab é reservado pela CoreGui e chega marcado como processado: nesse
+--    caso ele é ignorado (o guia manda não disputar a tecla) e as setas cumprem o mesmo papel.
+--  * Setas movem o foco dentro da camada ativa depois que já existe um item focado.
+--  * Clicar ou tocar num botão também leva o foco de teclado até ele, para que a navegação
+--    continue de onde o jogador estava.
 --  * Enter/Espaço ativa o item focado (sem disparar nenhuma outra confirmação redundante).
 --  * Escape cancela a camada local apenas quando o CoreGui não consumiu a tecla.
 --  * Fechar um modal devolve o foco ao botão que o abriu, desde que ele ainda exista.
@@ -197,6 +202,10 @@ function Focus.init()
 					then -1
 					else 1
 			)
+		elseif focused ~= nil and (key == Enum.KeyCode.Down or key == Enum.KeyCode.Right) then
+			Focus.move(1)
+		elseif focused ~= nil and (key == Enum.KeyCode.Up or key == Enum.KeyCode.Left) then
+			Focus.move(-1)
 		elseif key == Enum.KeyCode.Return or key == Enum.KeyCode.KeypadEnter or key == Enum.KeyCode.Space then
 			if focused then
 				Focus.activateFocused()

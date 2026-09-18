@@ -26,6 +26,62 @@ OUT_MOTION = os.path.join(ROOT, "src", "shared", "Config", "UiMotion.luau")
 # Camadas de renderização definidas no guia (decisões locais; não substituem a CoreGui).
 DISPLAY_ORDER = {"world": 0, "hud": 10, "menu": 20, "modal": 30, "toast": 40}
 
+# Variações de apoio derivadas da paleta funcional (sombras de botão, fundos de estado, caminhos
+# dos três mapas). Não estão em design_tokens.json porque são decisões de implementação, mas ficam
+# aqui para que a checagem de contraste em tests/specs/07_ui_tokens.spec.luau enxergue todas.
+DERIVED = {
+    "creamDark": "#F1E2BE",
+    "tealDark": "#18705F",  # escurecido de #1F8C7A: títulos de seção são texto normal (4,5:1)
+    "goldDark": "#D9A53E",  # só preenchimento (marca de pressionado, barras): não é cor de texto
+    "goldText": "#8A5E12",  # âmbar de texto: 5,46:1 sobre paper, 4,48:1 sobre sage
+    "dangerSoft": "#FCE6E2",  # clareado de #FBE0DC para chegar a 4,65:1 com danger (guia: 4,5:1)
+    "sageDeep": "#CBDDC6",
+    "white": "#FFFFFF",
+    "backdrop": "#14202F",
+    "sand": "#FFE1A0",
+    "sandDark": "#CEAC71",
+    "tape": "#F7EAC9",
+    "tapeDark": "#C6BBA7",
+    "night": "#DAD4ED",
+    "nightDark": "#9F9CB2",
+}
+
+# Pares texto/fundo que precisam passar em contraste. "large" segue o mínimo 3:1 do guia;
+# o restante usa 4,5:1. A ferramenta falha quando um par cai abaixo do mínimo.
+CONTRAST_PAIRS = [
+    ("ink", "paper", 4.5),
+    ("ink", "cream", 4.5),
+    ("ink", "gold", 4.5),
+    ("ink", "sage", 4.5),
+    ("ink", "cyan", 4.5),
+    ("ink", "creamDark", 4.5),
+    ("ink", "sageDeep", 4.5),
+    ("muted", "paper", 4.5),
+    ("muted", "cream", 4.5),
+    ("muted", "sage", 4.5),
+    ("danger", "dangerSoft", 4.5),
+    ("danger", "paper", 4.5),
+    ("cream", "ink", 4.5),
+    ("tealDark", "paper", 4.5),
+    ("goldText", "paper", 4.5),
+    ("goldText", "cream", 4.5),
+    ("tealDark", "sage", 4.5),
+]
+
+
+def luminance(rgb):
+    channels = []
+    for value in rgb:
+        c = value / 255.0
+        channels.append(c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4)
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
+
+
+def contrast(a, b):
+    la, lb = luminance(a), luminance(b)
+    lighter, darker = max(la, lb), min(la, lb)
+    return (lighter + 0.05) / (darker + 0.05)
+
 # Mapeia "Quad Out" -> Enum.EasingStyle.Quad / Enum.EasingDirection.Out
 EASING_STYLES = {"quad": "Quad", "back": "Back", "linear": "Linear", "sine": "Sine"}
 EASING_DIRECTIONS = {"in": "In", "out": "Out", "inout": "InOut"}
@@ -72,11 +128,24 @@ def build_tokens(data):
     for key in ("caption", "body", "button", "title", "hero"):
         if key not in text:
             raise ValidationError(f"tamanho de texto ausente: {key}")
+    for name, value in DERIVED.items():
+        if name in colors:
+            raise ValidationError(f"cor derivada colide com token: {name}")
+        colors[name] = hex_to_rgb(value)
     touch = int(data["minimumTouchTarget"])
     if touch < 44:
         raise ValidationError("alvo de toque mínimo abaixo de 44 px")
+    pairs = []
+    for fg, bg, minimum in CONTRAST_PAIRS:
+        ratio = contrast(colors[fg], colors[bg])
+        if ratio < minimum:
+            raise ValidationError(
+                f"contraste insuficiente: {fg} sobre {bg} = {ratio:.2f}:1 (mínimo {minimum}:1)"
+            )
+        pairs.append({"text": fg, "background": bg, "minimum": minimum, "ratio": round(ratio, 2)})
     return {
         "colors": colors,
+        "contrastPairs": pairs,
         "radius": radius,
         "stroke": data["stroke"],
         "spacing": data["spacing"],

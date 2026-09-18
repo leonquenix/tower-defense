@@ -129,7 +129,7 @@ function SettingsScreen.save(self: SettingsScreen)
 end
 
 local function sectionTitle(self: SettingsScreen, text: string, order: number)
-	Components.label(self.content, "T" .. order, string.upper(text), {
+	Components.label(self.content, "T" .. order, Components.upper(text), {
 		Size = UDim2.new(1, 0, 0, 22),
 		TextSize = Theme.sizes.caption,
 		Font = Theme.fonts.bodyBold,

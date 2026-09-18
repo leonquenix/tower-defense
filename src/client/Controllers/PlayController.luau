@@ -807,16 +807,8 @@ function PlayController.init(
 	end)
 end
 
--- Reconstrói o HUD quando o modo de layout muda (redimensionamento/rotação) e reajusta larguras
-function PlayController.relayout()
-	if not hud then
-		return
-	end
-	local mobile = Responsive.isCompact()
-	if hud.mobile == mobile then
-		hud:refit()
-		return
-	end
+-- Reconstrói o HUD do zero (troca de modo de layout ou de idioma) preservando seleção e estado.
+local function rebuildHud(mobile: boolean)
 	local old = hud
 	hud = Hud.new(root, hudCallbacks, mobile)
 	transform.viewport.Parent = hud.boardArea
@@ -829,6 +821,27 @@ function PlayController.relayout()
 		refreshBuildPreview()
 		hud:update(view, view.snapshot.wallet, MatchController.myTowerCount(), mobile)
 	end
+end
+
+-- Reconstrói o HUD quando o modo de layout muda (redimensionamento/rotação) e reajusta larguras
+function PlayController.relayout()
+	if not hud then
+		return
+	end
+	local mobile = Responsive.isCompact()
+	if hud.mobile == mobile then
+		hud:refit()
+		return
+	end
+	rebuildHud(mobile)
+end
+
+-- Trocar o idioma reescreve rótulos fixos do HUD (legendas, atalhos, painéis contextuais).
+function PlayController.rebuildForLocale()
+	if not hud then
+		return
+	end
+	rebuildHud(Responsive.isCompact())
 end
 
 function PlayController.isActive(): boolean

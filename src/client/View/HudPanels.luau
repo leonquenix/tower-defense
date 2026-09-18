@@ -119,9 +119,9 @@ function HudPanels.bossBar(parent: Instance, mobile: boolean): BossBar
 			end
 		elseif live.armorBonus > 0 then
 			stateLabel.Text = L("boss.shieldActive", { value = math.floor(live.armor * 100 + 0.5) })
-			stateLabel.TextColor3 = Theme.colors.goldDark
+			stateLabel.TextColor3 = Theme.colors.goldText
 			if iconHandle then
-				iconHandle:setColor(Theme.colors.goldDark)
+				iconHandle:setColor(Theme.colors.goldText)
 			end
 		else
 			stateLabel.Text = if Localization.has(abilityKey) then L(abilityKey) else ""
@@ -436,7 +436,7 @@ function HudPanels.optionsPanel(parent: Instance, callbacks: OptionsCallbacks): 
 	}, { tape = true, shadow = false })
 	Components.padding(panel, 14, 12)
 
-	Components.label(panel, "Title", string.upper(L("hud.options")), {
+	Components.label(panel, "Title", Components.upper(L("hud.options")), {
 		Size = UDim2.new(1, 0, 0, 20),
 		TextSize = Theme.sizes.caption,
 		Font = Theme.fonts.bodyBold,

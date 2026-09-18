@@ -199,28 +199,9 @@ function Ui.toast(_: Instance, text: string, danger: boolean?)
 	Toasts.show(text, if danger then "error" else "info")
 end
 
-local ACCENT_UPPER: { [string]: string } = {
-	["á"] = "Á",
-	["à"] = "À",
-	["â"] = "Â",
-	["ã"] = "Ã",
-	["é"] = "É",
-	["ê"] = "Ê",
-	["í"] = "Í",
-	["ó"] = "Ó",
-	["ô"] = "Ô",
-	["õ"] = "Õ",
-	["ú"] = "Ú",
-	["ç"] = "Ç",
-}
-
--- Maiúsculas preservando acentos do português (string.upper só trata ASCII)
+-- Maiúsculas com acento (delegado ao componente compartilhado).
 function Ui.upper(text: string): string
-	local out = string.upper(text)
-	for lower, upperChar in pairs(ACCENT_UPPER) do
-		out = out:gsub(lower, upperChar)
-	end
-	return out
+	return Components.upper(text)
 end
 
 function Ui.formatNumber(n: number): string

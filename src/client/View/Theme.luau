@@ -10,34 +10,35 @@ local Theme = {}
 
 Theme.tokens = UiTokens
 
+-- Toda a paleta (tokens e variações de apoio) vem de UiTokens, que já valida o contraste
+-- dos pares de texto/fundo ao ser gerado.
 Theme.colors = {
 	ink = UiTokens.color("ink"),
 	cream = UiTokens.color("cream"),
-	creamDark = Color3.fromHex("F1E2BE"),
+	creamDark = UiTokens.color("creamDark"),
 	teal = UiTokens.color("teal"),
-	tealDark = Color3.fromHex("1F8C7A"),
+	tealDark = UiTokens.color("tealDark"),
 	gold = UiTokens.color("gold"),
-	goldDark = Color3.fromHex("D9A53E"),
+	goldDark = UiTokens.color("goldDark"), -- preenchimento, nunca texto
+	goldText = UiTokens.color("goldText"), -- âmbar legível para números e rótulos
 	coral = UiTokens.color("coral"),
 	enemy = UiTokens.color("enemy"),
 	cyan = UiTokens.color("cyan"),
 	danger = UiTokens.color("danger"),
-	dangerSoft = Color3.fromHex("FBE0DC"),
-	-- #526174 escurece o muted original para atingir 4,5:1 sobre creme (guia, paleta funcional)
+	dangerSoft = UiTokens.color("dangerSoft"),
 	muted = UiTokens.color("muted"),
-	white = Color3.fromHex("FFFFFF"),
-	-- superfície de ficha (Paper) e fundo verde suave (Sage) da direção de arte
+	white = UiTokens.color("white"),
 	surface = UiTokens.color("paper"),
 	sage = UiTokens.color("sage"),
-	sageDeep = Color3.fromHex("CBDDC6"),
-	paper = Color3.fromHex("F4F1E9"),
-	sand = Color3.fromHex("FFE1A0"),
-	sandDark = Color3.fromHex("CEAC71"),
-	tape = Color3.fromHex("F7EAC9"),
-	tapeDark = Color3.fromHex("C6BBA7"),
-	night = Color3.fromHex("DAD4ED"),
-	nightDark = Color3.fromHex("9F9CB2"),
-	backdrop = Color3.fromHex("14202F"),
+	sageDeep = UiTokens.color("sageDeep"),
+	paper = UiTokens.color("paper"),
+	sand = UiTokens.color("sand"),
+	sandDark = UiTokens.color("sandDark"),
+	tape = UiTokens.color("tape"),
+	tapeDark = UiTokens.color("tapeDark"),
+	night = UiTokens.color("night"),
+	nightDark = UiTokens.color("nightDark"),
+	backdrop = UiTokens.color("backdrop"),
 }
 
 -- Cores e formas de dono (círculo, quadrado, triângulo, losango)

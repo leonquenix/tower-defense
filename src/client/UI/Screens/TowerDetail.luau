@@ -312,7 +312,7 @@ function TowerDetail.render(self: TowerDetail)
 	costCard("Build", L("detail.buildCost"), tostring(stats.cost), "ui_scrap", 2)
 
 	-- especializações: comparação lado a lado, sem aplicar nada
-	Components.label(self.content, "SpecTitle", string.upper(L("collection.spec")), {
+	Components.label(self.content, "SpecTitle", Components.upper(L("collection.spec")), {
 		Size = UDim2.new(1, 0, 0, 20),
 		TextSize = Theme.sizes.caption,
 		Font = Theme.fonts.bodyBold,
@@ -321,7 +321,8 @@ function TowerDetail.render(self: TowerDetail)
 		ZIndex = 3,
 	})
 	local specRow = Components.frame(self.content, "Specs", {
-		Size = UDim2.new(1, 0, 0, 160),
+		-- folga para cinco linhas de atributo sem encostar no custo
+		Size = UDim2.new(1, 0, 0, 178),
 		BackgroundTransparency = 1,
 		LayoutOrder = 4,
 		ZIndex = 3,
@@ -368,7 +369,7 @@ function TowerDetail.render(self: TowerDetail)
 				Position = UDim2.new(0, 0, 1, -20),
 				TextSize = Theme.sizes.caption,
 				Font = Theme.fonts.bodyBold,
-				TextColor3 = Theme.colors.goldDark,
+				TextColor3 = Theme.colors.goldText,
 				ZIndex = 5,
 			})
 		end

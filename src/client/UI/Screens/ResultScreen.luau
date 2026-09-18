@@ -307,7 +307,7 @@ local function rewardBlock(self: ResultScreen, payload: { [string]: any }, order
 		AutomaticSize = Enum.AutomaticSize.X,
 		TextSize = 28,
 		Font = Theme.fonts.numbers,
-		TextColor3 = Theme.colors.goldDark,
+		TextColor3 = Theme.colors.goldText,
 		TextWrapped = false,
 		LayoutOrder = 2,
 		ZIndex = 15,
@@ -494,7 +494,7 @@ function ResultScreen.render(self: ResultScreen)
 	-- contribuição do grupo (sem ranking de dano na derrota: tom acolhedor)
 	local stats = payload.stats
 	if stats and view and #view.snapshot.participants > 1 and won then
-		Components.label(self.content, "ContribTitle", string.upper(L("result.contribution")), {
+		Components.label(self.content, "ContribTitle", Components.upper(L("result.contribution")), {
 			Size = UDim2.new(1, 0, 0, 20),
 			TextSize = Theme.sizes.caption,
 			Font = Theme.fonts.bodyBold,
