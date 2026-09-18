@@ -163,6 +163,8 @@ local strings: { [string]: { [string]: string } } = {
 		["boss.rei_ferrugem.ability"] = "Armadura extra por 5 s",
 		["boss.breu.ability"] = "Invoca quatro Corriscos",
 		["boss.telegraph"] = "{name} prepara {ability}",
+		["hud.armorPhysical"] = "Proteção física {value}%",
+		["hud.armorEnergy"] = "Resistência a energia {value}%",
 		-- resultado
 		["result.won"] = "Farol protegido!",
 		["result.lost"] = "O farol apagou",
@@ -383,6 +385,8 @@ local strings: { [string]: { [string]: string } } = {
 		["boss.rei_ferrugem.ability"] = "Extra armor for 5 s",
 		["boss.breu.ability"] = "Summons four Skitters",
 		["boss.telegraph"] = "{name} prepares {ability}",
+		["hud.armorPhysical"] = "Physical protection {value}%",
+		["hud.armorEnergy"] = "Energy resistance {value}%",
 		["result.won"] = "Lighthouse protected!",
 		["result.lost"] = "The lighthouse went dark",
 		["result.abandoned"] = "Match abandoned",

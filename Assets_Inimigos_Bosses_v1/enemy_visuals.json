@@ -1,0 +1,359 @@
+{
+  "schemaVersion": 1,
+  "status": "visual_configuration_not_gameplay_or_animator",
+  "visualLookup": "entityId -> entities[entityId].assetKey -> asset_index entry",
+  "gameplaySource": "Pacote_Claude_Code/dados/balanceamento_v1.json",
+  "supportedMaps": [
+    "jardim",
+    "oficina",
+    "sotao"
+  ],
+  "supportedDifficulties": [
+    "normal",
+    "desafio"
+  ],
+  "bossByMap": {
+    "jardim": "aspirador",
+    "oficina": "rei_ferrugem",
+    "sotao": "breu"
+  },
+  "mapSelectionRule": "Boss assignments remain canonical; map-independent artwork does not change spawn rules.",
+  "allLevels": "Reuse by entity ID on any wave and difficulty. No separate PNG or Roblox upload per level.",
+  "reducedMotion": "Disable continuous bob, rotation and squash; preserve logical movement and readable status.",
+  "speed2x": "Drive cosmetic combat motions from simulation time; UI timing remains real time.",
+  "orientation": "Keep one three-quarter pose upright; do not rotate entire sprite along path turns.",
+  "shadow": "Separate optional ellipse; no shadow texture included.",
+  "entities": {
+    "fiapo": {
+      "assetKey": "enemy_fiapo_base",
+      "entityType": "enemy",
+      "suggestedVisibleWidthCells": 0.68,
+      "sourceAnchorSuggested": [
+        0.5,
+        0.827
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "hop",
+        "periodSimSeconds": 0.6,
+        "offsetPixelsAt128": 2,
+        "maxRotationDegrees": 0,
+        "scaleYRange": [
+          1,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": null
+      },
+      "drawnAnimationStatus": "not_produced"
+    },
+    "corrisco": {
+      "assetKey": "enemy_corrisco_base",
+      "entityType": "enemy",
+      "suggestedVisibleWidthCells": 0.85,
+      "sourceAnchorSuggested": [
+        0.66,
+        0.79
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "run",
+        "periodSimSeconds": 0.35,
+        "offsetPixelsAt128": 1.5,
+        "maxRotationDegrees": 1,
+        "scaleYRange": [
+          1,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": null
+      },
+      "drawnAnimationStatus": "not_produced"
+    },
+    "bolota": {
+      "assetKey": "enemy_bolota_base",
+      "entityType": "enemy",
+      "suggestedVisibleWidthCells": 1.1,
+      "sourceAnchorSuggested": [
+        0.64,
+        0.838
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "squash",
+        "periodSimSeconds": 1.2,
+        "offsetPixelsAt128": 1,
+        "maxRotationDegrees": 0,
+        "scaleYRange": [
+          0.97,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": null
+      },
+      "drawnAnimationStatus": "not_produced"
+    },
+    "latinha": {
+      "assetKey": "enemy_latinha_base",
+      "entityType": "enemy",
+      "suggestedVisibleWidthCells": 0.86,
+      "sourceAnchorSuggested": [
+        0.56,
+        0.89
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "stomp",
+        "periodSimSeconds": 0.85,
+        "offsetPixelsAt128": 1,
+        "maxRotationDegrees": 0,
+        "scaleYRange": [
+          1,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": null
+      },
+      "drawnAnimationStatus": "not_produced"
+    },
+    "nevoa": {
+      "assetKey": "enemy_nevoa_base",
+      "entityType": "enemy",
+      "suggestedVisibleWidthCells": 1.02,
+      "sourceAnchorSuggested": [
+        0.5,
+        0.81
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "float",
+        "periodSimSeconds": 1.4,
+        "offsetPixelsAt128": 2,
+        "maxRotationDegrees": 0,
+        "scaleYRange": [
+          1,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": null
+      },
+      "drawnAnimationStatus": "not_produced"
+    },
+    "remendo": {
+      "assetKey": "enemy_remendo_base",
+      "entityType": "enemy",
+      "suggestedVisibleWidthCells": 0.76,
+      "sourceAnchorSuggested": [
+        0.55,
+        0.89
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "sway",
+        "periodSimSeconds": 1.1,
+        "offsetPixelsAt128": 1,
+        "maxRotationDegrees": 1,
+        "scaleYRange": [
+          1,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": "same_sprite_with_separate_effect"
+      },
+      "drawnAnimationStatus": "not_produced"
+    },
+    "casulo": {
+      "assetKey": "enemy_casulo_base",
+      "entityType": "enemy",
+      "suggestedVisibleWidthCells": 0.84,
+      "sourceAnchorSuggested": [
+        0.515,
+        0.855
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "sway",
+        "periodSimSeconds": 1.25,
+        "offsetPixelsAt128": 1,
+        "maxRotationDegrees": 1,
+        "scaleYRange": [
+          1,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": null
+      },
+      "drawnAnimationStatus": "not_produced"
+    },
+    "brutamontes": {
+      "assetKey": "enemy_brutamontes_base",
+      "entityType": "enemy",
+      "suggestedVisibleWidthCells": 1.3,
+      "sourceAnchorSuggested": [
+        0.5,
+        0.87
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "stomp",
+        "periodSimSeconds": 1.3,
+        "offsetPixelsAt128": 1.5,
+        "maxRotationDegrees": 0,
+        "scaleYRange": [
+          1,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": null
+      },
+      "drawnAnimationStatus": "not_produced"
+    },
+    "aspirador": {
+      "assetKey": "boss_aspirador_base",
+      "entityType": "boss",
+      "suggestedVisibleWidthCells": 1.8,
+      "sourceAnchorSuggested": [
+        0.64,
+        0.85
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "sway",
+        "periodSimSeconds": 1.8,
+        "offsetPixelsAt128": 0.7,
+        "maxRotationDegrees": 1,
+        "scaleYRange": [
+          1,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": "same_sprite_with_separate_effect"
+      },
+      "drawnAnimationStatus": "not_produced"
+    },
+    "rei_ferrugem": {
+      "assetKey": "boss_rei_ferrugem_base",
+      "entityType": "boss",
+      "suggestedVisibleWidthCells": 1.28,
+      "sourceAnchorSuggested": [
+        0.515,
+        0.95
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "stomp",
+        "periodSimSeconds": 1.6,
+        "offsetPixelsAt128": 0.8,
+        "maxRotationDegrees": 0,
+        "scaleYRange": [
+          1,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": "same_sprite_with_separate_effect"
+      },
+      "drawnAnimationStatus": "not_produced"
+    },
+    "breu": {
+      "assetKey": "boss_breu_base",
+      "entityType": "boss",
+      "suggestedVisibleWidthCells": 1.55,
+      "sourceAnchorSuggested": [
+        0.54,
+        0.928
+      ],
+      "anchorRequiresReview": true,
+      "motion": {
+        "status": "specified_not_implemented_in_Roblox",
+        "type": "sway",
+        "periodSimSeconds": 2.0,
+        "offsetPixelsAt128": 1,
+        "maxRotationDegrees": 1,
+        "scaleYRange": [
+          1,
+          1.01
+        ]
+      },
+      "clips": {
+        "idle": "single_static_procedural",
+        "move": "single_static_procedural",
+        "hit": "same_sprite_short_outline",
+        "death": "same_sprite_fade_0.3s",
+        "ability": "same_sprite_with_separate_effect"
+      },
+      "drawnAnimationStatus": "not_produced"
+    }
+  },
+  "spawnedVariants": {
+    "casulo_child_fiapo": {
+      "reuseEntity": "fiapo",
+      "visualScaleMultiplier": 0.7,
+      "gameplaySource": "server rules for Casulo children; no bounty"
+    },
+    "breu_summoned_corrisco": {
+      "reuseEntity": "corrisco",
+      "visualScaleMultiplier": 1,
+      "gameplaySource": "server rules for Breu summons"
+    }
+  }
+}

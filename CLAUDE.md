@@ -27,3 +27,7 @@ Implemente movimentos procedurais como apresentação inicial e registre que os 
 ## Estado da implementação (2026-09-16)
 
 O jogo foi implementado nesta raiz: `src/` (Luau estrito), `tests/` (Lune), `tools/` (geradores), `assets/export/` (exports e uploads), `docs/` (SETUP, TEST_REPORT, MANUAL_ACTIONS, MILESTONES) e `build/`. Leia `docs/SETUP.md` para abrir e testar. `Config/Balance.luau`, `Config/Maps.luau` e `Config/Assets.luau` são gerados: altere o JSON ou o registro e rode as ferramentas em `tools/`, nunca edite os módulos gerados à mão.
+
+## Inimigos e chefes (2026-09-18)
+
+`Assets_Inimigos_Bosses_v1/` traz 11 poses estáticas (8 inimigos e 3 chefes) e `enemy_visuals.json`, com o comportamento especificado em `Assets_Inimigos_Bosses_v1/GUIA_MONSTROS_E_BOSSES.pdf`. Os `localFile` desse manifesto são relativos a essa pasta; os `sourceFile`, a esta raiz. Pipeline: `tools/export_enemy_assets.py` → `tools/merge_enemy_index.py` → `tools/update_asset_registry.py`. O movimento 2D fica em `src/client/View/EnemyAnimator.luau` (espelho de `enemy_visuals.json`); as poses não são atlas e os 96 + 48 quadros desenhados continuam pendentes.

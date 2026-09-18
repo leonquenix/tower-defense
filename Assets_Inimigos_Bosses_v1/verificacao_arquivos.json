@@ -1,0 +1,204 @@
+{
+  "date": "2026-09-17",
+  "fileCount": 11,
+  "files": [
+    {
+      "file": "inimigos/enemy_fiapo_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.68626,
+      "contentBoundsPxAlpha128": [
+        218,
+        214,
+        1043,
+        1044
+      ],
+      "sha256": "1af15b1dd7f0febff5489ec36e7e3bb676edf6be1d9bb7d89af3959a7edd10b9",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    },
+    {
+      "file": "inimigos/enemy_corrisco_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.73634,
+      "contentBoundsPxAlpha128": [
+        130,
+        318,
+        1127,
+        1001
+      ],
+      "sha256": "495c18b1984ef4628fd0f2f61afd09464b6af056c2466db91779cef791554243",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    },
+    {
+      "file": "inimigos/enemy_bolota_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.59911,
+      "contentBoundsPxAlpha128": [
+        86,
+        246,
+        1175,
+        1062
+      ],
+      "sha256": "1652e3a530d007048b84a3922a82c130303c5d75c684513eaf36716e21e6acff",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    },
+    {
+      "file": "inimigos/enemy_latinha_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.60649,
+      "contentBoundsPxAlpha128": [
+        232,
+        154,
+        1046,
+        1123
+      ],
+      "sha256": "ad87dcb26569736431b1bc034ac629911dcaa854c0b235c30992eaaba9c9aed9",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    },
+    {
+      "file": "inimigos/enemy_nevoa_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.70326,
+      "contentBoundsPxAlpha128": [
+        117,
+        253,
+        1142,
+        1003
+      ],
+      "sha256": "7620d3c51501aa3d998492454209e9c46de62e63c06dc4f0aa8b187d2037abad",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    },
+    {
+      "file": "inimigos/enemy_remendo_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.75187,
+      "contentBoundsPxAlpha128": [
+        347,
+        157,
+        947,
+        1121
+      ],
+      "sha256": "667a3f1f4ba368ead9f1b1846308636954a7682f3f07e20503104fcbccd65bd9",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    },
+    {
+      "file": "inimigos/enemy_casulo_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.69817,
+      "contentBoundsPxAlpha128": [
+        292,
+        179,
+        977,
+        1081
+      ],
+      "sha256": "6d55ee445c6049954f337cbd4e58350991e4adf76cb3041f0ad564ee0470342f",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    },
+    {
+      "file": "inimigos/enemy_brutamontes_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.4906,
+      "contentBoundsPxAlpha128": [
+        37,
+        153,
+        1219,
+        1144
+      ],
+      "sha256": "04e4a576b013c786d49374ddfa848917ebc93cf747b273004798232f3d32727a",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    },
+    {
+      "file": "bosses/boss_aspirador_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.52879,
+      "contentBoundsPxAlpha128": [
+        116,
+        120,
+        1177,
+        1168
+      ],
+      "sha256": "0b9bd1cc8e39c9a3b739aecae91ec5e5c41dd55f1b400f48eb6062629871eaa5",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    },
+    {
+      "file": "bosses/boss_rei_ferrugem_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.62635,
+      "contentBoundsPxAlpha128": [
+        227,
+        38,
+        1032,
+        1207
+      ],
+      "sha256": "75faabe507bc4f12079ef416c3ff105f23b48458ade71fe5554da2821ab8e0d6",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    },
+    {
+      "file": "bosses/boss_breu_base_v001.png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alphaMinimum": 0,
+      "alphaMaximum": 255,
+      "fullyTransparentFraction": 0.53603,
+      "contentBoundsPxAlpha128": [
+        79,
+        84,
+        1206,
+        1174
+      ],
+      "sha256": "d196cf94aae10ac8d30d94630c52b591b2d40c2d26ffa79e63f3402d346a1054",
+      "visualReview": "complete_character_no_baked_background_no_text",
+      "testedInRoblox": false
+    }
+  ]
+}

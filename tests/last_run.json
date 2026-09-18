@@ -1,8 +1,8 @@
 {
-  "elapsedSeconds": 0.02012887500313809,
+  "elapsedSeconds": 0.015420125011587515,
   "failed": 0,
   "failures": {},
-  "passed": 88,
+  "passed": 115,
   "suites": [
     {
       "name": "Grid",
@@ -435,7 +435,160 @@
           "ok": true
         }
       ]
+    },
+    {
+      "name": "Guia / atributos dos oito inimigos",
+      "tests": [
+        {
+          "name": "catálogo bate com a tabela da página 2",
+          "ok": true
+        },
+        {
+          "name": "catálogo dos três chefes bate com a tabela da página 2",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Guia / resistências",
+      "tests": [
+        {
+          "name": "Latinha: físico 20 -> 11; energia 20 -> 20; armorIgnore 1 -> 20",
+          "ok": true
+        },
+        {
+          "name": "Névoa: energia 20 -> 13; físico 20 -> 20; Pulso de Luz solo -> 117",
+          "ok": true
+        },
+        {
+          "name": "Bolota: sem redução em físico e energia",
+          "ok": true
+        },
+        {
+          "name": "Brutamontes: físico 20 -> 15; lentidão comum de 45% não vira 15,75%",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Guia / escala de vida",
+      "tests": [
+        {
+          "name": "Fiapo no Jardim Normal com quatro pessoas nasce com 75",
+          "ok": true
+        },
+        {
+          "name": "Aspirador solo no Desafio nasce com 10150 (mapa não conta para chefe)",
+          "ok": true
+        },
+        {
+          "name": "velocidade do Corrisco no Desafio é 2,255 e não muda por mapa",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Guia / Remendo",
+      "tests": [
+        {
+          "name": "dois Remendos no mesmo passo curam Fiapo 10/24 para 22/24",
+          "ok": true
+        },
+        {
+          "name": "não cura a si mesmo, outro Remendo nem chefe",
+          "ok": true
+        },
+        {
+          "name": "pulso vale 12 x fator de vida comum e o evento lista os alvos curados",
+          "ok": true
+        },
+        {
+          "name": "filhos de Casulo e invocados de Breu são comuns e podem ser curados",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Guia / Casulo",
+      "tests": [
+        {
+          "name": "morte letal gera exatamente três filhos, uma recompensa e sem bounty nos filhos",
+          "ok": true
+        },
+        {
+          "name": "Casulo que alcança a base causa 8, não divide e não paga",
+          "ok": true
+        },
+        {
+          "name": "filhos entram após as mortes e a onda não termina antes de resolvê-los",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Guia / Aspirador",
+      "tests": [
+        {
+          "name": "aviso aos 14 s, poeira aos 16 s por 4 s e intervalo 1 s vira 1,333 s",
+          "ok": true
+        },
+        {
+          "name": "centro fica fixo: vender a torre marcada durante o aviso não move a área",
+          "ok": true
+        },
+        {
+          "name": "sem torres o ciclo é consumido sem área",
+          "ok": true
+        },
+        {
+          "name": "morte durante o aviso cancela a resolução e avisa o cliente",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Guia / Rei Ferrugem",
+      "tests": [
+        {
+          "name": "20% antes, 55% por 5 s e 20% depois; físico 100 -> 80/45/80",
+          "ok": true
+        },
+        {
+          "name": "eventos duplicados não acumulam além de 55%",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Guia / Breu",
+      "tests": [
+        {
+          "name": "invoca quatro Corriscos sem recompensa em s + 0,5",
+          "ok": true
+        },
+        {
+          "name": "morto durante o aviso não invoca; morto depois não apaga os invocados",
+          "ok": true
+        },
+        {
+          "name": "a onda não termina enquanto houver invocados vivos",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Guia / apresentação e rede",
+      "tests": [
+        {
+          "name": "snapshot leva prazo do aviso, armadura atual e resistência",
+          "ok": true
+        },
+        {
+          "name": "2x produz o mesmo resultado lógico que 1x no mesmo tempo simulado",
+          "ok": true
+        }
+      ]
     }
   ],
-  "timestamp": "2026-09-16T15:46:44Z"
+  "timestamp": "2026-09-18T06:17:54Z"
 }

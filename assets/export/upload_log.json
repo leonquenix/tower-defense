@@ -71,7 +71,27 @@
     "placeholders/enemy_brutamontes_placeholder_128.png": 125708858322874,
     "placeholders/boss_aspirador_placeholder_256.png": 84616287279990,
     "placeholders/boss_rei_ferrugem_placeholder_256.png": 82702601059521,
-    "placeholders/boss_breu_placeholder_256.png": 74415275292368
+    "placeholders/boss_breu_placeholder_256.png": 74415275292368,
+    "enemies/enemy_fiapo_base_128.png": 96760892978018,
+    "enemies/enemy_corrisco_base_128.png": 137840903114922,
+    "enemies/enemy_bolota_base_128.png": 70924701636605,
+    "enemies/enemy_latinha_base_128.png": 134622259971412,
+    "enemies/enemy_nevoa_base_128.png": 139783246736347,
+    "enemies/enemy_remendo_base_128.png": 132403473311586,
+    "enemies/enemy_casulo_base_128.png": 76127081859620,
+    "enemies/enemy_brutamontes_base_128.png": 133198055129249,
+    "bosses/boss_aspirador_base_256.png": 81465921210268,
+    "bosses/boss_rei_ferrugem_base_256.png": 84414479944054,
+    "bosses/boss_breu_base_256.png": 134870836730815
   },
-  "placeholderNote": "Entradas 'placeholders/' são visuais provisórios procedurais (não são a arte final de inimigos/chefes)."
+  "placeholderNote": "Entradas 'placeholders/' são visuais provisórios procedurais (não são a arte final de inimigos/chefes).",
+  "batches": [
+    {
+      "uploadedAt": "2026-09-18T04:05:00Z",
+      "count": 11,
+      "source": "Assets_Inimigos_Bosses_v1 (8 inimigos + 3 chefes), exports de tools/export_enemy_assets.py",
+      "method": "Roblox Studio MCP upload_image (conta logada no Studio), arquivos servidos por HTTP local",
+      "note": "IDs reais retornados pelo servidor de assets. Substituem os 11 placeholders procedurais, que deixam de ser usados."
+    }
+  ]
 }

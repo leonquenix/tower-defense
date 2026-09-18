@@ -106,3 +106,65 @@ Sistema: `View/Responsive.luau` decide o modo (computador ≥ 1000×540 lógicos
 | 750×361 (iPhone 17 Pro, teste anterior) | compacto | 1,00 | colunas laterais e tabuleiro em altura total |
 
 Não executado: redimensionamento contínuo da janela durante a partida (o Studio não expõe isso pelo MCP) e rotação em aparelho real.
+
+## 7. Inimigos, chefes e animação 2D (adendo 2026-09-18)
+
+Entrada: `GUIA_MONSTROS_E_BOSSES.pdf` (18 páginas) e `Assets_Inimigos_Bosses_v1/` (11 PNGs 1254×1254, manifesto, `enemy_visuals.json`).
+
+### 7.1 Executado fora do Studio
+
+| Verificação | Comando | Resultado |
+| --- | --- | --- |
+| Integridade das 11 origens | sha256 × `manifesto_inimigos_bosses.json` | 11/11 conferem |
+| Export normalizado | `python3 tools/export_enemy_assets.py` | 11 quadros (8 × 128 px, 3 × 256 px), apoio (0,5; 0,82), alpha preservado |
+| Cobertura do índice | `python3 tools/merge_enemy_index.py` | 40 → 51 assets no índice e no registro de runtime |
+| Geração de `Config/Assets.luau` | `python3 tools/update_asset_registry.py` | 51/51 com ID do Roblox; 11 placeholders procedurais deixaram de ser emitidos |
+| Testes de regras | `lune run tests/run.luau` | **115 aprovados, 0 reprovados** (88 anteriores + 27 novos) |
+| Análise estática estrita | `luau-lsp analyze … src/` | 0 erros |
+| Lint | `selene src/` | 0 erros, 6 avisos (os mesmos de antes) |
+| Formatação | `stylua --check src/ tests/` | conforme |
+
+Novo spec `tests/specs/06_enemies_bosses.spec.luau` (27 testes) cobrindo a tabela de aceite do guia:
+
+| Caso do guia | Resultado |
+| --- | --- |
+| Cobertura de tipos e atributos das páginas 2 e 4 a 14 | ✅ 8 inimigos e 3 chefes conferem com o catálogo |
+| Resistências: Latinha 20→11, Névoa 20→13, Bolota 20→20, Brutamontes 20→15 | ✅ |
+| `armorIgnore = 1` na Latinha → 20 | ✅ |
+| Pulso de Luz na Névoa, solo, sem marca → 117 | ✅ |
+| Escala de vida: Fiapo 4 pessoas → 75; Aspirador solo Desafio → 10150 | ✅ |
+| Velocidade do Corrisco no Desafio → 2,255 | ✅ |
+| Cura concorrente: dois Remendos, Fiapo 10/24 → 22/24 | ✅ |
+| Remendo não cura a si, outro Remendo nem chefe; pulso = 12 × fator | ✅ |
+| Casulo letal: uma morte, três filhos, uma recompensa, filhos sem bounty e sem efeitos herdados | ✅ |
+| Casulo na base: leak 8, zero filhos, zero recompensa | ✅ |
+| Poeira: aviso aos 14 s, resolução aos 16 s, expira em 20 s; intervalo 1 s → 1,333 s | ✅ |
+| Centro da poeira fixo após vender a torre marcada; sem torres o ciclo é consumido | ✅ |
+| Armadura do Rei: 20% → 55% por 5 s → 20%; físico 100 → 80/45/80; sem acúmulo | ✅ |
+| Breu: quatro Corriscos em s + 0,5, bounty 0, leak 3 preservado | ✅ |
+| Breu morto durante o aviso não invoca; morto depois não apaga os invocados | ✅ |
+| Fim de onda espera filhos e invocados | ✅ |
+| Snapshot leva prazo do aviso, armadura atual e resistência de energia | ✅ |
+
+### 7.2 Executado no Roblox Studio (place do grupo, Play solo, um cliente)
+
+| Cenário | Resultado |
+| --- | --- |
+| Upload dos 11 exports pela conta logada no Studio | ✅ IDs reais em `assets/export/upload_log.json` (69 → 80 entradas) |
+| Treino com os 11 tipos no tabuleiro | ✅ 11/11 sprites com `IsLoaded = true`, nenhum fallback visível |
+| Largura por tipo | ✅ quadros de 44 px (Fiapo) a 130 px (Aspirador), proporcionais a `enemy_visuals.json` |
+| Ciclos de movimento | ✅ 11/11 com ciclo ativo; amplitudes medidas batem com o guia (Fiapo 1,94 px; Corrisco 1,50; Bolota ±1; Névoa ±2; Aspirador ±0,7; Rei 0,73; Breu ±1, na referência de 128 px) |
+| Aviso de chefe com contagem | ✅ selo com ícone e segundos restantes derivados do prazo do servidor |
+| Poeira do Aspirador | ✅ anel no tabuleiro e ícone de poeira na torre atingida |
+| Console durante a sessão | ✅ sem erros de script (só telemetria e o aviso de DataStore desligado) |
+
+Defeito encontrado e corrigido durante a verificação: o deslocamento vertical usava o campo `Offset` de `UDim2`, que é inteiro — um salto de 0,7 px em um sprite de 44 px truncava para zero e nenhum inimigo subia. Passou a ser fração do quadro de referência, medido depois em 11/11 sprites.
+
+### 7.3 Não executado
+
+- **Movimento reduzido nos inimigos**: a tentativa desta sessão alterou a configuração pelo remote `SaveSettings`, que grava no servidor mas não atualiza o espelho local do cliente; o teste não mediu o que pretendia. O caminho real é a tela de Configurações. O código do `EnemyAnimator` trata a opção, mas a verificação em tela continua pendente.
+- Partida completa de 20 ondas com os chefes no fim de cada mapa (só o treino e o salto de desenvolvimento foram exercitados nesta sessão).
+- Impacto, morte e cura observados a olho: os eventos existem e os testes cobrem a lógica, mas não foram capturados em vídeo nem medidos em tela.
+- Celular real, quatro clientes, latência simulada e carga — continuam pendentes como no relatório principal.
+- Moderação dos 11 assets novos: o carregamento foi verificado agora, mas a moderação do Roblox é assíncrona e pode remover um asset depois.
+

@@ -1132,7 +1132,7 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 			Hud.showEnemyDetail(self, nil)
 			return
 		end
-		key = "e" .. ev.id .. math.floor(ev.hp)
+		key = "e" .. ev.id .. math.floor(ev.hp) .. ":" .. string.format("%.2f", ev.armor)
 	end
 	if key == self.lastRenderedDetailKey and not self.detailDirty then
 		return
@@ -1368,6 +1368,28 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 					"Trait",
 					L("enemy.trait." .. ev.defId),
 					{ Size = UDim2.new(1, 0, 0, 36), TextSize = 14, ZIndex = 7 }
+				)
+			)
+		end
+		if ev.armor > 0 then
+			local text = "⛨ " .. L("hud.armorPhysical", { value = math.floor(ev.armor * 100 + 0.5) })
+			if ev.armorBonus > 0 then
+				text ..= " ↑"
+			end
+			add(Ui.label(body, "Armor", text, {
+				Size = UDim2.new(1, 0, 0, 20),
+				TextSize = 14,
+				TextColor3 = if ev.armorBonus > 0 then Theme.colors.gold else Theme.colors.sand,
+				ZIndex = 7,
+			}))
+		end
+		if ev.energyResistance > 0 then
+			add(
+				Ui.label(
+					body,
+					"Energy",
+					"◈ " .. L("hud.armorEnergy", { value = math.floor(ev.energyResistance * 100 + 0.5) }),
+					{ Size = UDim2.new(1, 0, 0, 20), TextSize = 14, TextColor3 = Theme.colors.cyan, ZIndex = 7 }
 				)
 			)
 		end

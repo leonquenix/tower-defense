@@ -364,6 +364,20 @@ local function removeEnemy(state: Types.MatchState, enemy: Types.Enemy)
 	TableUtil.removeValue(state.enemyOrder, enemy.id)
 end
 
+-- Morte ou escape cancela um aviso em andamento (nada é resolvido depois da remoção).
+-- Efeitos já aplicados em passos anteriores continuam até expirar.
+local function cancelTelegraph(state: Types.MatchState, enemy: Types.Enemy, events: { Types.SimEvent })
+	if not enemy.bossTelegraphing then
+		return
+	end
+	enemy.bossTelegraphing = false
+	enemy.bossNextTelegraphAt = math.huge
+	table.insert(
+		events,
+		event(state, "bossCancel", { entityId = enemy.id, enemyDefId = enemy.defId, reason = "removed" })
+	)
+end
+
 -- ---------------------------------------------------------------------------
 -- Ondas
 -- ---------------------------------------------------------------------------
@@ -543,6 +557,7 @@ local function updateMovement(state: Types.MatchState, dt: number, events: { Typ
 			e.s += e.baseSpeed * (1 - slow) * dt
 			if e.s >= state.pathLength then
 				-- vazamento: sem divisão, sem recompensa
+				cancelTelegraph(state, e, events)
 				removeEnemy(state, e)
 				if state.mode ~= "training" then
 					state.baseHP = math.max(0, state.baseHP - e.leak)
@@ -564,7 +579,7 @@ local function updateHealing(state: Types.MatchState, events: { Types.SimEvent }
 				local path = getPath(state.mapId)
 				local hx, hy = Path.positionAt(path, healer.s)
 				local amount = def.healPulse * state.commonHpFactor
-				local healedAny = false
+				local healed: { number } = {}
 				for _, otherId in ipairs(state.enemyOrder) do
 					local other = state.enemies[otherId]
 					if
@@ -579,12 +594,15 @@ local function updateHealing(state: Types.MatchState, events: { Types.SimEvent }
 						if Grid.distance(hx, hy, ox, oy) <= def.healRadius + 1e-9 then
 							other.hp = math.min(other.maxHp, other.hp + amount)
 							healedThisStep[other.id] = true
-							healedAny = true
+							table.insert(healed, other.id)
 						end
 					end
 				end
-				if healedAny then
-					table.insert(events, event(state, "heal", { entityId = healer.id, amount = amount }))
+				if #healed > 0 then
+					table.insert(
+						events,
+						event(state, "heal", { entityId = healer.id, amount = amount, entityIds = healed })
+					)
 				end
 			end
 		end
@@ -625,33 +643,45 @@ local function updateBosses(state: Types.MatchState, events: { Types.SimEvent })
 						cell = boss.bossTargetCell,
 						radius = def.radius,
 						reason = def.mechanic,
+						resolveAt = boss.bossResolveAt,
 					})
 				)
 			end
 			if boss.bossTelegraphing and state.simTime >= boss.bossResolveAt then
 				boss.bossTelegraphing = false
 				boss.bossNextTelegraphAt += def.period
+				local expiresAt: number? = nil
+				local dusted: { number }? = nil
+				local summoned: { number }? = nil
 				if def.mechanic == "dust_pulse" then
 					local cell = boss.bossTargetCell
 					if cell then
 						local until_ = state.simTime + (def.duration or 4)
+						expiresAt = until_
+						dusted = {}
 						for _, tid in ipairs(state.towerOrder) do
 							local t = state.towers[tid]
 							if Grid.distance(t.x, t.y, cell[1], cell[2]) <= (def.radius or 2) + 1e-9 then
 								t.dustUntil = until_
+								table.insert(dusted :: { number }, t.id)
 							end
 						end
 					end
 				elseif def.mechanic == "armor_cycle" then
 					boss.bossArmorBonus = def.extraArmor or 0
 					boss.bossArmorUntil = state.simTime + (def.duration or 5)
+					expiresAt = boss.bossArmorUntil
 				elseif def.mechanic == "summon" then
 					local count = def.summonCount or 0
 					local summonType = def.summonType or "corrisco"
 					local s = math.min(boss.s + 0.5, state.pathLength - 0.1)
+					summoned = {}
 					for _ = 1, count do
 						if #state.enemyOrder < Simulation.MAX_ENEMIES then
-							spawnEnemy(state, summonType, s, events, { isSummon = true, bounty = 0 })
+							local child = spawnEnemy(state, summonType, s, events, { isSummon = true, bounty = 0 })
+							if child then
+								table.insert(summoned :: { number }, child.id)
+							end
 						end
 					end
 				end
@@ -663,6 +693,10 @@ local function updateBosses(state: Types.MatchState, events: { Types.SimEvent })
 						cell = boss.bossTargetCell,
 						radius = def.radius,
 						reason = def.mechanic,
+						expiresAt = expiresAt,
+						entityIds = summoned,
+						towerIds = dusted,
+						s = boss.s,
 					})
 				)
 			end
@@ -875,6 +909,7 @@ local function processDeaths(state: Types.MatchState, events: { Types.SimEvent }
 	for _, id in ipairs(ids) do
 		local e = state.enemies[id]
 		if e and e.alive and e.hp <= 0 then
+			cancelTelegraph(state, e, events)
 			removeEnemy(state, e)
 			local paid = 0
 			if not e.isSummon and e.bounty > 0 then
