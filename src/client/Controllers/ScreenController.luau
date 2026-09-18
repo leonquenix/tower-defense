@@ -133,6 +133,8 @@ local function refreshVisibleScreen()
 		cosmetics:render()
 	elseif current == "invites" then
 		invites:render()
+	elseif current == "settings" then
+		settings:render()
 	end
 end
 

@@ -174,6 +174,8 @@ function SettingsScreen.render(self: SettingsScreen)
 		end
 	end
 
+	-- refreshBalance também reescreve os textos fixos da moldura (Voltar, legenda do saldo)
+	self.chrome:refreshBalance()
 	self.chrome:setTitle(L("settings.title"), if self.inMatch then L("settings.matchContinues") else nil)
 
 	sectionTitle(self, L("settings.audio"), 1)

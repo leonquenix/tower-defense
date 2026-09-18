@@ -14,6 +14,7 @@ local Components = require(script.Parent.Parent.UI.Components)
 local Focus = require(script.Parent.Parent.UI.Focus)
 local MatchController = require(script.Parent.Parent.Controllers.MatchController)
 local Theme = require(script.Parent.Theme)
+local Ui = require(script.Parent.Ui)
 
 local HudPanels = {}
 
@@ -605,6 +606,7 @@ function HudPanels.compareStates(
 	to: Types.TowerStateStats
 ): { string }
 	local lines: { string } = {}
+	-- números seguem a formatação do idioma (vírgula decimal em PT-BR), como no resto da ficha
 	local function compare(labelKey: string, before: number?, after: number?, suffix: string?)
 		if before == nil or after == nil then
 			return
@@ -615,8 +617,8 @@ function HudPanels.compareStates(
 			string.format(
 				"%s: %s → %s %s%s",
 				L(labelKey),
-				tostring(before),
-				tostring(after),
+				Ui.formatDecimal(before, 2),
+				Ui.formatDecimal(after, 2),
 				arrow,
 				if suffix then " " .. suffix else ""
 			)

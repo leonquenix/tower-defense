@@ -52,6 +52,7 @@ export type Hud = typeof(setmetatable(
 		boardArea: Frame,
 		detail: Frame,
 		detailBody: ScrollingFrame,
+		detailActions: Frame,
 		wavePreview: Frame,
 		wavePreviewText: TextLabel,
 		tutorialBanner: Frame,
@@ -469,8 +470,25 @@ function Hud.new(parent: GuiObject, callbacks: Callbacks, mobile: boolean): Hud
 	detailBody.ScrollBarThickness = 4
 	detailBody.ZIndex = 6
 	detailBody.Parent = detail
+	-- As ações (melhorar, alvo, vender) ficam fixas na base do painel: só os atributos rolam.
+	-- Sem isso, num painel baixo (tutorial, celular) o botão de vender saía da área visível.
+	local detailActions = Ui.frame(detail, "Actions", {
+		Size = UDim2.new(1, 0, 0, 0),
+		AutomaticSize = Enum.AutomaticSize.Y,
+		Position = UDim2.new(0, 0, 1, 0),
+		AnchorPoint = Vector2.new(0, 1),
+		BackgroundTransparency = 1,
+		ZIndex = 7,
+	})
+	local actionsLayout = Ui.list(detailActions, Enum.FillDirection.Vertical, 6)
+	actionsLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+	detailActions:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+		local reserved = detailActions.AbsoluteSize.Y
+		detailBody.Size = UDim2.new(1, 0, 1, -(if reserved > 0 then reserved + 8 else 0))
+	end)
 	self.detail = detail
 	self.detailBody = detailBody
+	self.detailActions = detailActions
 
 	-- ------------------------------------------------------------------
 	-- Faixa inferior (computador) / cartas na coluna esquerda e ações na coluna direita (celular)
@@ -1216,13 +1234,27 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 	for _, c in ipairs(self.detailBody:GetChildren()) do
 		c:Destroy()
 	end
+	for _, c in ipairs(self.detailActions:GetChildren()) do
+		if not c:IsA("UIListLayout") then
+			c:Destroy()
+		end
+	end
 	local body = self.detailBody
+	local actions = self.detailActions
 	local list = Ui.list(body, Enum.FillDirection.Vertical, 6)
 	list.VerticalAlignment = Enum.VerticalAlignment.Top
 	local order = 0
 	local function add(inst: GuiObject)
 		order += 1
 		inst.LayoutOrder = order
+	end
+	-- ação fixa na base do painel, sempre alcançável sem rolar
+	local actionOrder = 0
+	local function addAction(button: Ui.Button)
+		actionOrder += 1
+		button.instance.LayoutOrder = actionOrder
+		button.instance.Size = UDim2.new(1, 0, 0, Theme.sizes.buttonTarget)
+		button.instance.Parent = actions
 	end
 	if tower then
 		local t = tower :: Types.TowerSnapshot
@@ -1344,7 +1376,7 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 					"primary",
 					{ Size = UDim2.new(1, 0, 0, 46), ZIndex = 7 }
 				)
-				add(b.instance)
+				addAction(b)
 				if not training and wallet < nextStats.cost then
 					b:setEnabled(false, L("build.noFunds", { missing = nextStats.cost - wallet }))
 				end
@@ -1369,7 +1401,7 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 						"primary",
 						{ Size = UDim2.new(1, 0, 0, 46), ZIndex = 7 }
 					)
-					add(b.instance)
+					addAction(b)
 					if not training and wallet < nextStats.cost then
 						b:setEnabled(false, L("build.noFunds", { missing = nextStats.cost - wallet }))
 					end
@@ -1409,7 +1441,7 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 					"secondary",
 					{ Size = UDim2.new(1, 0, 0, 44), ZIndex = 7 }
 				)
-				add(modeBtn.instance)
+				addAction(modeBtn)
 				modeBtn:onClick(function()
 					self.targetMenu:open(modeBtn.instance, t.tm, function(mode: string)
 						self.callbacks.onTarget(t.id, mode)
@@ -1424,7 +1456,7 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 				"danger",
 				{ Size = UDim2.new(1, 0, 0, 44), ZIndex = 7 }
 			)
-			add(sell.instance)
+			addAction(sell)
 			sell:onClick(function()
 				local circuitImpact = if t.ci
 					then L("detail.sellCircuit", { name = L("circuit." .. (t.ci :: string)) })
