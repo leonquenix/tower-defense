@@ -22,6 +22,7 @@ function Snapshot.enemies(state: Types.MatchState): { Types.EnemySnapshot }
 		local e = state.enemies[id]
 		if e.alive then
 			local slow = Combat.activeSlow(e, state.simTime, Balance.effects)
+			local armorBonus = if e.isBoss and e.bossArmorUntil > state.simTime then e.bossArmorBonus else 0
 			table.insert(list, {
 				id = e.id,
 				d = e.defId,
@@ -34,6 +35,11 @@ function Snapshot.enemies(state: Types.MatchState): { Types.EnemySnapshot }
 				mk = Combat.activeMark(e, state.simTime),
 				sm = e.isSummon,
 				tg = e.bossTelegraphing,
+				-- prazo real do aviso: o cliente reconstrói a contagem mesmo após atraso de rede
+				tga = if e.bossTelegraphing then e.bossResolveAt else nil,
+				ab = armorBonus,
+				ar = Combat.currentArmor(e, state.simTime),
+				er = e.energyResistance,
 			})
 		end
 	end

@@ -39,6 +39,8 @@ def main():
     pending = []
     for entry in registry["assets"]:
         key = entry["assetKey"]
+        if entry.get("entityType") in ("enemy", "boss"):
+            continue  # inimigos e chefes usam enemy_export_manifest.json (bloco abaixo)
         m = manifest.get(key)
         if not m:
             pending.append(key)
@@ -100,8 +102,37 @@ def main():
                 "backingColor": m["backingColor"],
             }
         entry["checkedInStudio"] = bool(entry.get("robloxAssetId")) and checked
+    # arte real de inimigos e chefes (Assets_Inimigos_Bosses_v1), por entityId do catálogo
+    enemy_manifest = os.path.join(ROOT, "assets", "export", "enemy_export_manifest.json")
+    real_enemy_keys = set()
+    enemy_entries = {}
+    if os.path.exists(enemy_manifest):
+        em = json.load(open(enemy_manifest))["assets"]
+        by_key = {a["assetKey"]: a for a in registry["assets"]}
+        for pack_key, exp in em.items():
+            is_boss = exp["entityType"] == "boss"
+            key = ("boss_" if is_boss else "enemy_") + exp["entityId"]
+            rel = exp["file"].replace("assets/export/", "")
+            aid = uploads.get(rel)
+            real_enemy_keys.add(key)
+            enemy_entries[key] = {
+                "image": f"rbxassetid://{aid}" if aid else None,
+                "width": exp["width"], "height": exp["height"],
+                "anchorX": exp["anchor"][0], "anchorY": exp["anchor"][1],
+                "kind": "boss" if is_boss else "enemy", "entityId": exp["entityId"],
+                "frameWidthCells": exp["frameWidthCells"], "visibleWidthCells": exp["visibleWidthCells"],
+            }
+            reg = by_key.get(pack_key)
+            if reg is not None:
+                reg["robloxAssetId"] = aid
+                reg["uploadedWidth"] = exp["width"] if aid else None
+                reg["uploadedHeight"] = exp["height"] if aid else None
+                reg["status"] = "uploaded" if aid else "exported_pending_upload"
+                reg["checkedInStudio"] = bool(aid) and checked
+
     registry["schemaNotes"] = (
-        "Campos adicionais: exportSha256, portraitExportFile, portraitRobloxAssetId, uploadFile, backingColor. "
+        "Campos adicionais: exportSha256, portraitExportFile, portraitRobloxAssetId, uploadFile, backingColor, "
+        "visibleWidthCells/frameWidthCells (inimigos e chefes). "
         "Status: pending_upload | exported_pending_upload | uploaded. checkedInStudio só após carregamento verificado."
     )
     registry["uploadLog"] = "assets/export/upload_log.json"
@@ -109,11 +140,13 @@ def main():
         json.dump(registry, f, indent=2, ensure_ascii=False)
         f.write("\n")
 
-    # placeholders procedurais de inimigos/chefes (identificados; não contam como arte final)
+    # placeholders procedurais: só para chaves que ainda não têm arte real (identificados)
     ph_path = os.path.join(ROOT, "assets", "export", "placeholders", "placeholder_manifest.json")
     if os.path.exists(ph_path):
         ph = json.load(open(ph_path))
         for key, entry in ph["assets"].items():
+            if key in real_enemy_keys:
+                continue
             rel = entry["file"].replace("assets/export/", "")
             aid = uploads.get(rel)
             luau_assets[key] = {
@@ -121,6 +154,7 @@ def main():
                 "anchorX": entry["anchor"][0], "anchorY": entry["anchor"][1],
                 "kind": "boss" if key.startswith("boss_") else "enemy", "placeholder": True,
             }
+    luau_assets.update(enemy_entries)
     header = (
         "--!strict\n"
         "-- ARQUIVO GERADO por tools/update_asset_registry.py a partir de runtime_asset_registry.json.\n"
@@ -128,7 +162,8 @@ def main():
         "-- image == nil significa asset ainda não publicado: o cliente usa um visual provisório identificado.\n\n"
         "export type AssetEntry = {\n"
         "\timage: string?,\n\tportrait: string?,\n\twidth: number,\n\theight: number,\n\tanchorX: number,\n\tanchorY: number,\n"
-        "\tcontentHeight: number?,\n\tkind: string,\n\ttowerId: string?,\n\tstate: string?,\n\tbackingColor: { number }?,\n\tplaceholder: boolean?,\n}\n\n"
+        "\tcontentHeight: number?,\n\tkind: string,\n\ttowerId: string?,\n\tstate: string?,\n\tbackingColor: { number }?,\n\tplaceholder: boolean?,\n"
+        "\tentityId: string?,\n\tframeWidthCells: number?,\n\tvisibleWidthCells: number?,\n}\n\n"
     )
     body = "local entries: { [string]: AssetEntry } = " + emit(luau_assets) + "\n\n"
     body += (

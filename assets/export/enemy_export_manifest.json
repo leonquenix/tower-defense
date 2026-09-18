@@ -1,0 +1,452 @@
+{
+  "generatedBy": "tools/export_enemy_assets.py",
+  "sourcePack": "Assets_Inimigos_Bosses_v1",
+  "anchor": [
+    0.5,
+    0.82
+  ],
+  "alphaThreshold": 128,
+  "note": "Exports normalizados das 11 poses estáticas. frameWidthCells é a largura do quadro quadrado em células do tabuleiro para que a largura visível corresponda a visibleWidthCells. Não são atlas: frameCount = 1.",
+  "assets": {
+    "enemy_fiapo_base": {
+      "assetKey": "enemy_fiapo_base",
+      "entityId": "fiapo",
+      "entityType": "enemy",
+      "displayName": "Fiapo",
+      "category": "inimigos",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_fiapo_base_v001.png",
+      "sourceSha256": "1af15b1dd7f0febff5489ec36e7e3bb676edf6be1d9bb7d89af3959a7edd10b9",
+      "file": "assets/export/enemies/enemy_fiapo_base_128.png",
+      "sha256": "7558dfcefd4907b09924e2b0bbd5c4d052bd3dda7745b27e8b42d83cf287926e",
+      "width": 128,
+      "height": 128,
+      "scaleFromSource": 0.117805,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.5,
+        0.827
+      ],
+      "sourceAnchorMeasured": [
+        0.5016,
+        0.8325
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        16,
+        8,
+        113,
+        106
+      ],
+      "contentWidthPx": 97,
+      "contentHeightPx": 98,
+      "visibleWidthCells": 0.68,
+      "frameWidthCells": 0.8973,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    },
+    "enemy_corrisco_base": {
+      "assetKey": "enemy_corrisco_base",
+      "entityId": "corrisco",
+      "entityType": "enemy",
+      "displayName": "Corrisco",
+      "category": "inimigos",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_corrisco_base_v001.png",
+      "sourceSha256": "495c18b1984ef4628fd0f2f61afd09464b6af056c2466db91779cef791554243",
+      "file": "assets/export/enemies/enemy_corrisco_base_128.png",
+      "sha256": "a7a6534a1de7c5d475d8ce7466cf8f936d64dec87fb4dd46f91ea451c7c6224b",
+      "width": 128,
+      "height": 128,
+      "scaleFromSource": 0.080271,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.66,
+        0.79
+      ],
+      "sourceAnchorMeasured": [
+        0.6232,
+        0.7982
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        8,
+        51,
+        89,
+        106
+      ],
+      "contentWidthPx": 81,
+      "contentHeightPx": 55,
+      "visibleWidthCells": 0.85,
+      "frameWidthCells": 1.3432,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    },
+    "enemy_bolota_base": {
+      "assetKey": "enemy_bolota_base",
+      "entityId": "bolota",
+      "entityType": "enemy",
+      "displayName": "Bolota",
+      "category": "inimigos",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_bolota_base_v001.png",
+      "sourceSha256": "1652e3a530d007048b84a3922a82c130303c5d75c684513eaf36716e21e6acff",
+      "file": "assets/export/enemies/enemy_bolota_base_128.png",
+      "sha256": "572187affc5c9f51e0831a3b36d424308c139c1a3d0e9cf73998466469c6840d",
+      "width": 128,
+      "height": 128,
+      "scaleFromSource": 0.078151,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.64,
+        0.838
+      ],
+      "sourceAnchorMeasured": [
+        0.4685,
+        0.8469
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        8,
+        42,
+        93,
+        106
+      ],
+      "contentWidthPx": 85,
+      "contentHeightPx": 64,
+      "visibleWidthCells": 1.1,
+      "frameWidthCells": 1.6565,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    },
+    "enemy_latinha_base": {
+      "assetKey": "enemy_latinha_base",
+      "entityId": "latinha",
+      "entityType": "enemy",
+      "displayName": "Latinha",
+      "category": "inimigos",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_latinha_base_v001.png",
+      "sourceSha256": "ad87dcb26569736431b1bc034ac629911dcaa854c0b235c30992eaaba9c9aed9",
+      "file": "assets/export/enemies/enemy_latinha_base_128.png",
+      "sha256": "1be3781dc9969692af96523834fdf7ffd389b43e0cb33b7b6a958ac126c0b697",
+      "width": 128,
+      "height": 128,
+      "scaleFromSource": 0.100784,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.56,
+        0.89
+      ],
+      "sourceAnchorMeasured": [
+        0.5327,
+        0.8955
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        16,
+        8,
+        98,
+        105
+      ],
+      "contentWidthPx": 82,
+      "contentHeightPx": 97,
+      "visibleWidthCells": 0.86,
+      "frameWidthCells": 1.3424,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    },
+    "enemy_nevoa_base": {
+      "assetKey": "enemy_nevoa_base",
+      "entityId": "nevoa",
+      "entityType": "enemy",
+      "displayName": "Névoa",
+      "category": "inimigos",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_nevoa_base_v001.png",
+      "sourceSha256": "7620d3c51501aa3d998492454209e9c46de62e63c06dc4f0aa8b187d2037abad",
+      "file": "assets/export/enemies/enemy_nevoa_base_128.png",
+      "sha256": "03900e3697feea5961e05f1076b1bb5e143ee50947220420351d574451515a70",
+      "width": 128,
+      "height": 128,
+      "scaleFromSource": 0.108738,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.5,
+        0.81
+      ],
+      "sourceAnchorMeasured": [
+        0.6344,
+        0.7998
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        9,
+        22,
+        120,
+        104
+      ],
+      "contentWidthPx": 111,
+      "contentHeightPx": 82,
+      "visibleWidthCells": 1.02,
+      "frameWidthCells": 1.1762,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    },
+    "enemy_remendo_base": {
+      "assetKey": "enemy_remendo_base",
+      "entityId": "remendo",
+      "entityType": "enemy",
+      "displayName": "Remendo",
+      "category": "inimigos",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_remendo_base_v001.png",
+      "sourceSha256": "667a3f1f4ba368ead9f1b1846308636954a7682f3f07e20503104fcbccd65bd9",
+      "file": "assets/export/enemies/enemy_remendo_base_128.png",
+      "sha256": "5b0f823c87d7f9eda07b36fcc21da3a652345f540c309b2114e40c241114b048",
+      "width": 128,
+      "height": 128,
+      "scaleFromSource": 0.101099,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.55,
+        0.89
+      ],
+      "sourceAnchorMeasured": [
+        0.4322,
+        0.8939
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        29,
+        8,
+        90,
+        105
+      ],
+      "contentWidthPx": 61,
+      "contentHeightPx": 97,
+      "visibleWidthCells": 0.76,
+      "frameWidthCells": 1.5948,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    },
+    "enemy_casulo_base": {
+      "assetKey": "enemy_casulo_base",
+      "entityId": "casulo",
+      "entityType": "enemy",
+      "displayName": "Casulo",
+      "category": "inimigos",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_casulo_base_v001.png",
+      "sourceSha256": "6d55ee445c6049954f337cbd4e58350991e4adf76cb3041f0ad564ee0470342f",
+      "file": "assets/export/enemies/enemy_casulo_base_128.png",
+      "sha256": "95849f16522410c5a7dc3d06e824b6b80a5d511aeeeaad92e16de398076f1e7e",
+      "width": 128,
+      "height": 128,
+      "scaleFromSource": 0.108557,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.515,
+        0.855
+      ],
+      "sourceAnchorMeasured": [
+        0.5112,
+        0.862
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        26,
+        8,
+        100,
+        106
+      ],
+      "contentWidthPx": 74,
+      "contentHeightPx": 98,
+      "visibleWidthCells": 0.84,
+      "frameWidthCells": 1.453,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    },
+    "enemy_brutamontes_base": {
+      "assetKey": "enemy_brutamontes_base",
+      "entityId": "brutamontes",
+      "entityType": "enemy",
+      "displayName": "Brutamontes",
+      "category": "inimigos",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_brutamontes_base_v001.png",
+      "sourceSha256": "04e4a576b013c786d49374ddfa848917ebc93cf747b273004798232f3d32727a",
+      "file": "assets/export/enemies/enemy_brutamontes_base_128.png",
+      "sha256": "9a93c6006a0eb9696e2434464f6ca9385af18044cbb5c5af0f920ffcfd2fa267",
+      "width": 128,
+      "height": 128,
+      "scaleFromSource": 0.094595,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.5,
+        0.87
+      ],
+      "sourceAnchorMeasured": [
+        0.7803,
+        0.9123
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        9,
+        17,
+        121,
+        111
+      ],
+      "contentWidthPx": 112,
+      "contentHeightPx": 94,
+      "visibleWidthCells": 1.3,
+      "frameWidthCells": 1.4857,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    },
+    "boss_aspirador_base": {
+      "assetKey": "boss_aspirador_base",
+      "entityId": "aspirador",
+      "entityType": "boss",
+      "displayName": "Aspirador Rabugento",
+      "category": "bosses",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/bosses/boss_aspirador_base_v001.png",
+      "sourceSha256": "0b9bd1cc8e39c9a3b739aecae91ec5e5c41dd55f1b400f48eb6062629871eaa5",
+      "file": "assets/export/bosses/boss_aspirador_base_256.png",
+      "sha256": "48cc19c8b8c1df67b10cf0c1249a0ce5da2f0e9279dbcdac7bc3a25afddbf842",
+      "width": 256,
+      "height": 256,
+      "scaleFromSource": 0.163132,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.64,
+        0.85
+      ],
+      "sourceAnchorMeasured": [
+        0.248,
+        0.9314
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        16,
+        56,
+        189,
+        227
+      ],
+      "contentWidthPx": 173,
+      "contentHeightPx": 171,
+      "visibleWidthCells": 1.8,
+      "frameWidthCells": 2.6636,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    },
+    "boss_rei_ferrugem_base": {
+      "assetKey": "boss_rei_ferrugem_base",
+      "entityId": "rei_ferrugem",
+      "entityType": "boss",
+      "displayName": "Rei Ferrugem",
+      "category": "bosses",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/bosses/boss_rei_ferrugem_base_v001.png",
+      "sourceSha256": "75faabe507bc4f12079ef416c3ff105f23b48458ade71fe5554da2821ab8e0d6",
+      "file": "assets/export/bosses/boss_rei_ferrugem_base_256.png",
+      "sha256": "18ae3895dfab6ce407b5271495b8f914834bc6d5d1146050db867a12159c7ce4",
+      "width": 256,
+      "height": 256,
+      "scaleFromSource": 0.168144,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.515,
+        0.95
+      ],
+      "sourceAnchorMeasured": [
+        0.5072,
+        0.9625
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        57,
+        16,
+        193,
+        213
+      ],
+      "contentWidthPx": 136,
+      "contentHeightPx": 197,
+      "visibleWidthCells": 1.28,
+      "frameWidthCells": 2.4094,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    },
+    "boss_breu_base": {
+      "assetKey": "boss_breu_base",
+      "entityId": "breu",
+      "entityType": "boss",
+      "displayName": "Breu debaixo da cama",
+      "category": "bosses",
+      "sourceFile": "Assets_Inimigos_Bosses_v1/bosses/boss_breu_base_v001.png",
+      "sourceSha256": "d196cf94aae10ac8d30d94630c52b591b2d40c2d26ffa79e63f3402d346a1054",
+      "file": "assets/export/bosses/boss_breu_base_256.png",
+      "sha256": "374437010a52a15ab4c95fad2671e2af042adac7c941b469e60e3a5e01bf500d",
+      "width": 256,
+      "height": 256,
+      "scaleFromSource": 0.179603,
+      "anchor": [
+        0.5,
+        0.82
+      ],
+      "sourceAnchorUsed": [
+        0.54,
+        0.928
+      ],
+      "sourceAnchorMeasured": [
+        0.5343,
+        0.9362
+      ],
+      "anchorRequiresReview": true,
+      "contentBoundsPx": [
+        20,
+        16,
+        222,
+        212
+      ],
+      "contentWidthPx": 202,
+      "contentHeightPx": 196,
+      "visibleWidthCells": 1.55,
+      "frameWidthCells": 1.9644,
+      "renderMode": "single_static",
+      "frameCount": 1,
+      "drawnAnimationStatus": "not_produced"
+    }
+  }
+}

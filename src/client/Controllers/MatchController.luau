@@ -19,6 +19,10 @@ export type EnemyView = {
 	slow: number,
 	mark: number,
 	telegraphing: boolean,
+	telegraphAt: number?, -- simTime da resolução do aviso (reconstrói a contagem após atraso)
+	armorBonus: number, -- reforço ativo do Rei Ferrugem
+	armor: number, -- armadura atual efetiva
+	energyResistance: number,
 	samples: { { t: number, s: number, v: number } },
 	lastSeen: number,
 }
@@ -137,6 +141,10 @@ local function applySnapshot(snapshot: Types.MatchSnapshot)
 				slow = e.sl,
 				mark = e.mk,
 				telegraphing = e.tg,
+				telegraphAt = e.tga,
+				armorBonus = e.ab,
+				armor = e.ar,
+				energyResistance = e.er,
 				samples = {},
 				lastSeen = now,
 			}
@@ -147,6 +155,10 @@ local function applySnapshot(snapshot: Types.MatchSnapshot)
 		ev.slow = e.sl
 		ev.mark = e.mk
 		ev.telegraphing = e.tg
+		ev.telegraphAt = e.tga
+		ev.armorBonus = e.ab
+		ev.armor = e.ar
+		ev.energyResistance = e.er
 		ev.lastSeen = now
 		local samples = ev.samples
 		local last = samples[#samples]

@@ -1,0 +1,79 @@
+[
+  {
+    "entityId": "fiapo",
+    "outputFile": "inimigos/enemy_fiapo_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": null,
+    "prompt": "Use case: stylized-concept.\nAsset type: one reusable transparent PNG enemy sprite for the Roblox 2D tower-defense game Quintal em Guarda.\nPrimary request: FIAPO, a tiny mischievous purple dust-bunny creature. A single squat round dusty violet ball, asymmetric broad soft tufts rather than fine hair, two large ivory oval eyes, tiny charcoal pupils, curious harmless expression, no mouth needed, no limbs needed. Lovable toy-world enemy, not scary.\nStyle/medium: polished hand-painted 2D cartoon game illustration, handmade paper/felt feeling, large clean color areas with at most two shading bands, bold dark navy #19283F contour, violet #7D63B8 body, cream #FFF3D6 eyes, soft top-left drawn lighting. Match a warm handcrafted garden of cardboard toys. No photorealism or glossy 3D rendering.\nComposition: square 1024x1024 canvas; exactly ONE full-body character centered, gently viewed from above in three-quarter view with face clearly readable. Character silhouette contained within 15%-85% of width and 15%-85% of height. Neutral reusable idle pose, no environment or level-specific accessory. Distinct readable at 32 pixels. Keep generous empty transparent space around the entire silhouette.\nBackground: TRUE TRANSPARENT ALPHA. Only character pixels. No floor, no cast shadow, no pedestal, no border, no labels, no letters, no checkerboard drawn into image, no watermark, no extra creatures or particles detached from body."
+  },
+  {
+    "entityId": "corrisco",
+    "outputFile": "inimigos/enemy_corrisco_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": "inimigos/enemy_fiapo_base_v001.png",
+    "prompt": "Use case: style-transfer. Create a sibling enemy sprite by redesigning the reference creature into the character below, preserving the reference's exact handcrafted 2D paper/felt illustration style, broad flat shading, thick dark navy #19283F outline, violet #7D63B8 family and large ivory eyes. The input is the STYLE reference, not a request to retain its round silhouette. Exactly ONE full-body character, square canvas, 15% transparent safe margin on all sides, face visible in gentle overhead three-quarter view. Neutral reusable idle pose for a 2D Roblox tower defense, legible at 32 pixels. Light painted from top left. No environment, no text, no UI, no ground shadow, no pedestal, no detached particles, no extra characters. Background MUST be real transparent alpha, never painted checkerboard. CORRISCO, fast enemy: a distinctly narrow elongated violet dust teardrop tilted forward slightly to the right, with a short swept-back tail contiguous with the body on the left, two big alert cream eyes, two tiny soft pointed feet in a ready-to-run pose. Streamlined asymmetric silhouette, playful determined expression. No motion-blur streaks baked in."
+  },
+  {
+    "entityId": "bolota",
+    "outputFile": "inimigos/enemy_bolota_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": "inimigos/enemy_fiapo_base_v001.png",
+    "prompt": "Use case: style-transfer. Create a sibling enemy sprite by redesigning the reference creature into the character below, preserving the reference's exact handcrafted 2D paper/felt illustration style, broad flat shading, thick dark navy #19283F outline, violet #7D63B8 family and large ivory eyes. The input is the STYLE reference, not a request to retain its round silhouette. Exactly ONE full-body character, square canvas, 15% transparent safe margin on all sides, face visible in gentle overhead three-quarter view. Neutral reusable idle pose for a 2D Roblox tower defense, legible at 32 pixels. Light painted from top left. No environment, no text, no UI, no ground shadow, no pedestal, no detached particles, no extra characters. Background MUST be real transparent alpha, never painted checkerboard. BOLOTA, heavy enemy: a very wide squat plump dust creature like a stuffed violet beanbag, broad cheeks and heavy lower body, two tiny stocky feet, two sleepy but stubborn ivory eyes. Very few large broad fabric folds and dust tufts. Width about 1.4 times height. No arms, no accessories. Clearly heavier and lower than the reference, not merely scaled larger."
+  },
+  {
+    "entityId": "latinha",
+    "outputFile": "inimigos/enemy_latinha_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": "inimigos/enemy_fiapo_base_v001.png",
+    "prompt": "Use case: style-transfer. Create a sibling enemy sprite by redesigning the reference creature into the character below, preserving the reference's exact handcrafted 2D paper/felt illustration style, broad flat shading, thick dark navy #19283F outline, violet #7D63B8 family and large ivory eyes. The input is the STYLE reference, not a request to retain its round silhouette. Exactly ONE full-body character, square canvas, 15% transparent safe margin on all sides, face visible in gentle overhead three-quarter view. Neutral reusable idle pose for a 2D Roblox tower defense, legible at 32 pixels. Light painted from top left. No environment, no text, no UI, no ground shadow, no pedestal, no detached particles, no extra characters. Background MUST be real transparent alpha, never painted checkerboard. LATINHA, armored enemy: a little violet dust creature living inside a squat square dented tin box, muted blue-gray steel plates with one large lid-shaped shield plate covering the front lower body, two large cream eyes visible above the plate, purple tufts over the rim and two little dark violet feet. Square rigid silhouette, charming grumpy toy. One or two big simple rivets, restrained warm rust accents. Clear simple physical armor, no symbols or writing."
+  },
+  {
+    "entityId": "nevoa",
+    "outputFile": "inimigos/enemy_nevoa_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": "inimigos/enemy_fiapo_base_v001.png",
+    "prompt": "Use case: style-transfer. Create a sibling enemy sprite by redesigning the reference creature into the character below, preserving the reference's exact handcrafted 2D paper/felt illustration style, broad flat shading, thick dark navy #19283F outline, violet #7D63B8 family and large ivory eyes. The input is the STYLE reference, not a request to retain its round silhouette. Exactly ONE full-body character, square canvas, 15% transparent safe margin on all sides, face visible in gentle overhead three-quarter view. Neutral reusable idle pose for a 2D Roblox tower defense, legible at 32 pixels. Light painted from top left. No environment, no text, no UI, no ground shadow, no pedestal, no detached particles, no extra characters. Background MUST be real transparent alpha, never painted checkerboard. NÉVOA, energy-resistant enemy: a flattened oval spiral of violet cloth-like magical mist, made from three thick curling ribbon lobes forming one connected swirl body. Two large luminous cream eyes in the dark center. Outer rim has a few simple dotted cutout scallops, no detached particles. Horizontal floating low silhouette, no arms or feet. Muted lavender and dark purple, opaque visible face, no outer glow or bloom. Must be visually distinct from a round furry ball."
+  },
+  {
+    "entityId": "remendo",
+    "outputFile": "inimigos/enemy_remendo_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": "inimigos/enemy_fiapo_base_v001.png",
+    "prompt": "Use case: style-transfer. Create a sibling enemy sprite by redesigning the reference creature into the character below, preserving the reference's exact handcrafted 2D paper/felt illustration style, broad flat shading, thick dark navy #19283F outline, violet #7D63B8 family and large ivory eyes. The input is the STYLE reference, not a request to retain its round silhouette. Exactly ONE full-body character, square canvas, 15% transparent safe margin on all sides, face visible in gentle overhead three-quarter view. Neutral reusable idle pose for a 2D Roblox tower defense, legible at 32 pixels. Light painted from top left. No environment, no text, no UI, no ground shadow, no pedestal, no detached particles, no extra characters. Background MUST be real transparent alpha, never painted checkerboard. REMENDO, healer enemy: a small soft violet cloth sack with a tied top knot, two short stubby fabric feet, two kindly but mischievous ivory eyes. One large cream rectangular patch on its belly fastened by a prominent dark X stitch, plus a few large stitches along the side seam. No medical red cross, no weapon, no staff. Silhouette is a vertically tapered sack, not a round dust ball. Two simple shading bands."
+  },
+  {
+    "entityId": "casulo",
+    "outputFile": "inimigos/enemy_casulo_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": "inimigos/enemy_fiapo_base_v001.png",
+    "prompt": "Use case: style-transfer. Create a sibling enemy sprite by redesigning the reference creature into the character below, preserving the reference's exact handcrafted 2D paper/felt illustration style, broad flat shading, thick dark navy #19283F outline, violet #7D63B8 family and large ivory eyes. The input is the STYLE reference, not a request to retain its round silhouette. Exactly ONE full-body character, square canvas, 15% transparent safe margin on all sides, face visible in gentle overhead three-quarter view. Neutral reusable idle pose for a 2D Roblox tower defense, legible at 32 pixels. Light painted from top left. No environment, no text, no UI, no ground shadow, no pedestal, no detached particles, no extra characters. Background MUST be real transparent alpha, never painted checkerboard. CASULO, splitting enemy: one upright squat oval cocoon made of layered purple-gray cardboard and dusty violet cloth, a single bold zigzag crack across its shell, two wide ivory eyes peeking from a small dark opening near the upper third. Small rounded foot-like lobes at base, but no external arms. The cracked shell remains assembled in a calm reusable idle pose. No fragments floating away, no baby creatures, no hatching sequence, no detached particles. Recognizable egg silhouette."
+  },
+  {
+    "entityId": "brutamontes",
+    "outputFile": "inimigos/enemy_brutamontes_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": "inimigos/enemy_fiapo_base_v001.png",
+    "prompt": "Use case: style-transfer. Create a sibling enemy sprite by redesigning the reference creature into the character below, preserving the reference's exact handcrafted 2D paper/felt illustration style, broad flat shading, thick dark navy #19283F outline, violet #7D63B8 family and large ivory eyes. The input is the STYLE reference, not a request to retain its round silhouette. Exactly ONE full-body character, square canvas, 15% transparent safe margin on all sides, face visible in gentle overhead three-quarter view. Neutral reusable idle pose for a 2D Roblox tower defense, legible at 32 pixels. Light painted from top left. No environment, no text, no UI, no ground shadow, no pedestal, no detached particles, no extra characters. Background MUST be real transparent alpha, never painted checkerboard. BRUTAMONTES, brute enemy: a very wide hulking violet patchwork cloth creature with a small head nestled between massive high shoulders, exactly two thick long stuffed-fabric arms and mitten fists touching near the ground, exactly two short sturdy feet, cream eyes and a stubborn knitted brow. Gentle toy gorilla proportions, no realistic anatomy. One broad stitched repair on a shoulder and large fabric folds, clean readable shapes. Different silhouette from a fluffy ball; strength comes from huge arms and shoulders."
+  },
+  {
+    "entityId": "aspirador",
+    "outputFile": "bosses/boss_aspirador_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": "inimigos/enemy_fiapo_base_v001.png",
+    "prompt": "Use case: style-transfer. Redesign the style reference into one full-body BOSS sprite for Quintal em Guarda. Keep its handcrafted 2D paper/felt painted look, dark navy #19283F bold outlines, two-band shading, cream cartoon eyes, soft light from upper left. Subject: ASPIRADOR RABUGENTO, a living old toy canister vacuum cleaner: squat oval dusty blue-gray and muted teal metal body on two chunky small wheels, rust-coral top panel, two big irritated cream eyes on front, one thick corrugated flexible hose looping up from the side and ending in a simple wide suction nozzle near ground. A violet dust tuft peeks from top seam, linking to the dust enemies. Coherent single connected character; hose fully visible; no extra faces. Boss feels bulky, funny and grumpy, never frightening. Front three-quarter view gently from above, face readable at 64px. Square transparent canvas, centered character occupying about 70% of frame with 15% safe margins. No backdrop, no floor, no shadow, no particles, no text, no labels, no UI, no logos or watermark. TRUE TRANSPARENT ALPHA around character, not a painted checkerboard. Neutral pose reusable on every map and difficulty."
+  },
+  {
+    "entityId": "rei_ferrugem",
+    "outputFile": "bosses/boss_rei_ferrugem_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": "inimigos/enemy_fiapo_base_v001.png",
+    "prompt": "Use case: style-transfer. Redesign the style reference into one full-body BOSS sprite for Quintal em Guarda. Keep handcrafted 2D paper/felt painted cartoon style, thick dark navy #19283F outlines, clean two-band cel shadows, large cream eyes, light painted from upper left. Subject: REI FERRUGEM, a tall living tin-can king, cylindrical slightly tapered body formed of three big overlapping dented rust-coral and blue-gray metal armor plates, a simple recognizable crown made from three flattened gold bottle caps across the top, violet dust peeking at joints, two short chunky violet feet, two small metal mitten arms. Proud stern eyes visible in top faceplate, one large simple rivet per main plate, no mouth or weapons required. Vertical regal silhouette distinct from round creatures, armor currently at rest. Funny handmade junk toy, not a real robot or horror character. Single full character on square canvas, centered, 15% transparent margins all around, gentle overhead three-quarter view with clear face. TRUE TRANSPARENT ALPHA background. No scenery, cast shadow, pedestal, detached objects, text, numbers, logos, UI, checkerboard or watermark."
+  },
+  {
+    "entityId": "breu",
+    "outputFile": "bosses/boss_breu_base_v001.png",
+    "tool": "image_gen",
+    "referenceAsset": "inimigos/enemy_fiapo_base_v001.png",
+    "prompt": "Use case: style-transfer. Redesign the style reference into one full-body BOSS sprite for Quintal em Guarda. Keep the handcrafted 2D paper/felt painted illustration, thick navy #19283F outline, broad simple two-band shading, ivory eyes, warm playful toy-world feeling. Subject: BREU DEBAIXO DA CAMA, a big funny creature made from a draped dark indigo-purple bedtime blanket, broad tent-like silhouette with an asymmetric slouching top, two large expressive ivory eyes inside a dark hood opening, exactly two short rounded violet fabric feet showing below the hem. Three large muted gold star-shaped fabric patches stitched on the blanket and a cream stitched hem. Small folds suggest cloth, no realistic fabric noise. No weapon, no crown, no teeth, no horror. Boss must feel distinct and readable at 64px; whimsical grumpy bedtime blanket. Single full body, neutral reusable idle pose, gentle overhead three-quarter view. Square canvas, centered, whole silhouette inside 15% safe margins. Background TRUE TRANSPARENT ALPHA. No ground, no shadow, no stars floating outside body, no extra creatures, no text, UI, logos, watermark or painted checkerboard."
+  }
+]

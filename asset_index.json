@@ -3,7 +3,7 @@
   "project": "Quintal em Guarda",
   "documentVersion": "1.1",
   "pathBase": "directory containing this file (Tower Defense root)",
-  "sourceAssetCount": 40,
+  "sourceAssetCount": 51,
   "assets": [
     {
       "assetKey": "base_farol_pilha",
@@ -1094,6 +1094,336 @@
         ],
         "preserveOriginal": true
       }
+    },
+    {
+      "assetKey": "enemy_fiapo_base",
+      "displayName": "Fiapo",
+      "category": "inimigos",
+      "entityId": "fiapo",
+      "entityType": "enemy",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_fiapo_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5,
+        0.827
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "1af15b1dd7f0febff5489ec36e7e3bb676edf6be1d9bb7d89af3959a7edd10b9",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_corrisco_base",
+      "displayName": "Corrisco",
+      "category": "inimigos",
+      "entityId": "corrisco",
+      "entityType": "enemy",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_corrisco_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.66,
+        0.79
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "495c18b1984ef4628fd0f2f61afd09464b6af056c2466db91779cef791554243",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_bolota_base",
+      "displayName": "Bolota",
+      "category": "inimigos",
+      "entityId": "bolota",
+      "entityType": "enemy",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_bolota_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.64,
+        0.838
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "1652e3a530d007048b84a3922a82c130303c5d75c684513eaf36716e21e6acff",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_latinha_base",
+      "displayName": "Latinha",
+      "category": "inimigos",
+      "entityId": "latinha",
+      "entityType": "enemy",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_latinha_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.56,
+        0.89
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "ad87dcb26569736431b1bc034ac629911dcaa854c0b235c30992eaaba9c9aed9",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_nevoa_base",
+      "displayName": "Névoa",
+      "category": "inimigos",
+      "entityId": "nevoa",
+      "entityType": "enemy",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_nevoa_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5,
+        0.81
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "7620d3c51501aa3d998492454209e9c46de62e63c06dc4f0aa8b187d2037abad",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_remendo_base",
+      "displayName": "Remendo",
+      "category": "inimigos",
+      "entityId": "remendo",
+      "entityType": "enemy",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_remendo_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.55,
+        0.89
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "667a3f1f4ba368ead9f1b1846308636954a7682f3f07e20503104fcbccd65bd9",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_casulo_base",
+      "displayName": "Casulo",
+      "category": "inimigos",
+      "entityId": "casulo",
+      "entityType": "enemy",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_casulo_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.515,
+        0.855
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "6d55ee445c6049954f337cbd4e58350991e4adf76cb3041f0ad564ee0470342f",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_brutamontes_base",
+      "displayName": "Brutamontes",
+      "category": "inimigos",
+      "entityId": "brutamontes",
+      "entityType": "enemy",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_brutamontes_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.5,
+        0.87
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "04e4a576b013c786d49374ddfa848917ebc93cf747b273004798232f3d32727a",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_aspirador_base",
+      "displayName": "Aspirador Rabugento",
+      "category": "bosses",
+      "entityId": "aspirador",
+      "entityType": "boss",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/bosses/boss_aspirador_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.64,
+        0.85
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "0b9bd1cc8e39c9a3b739aecae91ec5e5c41dd55f1b400f48eb6062629871eaa5",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_rei_ferrugem_base",
+      "displayName": "Rei Ferrugem",
+      "category": "bosses",
+      "entityId": "rei_ferrugem",
+      "entityType": "boss",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/bosses/boss_rei_ferrugem_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.515,
+        0.95
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "75faabe507bc4f12079ef416c3ff105f23b48458ade71fe5554da2821ab8e0d6",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_breu_base",
+      "displayName": "Breu debaixo da cama",
+      "category": "bosses",
+      "entityId": "breu",
+      "entityType": "boss",
+      "towerId": null,
+      "state": null,
+      "sourceFile": "Assets_Inimigos_Bosses_v1/bosses/boss_breu_base_v001.png",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sourceAnchorSuggested": [
+        0.54,
+        0.928
+      ],
+      "anchorRequiresReview": true,
+      "sha256": "d196cf94aae10ac8d30d94630c52b591b2d40c2d26ffa79e63f3402d346a1054",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
     }
   ],
   "towers": {
@@ -1169,5 +1499,9 @@
     "audio",
     "skins",
     "Roblox upload IDs"
+  ],
+  "assetPacks": [
+    "Assets_Quintal_em_Guarda_v1 (40 originais: torres, cenário e terrenos)",
+    "Assets_Inimigos_Bosses_v1 (11 originais: 8 inimigos e 3 chefes)"
   ]
 }

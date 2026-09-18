@@ -27,11 +27,14 @@ O script baixa os binários fixados em `rokit.toml` para `.toolchain/bin/` e o a
 ```bash
 python3 tools/import_balance.py          # valida dados/balanceamento_v1.json e gera Config/Balance.luau + Config/Maps.luau
 python3 tools/export_assets.py           # exports normalizados dos 40 PNGs em assets/export (originais preservados)
-python3 tools/generate_placeholder_enemies.py   # visuais PROVISÓRIOS de inimigos/chefes (identificados como placeholder)
+python3 tools/export_enemy_assets.py     # exports dos 11 PNGs de inimigos/chefes (128 px) e chefes (256 px)
+python3 tools/merge_enemy_index.py       # acrescenta os 11 registros ao asset_index.json e ao registro de runtime
 python3 tools/update_asset_registry.py   # atualiza runtime_asset_registry.json e gera Config/Assets.luau (só com IDs de uploads reais)
 ```
 
 `import_balance.py` falha com código 1 se houver ID desconhecido, custo inválido, salto de evolução, caminho diagonal, bloqueio sobre caminho ou célula fora da grade. Os módulos gerados carregam o sha256 do JSON de origem.
+
+`export_enemy_assets.py` normaliza as 11 poses de `Assets_Inimigos_Bosses_v1/` com apoio em (0,5; 0,82) e calcula `frameWidthCells` por tipo, de modo que a largura visível em células corresponda a `enemy_visuals.json`. Ele grava `assets/export/enemy_export_manifest.json` e as pranchas `review_enemies_light.png` e `review_enemies_dark.png` (conferência sobre fundo claro e escuro). `tools/generate_placeholder_enemies.py` continua existindo, mas os placeholders procedurais deixaram de ser usados: `update_asset_registry.py` só os emite para chaves sem arte real.
 
 ## Verificações
 
@@ -89,12 +92,18 @@ game.ReplicatedStorage.QuintalNet.Command:InvokeServer({protocolVersion=1, sessi
 default.project.json     árvore Rojo (ReplicatedStorage/Shared, ServerScriptService/Server, StarterPlayerScripts/Client)
 src/shared               Types, Config (gerados), Math, Rules, Sim (simulação pura), Net/Protocol, Profile, Util
 src/server               Bootstrap + Services (Match, Command, Party, Menu, Profile, Reward, Shop, Telemetry)
-src/client               Bootstrap + Controllers (Screen, Play, Match, Input, Settings, Audio) + View (Board, Hud, Menu, ...)
+src/client               Bootstrap + Controllers (Screen, Play, Match, Input, Settings, Audio) + View (Board, Hud, Menu, TowerAnimator, EnemyAnimator, ...)
 tests/                   runner Lune, loader Roblox-like e specs
 tools/                   geradores e exportadores (Python) + bootstrap da toolchain
 assets/export            exports normalizados, manifesto de export, log de uploads e placeholders
 docs/                    SETUP, TEST_REPORT, MANUAL_ACTIONS, MILESTONES
 ```
+
+## Inimigos, chefes e movimento
+
+`src/client/View/EnemyAnimator.luau` é o espelho tipado de `Assets_Inimigos_Bosses_v1/enemy_visuals.json`: um ciclo por tipo (salto, corrida, compressão, passada, flutuação, balanço), impacto de 0,12 s, tremor do Casulo na morte, pose de aviso e de habilidade dos chefes. As amplitudes são frações do quadro de referência de 128 px, então valem em qualquer resolução. O relógio é o tempo de simulação (1x e 2x usam o mesmo ciclo lógico) e movimento reduzido desliga os ciclos decorativos sem afetar posição, barra de vida nem avisos.
+
+As 11 poses são estáticas: não existe atlas nem recorte por quadro. Ao produzir os 96 quadros de inimigos e 48 de chefes, trocar `renderMode` em `runtime_asset_registry.json` e implementar o recorte em `BoardRenderer`.
 
 ## Responsividade
 

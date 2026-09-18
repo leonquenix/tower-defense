@@ -16,6 +16,7 @@ local Ui = require(script.Parent.Ui)
 local BoardTransform = require(script.Parent.BoardTransform)
 local SpritePool = require(script.Parent.SpritePool)
 local TowerAnimator = require(script.Parent.TowerAnimator)
+local EnemyAnimator = require(script.Parent.EnemyAnimator)
 local MatchController = require(script.Parent.Parent.Controllers.MatchController)
 
 local BoardRenderer = {}
@@ -50,13 +51,19 @@ type EnemyVisual = {
 	hpBack: Frame,
 	hpFill: Frame,
 	status: TextLabel,
+	resist: TextLabel, -- ícone de resistência física/energia (forma + texto, não só cor)
+	badge: TextLabel, -- aviso de habilidade do chefe com contagem
+	healMark: TextLabel, -- remendo recebido
 	name: TextLabel,
 	stroke: UIStroke,
+	animator: EnemyAnimator.Animator,
+	frameCells: number,
 	id: number,
 	defId: string,
 	isBoss: boolean,
 	depth: number,
 	dying: boolean,
+	healUntil: number,
 	px: number,
 	py: number,
 }
@@ -157,6 +164,12 @@ function BoardRenderer.new(transform: BoardTransform.BoardTransform): Renderer
 		v.image.ImageTransparency = 0
 		v.container.Size = cellsToScale(ENEMY_CELLS)
 		v.stroke.Enabled = false
+		v.resist.Visible = false
+		v.badge.Visible = false
+		v.healMark.Visible = false
+		v.healUntil = 0
+		-- cancela feedback antigo: o objeto pode voltar como outra entidade no passo seguinte
+		v.animator:restore()
 	end)
 	self.numberPool = SpritePool.new(function(): TextLabel
 		local l = Ui.label(self.layers.effects, "Dmg", "", {
@@ -629,6 +642,45 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 		Visible = false,
 		ZIndex = Z.entities + 3,
 	})
+	-- resistência: ícone com forma própria à esquerda da barra (nunca só cor)
+	local resist = Ui.label(container, "Resist", "", {
+		Size = UDim2.fromScale(0.26, 0.16),
+		Position = UDim2.fromScale(0.05, 0.06),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		TextScaled = true,
+		TextXAlignment = Enum.TextXAlignment.Center,
+		TextColor3 = Theme.colors.cream,
+		TextStrokeTransparency = 0,
+		TextStrokeColor3 = Theme.colors.ink,
+		Visible = false,
+		ZIndex = Z.entities + 4,
+	})
+	-- aviso do chefe com contagem em segundos de simulação
+	local badge = Ui.label(container, "Badge", "", {
+		Size = UDim2.fromScale(0.9, 0.18),
+		Position = UDim2.fromScale(0.5, -0.12),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		TextScaled = true,
+		TextXAlignment = Enum.TextXAlignment.Center,
+		TextColor3 = Theme.colors.danger,
+		TextStrokeTransparency = 0,
+		TextStrokeColor3 = Theme.colors.ink,
+		Font = Theme.fonts.title,
+		Visible = false,
+		ZIndex = Z.entities + 5,
+	})
+	local healMark = Ui.label(container, "Heal", "✚", {
+		Size = UDim2.fromScale(0.3, 0.2),
+		Position = UDim2.fromScale(0.85, 0.1),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		TextScaled = true,
+		TextXAlignment = Enum.TextXAlignment.Center,
+		TextColor3 = Theme.colors.teal,
+		TextStrokeTransparency = 0,
+		TextStrokeColor3 = Theme.colors.ink,
+		Visible = false,
+		ZIndex = Z.entities + 5,
+	})
 	return {
 		container = container,
 		image = image,
@@ -637,13 +689,19 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 		hpBack = hpBack,
 		hpFill = hpFill,
 		status = status,
+		resist = resist,
+		badge = badge,
+		healMark = healMark,
 		name = name,
 		stroke = stroke,
+		animator = EnemyAnimator.new(image, "fiapo", 0, 0.82, 1),
+		frameCells = ENEMY_CELLS,
 		id = 0,
 		defId = "",
 		isBoss = false,
 		depth = 0,
 		dying = false,
+		healUntil = 0,
 		px = 0,
 		py = 0,
 	}
@@ -653,24 +711,82 @@ local function enemyDisplayName(defId: string): string
 	return Localization.get("enemy." .. defId)
 end
 
+-- Aviso de cada chefe: poeira (Aspirador), escudo (Rei Ferrugem), estrela (Breu).
+local BOSS_BADGE: { [string]: string } = { aspirador = "≋", rei_ferrugem = "⛨", breu = "★" }
+
+local function bossBadgeIcon(defId: string): string
+	return BOSS_BADGE[defId] or "!"
+end
+
+-- Filhos do Casulo reusam o sprite de Fiapo em 70% da escala (enemy_visuals.json, spawnedVariants);
+-- os Corriscos invocados por Breu usam a escala normal. O tamanho não altera atributos.
+local function visualScaleFor(ev: MatchController.EnemyView): number
+	if ev.isSummon and ev.defId == "fiapo" then
+		return 0.7
+	end
+	return 1
+end
+
+-- Ícone de resistência do tipo (formato + letra, legível sem depender de cor).
+local function resistIconFor(defId: string, isBoss: boolean): (string, Color3?)
+	local def = if isBoss then nil else Catalog.getEnemy(defId)
+	if def then
+		if (def.energyResistance or 0) > 0 then
+			return "◈", Theme.colors.cyan
+		end
+		if def.armor > 0 then
+			return "⛨", Theme.colors.sand
+		end
+		if def.healPulse then
+			return "✚", Theme.colors.teal
+		end
+		if def.splitOnDeath then
+			return "❖", Theme.colors.gold
+		end
+	end
+	return "", nil
+end
+
 function BoardRenderer.acquireEnemy(self: Renderer, ev: MatchController.EnemyView): EnemyVisual
 	local visual = self.enemyPool:acquire()
 	visual.id = ev.id
 	visual.defId = ev.defId
 	visual.isBoss = ev.isBoss
 	visual.dying = false
+	visual.healUntil = 0
 	local key = Assets.enemyKey(ev.defId, ev.isBoss)
 	local entry = Assets.get(key)
 	visual.image.Image = if entry and entry.image then entry.image :: string else ""
 	visual.fallback.Visible = visual.image.Image == ""
 	visual.fallback.Text = ev.defId:sub(1, 2):upper()
-	local cells = if ev.isBoss then BOSS_CELLS else (if ev.isSummon then ENEMY_CELLS * 0.8 else ENEMY_CELLS)
+	-- largura do quadro por tipo: vem do export normalizado para que a largura visível em células
+	-- corresponda ao guia. Sem entrada (arte ainda não exportada) usa o tamanho genérico.
+	local scale = visualScaleFor(ev)
+	local baseCells = if entry and entry.frameWidthCells
+		then entry.frameWidthCells :: number
+		else (if ev.isBoss then BOSS_CELLS else ENEMY_CELLS)
+	local cells = baseCells * scale
+	visual.frameCells = cells
 	visual.container.Size = cellsToScale(cells)
+	local anchorY = if entry then entry.anchorY else 0.82
+	visual.container.AnchorPoint = Vector2.new(if entry then entry.anchorX else 0.5, anchorY)
+	visual.image.AnchorPoint = Vector2.new(0.5, anchorY)
 	visual.image.ImageTransparency = 0
+	visual.animator:reset(ev.defId, ev.id, anchorY, 1)
 	visual.name.Visible = ev.isBoss
 	visual.name.Text = if ev.isBoss then enemyDisplayName(ev.defId) else ""
+	local icon, color = resistIconFor(ev.defId, ev.isBoss)
+	visual.resist.Text = icon
+	visual.resist.Visible = icon ~= ""
+	if color then
+		visual.resist.TextColor3 = color
+	end
+	visual.badge.Visible = false
+	visual.healMark.Visible = false
+	visual.hpBack.Visible = true
 	visual.container.Visible = true
 	visual.shadow.Visible = true
+	visual.shadow.Size = UDim2.fromScale(0.55 * scale / Grid.COLUMNS, 0.18 * scale / Grid.ROWS)
 	visual.container.Name = "Enemy_" .. ev.id
 	self.enemies[ev.id] = visual
 	return visual
@@ -692,9 +808,15 @@ function BoardRenderer.playEnemyExit(self: Renderer, id: number, kind: "death" |
 	end
 	visual.dying = true
 	self.enemies[id] = nil
+	visual.badge.Visible = false
+	visual.healMark.Visible = false
+	BoardRenderer.setTelegraph(self, id, nil, nil, false)
 	local duration = if kind == "death" then 0.3 else 0.12
 	if self.reducedMotion then
 		duration = 0.08
+	end
+	if kind == "death" and visual.defId == "casulo" then
+		visual.animator:playDeathShake()
 	end
 	local tween =
 		TweenService:Create(visual.image, TweenInfo.new(duration, Enum.EasingStyle.Quad), { ImageTransparency = 1 })
@@ -724,6 +846,22 @@ function BoardRenderer.playEnemyExit(self: Renderer, id: number, kind: "death" |
 		visual.image.ImageTransparency = 0
 		self.enemyPool:release(visual)
 	end)
+end
+
+-- Impacto confirmado pelo servidor: escurecimento curto de 0,12 s.
+function BoardRenderer.playEnemyHit(self: Renderer, enemyId: number)
+	local visual = self.enemies[enemyId]
+	if visual and not visual.dying then
+		visual.animator:playHit()
+	end
+end
+
+-- Entrada dos invocados (Breu): escala curta; a entidade já existe e já pode ser atacada.
+function BoardRenderer.playEnemySpawnIn(self: Renderer, enemyId: number)
+	local visual = self.enemies[enemyId]
+	if visual and not visual.dying then
+		visual.animator:playSpawnIn()
+	end
 end
 
 -- ---------------------------------------------------------------------------
@@ -949,6 +1087,10 @@ function BoardRenderer.setTelegraph(
 	if not active then
 		return
 	end
+	local boss = self.enemies[entityId]
+	if boss and not boss.dying then
+		boss.animator:playTelegraph()
+	end
 	if cell and radius then
 		local ring = ringFrame(self, cell[1], cell[2], radius, Theme.colors.danger, 3, Z.effects + 2)
 		ring.BackgroundTransparency = 0.85
@@ -966,27 +1108,94 @@ function BoardRenderer.setTelegraph(
 	end
 end
 
+-- Cura do Remendo: anel curto no curador e marca nos alvos efetivamente curados.
+-- Os valores já foram aplicados no servidor; aqui só há apresentação.
+function BoardRenderer.playHeal(self: Renderer, healerId: number, targets: { number }?, simNow: number)
+	local healer = self.enemies[healerId]
+	if healer and not healer.dying and not self.reducedParticles then
+		local ring = ringFrame(self, healer.px, healer.py - 0.2, 0.75, Theme.colors.teal, 3, Z.effects + 2)
+		local t = TweenService:Create(
+			ring,
+			TweenInfo.new(if self.reducedMotion then 0.15 else 0.35, Enum.EasingStyle.Quad),
+			{ Size = cellsToScale(2.4), BackgroundTransparency = 1 }
+		)
+		local stroke = ring:FindFirstChildOfClass("UIStroke")
+		if stroke then
+			TweenService:Create(stroke, TweenInfo.new(0.35), { Transparency = 1 }):Play()
+		end
+		t:Play()
+		t.Completed:Once(function()
+			ring:Destroy()
+		end)
+	end
+	if targets then
+		for _, id in ipairs(targets) do
+			local visual = self.enemies[id]
+			if visual and not visual.dying then
+				visual.healMark.Visible = true
+				visual.healUntil = simNow + 0.6
+			end
+		end
+	end
+end
+
 function BoardRenderer.playAbility(
 	self: Renderer,
 	entityId: number,
 	mechanic: string,
 	cell: Types.Cell?,
-	radius: number?
+	radius: number?,
+	expiresAt: number?,
+	entityIds: { number }?,
+	simNow: number?
 )
 	BoardRenderer.setTelegraph(self, entityId, nil, nil, false)
+	local boss = self.enemies[entityId]
+	if boss and not boss.dying then
+		boss.animator:playAbility()
+	end
 	if mechanic == "dust_pulse" and cell and radius then
+		-- a nuvem permanece enquanto a poeira estiver ativa (prazo do servidor)
+		local duration = 4
+		if expiresAt and simNow then
+			duration = math.max(0.3, expiresAt - simNow)
+		end
+		if self.reducedMotion then
+			duration = math.min(duration, 0.6)
+		end
 		local ring = ringFrame(self, cell[1], cell[2], radius, Theme.colors.muted, 6, Z.effects + 2)
 		ring.BackgroundColor3 = Theme.colors.muted
 		ring.BackgroundTransparency = 0.7
-		local t = TweenService:Create(
-			ring,
-			TweenInfo.new(if self.reducedMotion then 0.3 else 4, Enum.EasingStyle.Linear),
-			{ BackgroundTransparency = 1 }
-		)
+		local t = TweenService:Create(ring, TweenInfo.new(duration, Enum.EasingStyle.Linear), {
+			BackgroundTransparency = 1,
+		})
 		t:Play()
 		t.Completed:Once(function()
 			ring:Destroy()
 		end)
+	elseif mechanic == "summon" and entityIds then
+		-- anel no ponto de invocação e entrada dos Corriscos
+		local first = entityIds[1]
+		local target = if first then self.enemies[first] else nil
+		if target and not self.reducedParticles then
+			local ring = ringFrame(self, target.px, target.py, 0.6, Theme.colors.enemy, 4, Z.effects + 2)
+			local t = TweenService:Create(
+				ring,
+				TweenInfo.new(if self.reducedMotion then 0.15 else 0.35, Enum.EasingStyle.Quad),
+				{ Size = cellsToScale(2), BackgroundTransparency = 1 }
+			)
+			local stroke = ring:FindFirstChildOfClass("UIStroke")
+			if stroke then
+				TweenService:Create(stroke, TweenInfo.new(0.35), { Transparency = 1 }):Play()
+			end
+			t:Play()
+			t.Completed:Once(function()
+				ring:Destroy()
+			end)
+		end
+		for _, id in ipairs(entityIds) do
+			BoardRenderer.playEnemySpawnIn(self, id)
+		end
 	end
 end
 
@@ -1233,11 +1442,13 @@ function BoardRenderer.applyFrame(self: Renderer, view: MatchController.MatchVie
 			BoardRenderer.acquireEnemy(self, ev)
 		end
 	end
+	local simNow = snapshot.simTime
 	for _, e in ipairs(events) do
 		if e.kind == "attack" and e.towerId and e.attackSeq and e.targets then
 			BoardRenderer.playAttack(self, e.towerId, e.attackSeq, e.targets)
 			for _, t in ipairs(e.targets) do
 				BoardRenderer.showDamage(self, e.towerId, t.enemyId, t.damage, false)
+				BoardRenderer.playEnemyHit(self, t.enemyId)
 			end
 		elseif e.kind == "support" and e.towerId and e.attackSeq then
 			BoardRenderer.playAttack(self, e.towerId, e.attackSeq, {})
@@ -1252,12 +1463,27 @@ function BoardRenderer.applyFrame(self: Renderer, view: MatchController.MatchVie
 			if e.targets then
 				for _, t in ipairs(e.targets) do
 					BoardRenderer.showDamage(self, 0, t.enemyId, t.damage, true)
+					BoardRenderer.playEnemyHit(self, t.enemyId)
 				end
 			end
+		elseif e.kind == "heal" and e.entityId then
+			BoardRenderer.playHeal(self, e.entityId, e.entityIds, simNow)
 		elseif e.kind == "bossTelegraph" and e.entityId then
 			BoardRenderer.setTelegraph(self, e.entityId, e.cell, e.radius, true)
 		elseif e.kind == "bossAbility" and e.entityId then
-			BoardRenderer.playAbility(self, e.entityId, e.reason or "", e.cell, e.radius)
+			BoardRenderer.playAbility(
+				self,
+				e.entityId,
+				e.reason or "",
+				e.cell,
+				e.radius,
+				e.expiresAt,
+				e.entityIds,
+				simNow
+			)
+		elseif e.kind == "bossCancel" and e.entityId then
+			-- morte ou escape durante o aviso: nada é resolvido e o círculo sai da tela
+			BoardRenderer.setTelegraph(self, e.entityId, nil, nil, false)
 		end
 	end
 	-- inimigos que sumiram sem evento (reconciliação)
@@ -1284,6 +1510,7 @@ function BoardRenderer.update(self: Renderer, dt: number)
 	for _, visual in pairs(self.towers) do
 		visual.animator:update(simDt, self.reducedMotion, cellPx * TOWER_CELLS)
 	end
+	local simNow = MatchController.estimateSimTime()
 	for id, visual in pairs(self.enemies) do
 		local ev = view.enemies[id]
 		if ev then
@@ -1300,8 +1527,13 @@ function BoardRenderer.update(self: Renderer, dt: number)
 				visual.hpBack.ZIndex = depth + 2
 				visual.hpFill.ZIndex = depth + 3
 				visual.status.ZIndex = depth + 3
+				visual.resist.ZIndex = depth + 4
+				visual.healMark.ZIndex = depth + 5
+				visual.badge.ZIndex = depth + 5
 				visual.name.ZIndex = depth + 3
 			end
+			-- movimento cosmético: um único controlador por entidade, no relógio da simulação
+			visual.animator:update(simDt, self.reducedMotion)
 			visual.hpFill.Size = UDim2.fromScale(math.clamp(ev.hp / math.max(ev.maxHp, 1), 0, 1), 1)
 			local status = ""
 			if ev.slow > 0 then
@@ -1312,6 +1544,26 @@ function BoardRenderer.update(self: Renderer, dt: number)
 			end
 			visual.status.Text = status
 			visual.status.TextColor3 = if ev.mark > 0 and ev.slow <= 0 then Theme.colors.gold else Theme.colors.cyan
+			if visual.healMark.Visible and simNow >= visual.healUntil then
+				visual.healMark.Visible = false
+			end
+			-- Rei Ferrugem: escudo enquanto o reforço de armadura está ativo
+			if ev.isBoss and ev.armorBonus > 0 then
+				visual.resist.Text = "⛨"
+				visual.resist.TextColor3 = Theme.colors.gold
+				visual.resist.Visible = true
+			elseif ev.isBoss then
+				visual.resist.Visible = false
+			end
+			-- aviso de habilidade com contagem em segundos de simulação (prazo vem do servidor)
+			local resolveAt = ev.telegraphAt
+			if ev.telegraphing and resolveAt then
+				local remaining = math.max(0, resolveAt - simNow)
+				visual.badge.Text = string.format("%s %.1fs", bossBadgeIcon(ev.defId), remaining)
+				visual.badge.Visible = true
+			elseif visual.badge.Visible then
+				visual.badge.Visible = false
+			end
 			visual.stroke.Enabled = ev.telegraphing
 			if ev.telegraphing and not self.reducedMotion then
 				visual.stroke.Transparency = 0.3 + 0.3 * math.sin(os.clock() * 6)

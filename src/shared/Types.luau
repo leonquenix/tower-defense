@@ -378,6 +378,10 @@ export type SimEvent = {
 	s: number?,
 	code: string?,
 	speed: number?,
+	resolveAt: number?, -- prazo de simulação do aviso de chefe
+	expiresAt: number?, -- fim do efeito já resolvido (poeira, armadura)
+	entityIds: { number }?, -- alvos curados, invocados criados
+	towerIds: { number }?, -- torres atingidas por poeira
 }
 
 -- ---------------------------------------------------------------------------
@@ -476,6 +480,10 @@ export type EnemySnapshot = {
 	mk: number, -- marca ativa
 	sm: boolean, -- summon
 	tg: boolean, -- boss telegraphing
+	tga: number?, -- simTime em que o aviso resolve (só enquanto tg)
+	ab: number, -- bônus de armadura ativo do chefe (Rei Ferrugem)
+	ar: number, -- armadura atual efetiva (base + bônus)
+	er: number, -- resistência de energia atual
 }
 
 export type TowerSnapshot = {
@@ -547,6 +555,10 @@ export type NetEvent = {
 	s: number?,
 	code: string?,
 	speed: number?,
+	resolveAt: number?, -- prazo de simulação do aviso de chefe
+	expiresAt: number?, -- fim do efeito já resolvido (poeira, armadura)
+	entityIds: { number }?, -- alvos curados, invocados criados
+	towerIds: { number }?, -- torres atingidas por poeira
 }
 
 return nil

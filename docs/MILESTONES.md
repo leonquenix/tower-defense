@@ -33,5 +33,12 @@ Registro de progresso por marco (o que mudou, o que foi verificado, o que falta)
 - Responsividade (2026-09-16): escala uniforme por janela, troca automática computador/compacto, cartas adaptativas, grade da coleção por colunas, linhas com quebra no menu; transições animadas (cortina, painéis, avisos, contadores) com respeito ao movimento reduzido. Verificado em 1313×693, 1920×1080, 1024×768 e 750×361.
 - Pendente: quadros desenhados (240 torres, 96 inimigos, 48 chefes), áudio, ícones, testes em celular real.
 
+## Adendo 2026-09-18 — inimigos, chefes e animação 2D
+- Entrada: `GUIA_MONSTROS_E_BOSSES.pdf` e `Assets_Inimigos_Bosses_v1/` (11 poses). Os 8 inimigos e 3 chefes já existiam na simulação desde M3; esta etapa integrou a arte real, o movimento 2D e os eventos de apresentação, e cobriu a tabela de aceite do guia com testes.
+- Novo: `tools/export_enemy_assets.py`, `tools/merge_enemy_index.py`, `src/client/View/EnemyAnimator.luau`, `tests/specs/06_enemies_bosses.spec.luau` (27 testes).
+- Servidor: eventos de chefe passaram a levar prazo (`resolveAt`, `expiresAt`), alvos (`entityIds`, `towerIds`) e cancelamento (`bossCancel`) quando o chefe morre ou escapa durante o aviso; o evento de cura lista os alvos curados; o snapshot leva prazo do aviso, armadura atual e resistência de energia.
+- Verificado no Studio: 11/11 sprites carregados no place do grupo, largura por tipo, ciclos de movimento com as amplitudes do guia, selo de aviso com contagem e poeira na torre. Ver `docs/TEST_REPORT.md` seção 7.
+- Pendente: quadros desenhados (96 + 48), movimento reduzido conferido em tela, partida completa de 20 ondas por mapa.
+
 ## M6 Candidato — não iniciado (depende de ações externas)
 - Publicação, DataStore em produção, telemetria em produção, desempenho medido em aparelhos nomeados, playtest. Ver `docs/MANUAL_ACTIONS.md`.
