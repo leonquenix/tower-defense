@@ -31,3 +31,13 @@ O jogo foi implementado nesta raiz: `src/` (Luau estrito), `tests/` (Lune), `too
 ## Inimigos e chefes (2026-09-18)
 
 `Assets_Inimigos_Bosses_v1/` traz 11 poses estáticas (8 inimigos e 3 chefes) e `enemy_visuals.json`, com o comportamento especificado em `Assets_Inimigos_Bosses_v1/GUIA_MONSTROS_E_BOSSES.pdf`. Os `localFile` desse manifesto são relativos a essa pasta; os `sourceFile`, a esta raiz. Pipeline: `tools/export_enemy_assets.py` → `tools/merge_enemy_index.py` → `tools/update_asset_registry.py`. O movimento 2D fica em `src/client/View/EnemyAnimator.luau` (espelho de `enemy_visuals.json`); as poses não são atlas e os 96 + 48 quadros desenhados continuam pendentes.
+
+## Interface completa (2026-09-18)
+
+As 49 pranchas de `UI_Quintal_em_Guarda_v1` estão implementadas como componentes nativos. Os insumos de build (dados, ícones, guia, exemplos) foram copiados para `UI_Quintal_em_Guarda_v1/` na raiz; as pranchas PNG/SVG continuam no Drive e são **referência**, nunca interface — nada de `ImageLabel` de tela inteira.
+
+A base fica em `src/client/UI/` (Accessibility, Anim, Focus, Components, Modal, Toasts, CommandAdapter, Layers, Router, Store, InviteCards e `Screens/`) e em `src/client/View/HudPanels.luau` para o combate. `View/Ui.luau` é só um adaptador sobre esses componentes: não crie botões, modais ou toasts fora deles.
+
+`Config/UiTokens.luau`, `Config/UiMotion.luau` e `Config/UiIcons.luau` são **gerados** por `tools/import_ui_tokens.py` e `tools/export_ui_icons.py`; altere o JSON do pacote e rode as ferramentas. O gerador de tokens falha quando um par texto/fundo cai abaixo do contraste mínimo. `tools/check_ui_coverage.py` valida `docs/ui_coverage.json` contra as 49 pranchas e gera `docs/UI_COVERAGE.md`: ao mexer numa tela, atualize a linha dela.
+
+Os 24 ícones ainda **não foram enviados**: `UiIcons` traz `image = nil` e o cliente desenha um glifo de reserva. A tabela de upload (arquivo → chave → campo) está em `docs/MANUAL_ACTIONS.md`. Não invente `rbxassetid`.

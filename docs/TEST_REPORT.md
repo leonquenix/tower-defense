@@ -168,3 +168,96 @@ Defeito encontrado e corrigido durante a verificação: o deslocamento vertical 
 - Celular real, quatro clientes, latência simulada e carga — continuam pendentes como no relatório principal.
 - Moderação dos 11 assets novos: o carregamento foi verificado agora, mas a moderação do Roblox é assíncrona e pode remover um asset depois.
 
+
+---
+
+## 8. Interface completa (2026-09-18)
+
+Sessão de implementação das 49 pranchas do pacote `UI_Quintal_em_Guarda_v1`. Como nas seções
+anteriores, o que está abaixo separa **executado** de **pendente**; nenhuma linha marca como testado
+algo que não foi visto rodando.
+
+### 8.1 Verificações automatizadas (executadas)
+
+| Verificação | Comando | Resultado |
+| --- | --- | --- |
+| Testes de regras e de interface (Lune 0.9.3) | `lune run tests/run.luau` | **140 aprovados, 0 reprovados** (eram 115 antes desta sessão) |
+| Análise estática estrita | `luau-lsp analyze … src/` | 0 erros em 60 módulos |
+| Lint | `selene src/` | 0 erros, 4 avisos (todos anteriores a esta sessão) |
+| Formatação | `stylua --check src/` | conforme |
+| Tokens e animações | `python3 tools/import_ui_tokens.py` | OK, com checagem de contraste embutida |
+| Ícones | `python3 tools/export_ui_icons.py` | 24 exportados, 24 pendentes de upload (nenhum id inventado) |
+| Cobertura das pranchas | `python3 tools/check_ui_coverage.py` | 49/49 declaradas e validadas contra `telas.json` |
+
+Specs novos: `07_ui_tokens` (paleta, contraste, receitas de animação, biblioteca de ícones) e
+`08_ui_state` (convites com expiração e cooldown, máquina de estados da conexão, recompensa
+pendente, validação de `RespondInvite` e cobertura de texto PT-BR/EN).
+
+**Defeitos de acessibilidade encontrados pela ferramenta de contraste**, antes de qualquer teste
+manual: `danger` sobre `dangerSoft` dava 4,45:1 e `tealDark` sobre `paper` dava 3,96:1, ambos abaixo
+do mínimo de 4,5:1 do guia; `goldDark` sobre `paper` dava 2,14:1 e estava sendo usado como cor de
+texto. Correções: `dangerSoft` clareado para `#FCE6E2` (4,65:1), `tealDark` escurecido para `#18705F`
+(5,72:1) e criação de `goldText` `#8A5E12` (5,46:1), com `goldDark` reclassificado como cor só de
+preenchimento — um teste garante que nenhum par de texto volte a usá-lo.
+
+### 8.2 Sessão de Play no Studio (executada)
+
+Place `Tower Defense` (PlaceId 85307223725202), viewport 1090×693, mouse e teclado reais via
+automação do Studio, sem acesso a DataStore (o que exercitou justamente o caminho de perfil
+indisponível).
+
+| Cenário | Resultado |
+| --- | --- |
+| Camadas de renderização | ✅ `QuintalWorld/Hud/Menu/Modal/Toast` com DisplayOrder 0/10/20/30/40; só as interativas com `CoreUISafeInsets` |
+| Entrada com perfil indisponível (01/26/42) | ✅ menu abriu em modo volátil com "Progresso não salvo" fixo, sem gravar defaults |
+| Menu inicial (02) | ✅ "Jogar" como única ação dourada, saldo fora da faixa de ações, loja ausente com a flag desligada |
+| Coleção (06/43) | ✅ seis cartas com custo de desbloqueio e de construção separados, quatro vagas, "Salvar" indisponível com o motivo "Nada mudou desde a última vez" |
+| Detalhe da torre (07) | ✅ Lupa mostrou **240 botões** para desbloquear e **500 sucatas** para construir, com "Faltam 240 botões" no botão — critério de aceite do guia |
+| Carregamento (11) | ✅ progresso contando assets essenciais resolvidos, sem porcentagem inventada |
+| Tutorial passos 1–3 (21) | ✅ posicionar Dardo, iniciar onda e a instrução do Circuito com Goma |
+| Construção (14) | ✅ 1.200 → 950 de sucata e 0 → 1 torre **apenas após o ACK**; a barra de construção fechou sozinha |
+| Torre selecionada (16) | ✅ comparação inline (Dano 10 → 16 ↑, Intervalo 0,8 → 0,75 ↓, Alcance 2,5 → 2,7 ↑) e ações fixas |
+| Venda (18) | ✅ modal com foco inicial em **Cancelar**, botão nomeando a ação ("Vender • 175") e **175 sucatas** devolvidas — critério de aceite do guia |
+| Opções em combate (13/27) | ✅ painel com grupo em leitura, Configurações e Sair; a partida continuou correndo por trás |
+| Configurações durante a onda (10) | ✅ sliders, toggles com texto, idioma; o combate não pausou e o texto diz isso |
+| Troca PT-BR ↔ EN (10) | ✅ moldura, tela ativa e HUD reescritos ao vivo |
+| Console | ✅ nenhum erro de script durante toda a sessão |
+
+### 8.3 Defeitos encontrados no Studio e corrigidos nesta sessão
+
+1. **Maiúsculas comiam acentos.** `string.upper` só trata ASCII: o selo do menu saiu como
+   "BRINQUEDOS EM MISSãO". Virou `Components.upper`, usado em todos os títulos de seção.
+2. **As ações da torre saíam do painel.** Com o balão do tutorial aberto o painel de detalhe encolhe
+   para 315 px e Melhorar/Alvo/Vender ficavam fora da área visível — clicar onde o botão "estava"
+   acertava a faixa inferior do HUD. Agora só os atributos rolam e as ações ficam ancoradas na base.
+3. **Troca de idioma deixava texto antigo.** O HUD e a moldura das telas escrevem rótulos fixos na
+   construção. Passou a existir um sinal de troca de idioma que reconstrói o HUD e redesenha a tela
+   ativa.
+4. **Números da comparação ignoravam o idioma.** "Intervalo: 0.8 → 0.75" convivia com "Intervalo 0,8 s"
+   na mesma ficha; passou a usar a formatação decimal do idioma.
+5. **Texto de venda se contradizia.** Dizia "Circuitos ligados serão desfeitos" logo acima da linha
+   "Esta torre não participa de nenhum Circuito".
+6. **Foco de teclado não tinha por onde começar.** O Tab é reservado pela CoreGui em parte dos
+   clientes (o próprio Studio recusa enviá-lo), então clicar/tocar agora leva o foco junto e as setas
+   movem o foco dentro da camada ativa. O Escape continua respeitando a CoreGui, como manda o guia.
+
+### 8.4 Pendente (não executado)
+
+Trinta das 49 pranchas dependem de condições que uma sessão local de Play não cria. A lista completa,
+linha a linha, está em `docs/UI_COVERAGE.md`; em resumo:
+
+- **Dois ou quatro clientes**: disputa da última vaga (04), prontidão do grupo (05), convites
+  simultâneos (33/40), votação de 2x (31/40), Pulso confirmado ao mesmo tempo (20).
+- **Perfil persistido** (exige Studio Access to API Services ou servidor real): desbloqueio por
+  botões (32), domínio e cosméticos (08/43), vitória (23), derrota (24), recompensa pendente (25) e
+  os destaques de resultado (44).
+- **Matriz de dispositivos**: 844×390, 896×414, 1280×720, 1920×1080, tablet 1024×768 e vertical
+  390×844, cada um em PT-BR e EN, com texto ampliado e movimento reduzido (28, 29, 30, 35, 36, 47, 48).
+- **Partida completa**: barra e avisos dos três chefes (19/41), especialização em L2 (17), inspeção
+  de inimigo (34), treino com chefes (22).
+- **Loja**: todos os estados de 09/46 dependem de um passe criado no Creator Hub.
+- **Latência simulada** de 100/300/1000 ms e contagem de pedidos por ação confirmada.
+
+Nenhuma dessas linhas foi marcada como aprovada. A interface está implementada e integrada; a
+validação em dispositivo e com várias pessoas continua sendo trabalho manual descrito em
+`docs/MANUAL_ACTIONS.md`.

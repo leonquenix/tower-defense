@@ -25,10 +25,61 @@ Lista objetiva do que depende da conta Roblox, de produção artística ou de de
 12. Revisar os **apoios sugeridos dos 11 inimigos e chefes**: o manifesto marca `anchorRequiresReview` e o export usou a âncora sugerida pelo autor (Corrisco 0,66 por causa do rastro desenhado; Névoa com apoio virtual sob o corpo flutuante). Conferir em `assets/export/review_enemies_light.png`, `review_enemies_dark.png` e no tabuleiro; se algum personagem parecer flutuar ou afundar, ajustar `sourceAnchorSuggested` no manifesto e rodar `tools/export_enemy_assets.py` de novo.
 13. Verificar **movimento reduzido nos inimigos** pela tela de Configurações (a verificação desta sessão usou o remote `SaveSettings` e não mediu o que pretendia — ver TEST_REPORT 7.3). Esperado: ciclos decorativos param; posição lógica, barras e avisos continuam.
 
+## Ícones da interface (24 arquivos, upload pendente)
+
+Os 24 ícones funcionais foram exportados em 128×128 com fundo transparente para `assets/export/ui/`
+a partir de `UI_Quintal_em_Guarda_v1/icones/` (originais preservados, nada recortado). **Nenhum
+`rbxassetid` foi inventado**: enquanto o upload não acontecer, `Config/UiIcons.luau` traz `image = nil`
+e o cliente desenha o glifo de reserva mantendo o rótulo textual — nenhum ícone é a única explicação
+de nada, então a interface funciona inteira sem eles.
+
+Para publicá-los:
+
+1. No Studio, Asset Manager → Images → Import, selecionando os 24 arquivos de `assets/export/ui/`.
+2. Anotar cada ID em `assets/export/ui_upload_log.json` no formato
+   `{"uploads": {"ui/ui_back_128.png": 123456789, ...}}`.
+3. Rodar `python3 tools/export_ui_icons.py`. Ele reescreve `ui_asset_registry.json`
+   (`robloxAssetId` e `status`) e regenera `src/shared/Config/UiIcons.luau`.
+4. Conferir no Play que os glifos deram lugar às imagens (`tests/specs/07_ui_tokens.spec.luau`
+   já garante que qualquer id preenchido tem o formato `rbxassetid://<número>`).
+5. Não enviar os `.svg`: eles são fonte de manutenção fora do Studio.
+
+Tabela exata de arquivo → chave → campo a preencher:
+
+| Fonte (preservada) | Export para upload | Chave em `ui_upload_log.json` | Chave do asset | Campo a preencher | Reserva atual |
+|---|---|---|---|---|---|
+| `UI_Quintal_em_Guarda_v1/icones/ui_back_v001.png` | `assets/export/ui/ui_back_128.png` | `ui/ui_back_128.png` | `ui_back` | `assets[].robloxAssetId` | `‹` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_base_v001.png` | `assets/export/ui/ui_base_128.png` | `ui/ui_base_128.png` | `ui_base` | `assets[].robloxAssetId` | `⌂` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_buttons_v001.png` | `assets/export/ui/ui_buttons_128.png` | `ui/ui_buttons_128.png` | `ui_buttons` | `assets[].robloxAssetId` | `◉` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_check_v001.png` | `assets/export/ui/ui_check_128.png` | `ui/ui_check_128.png` | `ui_check` | `assets[].robloxAssetId` | `✓` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_close_v001.png` | `assets/export/ui/ui_close_128.png` | `ui/ui_close_128.png` | `ui_close` | `assets[].robloxAssetId` | `✕` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_cooldown_v001.png` | `assets/export/ui/ui_cooldown_128.png` | `ui/ui_cooldown_128.png` | `ui_cooldown` | `assets[].robloxAssetId` | `◷` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_energy_v001.png` | `assets/export/ui/ui_energy_128.png` | `ui/ui_energy_128.png` | `ui_energy` | `assets[].robloxAssetId` | `◈` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_error_v001.png` | `assets/export/ui/ui_error_128.png` | `ui/ui_error_128.png` | `ui_error` | `assets[].robloxAssetId` | `!` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_group_v001.png` | `assets/export/ui/ui_group_128.png` | `ui/ui_group_128.png` | `ui_group` | `assets[].robloxAssetId` | `◍` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_heal_v001.png` | `assets/export/ui/ui_heal_128.png` | `ui/ui_heal_128.png` | `ui_heal` | `assets[].robloxAssetId` | `+` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_lock_v001.png` | `assets/export/ui/ui_lock_128.png` | `ui/ui_lock_128.png` | `ui_lock` | `assets[].robloxAssetId` | `🔒` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_minus_v001.png` | `assets/export/ui/ui_minus_128.png` | `ui/ui_minus_128.png` | `ui_minus` | `assets[].robloxAssetId` | `−` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_physical_v001.png` | `assets/export/ui/ui_physical_128.png` | `ui/ui_physical_128.png` | `ui_physical` | `assets[].robloxAssetId` | `⛨` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_play_v001.png` | `assets/export/ui/ui_play_128.png` | `ui/ui_play_128.png` | `ui_play` | `assets[].robloxAssetId` | `▶` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_plus_v001.png` | `assets/export/ui/ui_plus_128.png` | `ui/ui_plus_128.png` | `ui_plus` | `assets[].robloxAssetId` | `+` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_pulse_v001.png` | `assets/export/ui/ui_pulse_128.png` | `ui/ui_pulse_128.png` | `ui_pulse` | `assets[].robloxAssetId` | `✷` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_scrap_v001.png` | `assets/export/ui/ui_scrap_128.png` | `ui/ui_scrap_128.png` | `ui_scrap` | `assets[].robloxAssetId` | `✦` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_sell_v001.png` | `assets/export/ui/ui_sell_128.png` | `ui/ui_sell_128.png` | `ui_sell` | `assets[].robloxAssetId` | `⌫` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_settings_v001.png` | `assets/export/ui/ui_settings_128.png` | `ui/ui_settings_128.png` | `ui_settings` | `assets[].robloxAssetId` | `⚙` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_speed_v001.png` | `assets/export/ui/ui_speed_128.png` | `ui/ui_speed_128.png` | `ui_speed` | `assets[].robloxAssetId` | `»` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_target_v001.png` | `assets/export/ui/ui_target_128.png` | `ui/ui_target_128.png` | `ui_target` | `assets[].robloxAssetId` | `◎` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_upgrade_v001.png` | `assets/export/ui/ui_upgrade_128.png` | `ui/ui_upgrade_128.png` | `ui_upgrade` | `assets[].robloxAssetId` | `▲` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_volume_v001.png` | `assets/export/ui/ui_volume_128.png` | `ui/ui_volume_128.png` | `ui_volume` | `assets[].robloxAssetId` | `🔊` |
+| `UI_Quintal_em_Guarda_v1/icones/ui_wave_v001.png` | `assets/export/ui/ui_wave_128.png` | `ui/ui_wave_128.png` | `ui_wave` | `assets[].robloxAssetId` | `〜` |
+
+Depois do upload, `status` passa de `exported_pending_upload` para `uploaded` e `checkedInStudio`
+continua `false` até alguém confirmar o carregamento numa sessão de Play.
+
 ## Testes que exigem pessoas ou dispositivos
 
-14. Teste com **quatro clientes** reais (Studio: Test → Clients and Servers → 4 players) cobrindo compras simultâneas, votação de 2x, desconexão e revanche. Ver `docs/TEST_REPORT.md` para o que já foi executado com um cliente.
-15. Teste em **celular real** (844×390, 896×414 e tablet 4:3) do fluxo completo, pinça/zoom, ampliação automática de célula, folha de detalhe recolhível e áreas seguras.
+14. Teste com **quatro clientes** reais (Studio: Test → Clients and Servers → 4 players) cobrindo compras simultâneas, votação de 2x, desconexão e revanche. Ver `docs/TEST_REPORT.md` para o que já foi executado com um cliente. Com a interface nova, isso também cobre: disputa da última vaga numa sala (04), prontidão e limpeza de prontidão no grupo (05), convite aceito por duas pessoas ao mesmo tempo (33/40), popover de velocidade com unanimidade e retorno a 1x (31/40) e dois clientes confirmando o Pulso no mesmo instante (20).
+15. Teste em **celular real** (844×390, 896×414 e tablet 4:3) do fluxo completo, pinça/zoom, ampliação automática de célula, folha de detalhe recolhível e áreas seguras. Repetir a matriz visual do guia: 844×390, 896×414, 1280×720, 1920×1080, tablet 1024×768 e vertical 390×844, cada um em PT-BR e EN, com texto ampliado e movimento reduzido. As linhas *Studio: pendente* de `docs/UI_COVERAGE.md` listam exatamente o que falta.
 16. **Latência simulada** de 150–250 ms (Studio → Settings → Network → Incoming Replication Lag).
 17. **Carga**: três partidas de quatro e doze partidas solo em um servidor; medir p95 do passo de simulação, memória e tráfego.
 18. **Playtest de diversão** com 8 a 12 pessoas e revisão do balanceamento (os números são o catálogo inicial, não validados).
@@ -36,5 +87,6 @@ Lista objetiva do que depende da conta Roblox, de produção artística ou de de
 ## Decisões pendentes do responsável
 
 19. Autorizar a publicação e o preço do passe.
+19b. Decidir se os **cosméticos de domínio** (adesivo aos 30, título aos 100 e aparência aos 250) ganham arte própria. O servidor já concede os IDs ao cruzar cada marco (`ProfileSchema.applyMatchResult`), mas a arte não existe: a tela 08 mostra "Arte final ainda não produzida nesta versão" e mantém o Equipar indisponível em vez de oferecer um produto inexistente.
 20. Definir se `DEV_ALLOWLIST` (MatchService) recebe UserIds de QA fora do Studio.
 21. Decidir política de telemetria (AnalyticsService está preparado; eventos são enviados só fora do Studio e nunca interrompem o jogo).

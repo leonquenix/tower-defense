@@ -40,5 +40,15 @@ Registro de progresso por marco (o que mudou, o que foi verificado, o que falta)
 - Verificado no Studio: 11/11 sprites carregados no place do grupo, largura por tipo, ciclos de movimento com as amplitudes do guia, selo de aviso com contagem e poeira na torre. Ver `docs/TEST_REPORT.md` seção 7.
 - Pendente: quadros desenhados (96 + 48), movimento reduzido conferido em tela, partida completa de 20 ondas por mapa.
 
+## Adendo 2026-09-18 — interface completa (49 pranchas)
+- Entrada: `UI_Quintal_em_Guarda_v1` (guia, 49 pranchas, `telas.json`, `design_tokens.json`, `animacoes.json`, 24 ícones e dois módulos de exemplo). Os insumos de build foram copiados para `UI_Quintal_em_Guarda_v1/` na raiz; as pranchas continuam no Drive e são referência, nunca interface.
+- Nova base: `src/client/UI/` com Accessibility, Anim, Focus, Components (ActionButton de oito estados), Modal, Toasts, CommandAdapter, Layers, Router, Store e InviteCards; 15 telas em `UI/Screens/`; `View/HudPanels.luau` com os painéis contextuais do combate. `View/Ui.luau` virou adaptador fino e as telas antigas (`Menu`, `Collection`, `Settings`, `Shop`, `Result`) foram removidas para não existirem duas implementações.
+- Camadas: `QuintalWorld/Hud/Menu/Modal/Toast` com DisplayOrder 0/10/20/30/40; só as interativas usam `CoreUISafeInsets`, e a transformação do tabuleiro não soma o inset de novo.
+- Gerados: `tools/import_ui_tokens.py` (Config/UiTokens + UiMotion, com checagem de contraste que falha o build), `tools/export_ui_icons.py` (24 ícones + Config/UiIcons, sem inventar IDs) e `tools/check_ui_coverage.py` (valida `docs/ui_coverage.json` contra as 49 pranchas e gera `docs/UI_COVERAGE.md`).
+- Servidor: `RespondInvite` com token, expiração de 30 s e cooldown de 5 s por destinatário; os cosméticos dos marcos de domínio (30/100/250) passaram a ser concedidos de fato em `ProfileSchema.applyMatchResult` e chegam ao cliente pelo resultado.
+- Localização: 247 chaves novas em PT-BR e EN (462 no total), incluindo os rótulos acessíveis dos 24 ícones.
+- Verificado no Studio (sessão de Play, 1090×693): camadas, entrada com perfil indisponível, menu, coleção, detalhe de torre (Lupa 240 botões / 500 sucatas), carregamento, tutorial 1–3, construção com débito só após ACK, venda devolvendo 175, opções em combate e troca PT-BR/EN ao vivo, sem erro no console. Seis defeitos encontrados e corrigidos — ver `docs/TEST_REPORT.md` seção 8.
+- Pendente: upload dos 24 ícones, dois a quatro clientes, perfil persistido, matriz de dispositivos, partida completa até o chefe e estados da loja. A matriz linha a linha está em `docs/UI_COVERAGE.md`.
+
 ## M6 Candidato — não iniciado (depende de ações externas)
 - Publicação, DataStore em produção, telemetria em produção, desempenho medido em aparelhos nomeados, playtest. Ver `docs/MANUAL_ACTIONS.md`.
