@@ -1,0 +1,47 @@
+{
+  "colors": {
+    "ink": "#19283F",
+    "cream": "#FFF3D6",
+    "paper": "#FFFAEC",
+    "teal": "#2FB7A0",
+    "gold": "#FFC857",
+    "coral": "#FF775E",
+    "enemy": "#7D63B8",
+    "cyan": "#63CDE8",
+    "danger": "#B63E48",
+    "muted": "#526174",
+    "sage": "#DBE8D7"
+  },
+  "radius": {
+    "panel": 20,
+    "button": 12,
+    "pill": 15
+  },
+  "stroke": 2,
+  "spacing": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48
+  ],
+  "text": {
+    "caption": 14,
+    "body": 18,
+    "button": 19,
+    "title": 30,
+    "hero": 65
+  },
+  "minimumTouchTarget": 48,
+  "referenceDesktop": [
+    1280,
+    720
+  ],
+  "referenceMobile": [
+    844,
+    390
+  ],
+  "nativeImplementation": true
+}

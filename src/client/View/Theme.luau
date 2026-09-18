@@ -1,22 +1,35 @@
 --!strict
 -- Paleta e tipografia da direção de arte.
+-- As cores funcionais vêm de Config/UiTokens (gerado de dados/design_tokens.json); as variações
+-- de apoio (creamDark, goldDark, caminhos de mapa…) são derivadas e continuam definidas aqui.
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local UiTokens = require(ReplicatedStorage.Shared.Config.UiTokens)
+
 local Theme = {}
 
+Theme.tokens = UiTokens
+
 Theme.colors = {
-	ink = Color3.fromHex("19283F"),
-	cream = Color3.fromHex("FFF3D6"),
+	ink = UiTokens.color("ink"),
+	cream = UiTokens.color("cream"),
 	creamDark = Color3.fromHex("F1E2BE"),
-	teal = Color3.fromHex("2FB7A0"),
+	teal = UiTokens.color("teal"),
 	tealDark = Color3.fromHex("1F8C7A"),
-	gold = Color3.fromHex("FFC857"),
+	gold = UiTokens.color("gold"),
 	goldDark = Color3.fromHex("D9A53E"),
-	coral = Color3.fromHex("FF775E"),
-	enemy = Color3.fromHex("7D63B8"),
-	cyan = Color3.fromHex("63CDE8"),
-	danger = Color3.fromHex("B63E48"),
+	coral = UiTokens.color("coral"),
+	enemy = UiTokens.color("enemy"),
+	cyan = UiTokens.color("cyan"),
+	danger = UiTokens.color("danger"),
 	dangerSoft = Color3.fromHex("FBE0DC"),
-	muted = Color3.fromHex("66768A"),
+	-- #526174 escurece o muted original para atingir 4,5:1 sobre creme (guia, paleta funcional)
+	muted = UiTokens.color("muted"),
 	white = Color3.fromHex("FFFFFF"),
+	-- superfície de ficha (Paper) e fundo verde suave (Sage) da direção de arte
+	surface = UiTokens.color("paper"),
+	sage = UiTokens.color("sage"),
+	sageDeep = Color3.fromHex("CBDDC6"),
 	paper = Color3.fromHex("F4F1E9"),
 	sand = Color3.fromHex("FFE1A0"),
 	sandDark = Color3.fromHex("CEAC71"),
@@ -50,15 +63,24 @@ Theme.fonts = {
 }
 
 Theme.sizes = {
-	corner = 12,
-	stroke = 2,
+	corner = UiTokens.radius.button,
+	panelCorner = UiTokens.radius.panel,
+	pillCorner = UiTokens.radius.pill,
+	stroke = UiTokens.stroke,
+	focusStroke = 3,
+	caption = UiTokens.text.caption,
 	body = 16,
-	bodyLarge = 18,
+	bodyLarge = UiTokens.text.body,
+	button = UiTokens.text.button,
 	numbers = 22,
-	title = 30,
-	buttonMin = 44,
-	buttonTarget = 48,
+	title = UiTokens.text.title,
+	hero = UiTokens.text.hero,
+	buttonMin = UiTokens.touchMinimum,
+	buttonTarget = UiTokens.touchTarget,
 }
+
+-- Camadas de renderização (decisões locais; não substituem a CoreGui)
+Theme.displayOrder = UiTokens.displayOrder
 
 Theme.towerColors = {
 	dardo = Color3.fromHex("FF8A3D"),
