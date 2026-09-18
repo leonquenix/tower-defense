@@ -1,0 +1,86 @@
+[
+  {
+    "id": "hover_focus",
+    "durationMs": 100,
+    "easing": "Quad Out",
+    "normal": "escala 1 → 1,03; contorno de foco 3 px",
+    "reduced": "Somente contorno"
+  },
+  {
+    "id": "press",
+    "durationMs": 80,
+    "easing": "Quad Out",
+    "normal": "escala 1 → 0,97; retorno em 100 ms",
+    "reduced": "Somente mudança de preenchimento"
+  },
+  {
+    "id": "panel_enter",
+    "durationMs": 180,
+    "easing": "Quad Out",
+    "normal": "alpha 0 → 1; deslocamento vertical 12 → 0 px",
+    "reduced": "Somente alpha em 80 ms"
+  },
+  {
+    "id": "panel_exit",
+    "durationMs": 120,
+    "easing": "Quad In",
+    "normal": "alpha 1 → 0; remover após término",
+    "reduced": "Alpha em 80 ms"
+  },
+  {
+    "id": "modal_enter",
+    "durationMs": 180,
+    "easing": "Quad Out",
+    "normal": "scrim alpha 0 → 0,45; painel 0,96 → 1",
+    "reduced": "Alpha em 80 ms"
+  },
+  {
+    "id": "toast",
+    "durationMs": 160,
+    "easing": "Quad Out",
+    "normal": "alpha e deslocamento 8 px; sucesso permanece 2,5 s",
+    "reduced": "Alpha em 80 ms"
+  },
+  {
+    "id": "balance",
+    "durationMs": 200,
+    "easing": "Linear",
+    "normal": "número visual do saldo anterior ao confirmado",
+    "reduced": "Valor final imediato"
+  },
+  {
+    "id": "build",
+    "durationMs": 180,
+    "easing": "Back Out",
+    "normal": "sprite escala 0,90 → 1 sem deslocar célula",
+    "reduced": "Escala 1 imediata"
+  },
+  {
+    "id": "upgrade",
+    "durationMs": 350,
+    "easing": "Quad Out",
+    "normal": "borda dourada e troca de sprite aos 175 ms",
+    "reduced": "Troca imediata e rótulo"
+  },
+  {
+    "id": "result",
+    "durationMs": 240,
+    "easing": "Quad Out",
+    "normal": "painel entra; até 12 partículas por 450 ms",
+    "reduced": "Painel sem partículas"
+  },
+  {
+    "id": "boss_warning",
+    "durationMs": 2000,
+    "easing": "Linear",
+    "normal": "ícone + texto regressivo pelo servidor",
+    "reduced": "Ícone estático + texto"
+  },
+  {
+    "id": "cooldown",
+    "durationMs": 0,
+    "easing": "Linear",
+    "normal": "preenchimento calculado por readyAt − simTime",
+    "reduced": "Mesmo preenchimento, sem pulso"
+  }
+]

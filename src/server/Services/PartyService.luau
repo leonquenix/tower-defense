@@ -26,10 +26,34 @@ export type Party = {
 	inMatchId: string?,
 }
 
+-- Convite emitido pelo servidor. O inviteId é o token: só ele autoriza a entrada, e ele
+-- vence em 30 s de relógio real. A UI mostra a contagem, mas quem decide é este registro.
+export type Invite = {
+	inviteId: string,
+	partyId: string,
+	fromUserId: number,
+	toUserId: number,
+	expiresAt: number,
+}
+
+local INVITE_TTL = 30
+local INVITE_COOLDOWN = 5
+
 local parties: { [string]: Party } = {}
 local partyOf: { [number]: string } = {}
+local invites: { [string]: Invite } = {}
+-- Último convite enviado por (remetente -> destinatário), para o cooldown de 5 s.
+local lastInviteAt: { [string]: number } = {}
 local lobbyRemote: RemoteEvent
 local broadcastScheduled = false
+
+local function pruneInvites(now: number)
+	for inviteId, invite in pairs(invites) do
+		if now >= invite.expiresAt then
+			invites[inviteId] = nil
+		end
+	end
+end
 
 local function result(ok: boolean, code: string?, extra: { [string]: any }?): { [string]: any }
 	local r: { [string]: any } = { ok = ok, errorCode = code }
@@ -247,17 +271,73 @@ function PartyService.handle(player: Player, action: string, payload: { [string]
 		removeFromParty(userId)
 		return result(true)
 	elseif action == "InviteToParty" then
-		local inviteParty: Party = party or createParty(player)
+		local now = os.clock()
+		pruneInvites(now)
+		if payload.userId == userId then
+			return result(false, Protocol.ERROR.BAD_REQUEST)
+		end
 		local target = playerById(payload.userId)
 		if not target or partyOf[target.UserId] or MatchService.isInMatch(target.UserId) then
 			return result(false, Protocol.ERROR.INVALID_STATE)
 		end
-		lobbyRemote:FireClient(
-			target,
-			"invite",
-			{ partyId = inviteParty.id, fromName = player.DisplayName, fromUserId = userId }
-		)
-		return result(true)
+		-- cooldown por destinatário: nada de repetir automaticamente
+		local cooldownKey = userId .. ">" .. target.UserId
+		local last = lastInviteAt[cooldownKey]
+		if last and now - last < INVITE_COOLDOWN then
+			return result(false, Protocol.ERROR.RATE_LIMIT)
+		end
+		local inviteParty: Party = party or createParty(player)
+		if inviteParty.inMatchId or #inviteParty.members >= Balance.partyMax then
+			return result(false, Protocol.ERROR.INVALID_STATE)
+		end
+		lastInviteAt[cooldownKey] = now
+		local invite: Invite = {
+			inviteId = HttpService:GenerateGUID(false):sub(1, 12),
+			partyId = inviteParty.id,
+			fromUserId = userId,
+			toUserId = target.UserId,
+			expiresAt = now + INVITE_TTL,
+		}
+		invites[invite.inviteId] = invite
+		lobbyRemote:FireClient(target, "invite", {
+			inviteId = invite.inviteId,
+			partyId = inviteParty.id,
+			fromName = player.DisplayName,
+			fromUserId = userId,
+			mapId = inviteParty.mapId,
+			difficulty = inviteParty.difficulty,
+			expiresIn = INVITE_TTL,
+		})
+		PartyService.broadcast()
+		return result(true, nil, { inviteId = invite.inviteId })
+	elseif action == "RespondInvite" then
+		local now = os.clock()
+		pruneInvites(now)
+		local invite = invites[payload.inviteId]
+		-- token inexistente, de outra pessoa ou vencido: nenhuma entrada acontece
+		if not invite or invite.toUserId ~= userId then
+			return result(false, Protocol.ERROR.INVALID_STATE, { reason = "invite_invalid" })
+		end
+		invites[invite.inviteId] = nil
+		if payload.accept ~= true then
+			return result(true, nil, { declined = true })
+		end
+		if party then
+			return result(false, Protocol.ERROR.INVALID_STATE, { reason = "already_in_party" })
+		end
+		if MatchService.isInMatch(userId) then
+			return result(false, Protocol.ERROR.INVALID_STATE, { reason = "in_match" })
+		end
+		local target = parties[invite.partyId]
+		-- entrada atômica: dois aceites para a última vaga resultam em uma entrada
+		if not target or target.inMatchId or #target.members >= Balance.partyMax then
+			return result(false, Protocol.ERROR.INVALID_STATE, { reason = "party_full" })
+		end
+		table.insert(target.members, userId)
+		partyOf[userId] = target.id
+		target.ready = {} -- composição mudou: prontidão limpa
+		PartyService.broadcast()
+		return result(true, nil, { partyId = target.id })
 	elseif action == "KickFromParty" then
 		if not party or party.leaderId ~= userId or payload.userId == userId then
 			return result(false, Protocol.ERROR.NOT_OWNER)
@@ -370,6 +450,12 @@ end
 
 function PartyService.onPlayerRemoving(player: Player)
 	removeFromParty(player.UserId)
+	-- convites de e para quem saiu deixam de existir
+	for inviteId, invite in pairs(invites) do
+		if invite.fromUserId == player.UserId or invite.toUserId == player.UserId then
+			invites[inviteId] = nil
+		end
+	end
 	PartyService.broadcast()
 end
 

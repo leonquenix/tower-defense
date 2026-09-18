@@ -1,8 +1,8 @@
 {
-  "elapsedSeconds": 0.015420125011587515,
+  "elapsedSeconds": 0.019250958313932642,
   "failed": 0,
   "failures": {},
-  "passed": 115,
+  "passed": 140,
   "suites": [
     {
       "name": "Grid",
@@ -588,7 +588,147 @@
           "ok": true
         }
       ]
+    },
+    {
+      "name": "UiTokens / paleta e geometria",
+      "tests": [
+        {
+          "name": "cada par de texto/fundo declarado atinge o contraste mínimo do guia",
+          "ok": true
+        },
+        {
+          "name": "goldDark é só preenchimento: nenhum par de texto o usa",
+          "ok": true
+        },
+        {
+          "name": "alvo de toque respeita 44 px mínimos e 48 px de meta",
+          "ok": true
+        },
+        {
+          "name": "camadas de renderização ficam na ordem mundo < HUD < menu < modal < toast",
+          "ok": true
+        },
+        {
+          "name": "raios, contorno e espaçamentos vêm do pacote de design",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "UiMotion / receitas de animação",
+      "tests": [
+        {
+          "name": "todas as receitas do guia existem com a duração documentada",
+          "ok": true
+        },
+        {
+          "name": "o aviso de chefe mantém os 2 s definidos no combate",
+          "ok": true
+        },
+        {
+          "name": "toda receita descreve a variante de movimento reduzido",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "UiIcons / biblioteca de ícones",
+      "tests": [
+        {
+          "name": "os 24 ícones funcionais estão declarados",
+          "ok": true
+        },
+        {
+          "name": "nenhum rbxassetid inventado: sem upload, image é nil",
+          "ok": true
+        },
+        {
+          "name": "todo ícone tem rótulo acessível traduzido, em PT-BR e EN",
+          "ok": true
+        },
+        {
+          "name": "botões persistentes e sucata usam símbolos diferentes",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Store / convites",
+      "tests": [
+        {
+          "name": "um convite vencido deixa de ser aceitável e some depois da carência",
+          "ok": true
+        },
+        {
+          "name": "não duplica o mesmo inviteId",
+          "ok": true
+        },
+        {
+          "name": "responder remove o convite da lista",
+          "ok": true
+        },
+        {
+          "name": "cooldown por destinatário é de 5 s e não repete automaticamente",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Store / conexão",
+      "tests": [
+        {
+          "name": "2 s sem atualização é sinal instável e 5 s bloqueia mutações",
+          "ok": true
+        },
+        {
+          "name": "um frame novo devolve o estado para ok",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Store / recompensa pendente",
+      "tests": [
+        {
+          "name": "guarda e limpa o resultado pendente sem apagar o matchId",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Protocol / RespondInvite",
+      "tests": [
+        {
+          "name": "aceita inviteId e accept bem formados",
+          "ok": true
+        },
+        {
+          "name": "recusa resposta sem token ou com campo extra",
+          "ok": true
+        },
+        {
+          "name": "convite gasta o balde persistente, não o de combate",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Localização / textos da interface",
+      "tests": [
+        {
+          "name": "nenhum texto entregue mostra o marcador de preço",
+          "ok": true
+        },
+        {
+          "name": "todo código de erro do protocolo tem texto próprio",
+          "ok": true
+        },
+        {
+          "name": "motivos de bloqueio de construção existem nos dois idiomas",
+          "ok": true
+        }
+      ]
     }
   ],
-  "timestamp": "2026-09-18T06:17:54Z"
+  "timestamp": "2026-09-18T18:33:05Z"
 }

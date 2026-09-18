@@ -65,6 +65,7 @@ local PARTY_ACTIONS: { [string]: boolean } = {
 	JoinParty = true,
 	LeaveParty = true,
 	InviteToParty = true,
+	RespondInvite = true,
 	KickFromParty = true,
 	PartyReady = true,
 	PartySetup = true,

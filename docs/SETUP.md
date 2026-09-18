@@ -30,7 +30,19 @@ python3 tools/export_assets.py           # exports normalizados dos 40 PNGs em a
 python3 tools/export_enemy_assets.py     # exports dos 11 PNGs de inimigos/chefes (128 px) e chefes (256 px)
 python3 tools/merge_enemy_index.py       # acrescenta os 11 registros ao asset_index.json e ao registro de runtime
 python3 tools/update_asset_registry.py   # atualiza runtime_asset_registry.json e gera Config/Assets.luau (só com IDs de uploads reais)
+python3 tools/import_ui_tokens.py        # gera Config/UiTokens.luau e Config/UiMotion.luau do pacote de UI
+python3 tools/export_ui_icons.py         # exporta os 24 ícones para assets/export/ui e gera Config/UiIcons.luau
+python3 tools/check_ui_coverage.py       # valida docs/ui_coverage.json contra as 49 pranchas e gera docs/UI_COVERAGE.md
 ```
+
+`import_ui_tokens.py` também confere o contraste dos pares texto/fundo declarados e falha (exit 1)
+quando algum cai abaixo de 4,5:1 (3:1 para texto grande). Foi assim que `dangerSoft` e `tealDark`
+acabaram ajustados e `goldText` passou a existir separado de `goldDark`, que virou cor só de
+preenchimento.
+
+`export_ui_icons.py` nunca inventa `rbxassetid`: sem `assets/export/ui_upload_log.json`, o módulo
+gerado traz `image = nil` e o cliente desenha o glifo de reserva. A tabela de upload está em
+`docs/MANUAL_ACTIONS.md`.
 
 `import_balance.py` falha com código 1 se houver ID desconhecido, custo inválido, salto de evolução, caminho diagonal, bloqueio sobre caminho ou célula fora da grade. Os módulos gerados carregam o sha256 do JSON de origem.
 
@@ -47,6 +59,36 @@ python3 tools/update_asset_registry.py   # atualiza runtime_asset_registry.json 
 ```
 
 `tests/run.luau` escreve um resumo em `tests/last_run.json`. Um filtro opcional seleciona specs por nome: `lune run tests/run.luau 03_`.
+
+Os specs `07_ui_tokens` e `08_ui_state` cobrem a parte da interface que roda fora do motor: contraste
+da paleta, durações das animações, biblioteca de ícones, expiração e cooldown de convites, máquina de
+estados da conexão e cobertura de texto nos dois idiomas. O que depende de `Instance` (layout, foco,
+toque) só pode ser verificado no Studio — ver `docs/UI_COVERAGE.md`.
+
+## Estrutura da interface
+
+```
+src/client/UI/
+  Accessibility  preferências efetivas (Roblox + jogo): movimento reduzido e texto ampliado
+  Anim           animações guiadas por Config/UiMotion, um controlador por propriedade
+  Focus          Tab/setas/Enter, escopos de camada e retorno de foco ao fechar modal
+  Components     PaperPanel, ActionButton (oito estados), chip, barra, toggle, slider, tooltip, ícone
+  Modal          família compartilhada de confirmações (prancha 38)
+  Toasts         fila de no máximo três, deduplicada por 1 s
+  CommandAdapter um pedido pendente por ação, mesmo requestId na reconciliação
+  Layers         ScreenGuis mundo/HUD/menu/modal/toast (DisplayOrder 0/10/20/30/40)
+  Router         pilha de telas; Configurações volta para a origem
+  Store          perfil, grupo, salas, convites, conexão e recompensa pendente
+  InviteCards    cartões de convite recebidos, com contagem de 30 s
+  Screens/       as telas de menu, uma por arquivo
+src/client/View/
+  Hud            HUD de combate (faixas, cartas, construção, detalhe, tutorial e treino)
+  HudPanels      barra de chefe, menu de alvo, popover de velocidade, opções e aviso de conexão
+  Ui             adaptador fino sobre Components/Modal/Toasts para o código de combate
+```
+
+A regra de ouro do pacote de UI vale aqui: **as 49 pranchas são referência**. Nenhuma foi importada
+como imagem de tela; só a arte de personagens, terrenos e os 24 ícones entram como `ImageLabel`.
 
 ## Abrir no Roblox Studio
 

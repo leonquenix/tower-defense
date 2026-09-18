@@ -1,8 +1,15 @@
 --!strict
--- Construtores de interface: painéis, botões acessíveis (mín. 44 px), rótulos e diálogos de confirmação.
-local TweenService = game:GetService("TweenService")
-
+-- Construtores de interface usados pelo combate (painéis, rótulos e formatação de números).
+--
+-- Botão, confirmação e aviso curto são adaptadores finos sobre a biblioteca nova em UI/:
+-- Components.button (oito estados + foco), Modal (família da prancha 38) e Toasts (fila de 3).
+-- Assim o HUD antigo e as telas novas compartilham o mesmo contrato de interação.
 local Theme = require(script.Parent.Theme)
+local Accessibility = require(script.Parent.Parent.UI.Accessibility)
+local Components = require(script.Parent.Parent.UI.Components)
+local Focus = require(script.Parent.Parent.UI.Focus)
+local Modal = require(script.Parent.Parent.UI.Modal)
+local Toasts = require(script.Parent.Parent.UI.Toasts)
 
 local Ui = {}
 
@@ -119,155 +126,49 @@ function Ui.title(parent: Instance?, name: string, text: string, props: { [strin
 	return l
 end
 
-local kindStyles: { [string]: { bg: Color3, fg: Color3, stroke: Color3 } } = {
-	primary = { bg = Theme.colors.gold, fg = Theme.colors.ink, stroke = Theme.colors.ink },
-	secondary = { bg = Theme.colors.cream, fg = Theme.colors.ink, stroke = Theme.colors.ink },
-	danger = { bg = Theme.colors.dangerSoft, fg = Theme.colors.danger, stroke = Theme.colors.danger },
-	ghost = { bg = Theme.colors.paper, fg = Theme.colors.muted, stroke = Theme.colors.muted },
-	dark = { bg = Theme.colors.ink, fg = Theme.colors.cream, stroke = Theme.colors.ink },
-	cyan = { bg = Theme.colors.cyan, fg = Theme.colors.ink, stroke = Theme.colors.ink },
-}
+export type Button = Components.Button
 
-export type Button = {
-	instance: TextButton,
-	label: TextLabel,
-	sub: TextLabel,
-	setEnabled: (self: Button, enabled: boolean, reason: string?) -> (),
-	setText: (self: Button, text: string, sub: string?) -> (),
-	setKind: (self: Button, kind: ButtonKind) -> (),
-	onClick: (self: Button, fn: () -> ()) -> RBXScriptConnection,
-	destroy: (self: Button) -> (),
-}
-
-local reducedMotion = false
-function Ui.setReducedMotion(value: boolean)
-	reducedMotion = value
+-- Preferência efetiva de movimento reduzido (Roblox + opção do jogo), para o Motion legado.
+function Ui.setReducedMotion(_: boolean)
+	-- mantido por compatibilidade: a fonte de verdade agora é UI/Accessibility
 end
+
 function Ui.isReducedMotion(): boolean
-	return reducedMotion
+	return Accessibility.reducedMotion()
 end
 
+-- Adaptador: mantém a assinatura antiga do HUD e devolve o componente completo da prancha 37
+-- (que já expõe setEnabled/onClick como apelidos de setAvailable/onActivate).
 function Ui.button(parent: Instance?, name: string, text: string, kind: ButtonKind?, props: { [string]: any }?): Button
-	local b = Instance.new("TextButton")
-	b.Name = name
-	b.AutoButtonColor = false
-	b.Text = ""
-	b.BorderSizePixel = 0
-	b.Size = UDim2.new(0, 160, 0, Theme.sizes.buttonTarget)
-	b.Font = Theme.fonts.bodyBold
+	local options: Components.ButtonOptions = { name = name, text = text, kind = kind }
 	if props then
-		for k, v in pairs(props) do
-			(b :: any)[k] = v
-		end
+		options.size = props.Size
+		options.position = props.Position
+		options.anchorPoint = props.AnchorPoint
+		options.layoutOrder = props.LayoutOrder
+		options.zIndex = props.ZIndex
+		options.visible = props.Visible
 	end
-	Ui.corner(b)
-	local stroke = Ui.stroke(b)
-	local label = Ui.label(b, "Label", text, {
-		Size = UDim2.new(1, -16, 1, 0),
-		Position = UDim2.new(0, 8, 0, 0),
-		Font = Theme.fonts.bodyBold,
-		TextSize = Theme.sizes.bodyLarge,
-		TextXAlignment = Enum.TextXAlignment.Center,
-	})
-	local sub = Ui.label(b, "Sub", "", {
-		Size = UDim2.new(1, -16, 0, 14),
-		Position = UDim2.new(0, 8, 1, -18),
-		TextSize = 13,
-		TextXAlignment = Enum.TextXAlignment.Center,
-		Visible = false,
-	})
-	local minSize = Instance.new("UISizeConstraint")
-	minSize.MinSize = Vector2.new(Theme.sizes.buttonMin, Theme.sizes.buttonMin)
-	minSize.Parent = b
-	local scale = Instance.new("UIScale")
-	scale.Parent = b
-	local currentKind: ButtonKind = kind or "secondary"
-	local enabled = true
-
-	local self = {} :: Button
-	self.instance = b
-	self.label = label
-	self.sub = sub
-	local function applyStyle()
-		local style = kindStyles[currentKind]
-		b.BackgroundColor3 = style.bg
-		label.TextColor3 = style.fg
-		sub.TextColor3 = style.fg
-		stroke.Color = style.stroke
-		if not enabled then
-			b.BackgroundColor3 = Theme.colors.creamDark
-			label.TextColor3 = Theme.colors.muted
-			sub.TextColor3 = Theme.colors.muted
-			stroke.Color = Theme.colors.muted
-		end
-	end
-	function self.setKind(_, newKind: ButtonKind)
-		currentKind = newKind
-		applyStyle()
-	end
-	function self.setEnabled(_, value: boolean, reason: string?)
-		enabled = value
-		b.Active = true -- continua clicável para explicar o motivo
-		if reason and reason ~= "" then
-			sub.Text = reason
-			sub.Visible = true
-			label.Position = UDim2.new(0, 8, 0, -6)
-		elseif reason == "" or not value then
-			sub.Text = ""
-			sub.Visible = false
-			label.Position = UDim2.new(0, 8, 0, 0)
-		else
-			sub.Visible = sub.Text ~= ""
-			label.Position = if sub.Visible then UDim2.new(0, 8, 0, -6) else UDim2.new(0, 8, 0, 0)
-		end
-		applyStyle()
-	end
-	function self.setText(_, newText: string, newSub: string?)
-		label.Text = newText
-		if newSub ~= nil then
-			sub.Text = newSub
-			sub.Visible = newSub ~= ""
-			label.Position = if sub.Visible then UDim2.new(0, 8, 0, -6) else UDim2.new(0, 8, 0, 0)
-		end
-	end
-	function self.onClick(_, fn: () -> ()): RBXScriptConnection
-		return b.Activated:Connect(function()
-			if not reducedMotion then
-				scale.Scale = 0.96
-				TweenService:Create(scale, TweenInfo.new(0.08), { Scale = 1 }):Play()
+	local button = Components.button(parent, options)
+	if props then
+		for key, value in pairs(props) do
+			if
+				key ~= "Size"
+				and key ~= "Position"
+				and key ~= "AnchorPoint"
+				and key ~= "LayoutOrder"
+				and key ~= "ZIndex"
+				and key ~= "Visible"
+			then
+				(button.instance :: any)[key] = value
 			end
-			if enabled then
-				fn()
-			end
-		end)
-	end
-	function self.destroy(_)
-		b:Destroy()
-	end
-	b.MouseEnter:Connect(function()
-		if not reducedMotion then
-			TweenService:Create(scale, TweenInfo.new(0.1), { Scale = 1.03 }):Play()
 		end
-		stroke.Thickness = 3
-	end)
-	b.MouseLeave:Connect(function()
-		if not reducedMotion then
-			TweenService:Create(scale, TweenInfo.new(0.1), { Scale = 1 }):Play()
-		end
-		stroke.Thickness = Theme.sizes.stroke
-	end)
-	b.SelectionGained:Connect(function()
-		stroke.Thickness = 3
-	end)
-	b.SelectionLost:Connect(function()
-		stroke.Thickness = Theme.sizes.stroke
-	end)
-	applyStyle()
-	b.Parent = parent
-	return self
+	end
+	return button
 end
 
--- Diálogo modal de confirmação. onConfirm/onCancel opcionais.
+-- Confirmação: usa a família compartilhada de modais (scrim, foco inicial no cancelamento,
+-- retorno de foco ao fechar e botão principal nomeando a ação).
 function Ui.confirm(
 	parent: Instance,
 	titleText: string,
@@ -278,130 +179,29 @@ function Ui.confirm(
 	onConfirm: () -> (),
 	onCancel: (() -> ())?
 )
-	local overlay = Ui.frame(parent, "ConfirmOverlay", {
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Theme.colors.ink,
-		BackgroundTransparency = 0.45,
-		ZIndex = 50,
+	return Modal.open(parent, {
+		title = titleText,
+		body = bodyText,
+		confirmText = confirmText,
+		cancelText = cancelText,
+		danger = danger,
+		opener = Focus.current(),
+		onConfirm = function(controls)
+			controls:close()
+			onConfirm()
+		end,
+		onCancel = onCancel,
 	})
-	overlay.Active = true
-	local box = Ui.panel(overlay, "Box", {
-		Size = UDim2.new(0, 420, 0, 200),
-		Position = UDim2.fromScale(0.5, 0.5),
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		ZIndex = 51,
-	})
-	local constraint = Instance.new("UISizeConstraint")
-	constraint.MaxSize = Vector2.new(420, 260)
-	constraint.Parent = box
-	box.Size = UDim2.new(0.9, 0, 0, 200)
-	Ui.padding(box, 16)
-	Ui.title(box, "Title", titleText, { Size = UDim2.new(1, 0, 0, 34), TextSize = 24, ZIndex = 52 })
-	Ui.label(box, "Body", bodyText, { Size = UDim2.new(1, 0, 0, 70), Position = UDim2.new(0, 0, 0, 40), ZIndex = 52 })
-	local row = Ui.frame(
-		box,
-		"Row",
-		{ Size = UDim2.new(1, 0, 0, 48), Position = UDim2.new(0, 0, 1, -48), BackgroundTransparency = 1, ZIndex = 52 }
-	)
-	Ui.list(row, Enum.FillDirection.Horizontal, 12, Enum.HorizontalAlignment.Right)
-	local cancel = Ui.button(
-		row,
-		"Cancel",
-		cancelText,
-		"secondary",
-		{ Size = UDim2.new(0, 150, 0, 48), ZIndex = 53, LayoutOrder = 1 }
-	)
-	local ok = Ui.button(
-		row,
-		"Confirm",
-		confirmText,
-		if danger then "danger" else "primary",
-		{ Size = UDim2.new(0, 180, 0, 48), ZIndex = 53, LayoutOrder = 2 }
-	)
-	cancel:onClick(function()
-		overlay:Destroy()
-		if onCancel then
-			onCancel()
-		end
-	end)
-	ok:onClick(function()
-		overlay:Destroy()
-		onConfirm()
-	end)
-	return overlay
 end
 
--- Aviso curto (toast) no topo.
-function Ui.toast(parent: Instance, text: string, danger: boolean?)
-	local existing = parent:FindFirstChild("Toast")
-	if existing then
-		existing:Destroy()
-	end
-	local t = Ui.canvasPanel(parent, "Toast", {
-		Size = UDim2.new(0, 10, 0, 40),
-		AutomaticSize = Enum.AutomaticSize.X,
-		Position = UDim2.new(0.5, 0, 0, 72),
-		AnchorPoint = Vector2.new(0.5, 0),
-		BackgroundColor3 = if danger then Theme.colors.dangerSoft else Theme.colors.cream,
-		ZIndex = 60,
-	})
-	Ui.padding(t, 14, 8)
-	Ui.label(t, "Text", (if danger then "⚠ " else "") .. text, {
-		Size = UDim2.new(0, 0, 1, 0),
-		AutomaticSize = Enum.AutomaticSize.X,
-		TextColor3 = if danger then Theme.colors.danger else Theme.colors.ink,
-		Font = Theme.fonts.bodyMedium,
-		ZIndex = 61,
-	})
-	if not reducedMotion then
-		t.GroupTransparency = 1
-		t.Position = UDim2.new(0.5, 0, 0, 60)
-		TweenService:Create(
-			t,
-			TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-			{ GroupTransparency = 0, Position = UDim2.new(0.5, 0, 0, 72) }
-		):Play()
-	end
-	task.delay(2.6, function()
-		if not t.Parent then
-			return
-		end
-		if reducedMotion then
-			t:Destroy()
-			return
-		end
-		local out = TweenService:Create(t, TweenInfo.new(0.2), { GroupTransparency = 1 })
-		out:Play()
-		out.Completed:Once(function()
-			if t.Parent then
-				t:Destroy()
-			end
-		end)
-	end)
+-- Aviso curto: entra na fila global (máximo três, deduplicada por 1 s).
+function Ui.toast(_: Instance, text: string, danger: boolean?)
+	Toasts.show(text, if danger then "error" else "info")
 end
 
-local ACCENT_UPPER: { [string]: string } = {
-	["á"] = "Á",
-	["à"] = "À",
-	["â"] = "Â",
-	["ã"] = "Ã",
-	["é"] = "É",
-	["ê"] = "Ê",
-	["í"] = "Í",
-	["ó"] = "Ó",
-	["ô"] = "Ô",
-	["õ"] = "Õ",
-	["ú"] = "Ú",
-	["ç"] = "Ç",
-}
-
--- Maiúsculas preservando acentos do português (string.upper só trata ASCII)
+-- Maiúsculas com acento (delegado ao componente compartilhado).
 function Ui.upper(text: string): string
-	local out = string.upper(text)
-	for lower, upperChar in pairs(ACCENT_UPPER) do
-		out = out:gsub(lower, upperChar)
-	end
-	return out
+	return Components.upper(text)
 end
 
 function Ui.formatNumber(n: number): string

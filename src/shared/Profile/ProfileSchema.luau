@@ -3,6 +3,7 @@
 local Types = require(script.Parent.Parent.Types)
 local Balance = require(script.Parent.Parent.Config.Balance)
 local Catalog = require(script.Parent.Parent.Config.Catalog)
+local Products = require(script.Parent.Parent.Config.Products)
 
 local ProfileSchema = {}
 
@@ -259,11 +260,14 @@ export type ApplyResultOutcome = {
 	reason: string?,
 	newMilestones: { [string]: { number } },
 	unlocked: { string },
+	-- Cosméticos concedidos pelos marcos de domínio cruzados neste resultado (30/100/250).
+	grantedCosmetics: { string },
 }
 
 -- Aplica um resultado ao perfil de forma idempotente por matchId. Puro: não grava.
 function ProfileSchema.applyMatchResult(profile: Types.Profile, input: ApplyResultInput): ApplyResultOutcome
-	local out: ApplyResultOutcome = { applied = false, reason = nil, newMilestones = {}, unlocked = {} }
+	local out: ApplyResultOutcome =
+		{ applied = false, reason = nil, newMilestones = {}, unlocked = {}, grantedCosmetics = {} }
 	if input.now - input.createdAt > ProfileSchema.REWARD_RETENTION_SECONDS then
 		out.reason = "expired"
 		return out
@@ -308,6 +312,16 @@ function ProfileSchema.applyMatchResult(profile: Types.Profile, input: ApplyResu
 			end
 			if #reached > 0 then
 				out.newMilestones[towerId] = reached
+				-- marco cruzado concede o cosmético correspondente (30 adesivo, 100 título, 250 aparência).
+				-- A concessão é idempotente: o mesmo matchId nunca é aplicado duas vezes.
+				local byMilestone = Products.masteryCosmetics(towerId)
+				for _, milestone in ipairs(reached) do
+					local cosmetic = byMilestone[milestone]
+					if cosmetic and table.find(profile.cosmeticsOwned, cosmetic.id) == nil then
+						table.insert(profile.cosmeticsOwned, cosmetic.id)
+						table.insert(out.grantedCosmetics, cosmetic.id)
+					end
+				end
 			end
 		end
 	end

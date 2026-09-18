@@ -63,6 +63,9 @@ local ACTIONS: { [string]: { [string]: FieldSpec } } = {
 	JoinParty = { partyId = { kind = "string" } },
 	LeaveParty = {},
 	InviteToParty = { userId = { kind = "int" } },
+	-- Resposta a um convite recebido. O inviteId é o token emitido pelo servidor: sem ele,
+	-- ou com ele vencido, nenhuma entrada acontece.
+	RespondInvite = { inviteId = { kind = "string" }, accept = { kind = "boolean" } },
 	KickFromParty = { userId = { kind = "int" } },
 	PartyReady = { ready = { kind = "boolean" } },
 	PartySetup = { mapId = { kind = "string" }, mode = { kind = "string" } },
@@ -115,6 +118,9 @@ local PERSISTENT_ACTIONS: { [string]: boolean } = {
 	PromptFounderPass = true,
 	ClaimPending = true,
 	RetryProfile = true,
+	-- convites gastam o balde persistente: o cooldown de 5 s por destinatário é do PartyService
+	InviteToParty = true,
+	RespondInvite = true,
 }
 -- Snapshot completo: um a cada dois segundos
 local SNAPSHOT_ACTIONS: { [string]: boolean } = { RequestSnapshot = true }

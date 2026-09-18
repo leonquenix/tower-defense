@@ -1,0 +1,50 @@
+id,tela_ou_estado,png,imagem_no_documento,interacoes_e_feedback,implementacao
+01_entrada,Entrada e perfil,png/01_entrada.png,Incluída,Especificado,Pendente no Studio
+02_inicio,Menu inicial,png/02_inicio.png,Incluída,Especificado,Pendente no Studio
+03_mapas,Escolher mapa,png/03_mapas.png,Incluída,Especificado,Pendente no Studio
+04_salas,Salas e convites,png/04_salas.png,Incluída,Especificado,Pendente no Studio
+05_grupo,Grupo e prontidão,png/05_grupo.png,Incluída,Especificado,Pendente no Studio
+06_colecao,Coleção e equipe,png/06_colecao.png,Incluída,Especificado,Pendente no Studio
+07_torre,Detalhe e desbloqueio,png/07_torre.png,Incluída,Especificado,Pendente no Studio
+08_cosmeticos,Domínio e aparência,png/08_cosmeticos.png,Incluída,Especificado,Pendente no Studio
+09_loja,Loja opcional,png/09_loja.png,Incluída,Especificado,Pendente no Studio
+10_opcoes,Configurações,png/10_opcoes.png,Incluída,Especificado,Pendente no Studio
+11_carregamento,Carregamento de partida,png/11_carregamento.png,Incluída,Especificado,Pendente no Studio
+12_preparacao,Preparação e intervalo,png/12_preparacao.png,Incluída,Especificado,Pendente no Studio
+13_combate,Combate principal,png/13_combate.png,Incluída,Especificado,Pendente no Studio
+14_posicionar,Posicionar uma torre,png/14_posicionar.png,Incluída,Especificado,Pendente no Studio
+15_posicao_invalida,Posicionamento inválido,png/15_posicao_invalida.png,Incluída,Especificado,Pendente no Studio
+16_torre_selecionada,Torre selecionada,png/16_torre_selecionada.png,Incluída,Especificado,Pendente no Studio
+17_especializacao,Especialização,png/17_especializacao.png,Incluída,Especificado,Pendente no Studio
+18_venda,Confirmação de venda,png/18_venda.png,Incluída,Especificado,Pendente no Studio
+19_chefe,Chefe e aviso de habilidade,png/19_chefe.png,Incluída,Especificado,Pendente no Studio
+20_pulso,Pulso compartilhado,png/20_pulso.png,Incluída,Especificado,Pendente no Studio
+21_tutorial,Tutorial contextual,png/21_tutorial.png,Incluída,Especificado,Pendente no Studio
+22_treino,Treino,png/22_treino.png,Incluída,Especificado,Pendente no Studio
+23_vitoria,Vitória e revanche,png/23_vitoria.png,Incluída,Especificado,Pendente no Studio
+24_derrota,Derrota,png/24_derrota.png,Incluída,Especificado,Pendente no Studio
+25_recompensa_pendente,Recompensa pendente,png/25_recompensa_pendente.png,Incluída,Especificado,Pendente no Studio
+26_conexao,Falhas de perfil e conexão,png/26_conexao.png,Incluída,Especificado,Pendente no Studio
+27_sair,Sair da partida,png/27_sair.png,Incluída,Especificado,Pendente no Studio
+28_mobile_combate,Combate no celular,png/28_mobile_combate.png,Incluída,Especificado,Pendente no Studio
+29_mobile_posicionar,Construção no celular,png/29_mobile_posicionar.png,Incluída,Especificado,Pendente no Studio
+30_orientacao,Orientação vertical,png/30_orientacao.png,Incluída,Especificado,Pendente no Studio
+31_estados,Biblioteca de estados,png/31_estados.png,Incluída,Especificado,Pendente no Studio
+32_desbloqueio,Confirmar desbloqueio,png/32_desbloqueio.png,Incluída,Especificado,Pendente no Studio
+33_convites,Convidar jogadores,png/33_convites.png,Incluída,Especificado,Pendente no Studio
+34_inimigo,Inspecionar inimigo,png/34_inimigo.png,Incluída,Especificado,Pendente no Studio
+35_mobile_menu,Menu no celular,png/35_mobile_menu.png,Incluída,Especificado,Pendente no Studio
+36_mobile_detalhe,Detalhe no celular,png/36_mobile_detalhe.png,Incluída,Especificado,Pendente no Studio
+37_botoes,Todos os estados de botão,png/37_botoes.png,Incluída,Especificado,Pendente no Studio
+38_confirmacoes,Confirmações de ações,png/38_confirmacoes.png,Incluída,Especificado,Pendente no Studio
+39_erros,Erros e bloqueios,png/39_erros.png,Incluída,Especificado,Pendente no Studio
+40_grupo_estados,Convites e votação,png/40_grupo_estados.png,Incluída,Especificado,Pendente no Studio
+41_boss_estados,Avisos dos três chefes,png/41_boss_estados.png,Incluída,Especificado,Pendente no Studio
+42_recuperacao,Carregamento e recuperação,png/42_recuperacao.png,Incluída,Especificado,Pendente no Studio
+43_colecao_estados,Estados da coleção,png/43_colecao_estados.png,Incluída,Especificado,Pendente no Studio
+44_resultados_estados,Recompensas e conquistas,png/44_resultados_estados.png,Incluída,Especificado,Pendente no Studio
+45_menus_contextuais,Menus e feedbacks de combate,png/45_menus_contextuais.png,Incluída,Especificado,Pendente no Studio
+46_loja_estados,Estados da loja,png/46_loja_estados.png,Incluída,Especificado,Pendente no Studio
+47_mobile_colecao,Coleção no celular,png/47_mobile_colecao.png,Incluída,Especificado,Pendente no Studio
+48_mobile_mapas,Mapas no celular,png/48_mobile_mapas.png,Incluída,Especificado,Pendente no Studio
+49_icones,Ícones funcionais,png/49_icones.png,Incluída,Especificado,Pendente no Studio

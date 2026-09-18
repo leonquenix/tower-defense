@@ -9,6 +9,12 @@ local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Theme = require(script.Parent.Theme)
 local Ui = require(script.Parent.Ui)
+local Components = require(script.Parent.Parent.UI.Components)
+
+local HudPanels = require(script.Parent.HudPanels)
+local Modal = require(script.Parent.Parent.UI.Modal)
+local Store = require(script.Parent.Parent.UI.Store)
+local Toasts = require(script.Parent.Parent.UI.Toasts)
 local MatchController = require(script.Parent.Parent.Controllers.MatchController)
 local Motion = require(script.Parent.Motion)
 local Responsive = require(script.Parent.Responsive)
@@ -23,7 +29,7 @@ export type Callbacks = {
 	onConfirmBuild: () -> (),
 	onCancelBuild: () -> (),
 	onPulse: () -> (),
-	onSpeed: () -> (),
+	onSpeedVote: (value: number) -> (),
 	onReady: () -> (),
 	onLeave: () -> (),
 	onZoomReset: () -> (),
@@ -31,6 +37,7 @@ export type Callbacks = {
 	onSell: (entityId: number) -> (),
 	onTarget: (entityId: number, mode: string) -> (),
 	onCloseDetail: () -> (),
+	onOpenSettings: () -> (),
 	onTrainingSpawn: (enemyId: string, count: number) -> (),
 	onTrainingClear: () -> (),
 	onToggleRanges: (value: boolean) -> (),
@@ -47,6 +54,7 @@ export type Hud = typeof(setmetatable(
 		boardArea: Frame,
 		detail: Frame,
 		detailBody: ScrollingFrame,
+		detailActions: Frame,
 		wavePreview: Frame,
 		wavePreviewText: TextLabel,
 		tutorialBanner: Frame,
@@ -68,7 +76,13 @@ export type Hud = typeof(setmetatable(
 		speedButton: Ui.Button,
 		readyButton: Ui.Button,
 		zoomButton: Ui.Button,
-		leaveButton: Ui.Button,
+		optionsButton: Ui.Button,
+		groupButton: Ui.Button,
+		bossBar: HudPanels.BossBar,
+		targetMenu: HudPanels.TargetMenu,
+		speedPopover: HudPanels.SpeedPopover,
+		optionsPanel: HudPanels.OptionsPanel,
+		connectionBanner: HudPanels.ConnectionBanner,
 		buildBar: Frame,
 		buildText: TextLabel,
 		buildConfirm: Ui.Button,
@@ -129,8 +143,8 @@ local function buildTrainingPanel(self: Hud, root: Frame, callbacks: Callbacks, 
 	scroll.Parent = trainingPanel
 	local list = Ui.list(scroll, Enum.FillDirection.Vertical, 4)
 	list.VerticalAlignment = Enum.VerticalAlignment.Top
-	Ui.label(scroll, "Title", L("hud.training"), {
-		Size = UDim2.new(1, 0, 0, if mobile then 30 else 34),
+	Ui.label(scroll, "Title", L("hud.training") .. "\n" .. L("hud.trainingNotice"), {
+		Size = UDim2.new(1, 0, 0, if mobile then 44 else 48),
 		TextSize = if mobile then 11 else 13,
 		ZIndex = 7,
 		LayoutOrder = 1,
@@ -215,7 +229,17 @@ local function buildTrainingPanel(self: Hud, root: Frame, callbacks: Callbacks, 
 	})
 	clear.label.TextSize = 12
 	clear:onClick(function()
-		callbacks.onTrainingClear()
+		Modal.open(self.root, {
+			title = L("hud.trainingClear"),
+			body = L("hud.trainingClearConfirm"),
+			confirmText = L("hud.trainingClearAction"),
+			danger = true,
+			opener = clear.instance,
+			onConfirm = function(controls)
+				controls:close()
+				callbacks.onTrainingClear()
+			end,
+		})
 	end)
 	local row2 = Ui.frame(scroll, "Row2", {
 		Size = UDim2.new(1, 0, 0, if mobile then buttonHeight * 2 + 4 else buttonHeight),
@@ -448,8 +472,25 @@ function Hud.new(parent: GuiObject, callbacks: Callbacks, mobile: boolean): Hud
 	detailBody.ScrollBarThickness = 4
 	detailBody.ZIndex = 6
 	detailBody.Parent = detail
+	-- As ações (melhorar, alvo, vender) ficam fixas na base do painel: só os atributos rolam.
+	-- Sem isso, num painel baixo (tutorial, celular) o botão de vender saía da área visível.
+	local detailActions = Ui.frame(detail, "Actions", {
+		Size = UDim2.new(1, 0, 0, 0),
+		AutomaticSize = Enum.AutomaticSize.Y,
+		Position = UDim2.new(0, 0, 1, 0),
+		AnchorPoint = Vector2.new(0, 1),
+		BackgroundTransparency = 1,
+		ZIndex = 7,
+	})
+	local actionsLayout = Ui.list(detailActions, Enum.FillDirection.Vertical, 6)
+	actionsLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+	detailActions:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+		local reserved = detailActions.AbsoluteSize.Y
+		detailBody.Size = UDim2.new(1, 0, 1, -(if reserved > 0 then reserved + 8 else 0))
+	end)
 	self.detail = detail
 	self.detailBody = detailBody
+	self.detailActions = detailActions
 
 	-- ------------------------------------------------------------------
 	-- Faixa inferior (computador) / cartas na coluna esquerda e ações na coluna direita (celular)
@@ -512,7 +553,13 @@ function Hud.new(parent: GuiObject, callbacks: Callbacks, mobile: boolean): Hud
 	)
 	self.speedButton:setText(L("hud.speed", { value = 1 }), L("hud.speedHint"))
 	self.speedButton:onClick(function()
-		callbacks.onSpeed()
+		-- o popover mostra votos, quem falta e o retorno a 1x antes de qualquer voto
+		local view = MatchController.current()
+		if view then
+			self.speedPopover:toggle(self.speedButton.instance, view, function(value: number)
+				callbacks.onSpeedVote(value)
+			end)
+		end
 	end)
 	self.readyButton = Ui.button(
 		actions,
@@ -534,18 +581,43 @@ function Hud.new(parent: GuiObject, callbacks: Callbacks, mobile: boolean): Hud
 	self.zoomButton:onClick(function()
 		callbacks.onZoomReset()
 	end)
-	self.leaveButton = Ui.button(
+	-- "Grupo" e "Opções" ficam na faixa superior no computador e na coluna de ações no celular.
+	-- Opções reúne grupo em leitura, configurações e saída (o combate não pausa em nenhum caso).
+	self.groupButton = Ui.button(
 		if mobile then actions else top,
-		"Leave",
-		L("hud.leave"),
-		"ghost",
-		{ Size = if mobile then UDim2.new(1, 0, 0, 40) else UDim2.new(0, 84, 0, 40), LayoutOrder = 7 }
+		"Group",
+		L("hud.group"),
+		"secondary",
+		{ Size = if mobile then UDim2.new(1, 0, 0, 44) else UDim2.new(0, 145, 0, 44), LayoutOrder = 6 }
 	)
-	self.leaveButton:onClick(function()
-		callbacks.onLeave()
+	self.groupButton:onClick(function()
+		local view = MatchController.current()
+		if view then
+			self.optionsPanel:toggle(self.groupButton.instance, view)
+		end
+	end)
+	self.optionsButton = Ui.button(
+		if mobile then actions else top,
+		"Options",
+		L("hud.options"),
+		"secondary",
+		{ Size = if mobile then UDim2.new(1, 0, 0, 44) else UDim2.new(0, 160, 0, 44), LayoutOrder = 7 }
+	)
+	self.optionsButton:onClick(function()
+		local view = MatchController.current()
+		if view then
+			self.optionsPanel:toggle(self.optionsButton.instance, view)
+		end
 	end)
 	if mobile then
-		for _, b in ipairs({ self.pulseButton, self.speedButton, self.readyButton, self.zoomButton, self.leaveButton }) do
+		for _, b in ipairs({
+			self.pulseButton,
+			self.speedButton,
+			self.readyButton,
+			self.zoomButton,
+			self.groupButton,
+			self.optionsButton,
+		}) do
 			b.label.TextSize = 14
 			b.sub.TextSize = 10
 		end
@@ -620,6 +692,7 @@ function Hud.new(parent: GuiObject, callbacks: Callbacks, mobile: boolean): Hud
 	})
 	self.wavePreview = wavePreview
 
+	-- anúncio curto da chegada do chefe; vida, aviso e efeito ativo ficam na BossBar
 	self.bossBanner = Ui.label(root, "BossBanner", "", {
 		Size = UDim2.new(0, 10, 0, if mobile then 26 else 34),
 		AutomaticSize = Enum.AutomaticSize.X,
@@ -695,6 +768,20 @@ function Hud.new(parent: GuiObject, callbacks: Callbacks, mobile: boolean): Hud
 	-- Painel de treino
 	-- ------------------------------------------------------------------
 	self.trainingPanel = buildTrainingPanel(self, root, callbacks, mobile)
+
+	-- ------------------------------------------------------------------
+	-- Painéis contextuais (chefe, alvo, velocidade, opções e conexão)
+	-- ------------------------------------------------------------------
+	-- a fila de avisos desce abaixo da faixa superior para não cobrir nada do HUD
+	Toasts.setTopOffset(if mobile then SIDE_GAP + 8 else TOP_HEIGHT + 24)
+	self.bossBar = HudPanels.bossBar(root, mobile)
+	self.targetMenu = HudPanels.targetMenu(root)
+	self.speedPopover = HudPanels.speedPopover(root)
+	self.connectionBanner = HudPanels.connectionBanner(root)
+	self.optionsPanel = HudPanels.optionsPanel(root, {
+		onSettings = callbacks.onOpenSettings,
+		onLeave = callbacks.onLeave,
+	})
 
 	return self
 end
@@ -832,6 +919,16 @@ function Hud.update(self: Hud, view: MatchController.MatchView, wallet: number, 
 	self.displayedScrap = Motion.lerpNumber(self.displayedScrap, wallet, 0.45)
 	self.scrapText.Text = if snapshot.mode == "training" then "∞" else Ui.formatNumber(self.displayedScrap)
 	self.limitText.Text = L("hud.towerLimit", { placed = myTowers, limit = snapshot.limits.perPlayer })
+	self.bossBar:update(view, simTime)
+	self.connectionBanner:setState(Store.get().connection)
+	local connected = 0
+	for _, participant in ipairs(snapshot.participants) do
+		if participant.connected then
+			connected += 1
+		end
+	end
+	self.groupButton.instance.Visible = #snapshot.participants > 1
+	self.groupButton:setText(L("hud.groupCount", { ready = connected, total = #snapshot.participants }))
 	-- participantes
 	for _, child in ipairs(self.participants:GetChildren()) do
 		if child:IsA("TextLabel") then
@@ -877,15 +974,10 @@ function Hud.update(self: Hud, view: MatchController.MatchView, wallet: number, 
 		self.pulseButton:setEnabled(false, if phase == "Wave" then "" else L("hud.pulseReady"))
 		self.pulseButton:setText(L("hud.pulse"), "")
 	elseif pulseReady then
-		if os.clock() < self.pulseArmedUntil then
-			self.pulseButton:setEnabled(true, "")
-			self.pulseButton:setText(L("common.confirm") .. "?", "")
-			self.pulseButton:setKind("primary")
-		else
-			self.pulseButton:setEnabled(true, "")
-			self.pulseButton:setText(L("hud.pulse"), L("hud.pulseReady"))
-			self.pulseButton:setKind("cyan")
-		end
+		-- o primeiro toque abre a confirmação (tela 20); o botão nunca dispara sozinho
+		self.pulseButton:setEnabled(true, "")
+		self.pulseButton:setText(L("hud.pulse"), L("hud.pulseReady"))
+		self.pulseButton:setKind("cyan")
 	else
 		self.pulseButton:setEnabled(
 			false,
@@ -907,9 +999,20 @@ function Hud.update(self: Hud, view: MatchController.MatchView, wallet: number, 
 			end
 		end
 	end
+	-- rótulo da prancha 13: "2x • votar 1/2" quando há grupo; sozinho, só a velocidade
+	local speedVotes = 0
+	for _, participant in ipairs(snapshot.participants) do
+		if participant.connected and participant.speedVote == 2 then
+			speedVotes += 1
+		end
+	end
 	self.speedButton:setText(
 		L("hud.speed", { value = snapshot.speedMultiplier }),
-		if #snapshot.participants > 1 then L("hud.speedHint") .. (if mySpeedVote == 2 then " ✓" else "") else ""
+		if #snapshot.participants > 1
+			then L("hud.speedVotes", { votes = speedVotes, total = activeTotal }) .. (if mySpeedVote == 2
+				then " ✓"
+				else "")
+			else ""
 	)
 	self.speedButton:setEnabled(snapshot.mode ~= "tutorial", if snapshot.mode == "tutorial" then "1x" else nil)
 	self.speedButton:setKind(if snapshot.speedMultiplier == 2 then "primary" else "dark")
@@ -1142,13 +1245,27 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 	for _, c in ipairs(self.detailBody:GetChildren()) do
 		c:Destroy()
 	end
+	for _, c in ipairs(self.detailActions:GetChildren()) do
+		if not c:IsA("UIListLayout") then
+			c:Destroy()
+		end
+	end
 	local body = self.detailBody
+	local actions = self.detailActions
 	local list = Ui.list(body, Enum.FillDirection.Vertical, 6)
 	list.VerticalAlignment = Enum.VerticalAlignment.Top
 	local order = 0
 	local function add(inst: GuiObject)
 		order += 1
 		inst.LayoutOrder = order
+	end
+	-- ação fixa na base do painel, sempre alcançável sem rolar
+	local actionOrder = 0
+	local function addAction(button: Ui.Button)
+		actionOrder += 1
+		button.instance.LayoutOrder = actionOrder
+		button.instance.Size = UDim2.new(1, 0, 0, Theme.sizes.buttonTarget)
+		button.instance.Parent = actions
 	end
 	if tower then
 		local t = tower :: Types.TowerSnapshot
@@ -1254,6 +1371,15 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 			if #nexts == 1 then
 				local nextState = nexts[1]
 				local nextStats = Catalog.getStateStats(t.d, nextState) :: Types.TowerStateStats
+				-- upgrade linear: comparação inline e um clique (sem modal)
+				for line, text in ipairs(HudPanels.compareStates(def, stats, nextStats)) do
+					add(Ui.label(body, "Cmp" .. line, text, {
+						Size = UDim2.new(1, 0, 0, 18),
+						TextSize = 13,
+						TextColor3 = Theme.colors.tealDark,
+						ZIndex = 7,
+					}))
+				end
 				local b = Ui.button(
 					body,
 					"Upgrade",
@@ -1261,7 +1387,7 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 					"primary",
 					{ Size = UDim2.new(1, 0, 0, 46), ZIndex = 7 }
 				)
-				add(b.instance)
+				addAction(b)
 				if not training and wallet < nextStats.cost then
 					b:setEnabled(false, L("build.noFunds", { missing = nextStats.cost - wallet }))
 				end
@@ -1286,22 +1412,35 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 						"primary",
 						{ Size = UDim2.new(1, 0, 0, 46), ZIndex = 7 }
 					)
-					add(b.instance)
+					addAction(b)
 					if not training and wallet < nextStats.cost then
 						b:setEnabled(false, L("build.noFunds", { missing = nextStats.cost - wallet }))
 					end
 					b:onClick(function()
-						Ui.confirm(
-							self.root,
-							name,
-							L("detail.specConfirm", { name = name }),
-							L("common.confirm"),
-							L("common.cancel"),
-							false,
-							function()
+						-- confirmação específica: torre, opção e preço; escolha exclusiva até vender
+						Modal.open(self.root, {
+							title = L("detail.specTitle", { tower = def.name, name = name }),
+							body = L("detail.specConfirm", { name = name }),
+							confirmText = L("detail.specChoose", { name = name, cost = nextStats.cost }),
+							opener = b.instance,
+							width = 520,
+							build = function(content)
+								for line, text in ipairs(HudPanels.compareStates(def, stats, nextStats)) do
+									Ui.label(content, "Cmp" .. line, text, {
+										Size = UDim2.new(1, 0, 0, 20),
+										LayoutOrder = line,
+										TextSize = 14,
+										ZIndex = 5,
+									})
+								end
+							end,
+							onConfirm = function(controls)
+								-- uma escolha pendente impede a alternativa simultânea
+								controls:setPending(true)
 								self.callbacks.onUpgrade(t.id, nextState)
-							end
-						)
+								controls:close()
+							end,
+						})
 					end)
 				end
 			end
@@ -1313,11 +1452,11 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 					"secondary",
 					{ Size = UDim2.new(1, 0, 0, 44), ZIndex = 7 }
 				)
-				add(modeBtn.instance)
+				addAction(modeBtn)
 				modeBtn:onClick(function()
-					local idx = table.find(Catalog.TARGET_MODES, t.tm :: any) or 1
-					local nextMode = Catalog.TARGET_MODES[(idx % #Catalog.TARGET_MODES) + 1]
-					self.callbacks.onTarget(t.id, nextMode)
+					self.targetMenu:open(modeBtn.instance, t.tm, function(mode: string)
+						self.callbacks.onTarget(t.id, mode)
+					end)
 				end)
 			end
 			local refund = math.floor(t.inv * Balance.sellRefund)
@@ -1328,19 +1467,24 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 				"danger",
 				{ Size = UDim2.new(1, 0, 0, 44), ZIndex = 7 }
 			)
-			add(sell.instance)
+			addAction(sell)
 			sell:onClick(function()
-				Ui.confirm(
-					self.root,
-					L("detail.sell", { refund = refund }),
-					L("detail.sellConfirm", { tower = def.name, refund = refund }),
-					L("common.confirm"),
-					L("common.cancel"),
-					true,
-					function()
+				local circuitImpact = if t.ci
+					then L("detail.sellCircuit", { name = L("circuit." .. (t.ci :: string)) })
+					else L("detail.sellNoCircuit")
+				Modal.open(self.root, {
+					title = L("detail.sellTitle", { tower = def.name }),
+					body = L("detail.sellConfirm", { tower = def.name, refund = refund }) .. "\n" .. circuitImpact,
+					-- Cancelar é o foco inicial (Modal já faz isso) e nunca manda comando
+					confirmText = L("detail.sellAction", { refund = refund }),
+					danger = true,
+					opener = sell.instance,
+					onConfirm = function(controls)
+						controls:setPending(true)
 						self.callbacks.onSell(t.id)
-					end
-				)
+						controls:close()
+					end,
+				})
 			end)
 		end
 	elseif self.selectedEnemyId then
@@ -1376,22 +1520,25 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 			if ev.armorBonus > 0 then
 				text ..= " ↑"
 			end
-			add(Ui.label(body, "Armor", text, {
+			local armorLabel = Ui.label(body, "Armor", text, {
 				Size = UDim2.new(1, 0, 0, 20),
 				TextSize = 14,
-				TextColor3 = if ev.armorBonus > 0 then Theme.colors.gold else Theme.colors.sand,
+				TextColor3 = if ev.armorBonus > 0 then Theme.colors.goldText else Theme.colors.sandDark,
 				ZIndex = 7,
-			}))
+			})
+			add(armorLabel)
+			-- o contrajogo vem da resistência real, numa frase (guia, prancha 45)
+			Components.tooltip(armorLabel, L("hud.armorPhysicalHint"))
 		end
 		if ev.energyResistance > 0 then
-			add(
-				Ui.label(
-					body,
-					"Energy",
-					"◈ " .. L("hud.armorEnergy", { value = math.floor(ev.energyResistance * 100 + 0.5) }),
-					{ Size = UDim2.new(1, 0, 0, 20), TextSize = 14, TextColor3 = Theme.colors.cyan, ZIndex = 7 }
-				)
+			local energyLabel = Ui.label(
+				body,
+				"Energy",
+				"◈ " .. L("hud.armorEnergy", { value = math.floor(ev.energyResistance * 100 + 0.5) }),
+				{ Size = UDim2.new(1, 0, 0, 20), TextSize = 14, TextColor3 = Theme.colors.cyan, ZIndex = 7 }
 			)
+			add(energyLabel)
+			Components.tooltip(energyLabel, L("hud.armorEnergyHint"))
 		end
 		if ev.isBoss and Localization.has("boss." .. ev.defId .. ".ability") then
 			add(
@@ -1419,7 +1566,7 @@ function Hud.refreshDetail(self: Hud, view: MatchController.MatchView, wallet: n
 					body,
 					"Mark",
 					"◎ +" .. math.floor(ev.mark * 100 + 0.5) .. "%",
-					{ Size = UDim2.new(1, 0, 0, 20), TextSize = 14, TextColor3 = Theme.colors.gold, ZIndex = 7 }
+					{ Size = UDim2.new(1, 0, 0, 20), TextSize = 14, TextColor3 = Theme.colors.goldText, ZIndex = 7 }
 				)
 			)
 		end
@@ -1477,8 +1624,16 @@ end
 
 -- Verdadeiro quando o ponto de tela está sobre painéis do HUD (faixas, barra de construção, detalhe, tutorial, treino)
 function Hud.isPointOverChrome(self: Hud, point: Vector2): boolean
-	local candidates: { GuiObject } =
-		{ self.top, self.bottom, self.buildBar, self.detail, self.tutorialBanner, self.trainingPanel, self.wavePreview }
+	local candidates: { GuiObject } = {
+		self.top,
+		self.bottom,
+		self.buildBar,
+		self.detail,
+		self.tutorialBanner,
+		self.trainingPanel,
+		self.wavePreview,
+		self.bossBar.frame,
+	}
 	for _, frame in ipairs(candidates) do
 		if frame.Visible then
 			local pos = frame.AbsolutePosition
@@ -1499,7 +1654,14 @@ function Hud.setVisible(self: Hud, visible: boolean)
 	self.root.Visible = visible
 end
 
+function Hud.closeContextPanels(self: Hud)
+	self.targetMenu:close()
+	self.speedPopover:close()
+	self.optionsPanel:close()
+end
+
 function Hud.destroy(self: Hud)
+	Hud.closeContextPanels(self)
 	self.root:Destroy()
 end
 

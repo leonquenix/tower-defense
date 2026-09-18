@@ -1,363 +1,663 @@
 --!strict
--- Navegação entre telas: carregando, menu, coleção, configurações, loja, partida e resultado.
+-- Orquestra as telas: camadas, roteamento, store do lobby, convites, carregamento de partida,
+-- resultado, orientação e a ponte com o combate.
+--
+-- Uma tela principal por vez (Router), no máximo um painel contextual e um modal bloqueador acima.
+-- Configurações abre de qualquer origem e volta para a mesma origem (Router.push/back).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local Types = require(ReplicatedStorage.Shared.Types)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
-local Theme = require(script.Parent.Parent.View.Theme)
-local Ui = require(script.Parent.Parent.View.Ui)
-local Menu = require(script.Parent.Parent.View.Menu)
-local Collection = require(script.Parent.Parent.View.Collection)
-local Settings = require(script.Parent.Parent.View.Settings)
-local Result = require(script.Parent.Parent.View.Result)
-local Shop = require(script.Parent.Parent.View.Shop)
+local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Client = require(script.Parent.Parent.Net.Client)
+local Responsive = require(script.Parent.Parent.View.Responsive)
+local Accessibility = require(script.Parent.Parent.UI.Accessibility)
+local CommandAdapter = require(script.Parent.Parent.UI.CommandAdapter)
+local Focus = require(script.Parent.Parent.UI.Focus)
+local InviteCards = require(script.Parent.Parent.UI.InviteCards)
+local Layers = require(script.Parent.Parent.UI.Layers)
+local Modal = require(script.Parent.Parent.UI.Modal)
+local Router = require(script.Parent.Parent.UI.Router)
+local Store = require(script.Parent.Parent.UI.Store)
+local Toasts = require(script.Parent.Parent.UI.Toasts)
+local Boot = require(script.Parent.Parent.UI.Screens.Boot)
+local CollectionScreen = require(script.Parent.Parent.UI.Screens.CollectionScreen)
+local Cosmetics = require(script.Parent.Parent.UI.Screens.Cosmetics)
+local Invites = require(script.Parent.Parent.UI.Screens.Invites)
+local MainMenu = require(script.Parent.Parent.UI.Screens.MainMenu)
+local Maps = require(script.Parent.Parent.UI.Screens.Maps)
+local MatchLoading = require(script.Parent.Parent.UI.Screens.MatchLoading)
+local Orientation = require(script.Parent.Parent.UI.Screens.Orientation)
+local PartyScreen = require(script.Parent.Parent.UI.Screens.PartyScreen)
+local Rooms = require(script.Parent.Parent.UI.Screens.Rooms)
+local ResultScreen = require(script.Parent.Parent.UI.Screens.ResultScreen)
+local SettingsScreen = require(script.Parent.Parent.UI.Screens.SettingsScreen)
+local ShopScreen = require(script.Parent.Parent.UI.Screens.ShopScreen)
+local TowerDetail = require(script.Parent.Parent.UI.Screens.TowerDetail)
 local MatchController = require(script.Parent.MatchController)
 local PlayController = require(script.Parent.PlayController)
 local SettingsController = require(script.Parent.SettingsController)
 local AudioController = require(script.Parent.AudioController)
 local InputController = require(script.Parent.InputController)
-local Responsive = require(script.Parent.Parent.View.Responsive)
-local TweenService = game:GetService("TweenService")
 
 local ScreenController = {}
 
 local L = Localization.get
 
-local layer: Frame
-local loading: Frame
-local orientationHint: Frame
-local curtain: Frame
-local uiScale: UIScale
-local menu: Menu.Menu
-local collection: Collection.Collection
-local settings: Settings.Settings
-local result: Result.Result
-local shop: Shop.Shop
-local current = "loading"
-local lobby: Menu.LobbyData? = nil
+local menuLayer: Frame
+local hudLayer: Frame
+local modalLayer: Frame
+
+local boot: Boot.Boot
+local mainMenu: MainMenu.MainMenu
+local maps: Maps.Maps
+local rooms: Rooms.Rooms
+local party: PartyScreen.PartyScreen
+local collection: CollectionScreen.CollectionScreen
+local towerDetail: TowerDetail.TowerDetail
+local cosmetics: Cosmetics.Cosmetics
+local shop: ShopScreen.ShopScreen
+local settings: SettingsScreen.SettingsScreen
+local invites: Invites.Invites
+local matchLoading: MatchLoading.MatchLoading
+local result: ResultScreen.ResultScreen
+local orientation: Orientation.Orientation
+
+local inMatch = false
 local settingsApplied = false
-
-local function hideAll()
-	loading.Visible = false
-	menu:hide()
-	collection:hide()
-	settings:hide()
-	shop:hide()
-end
-
--- Transição com cortina curta entre telas (imediata no movimento reduzido)
-local function transition(apply: () -> ())
-	if Ui.isReducedMotion() or not curtain or current == "loading" then
-		apply()
-		return
-	end
-	curtain.Visible = true
-	curtain.Active = true
-	local fadeIn =
-		TweenService:Create(curtain, TweenInfo.new(0.1, Enum.EasingStyle.Quad), { BackgroundTransparency = 0 })
-	fadeIn:Play()
-	fadeIn.Completed:Once(function()
-		apply()
-		local fadeOut =
-			TweenService:Create(curtain, TweenInfo.new(0.22, Enum.EasingStyle.Quad), { BackgroundTransparency = 1 })
-		fadeOut:Play()
-		fadeOut.Completed:Once(function()
-			curtain.Visible = false
-			curtain.Active = false
-		end)
-	end)
-end
-
-local function show(name: string)
-	transition(function()
-		current = name
-		hideAll()
-		if name == "menu" then
-			menu:show()
-		elseif name == "collection" then
-			collection:show()
-		elseif name == "settings" then
-			settings:show()
-		elseif name == "shop" then
-			shop:show()
-		elseif name == "loading" then
-			loading.Visible = true
-		end
-	end)
-end
+local waitingMatch = false
 
 local function toastError(code: string?)
-	Ui.toast(layer, L("error." .. (code or "INVALID_STATE")), true)
+	Toasts.error(code)
 end
+
+-- ---------------------------------------------------------------------------
+-- Início de partida
+-- ---------------------------------------------------------------------------
 
 local function startMatch(mapId: string, difficulty: string, matchMode: string)
-	local profile = lobby and lobby.profile
-	if profile and profile.loadout then
-		PlayController.pendingLoadout = table.clone(profile.loadout)
+	if CommandAdapter.isPending("match:start") then
+		return -- "Começar" duplicado gera uma só partida
 	end
-	Client.requestAsync("StartMatch", { mapId = mapId, mode = difficulty, matchMode = matchMode }, function(response)
-		if not response.ok then
+	local profile = Store.profile()
+	local loadout: { string } = if profile and profile.loadout
+		then table.clone(profile.loadout)
+		else Catalog.starterTowerIds()
+	PlayController.pendingLoadout = loadout
+	waitingMatch = true
+	Router.suspend()
+	matchLoading:show(if matchMode == "tutorial" then "jardim" else mapId, difficulty, loadout)
+	party:setStartPending(true)
+	CommandAdapter.send("match:start", "StartMatch", { mapId = mapId, mode = difficulty, matchMode = matchMode }, {
+		onSuccess = function()
+			party:setStartPending(false)
+		end,
+		onError = function(code, response)
+			party:setStartPending(false)
+			waitingMatch = false
+			matchLoading:hide()
+			Router.resume()
 			if response.reason == "map_locked" then
-				Ui.toast(layer, L("menu.notAllUnlocked"), true)
+				Toasts.error("INVALID_STATE")
+				Toasts.show(L("menu.notAllUnlocked"), "error", "start:map_locked")
 			elseif response.reason == "not_ready" then
-				Ui.toast(layer, L("common.notReady"), true)
+				Toasts.show(L("party.waitingReady"), "error", "start:not_ready")
+			elseif response.reason == "empty_loadout" then
+				Toasts.show(L("menu.teamEmpty"), "error", "start:empty_loadout")
 			else
-				toastError(response.errorCode)
+				toastError(code)
 			end
-		end
-	end)
+		end,
+	})
 end
 
-local function applyLobby(data: Menu.LobbyData)
-	lobby = data
-	menu:setLobby(data)
+-- ---------------------------------------------------------------------------
+-- Lobby e convites
+-- ---------------------------------------------------------------------------
+
+local function refreshVisibleScreen()
+	local current = Router.current()
+	if current == "menu" then
+		mainMenu:render()
+	elseif current == "maps" then
+		maps:render()
+	elseif current == "rooms" then
+		rooms:render()
+	elseif current == "party" then
+		party:render()
+	elseif current == "collection" then
+		collection:render()
+	elseif current == "tower" then
+		towerDetail:render()
+	elseif current == "cosmetics" then
+		cosmetics:render()
+	elseif current == "invites" then
+		invites:render()
+	elseif current == "settings" then
+		settings:render()
+	end
+end
+
+local function applyLobby(data: { [string]: any })
+	Store.setLobby(data)
 	local profile = data.profile
 	if profile and (profile.status == "ready" or profile.status == "volatile") then
-		collection:setProfile(profile)
 		if not settingsApplied and profile.settings then
 			settingsApplied = true
 			SettingsController.apply(profile.settings)
-			-- textos dependem do idioma: re-renderiza
-			menu:setLobby(data)
 		end
 		if profile.loadout then
 			PlayController.pendingLoadout = table.clone(profile.loadout)
 		end
 	end
-	if current == "loading" and not MatchController.inMatch() and not data.inMatch then
-		show("menu")
-		AudioController.music("music_menu")
+	-- perfil pronto e fora de partida: sai da tela de entrada
+	if Router.current() == nil or Router.current() == "boot" then
+		if Store.profile() and not data.inMatch and not MatchController.inMatch() then
+			boot:hide()
+			Router.reset("menu")
+			AudioController.music("music_menu")
+		end
 	end
+	refreshVisibleScreen()
 end
 
-function ScreenController.init(gui: ScreenGui)
-	Responsive.init()
-	layer = Ui.frame(gui, "Screens", { Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1 })
-	uiScale = Instance.new("UIScale")
-	uiScale.Parent = layer
-	local function applyResponsive()
-		local state = Responsive.get()
-		uiScale.Scale = state.scale
-		layer.Size = UDim2.fromScale(1 / state.scale, 1 / state.scale)
-	end
-	applyResponsive()
-	curtain = Ui.frame(gui, "Curtain", {
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Theme.colors.paper,
-		BackgroundTransparency = 1,
-		Visible = false,
-		ZIndex = 80,
+-- ---------------------------------------------------------------------------
+-- Registro das telas
+-- ---------------------------------------------------------------------------
+
+local function openSettings()
+	Router.push("settings", { inMatch = inMatch })
+end
+
+local function registerScreens()
+	Router.register("boot", {
+		show = function()
+			boot:show()
+		end,
+		hide = function()
+			boot:hide()
+		end,
 	})
-	loading = Ui.frame(layer, "Loading", { Size = UDim2.fromScale(1, 1), BackgroundColor3 = Theme.colors.paper })
-	Ui.title(loading, "Title", L("app.title"), {
-		Size = UDim2.new(1, 0, 0, 50),
-		Position = UDim2.fromScale(0, 0.4),
-		TextXAlignment = Enum.TextXAlignment.Center,
-		TextSize = 40,
+	Router.register("menu", {
+		show = function()
+			mainMenu:show()
+		end,
+		hide = function()
+			mainMenu:hide()
+		end,
+		resume = function()
+			mainMenu:show()
+		end,
 	})
-	Ui.label(loading, "Sub", L("app.loading"), {
-		Size = UDim2.new(1, 0, 0, 30),
-		Position = UDim2.fromScale(0, 0.5),
-		TextXAlignment = Enum.TextXAlignment.Center,
-		TextColor3 = Theme.colors.muted,
+	Router.register("maps", {
+		show = function()
+			maps:show()
+		end,
+		hide = function()
+			maps:hide()
+		end,
+		resume = function()
+			maps:show()
+		end,
+	})
+	Router.register("rooms", {
+		show = function()
+			rooms:show()
+		end,
+		hide = function()
+			rooms:hide()
+		end,
+		resume = function()
+			rooms:show()
+		end,
+	})
+	Router.register("party", {
+		show = function()
+			party:show()
+		end,
+		hide = function()
+			party:hide()
+		end,
+		resume = function()
+			party:show()
+		end,
+	})
+	Router.register("collection", {
+		show = function()
+			collection:show()
+		end,
+		hide = function()
+			collection:hide()
+		end,
+		-- ao voltar do detalhe, a seleção e o rascunho da equipe continuam onde estavam
+		resume = function()
+			collection:resume()
+		end,
+	})
+	Router.register("tower", {
+		show = function(params)
+			towerDetail:show(params)
+		end,
+		hide = function()
+			towerDetail:hide()
+		end,
+		resume = function(params)
+			towerDetail:show(params)
+		end,
+	})
+	Router.register("cosmetics", {
+		show = function(params)
+			cosmetics:show(params)
+		end,
+		hide = function()
+			cosmetics:hide()
+		end,
+	})
+	Router.register("shop", {
+		show = function()
+			shop:show()
+		end,
+		hide = function()
+			shop:hide()
+		end,
+	})
+	Router.register("settings", {
+		show = function(params)
+			settings:show(params)
+		end,
+		hide = function()
+			settings:hide()
+		end,
+	})
+	Router.register("invites", {
+		show = function()
+			invites:show()
+		end,
+		hide = function()
+			invites:hide()
+		end,
+		resume = function()
+			invites:show()
+		end,
+	})
+end
+
+local function buildScreens()
+	boot = Boot.new(menuLayer, {
+		onTraining = function()
+			startMatch("jardim", "normal", "training")
+		end,
+		onSettings = openSettings,
 	})
 
-	menu = Menu.new(layer, {
-		onStart = startMatch,
-		onCollection = function()
-			show("collection")
+	mainMenu = MainMenu.new(menuLayer, {
+		onPlay = function()
+			Router.go("maps")
 		end,
-		onSettings = function()
-			show("settings")
+		onCollection = function()
+			Router.go("collection")
+		end,
+		onTraining = function()
+			local mapId = maps:selection()
+			startMatch(mapId, "normal", "training")
+		end,
+		onSettings = openSettings,
+		onTutorial = function()
+			startMatch("jardim", "normal", "tutorial")
 		end,
 		onShop = function()
-			show("shop")
-		end,
-		onCreateParty = function()
-			Client.requestAsync("CreateParty", {}, function(r)
-				if not r.ok then
-					toastError(r.errorCode)
-				end
-			end)
-		end,
-		onJoinParty = function(partyId)
-			Client.requestAsync("JoinParty", { partyId = partyId }, function(r)
-				if not r.ok then
-					toastError(r.errorCode)
-				end
-			end)
-		end,
-		onLeaveParty = function()
-			Client.requestAsync("LeaveParty", {}, nil)
-		end,
-		onPartyReady = function(ready)
-			Client.requestAsync("PartyReady", { ready = ready }, nil)
-		end,
-		onPartySetup = function(mapId, difficulty)
-			Client.requestAsync("PartySetup", { mapId = mapId, mode = difficulty }, nil)
-		end,
-		onInvite = function(userId)
-			Client.requestAsync("InviteToParty", { userId = userId }, function(r)
-				if r.ok then
-					Ui.toast(layer, L("menu.invite") .. " ✓")
-				else
-					toastError(r.errorCode)
-				end
-			end)
-		end,
-		onKick = function(userId)
-			Client.requestAsync("KickFromParty", { userId = userId }, nil)
+			Router.push("shop")
 		end,
 		onRetryProfile = function()
-			Client.requestAsync("RetryProfile", {}, nil)
+			CommandAdapter.send("boot:retry", "RetryProfile", {}, nil)
 		end,
 	})
-	collection = Collection.new(layer, {
+
+	maps = Maps.new(menuLayer, {
 		onBack = function()
-			show("menu")
+			Router.go("menu")
 		end,
-		onBuy = function(towerId)
-			Client.requestAsync("BuyTower", { towerId = towerId }, function(r)
-				if r.ok then
-					AudioController.play("unlock", true)
-					if r.profile then
-						collection:setProfile(r.profile)
-					end
-				else
-					toastError(r.errorCode)
-				end
-			end)
+		onSolo = function(mapId, difficulty)
+			startMatch(mapId, difficulty, "normal")
 		end,
-		onSetLoadout = function(towerIds)
-			Client.requestAsync("SetLoadout", { towerIds = towerIds }, function(r)
-				if r.ok then
-					if r.profile then
-						collection:setProfile(r.profile)
-						PlayController.pendingLoadout = table.clone(r.profile.loadout)
-					end
-				else
-					toastError(r.errorCode)
-				end
-			end)
+		onFriends = function()
+			Router.go("rooms")
+		end,
+		onSelectionChanged = function(mapId, difficulty)
+			-- em grupo, o líder propaga a escolha; o servidor limpa a prontidão
+			if Store.party() then
+				CommandAdapter.send("party:setup", "PartySetup", { mapId = mapId, mode = difficulty }, {
+					onError = function(code)
+						if code ~= "NOT_OWNER" then
+							toastError(code)
+						end
+					end,
+				})
+			end
 		end,
 	})
-	settings = Settings.new(layer, {
+
+	rooms = Rooms.new(menuLayer, {
 		onBack = function()
-			show("menu")
+			Router.go("maps")
 		end,
-		onSave = function(s: Types.ProfileSettings)
-			Client.requestAsync("SaveSettings", {
-				musicVolume = s.musicVolume,
-				sfxVolume = s.sfxVolume,
-				reducedMotion = s.reducedMotion,
-				reducedParticles = s.reducedParticles,
-				damageNumbers = s.damageNumbers,
-				circuitPattern = s.circuitPattern,
-				locale = s.locale,
-			}, nil)
+		onJoined = function()
+			Router.go("party")
+		end,
+		onCreated = function()
+			Router.go("party")
+		end,
+		onSolo = function()
+			local mapId, difficulty = maps:selection()
+			startMatch(mapId, difficulty, "normal")
+		end,
+		onInvite = function()
+			Router.push("invites")
 		end,
 	})
-	shop = Shop.new(layer, {
+
+	party = PartyScreen.new(menuLayer, {
 		onBack = function()
-			show("menu")
+			Router.go("maps")
 		end,
-		onQuery = function(callback)
-			Client.requestAsync("QueryShop", {}, function(r)
-				callback(r)
-			end)
+		onEditTeam = function()
+			Router.push("collection")
 		end,
-		onBuy = function()
-			Client.requestAsync("PromptFounderPass", {}, function(r)
-				if not r.ok then
-					toastError(r.errorCode)
-				end
-			end)
+		onInvite = function()
+			Router.push("invites")
+		end,
+		onStart = function(mapId, difficulty)
+			startMatch(mapId, difficulty, "normal")
+		end,
+		onLeft = function()
+			Router.go("maps")
 		end,
 	})
-	result = Result.new(layer, {
+
+	collection = CollectionScreen.new(menuLayer, {
+		onBack = function()
+			if not Router.back() then
+				Router.go("menu")
+			end
+		end,
+		onOpenTower = function(towerId)
+			Router.push("tower", { towerId = towerId })
+		end,
+		onSaved = function()
+			refreshVisibleScreen()
+		end,
+	})
+
+	towerDetail = TowerDetail.new(menuLayer, {
+		onBack = function()
+			if not Router.back() then
+				Router.go("collection")
+			end
+		end,
+		onEquip = function(towerId)
+			Router.backTo("collection")
+			collection:equipFromDetail(towerId)
+		end,
+		onCosmetics = function(towerId)
+			Router.push("cosmetics", { towerId = towerId })
+		end,
+		onTraining = function()
+			startMatch("jardim", "normal", "training")
+		end,
+		onUnlocked = function()
+			refreshVisibleScreen()
+		end,
+	})
+
+	cosmetics = Cosmetics.new(menuLayer, {
+		onBack = function()
+			if not Router.back() then
+				Router.go("collection")
+			end
+		end,
+		onShop = function()
+			Router.push("shop")
+		end,
+	})
+
+	shop = ShopScreen.new(menuLayer, {
+		onBack = function()
+			if not Router.back() then
+				Router.go("menu")
+			end
+		end,
+		onCosmetics = function()
+			Router.backTo("collection")
+		end,
+		onShopState = function(enabled)
+			mainMenu:setShopEnabled(enabled)
+			cosmetics:setShopEnabled(enabled)
+		end,
+	})
+
+	settings = SettingsScreen.new(menuLayer, {
+		onDone = function()
+			if not Router.back() then
+				Router.go("menu")
+			end
+		end,
+	})
+
+	invites = Invites.new(menuLayer, {
+		onBack = function()
+			if not Router.back() then
+				Router.go("rooms")
+			end
+		end,
+	})
+
+	matchLoading = MatchLoading.new(menuLayer, {
+		onBack = function()
+			-- respeita o estado real da partida: só volta para o menu, nada é cancelado aqui
+			waitingMatch = false
+			matchLoading:hide()
+			Router.resume()
+		end,
+	})
+
+	result = ResultScreen.new(modalLayer, {
 		onRematch = function(ready)
-			MatchController.command("Rematch", { ready = ready }, nil)
+			MatchController.command("Rematch", { ready = ready }, function(response)
+				if not response.ok then
+					toastError(response.errorCode)
+				end
+			end)
 		end,
 		onMenu = function()
 			result:hide()
 			MatchController.command("LeaveMatch", {}, nil)
 		end,
-	})
-	PlayController.init(layer, {
-		onLeft = function()
+		onOpenCollection = function()
 			result:hide()
-			show("menu")
-			Client.requestAsync("ClaimPending", {}, nil)
+			Router.go("collection")
+		end,
+		onOpenMaps = function()
+			result:hide()
+			Router.go("maps")
+		end,
+		onOpenMastery = function(towerId)
+			result:hide()
+			Router.go("collection")
+			Router.push("cosmetics", { towerId = towerId })
+		end,
+	})
+
+	orientation = Orientation.new(modalLayer, {
+		onSettings = openSettings,
+		onMenu = function()
+			if inMatch then
+				Modal.open(modalLayer, {
+					title = L("hud.leave"),
+					body = L("hud.leaveConfirm"),
+					confirmText = L("hud.leave"),
+					danger = true,
+					onConfirm = function(controls)
+						controls:setPending(true)
+						MatchController.command("LeaveMatch", {}, function()
+							controls:close()
+						end)
+					end,
+				})
+			else
+				Router.go("menu")
+			end
+		end,
+	})
+end
+
+-- ---------------------------------------------------------------------------
+-- Inicialização
+-- ---------------------------------------------------------------------------
+
+function ScreenController.init(playerGui: PlayerGui)
+	Responsive.init()
+	Accessibility.init()
+	Layers.init(playerGui)
+	Focus.init()
+
+	menuLayer = Layers.content("menu")
+	hudLayer = Layers.content("hud")
+	modalLayer = Layers.content("modal")
+	Modal.setHost(modalLayer)
+	Toasts.init(Layers.content("toast"))
+	InviteCards.init(Layers.content("toast"), function()
+		if not inMatch then
+			Router.go("party")
+		end
+	end)
+
+	buildScreens()
+	registerScreens()
+
+	-- Uma resposta atrasada atualiza o store mesmo que a tela de origem já tenha fechado.
+	CommandAdapter.observe(function(_, response)
+		if response.ok and typeof(response.profile) == "table" then
+			Store.setProfile(response.profile)
+		end
+	end)
+
+	PlayController.init(hudLayer, {
+		onLeft = function()
+			inMatch = false
+			collection:setReadOnly(false)
+			result:hide()
+			Router.reset("menu")
+			AudioController.music("music_menu")
+			-- reconcilia recompensas registradas que ainda não foram creditadas
+			CommandAdapter.send("result:claim", "ClaimPending", {}, {
+				onSuccess = function(response)
+					if response.profile then
+						Store.setProfile(response.profile)
+					end
+					refreshVisibleScreen()
+				end,
+			})
 		end,
 		onResult = function(payload)
 			result:show(payload)
 		end,
+		onOpenSettings = openSettings,
 	})
+
 	MatchController.on("start", function()
-		transition(function()
-			hideAll()
-			result:hide()
-			current = "play"
-		end)
+		inMatch = true
+		waitingMatch = false
+		collection:setReadOnly(true)
+		matchLoading:hide()
+		Router.suspend()
+		result:hide()
 	end)
-	Responsive.onChange(function(_, modeChanged)
-		applyResponsive()
-		PlayController.relayout()
-		menu:relayout()
-		collection.refit()
-		if modeChanged and current == "menu" then
-			menu:render()
-		end
+	MatchController.on("frame", function()
+		Store.noteFrame()
 	end)
 	MatchController.on("rematch", function(ready, total)
 		result:setRematch(ready, total)
 	end)
-	Client.onLobby(function(kind, payload)
+
+	Client.onLobby(function(kind: string, payload: any)
 		if kind == "lobby" then
 			applyLobby(payload)
 		elseif kind == "invite" then
-			Ui.confirm(
-				layer,
-				L("menu.joinParty"),
-				L("menu.partyOf", { leader = payload.fromName }),
-				L("menu.joinParty"),
-				L("common.cancel"),
-				false,
-				function()
-					Client.requestAsync("JoinParty", { partyId = payload.partyId }, nil)
-				end
-			)
+			-- cartão discreto: não rouba foco e não interrompe o combate
+			Store.addInvite({
+				inviteId = tostring(payload.inviteId),
+				partyId = tostring(payload.partyId),
+				fromUserId = payload.fromUserId,
+				fromName = tostring(payload.fromName),
+				mapId = payload.mapId,
+				difficulty = payload.difficulty,
+				expiresAt = os.clock() + (payload.expiresIn or 30),
+				state = "pending",
+			})
 		end
 	end)
 
-	-- orientação vertical: pedir para girar, mantendo acesso a configurações
-	orientationHint = Ui.frame(
-		gui,
-		"Orientation",
-		{ Size = UDim2.fromScale(1, 1), BackgroundColor3 = Theme.colors.ink, Visible = false, ZIndex = 90 }
-	)
-	Ui.label(orientationHint, "Text", "⟳  " .. L("orientation.rotate"), {
-		Size = UDim2.new(1, 0, 0, 60),
-		Position = UDim2.fromScale(0, 0.45),
-		TextXAlignment = Enum.TextXAlignment.Center,
-		TextColor3 = Theme.colors.cream,
-		TextSize = 22,
-		Font = Theme.fonts.title,
-	})
-	RunService.RenderStepped:Connect(function()
+	Responsive.onChange(function(_, modeChanged)
+		Layers.applyScale()
+		PlayController.relayout()
+		mainMenu:relayout()
+		if modeChanged then
+			refreshVisibleScreen()
+		end
+	end)
+
+	Accessibility.onChange(function()
+		refreshVisibleScreen()
+	end)
+	SettingsController.onChanged(function(current)
+		Accessibility.setGamePreferences(current.reducedMotion, current.reducedParticles)
+	end)
+	-- trocar o idioma reescreve o que já está desenhado: moldura, tela ativa e HUD de combate
+	SettingsController.onLocaleChanged(function()
+		mainMenu:build()
+		refreshVisibleScreen()
+		if inMatch then
+			PlayController.rebuildForLocale()
+		end
+	end)
+	Accessibility.setGamePreferences(SettingsController.get().reducedMotion, SettingsController.get().reducedParticles)
+
+	Router.reset("boot")
+
+	-- Um único laço de apresentação: convites, entrada, carregamento, conexão e orientação.
+	-- Nada de um loop por botão ou contador.
+	local accumulator = 0
+	RunService.RenderStepped:Connect(function(deltaTime: number)
+		accumulator += deltaTime
+		if accumulator < 0.1 then
+			return
+		end
+		accumulator = 0
+		local now = os.clock()
+		InviteCards.update(now)
+		if Router.current() == "boot" then
+			boot:update()
+		end
+		if waitingMatch then
+			matchLoading:update()
+		end
+		if inMatch then
+			Store.updateConnection(now)
+		end
 		local portrait = InputController.isPortrait() and InputController.isTouchDevice()
-		if orientationHint.Visible ~= portrait then
-			orientationHint.Visible = portrait
-		end
+		orientation:setVisible(portrait, inMatch)
 	end)
-
-	show("loading")
 end
 
 function ScreenController.currentScreen(): string
-	return current
+	if inMatch then
+		return "play"
+	end
+	return Router.current() or "boot"
+end
+
+function ScreenController.isInMatch(): boolean
+	return inMatch
 end
 
 return ScreenController

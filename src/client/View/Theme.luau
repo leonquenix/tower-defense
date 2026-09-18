@@ -1,30 +1,44 @@
 --!strict
 -- Paleta e tipografia da direção de arte.
+-- As cores funcionais vêm de Config/UiTokens (gerado de dados/design_tokens.json); as variações
+-- de apoio (creamDark, goldDark, caminhos de mapa…) são derivadas e continuam definidas aqui.
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local UiTokens = require(ReplicatedStorage.Shared.Config.UiTokens)
+
 local Theme = {}
 
+Theme.tokens = UiTokens
+
+-- Toda a paleta (tokens e variações de apoio) vem de UiTokens, que já valida o contraste
+-- dos pares de texto/fundo ao ser gerado.
 Theme.colors = {
-	ink = Color3.fromHex("19283F"),
-	cream = Color3.fromHex("FFF3D6"),
-	creamDark = Color3.fromHex("F1E2BE"),
-	teal = Color3.fromHex("2FB7A0"),
-	tealDark = Color3.fromHex("1F8C7A"),
-	gold = Color3.fromHex("FFC857"),
-	goldDark = Color3.fromHex("D9A53E"),
-	coral = Color3.fromHex("FF775E"),
-	enemy = Color3.fromHex("7D63B8"),
-	cyan = Color3.fromHex("63CDE8"),
-	danger = Color3.fromHex("B63E48"),
-	dangerSoft = Color3.fromHex("FBE0DC"),
-	muted = Color3.fromHex("66768A"),
-	white = Color3.fromHex("FFFFFF"),
-	paper = Color3.fromHex("F4F1E9"),
-	sand = Color3.fromHex("FFE1A0"),
-	sandDark = Color3.fromHex("CEAC71"),
-	tape = Color3.fromHex("F7EAC9"),
-	tapeDark = Color3.fromHex("C6BBA7"),
-	night = Color3.fromHex("DAD4ED"),
-	nightDark = Color3.fromHex("9F9CB2"),
-	backdrop = Color3.fromHex("14202F"),
+	ink = UiTokens.color("ink"),
+	cream = UiTokens.color("cream"),
+	creamDark = UiTokens.color("creamDark"),
+	teal = UiTokens.color("teal"),
+	tealDark = UiTokens.color("tealDark"),
+	gold = UiTokens.color("gold"),
+	goldDark = UiTokens.color("goldDark"), -- preenchimento, nunca texto
+	goldText = UiTokens.color("goldText"), -- âmbar legível para números e rótulos
+	coral = UiTokens.color("coral"),
+	enemy = UiTokens.color("enemy"),
+	cyan = UiTokens.color("cyan"),
+	danger = UiTokens.color("danger"),
+	dangerSoft = UiTokens.color("dangerSoft"),
+	muted = UiTokens.color("muted"),
+	white = UiTokens.color("white"),
+	surface = UiTokens.color("paper"),
+	sage = UiTokens.color("sage"),
+	sageDeep = UiTokens.color("sageDeep"),
+	paper = UiTokens.color("paper"),
+	sand = UiTokens.color("sand"),
+	sandDark = UiTokens.color("sandDark"),
+	tape = UiTokens.color("tape"),
+	tapeDark = UiTokens.color("tapeDark"),
+	night = UiTokens.color("night"),
+	nightDark = UiTokens.color("nightDark"),
+	backdrop = UiTokens.color("backdrop"),
 }
 
 -- Cores e formas de dono (círculo, quadrado, triângulo, losango)
@@ -50,15 +64,24 @@ Theme.fonts = {
 }
 
 Theme.sizes = {
-	corner = 12,
-	stroke = 2,
+	corner = UiTokens.radius.button,
+	panelCorner = UiTokens.radius.panel,
+	pillCorner = UiTokens.radius.pill,
+	stroke = UiTokens.stroke,
+	focusStroke = 3,
+	caption = UiTokens.text.caption,
 	body = 16,
-	bodyLarge = 18,
+	bodyLarge = UiTokens.text.body,
+	button = UiTokens.text.button,
 	numbers = 22,
-	title = 30,
-	buttonMin = 44,
-	buttonTarget = 48,
+	title = UiTokens.text.title,
+	hero = UiTokens.text.hero,
+	buttonMin = UiTokens.touchMinimum,
+	buttonTarget = UiTokens.touchTarget,
 }
+
+-- Camadas de renderização (decisões locais; não substituem a CoreGui)
+Theme.displayOrder = UiTokens.displayOrder
 
 Theme.towerColors = {
 	dardo = Color3.fromHex("FF8A3D"),

@@ -1,0 +1,6858 @@
+[
+  {
+    "id": "01_entrada",
+    "title": "Entrada e perfil",
+    "goal": "Carregar perfil sem bloquear indefinidamente.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          486,
+          542,
+          308,
+          52
+        ],
+        "text": "Configurações",
+        "enabled": true,
+        "target": "10_opcoes"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          486,
+          542,
+          308,
+          52
+        ],
+        "label": "Configurações",
+        "target": "10_opcoes"
+      }
+    ],
+    "specification": {
+      "entry": "Ao entrar na experiência, antes de qualquer tela que dependa de dados persistentes.",
+      "actions": "Carregar perfil e assets essenciais em paralelo. Configurações abre preferências locais. Avançar automaticamente quando perfil válido e imagens mínimas estiverem prontos.",
+      "feedback": "Texto por etapa, nunca porcentagem inventada. Após 10 s reais mostrar Tentar novamente e Treino; timeout não cria perfil vazio. Uma tentativa pendente por vez.",
+      "rules": "Dados indisponíveis levam à tela 26. Falha de imagem oferece nome e silhueta local, sem bloquear o acesso para sempre.",
+      "acceptance": "Falhar o carregamento e repetir: nenhum perfil sobrescrito e nenhuma navegação duplicada."
+    },
+    "png": "png/01_entrada.png",
+    "svg": "svg/01_entrada.svg"
+  },
+  {
+    "id": "02_inicio",
+    "title": "Menu inicial",
+    "goal": "Começar a jogar com uma única ação principal.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          84,
+          353,
+          370,
+          66
+        ],
+        "text": "Jogar",
+        "enabled": true,
+        "target": "03_mapas"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          84,
+          443,
+          176,
+          52
+        ],
+        "text": "Coleção",
+        "enabled": true,
+        "target": "06_colecao"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          278,
+          443,
+          176,
+          52
+        ],
+        "text": "Treino",
+        "enabled": true,
+        "target": "22_treino"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          84,
+          515,
+          370,
+          52
+        ],
+        "text": "Configurações",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          84,
+          585,
+          176,
+          52
+        ],
+        "text": "Tutorial",
+        "enabled": true,
+        "target": "21_tutorial"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          278,
+          585,
+          176,
+          52
+        ],
+        "text": "Loja",
+        "enabled": true,
+        "target": "09_loja"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          84,
+          353,
+          370,
+          66
+        ],
+        "label": "Jogar",
+        "target": "03_mapas"
+      },
+      {
+        "rect": [
+          84,
+          443,
+          176,
+          52
+        ],
+        "label": "Coleção",
+        "target": "06_colecao"
+      },
+      {
+        "rect": [
+          278,
+          443,
+          176,
+          52
+        ],
+        "label": "Treino",
+        "target": "22_treino"
+      },
+      {
+        "rect": [
+          84,
+          515,
+          370,
+          52
+        ],
+        "label": "Configurações",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          84,
+          585,
+          176,
+          52
+        ],
+        "label": "Tutorial",
+        "target": "21_tutorial"
+      },
+      {
+        "rect": [
+          278,
+          585,
+          176,
+          52
+        ],
+        "label": "Loja",
+        "target": "09_loja"
+      }
+    ],
+    "specification": {
+      "entry": "Perfil carregado. Primeiro acesso oferece tutorial com opção clara de pular.",
+      "actions": "Jogar abre mapas; Coleção abre equipe; Treino inicia modo sem progresso; Tutorial pode ser reaberto; Configurações retorna à origem.",
+      "feedback": "Jogar é a única ação dourada dominante. Loja só existe com feature flag e produto válido; esconder seu espaço quando desativada.",
+      "rules": "Não inserir missões diárias, gacha, popups de compra ou menus de funcionalidades fora da versão 1. Saldo de botões vem do perfil.",
+      "acceptance": "Um novo jogador encontra Jogar em até 5 s. Menu acessível com teclado e toque, sem hover obrigatório."
+    },
+    "png": "png/02_inicio.png",
+    "svg": "svg/02_inicio.svg"
+  },
+  {
+    "id": "03_mapas",
+    "title": "Escolher mapa",
+    "goal": "Selecionar uma missão e entrar solo ou com amigos.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          48,
+          514,
+          175,
+          52
+        ],
+        "text": "Normal",
+        "enabled": true,
+        "target": "03_mapas"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          240,
+          514,
+          185,
+          52
+        ],
+        "text": "Desafio",
+        "enabled": false,
+        "target": null
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          678,
+          572,
+          254,
+          52
+        ],
+        "text": "Jogar solo",
+        "enabled": true,
+        "target": "11_carregamento"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          950,
+          572,
+          280,
+          52
+        ],
+        "text": "Jogar com amigos",
+        "enabled": true,
+        "target": "04_salas"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          48,
+          514,
+          175,
+          52
+        ],
+        "label": "Normal",
+        "target": "03_mapas"
+      },
+      {
+        "rect": [
+          678,
+          572,
+          254,
+          52
+        ],
+        "label": "Jogar solo",
+        "target": "11_carregamento"
+      },
+      {
+        "rect": [
+          950,
+          572,
+          280,
+          52
+        ],
+        "label": "Jogar com amigos",
+        "target": "04_salas"
+      }
+    ],
+    "specification": {
+      "entry": "Jogar a partir do menu ou alteração de mapa pelo líder.",
+      "actions": "Selecionar cartão muda mapa; Normal e Desafio são seleção exclusiva. Jogar solo valida e inicia; Jogar com amigos abre salas. Desafio só após vitória Normal daquele mapa.",
+      "feedback": "Mapa bloqueado mostra sua condição em texto. Começar desabilitado explica qual integrante ainda não desbloqueou o mapa. Imagem escolhida recebe borda e marcador.",
+      "rules": "Dados de desbloqueio são do servidor. Normal é padrão. Não cobrar botões para entrar. No celular, um cartão por vez com anterior e próximo, sem arrasto obrigatório.",
+      "acceptance": "Não iniciar mapa bloqueado por atalho ou pedido adulterado. Seleção preservada ao voltar das salas."
+    },
+    "png": "png/03_mapas.png",
+    "svg": "svg/03_mapas.svg"
+  },
+  {
+    "id": "04_salas",
+    "title": "Salas e convites",
+    "goal": "Encontrar pessoas presentes neste servidor.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1017,
+          190,
+          185,
+          52
+        ],
+        "text": "Entrar",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          1017,
+          324,
+          185,
+          52
+        ],
+        "text": "Entrar",
+        "enabled": false,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1017,
+          458,
+          185,
+          52
+        ],
+        "text": "Criar sala",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          48,
+          602,
+          270,
+          52
+        ],
+        "text": "Convidar presentes",
+        "enabled": true,
+        "target": "33_convites"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          1017,
+          190,
+          185,
+          52
+        ],
+        "label": "Entrar",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1017,
+          458,
+          185,
+          52
+        ],
+        "label": "Criar sala",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          48,
+          602,
+          270,
+          52
+        ],
+        "label": "Convidar presentes",
+        "target": "33_convites"
+      }
+    ],
+    "specification": {
+      "entry": "Escolha de cooperação; lista limitada ao servidor atual.",
+      "actions": "Entrar solicita vaga atômica. Criar sala cria grupo local e torna o jogador líder. Convidar presentes abre tela 33.",
+      "feedback": "Estados: carregando, lista disponível, vazia com Criar sala e Jogar solo, sala cheia, partida já iniciada, erro com Atualizar. Não mostrar falsa fila global.",
+      "rules": "Atualizações podem retirar uma vaga antes do clique: aceitar resposta do servidor e manter a lista. Impedir duas entradas simultâneas.",
+      "acceptance": "Duas pessoas disputando a última vaga: apenas uma entra; a outra lê Sala lotada e pode tentar outra."
+    },
+    "png": "png/04_salas.png",
+    "svg": "svg/04_salas.svg"
+  },
+  {
+    "id": "05_grupo",
+    "title": "Grupo e prontidão",
+    "goal": "Revisar equipe e confirmar que todos podem começar.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          48,
+          540,
+          264,
+          52
+        ],
+        "text": "Editar equipe",
+        "enabled": true,
+        "target": "06_colecao"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          333,
+          540,
+          264,
+          52
+        ],
+        "text": "Cancelar pronto",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          619,
+          540,
+          264,
+          52
+        ],
+        "text": "Convidar",
+        "enabled": true,
+        "target": "33_convites"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          910,
+          540,
+          320,
+          52
+        ],
+        "text": "Aguardando líder",
+        "enabled": false,
+        "target": null
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          48,
+          540,
+          264,
+          52
+        ],
+        "label": "Editar equipe",
+        "target": "06_colecao"
+      },
+      {
+        "rect": [
+          333,
+          540,
+          264,
+          52
+        ],
+        "label": "Cancelar pronto",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          619,
+          540,
+          264,
+          52
+        ],
+        "label": "Convidar",
+        "target": "33_convites"
+      }
+    ],
+    "specification": {
+      "entry": "Grupo formado com um a quatro integrantes.",
+      "actions": "Líder escolhe mapa e dificuldade; cada pessoa altera sua equipe e prontidão. Começar é exclusivo do líder e exige todos os presentes prontos. Convidar abre 33.",
+      "feedback": "Cartões mostram nome, líder, forma do dono e pronto. Mudança de mapa, dificuldade ou membros limpa prontidão. Alterar equipe limpa a prontidão desse jogador.",
+      "rules": "Menu usa perfis atuais, mas congela loadouts e participantes ao começar. Saída transfere liderança ao membro mais antigo. Revanche nunca transporta quem escolheu voltar ao menu.",
+      "acceptance": "Começar duplicado gera uma só partida. No celular, lista vertical rolável de membros e barra fixa de prontidão."
+    },
+    "png": "png/05_grupo.png",
+    "svg": "svg/05_grupo.svg"
+  },
+  {
+    "id": "06_colecao",
+    "title": "Coleção e equipe",
+    "goal": "Escolher até quatro torres diferentes.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          48,
+          505,
+          215,
+          52
+        ],
+        "text": "Dardo",
+        "enabled": true,
+        "target": "07_torre"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          283,
+          505,
+          215,
+          52
+        ],
+        "text": "Pipoca",
+        "enabled": true,
+        "target": "07_torre"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          518,
+          505,
+          215,
+          52
+        ],
+        "text": "Goma",
+        "enabled": true,
+        "target": "07_torre"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          753,
+          505,
+          215,
+          52
+        ],
+        "text": "+ Espaço livre",
+        "enabled": true,
+        "target": "07_torre"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          951,
+          595,
+          279,
+          52
+        ],
+        "text": "Salvar equipe",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          48,
+          176,
+          184,
+          224
+        ],
+        "label": "Dardo",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          247,
+          176,
+          184,
+          224
+        ],
+        "label": "Pipoca",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          446,
+          176,
+          184,
+          224
+        ],
+        "label": "Goma",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          645,
+          176,
+          184,
+          224
+        ],
+        "label": "Lupa",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          844,
+          176,
+          184,
+          224
+        ],
+        "label": "Maestro",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          1043,
+          176,
+          184,
+          224
+        ],
+        "label": "Voltz",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          48,
+          505,
+          215,
+          52
+        ],
+        "label": "Dardo",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          283,
+          505,
+          215,
+          52
+        ],
+        "label": "Pipoca",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          518,
+          505,
+          215,
+          52
+        ],
+        "label": "Goma",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          753,
+          505,
+          215,
+          52
+        ],
+        "label": "+ Espaço livre",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          951,
+          595,
+          279,
+          52
+        ],
+        "label": "Salvar equipe",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Menu ou preparação do grupo, fora de partida ativa.",
+      "actions": "Tocar personagem abre 07. Equipar adiciona ao primeiro espaço vazio; com quatro preenchidos, pedir qual substituir. Tocar espaço equipado permite remover. Salvar envia SetLoadout.",
+      "feedback": "Identificar possuída, equipada e bloqueada com rótulos. Conta nova tem Dardo, Pipoca e Goma; quarta vaga opcional. Salvar mostra Confirmando e depois Equipe salva.",
+      "rules": "Até quatro IDs distintos e possuídos. Não exigir equipe cheia. Seleções locais só viram equipe real após confirmação. Em partida, permitir leitura sem editar.",
+      "acceptance": "Rejeitar duplicata e torre bloqueada. Celular em paisagem usa a lista paginada da prancha 47; tablet alto pode usar duas colunas. Equipe permanece acessível."
+    },
+    "png": "png/06_colecao.png",
+    "svg": "svg/06_colecao.svg"
+  },
+  {
+    "id": "07_torre",
+    "title": "Detalhe e desbloqueio",
+    "goal": "Entender a função antes de gastar botões.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          564,
+          522,
+          300,
+          52
+        ],
+        "text": "Desbloquear • 240",
+        "enabled": true,
+        "target": "32_desbloqueio"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          886,
+          522,
+          310,
+          52
+        ],
+        "text": "Experimentar no treino",
+        "enabled": true,
+        "target": "22_treino"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          564,
+          522,
+          300,
+          52
+        ],
+        "label": "Desbloquear • 240",
+        "target": "32_desbloqueio"
+      },
+      {
+        "rect": [
+          886,
+          522,
+          310,
+          52
+        ],
+        "label": "Experimentar no treino",
+        "target": "22_treino"
+      }
+    ],
+    "specification": {
+      "entry": "Seleção de uma torre na coleção; Lupa é o exemplo visual.",
+      "actions": "Mostrar custo de desbloqueio em botões separado do custo de construção em sucata. Desbloquear abre 32; possuída oferece Equipar, Aparência e Domínio; Experimentar abre treino.",
+      "feedback": "Atributos vêm do catálogo, com unidades e função. Especializações mostram comparação, sem aplicar upgrade persistente. Maestro mostra bônus de cadência, não DPS zero.",
+      "rules": "Se saldo insuficiente, botão informa Faltam N botões e não abre loja de Robux. Dados de exemplos da imagem nunca substituem o catálogo real.",
+      "acceptance": "Lupa exibe 240 botões para desbloquear e 500 sucatas para construir. Nenhuma troca de moeda implícita."
+    },
+    "png": "png/07_torre.png",
+    "svg": "svg/07_torre.svg"
+  },
+  {
+    "id": "08_cosmeticos",
+    "title": "Domínio e aparência",
+    "goal": "Personalizar sem alterar atributos.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          553,
+          562,
+          298,
+          52
+        ],
+        "text": "Equipar padrão",
+        "enabled": true,
+        "target": "08_cosmeticos"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          873,
+          562,
+          315,
+          52
+        ],
+        "text": "Outras aparências",
+        "enabled": true,
+        "target": "09_loja"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          553,
+          562,
+          298,
+          52
+        ],
+        "label": "Equipar padrão",
+        "target": "08_cosmeticos"
+      },
+      {
+        "rect": [
+          873,
+          562,
+          315,
+          52
+        ],
+        "label": "Outras aparências",
+        "target": "09_loja"
+      }
+    ],
+    "specification": {
+      "entry": "Detalhe de torre possuída.",
+      "actions": "Alternar aparência, adesivo ou título muda prévia; Equipar confirma um item já possuído. Marcos de domínio: 30 adesivo, 100 título, 250 aparência.",
+      "feedback": "Mostrar progresso atual e requisito; após equipar, selo Equipado. Aparência sem arte final ou sem ID aprovado não deve aparecer como produto acabado.",
+      "rules": "Skins mantêm stats, silhueta e Circuitos. Mudança de aparência em menu vale para a próxima partida; não trocar o snapshot visual de uma partida em curso.",
+      "acceptance": "Repetir Equipar é idempotente. Estado bloqueado não envia comando de concessão. Nenhum atributo sobe com domínio."
+    },
+    "png": "png/08_cosmeticos.png",
+    "svg": "svg/08_cosmeticos.svg"
+  },
+  {
+    "id": "09_loja",
+    "title": "Loja opcional",
+    "goal": "Exibir cosméticos com preço e posse verificados.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          570,
+          538,
+          335,
+          52
+        ],
+        "text": "Voltar para jogar",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          570,
+          538,
+          335,
+          52
+        ],
+        "label": "Voltar para jogar",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Somente quando shopEnabled e disponibilidade permitirem; a imagem demonstra indisponibilidade segura.",
+      "actions": "Consultar preço real e posse do passe. Estado disponível mostra Comprar por preço recebido e abre o fluxo nativo Roblox. Possuído mostra Equipar aparências.",
+      "feedback": "Carregando preço, indisponível, disponível, aguardando Roblox, cancelado e possuído. Cancelamento é neutro e não concede itens.",
+      "rules": "Não desenhar um checkout falso, fixar 149 Robux ou conceder pelo fechamento do popup. Preço e posse são verificados. Sem loja válida, esconder acesso no menu. Arte ilustrativa base não é skin à venda.",
+      "acceptance": "Falha de consulta remove compra e mantém Voltar. Testar cancelamento, compra válida e posse anterior sem cobrança repetida."
+    },
+    "png": "png/09_loja.png",
+    "svg": "svg/09_loja.svg"
+  },
+  {
+    "id": "10_opcoes",
+    "title": "Configurações",
+    "goal": "Ajustar conforto sem abandonar a partida.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1054,
+          172,
+          62,
+          44
+        ],
+        "text": "−",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          1132,
+          172,
+          62,
+          44
+        ],
+        "text": "+",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1054,
+          227,
+          62,
+          44
+        ],
+        "text": "−",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          1132,
+          227,
+          62,
+          44
+        ],
+        "text": "+",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          984,
+          282,
+          211,
+          44
+        ],
+        "text": "Ligado",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_7",
+        "class": "TextButton",
+        "rect": [
+          984,
+          337,
+          211,
+          44
+        ],
+        "text": "Ligado",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_8",
+        "class": "TextButton",
+        "rect": [
+          984,
+          392,
+          211,
+          44
+        ],
+        "text": "Desligado",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_9",
+        "class": "TextButton",
+        "rect": [
+          984,
+          447,
+          211,
+          44
+        ],
+        "text": "Ligado",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_10",
+        "class": "TextButton",
+        "rect": [
+          80,
+          566,
+          250,
+          52
+        ],
+        "text": "Idioma • PT-BR",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_11",
+        "class": "TextButton",
+        "rect": [
+          919,
+          566,
+          276,
+          52
+        ],
+        "text": "Concluído",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          1054,
+          172,
+          62,
+          44
+        ],
+        "label": "−",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          1132,
+          172,
+          62,
+          44
+        ],
+        "label": "+",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          1054,
+          227,
+          62,
+          44
+        ],
+        "label": "−",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          1132,
+          227,
+          62,
+          44
+        ],
+        "label": "+",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          984,
+          282,
+          211,
+          44
+        ],
+        "label": "Ligado",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          984,
+          337,
+          211,
+          44
+        ],
+        "label": "Ligado",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          984,
+          392,
+          211,
+          44
+        ],
+        "label": "Desligado",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          984,
+          447,
+          211,
+          44
+        ],
+        "label": "Ligado",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          80,
+          566,
+          250,
+          52
+        ],
+        "label": "Idioma • PT-BR",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          919,
+          566,
+          276,
+          52
+        ],
+        "label": "Concluído",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Menu ou combate; guardar origem para retornar à mesma tela.",
+      "actions": "Sliders Música e Efeitos com botões menos e mais; toggles de movimento, partículas, dano e padrões; idioma PT-BR/EN. Mudanças locais imediatas, salvamento agrupado após 500 ms.",
+      "feedback": "Slider aceita clique, arrasto e teclado; passos de 5%. Toggles têm texto Ligado/Desligado e ícone. Concluído fecha; falha de salvar mostra Preferências não salvas e permite repetir.",
+      "rules": "Combate não pausa, mesmo solo. Respeitar preferência de movimento reduzido do Roblox junto à opção do jogo. Não ocultar CoreGui. Idioma pode ampliar o painel e provocar rolagem.",
+      "acceptance": "Configuração persiste após reabrir. Não gerar pedidos por frame do slider nem desconectar áudio de alertas visuais."
+    },
+    "png": "png/10_opcoes.png",
+    "svg": "svg/10_opcoes.svg"
+  },
+  {
+    "id": "11_carregamento",
+    "title": "Carregamento de partida",
+    "goal": "Mostrar progresso real e recuperar falhas.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [],
+    "hotspots": [],
+    "specification": {
+      "entry": "StartMatch aceito, antes de Preparation.",
+      "actions": "Mostrar mapa, dificuldade e equipe congelada. Carregar primeiro terreno, elenco usado e chefe do mapa. Progresso é quantidade resolvida de assets essenciais.",
+      "feedback": "Falha parcial de imagem mantém fallback e opção repetir. Aos 10 s informar demora; aos 20 s permitir Voltar, respeitando o estado real da partida no servidor.",
+      "rules": "Cliente não decide quando combate começa. Se preparação já iniciou, reconciliar snapshot e mostrar tempo restante. Não reiniciar o contador para cada cliente.",
+      "acceptance": "Imagem rejeitada não impede ver rota e botões. Com rede lenta, relógio exibido converge ao snapshot sem dupla largada."
+    },
+    "png": "png/11_carregamento.png",
+    "svg": "svg/11_carregamento.svg"
+  },
+  {
+    "id": "12_preparacao",
+    "title": "Preparação e intervalo",
+    "goal": "Construir antes da chegada dos inimigos.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          973,
+          480,
+          250,
+          52
+        ],
+        "text": "Pronto  1/2",
+        "enabled": true,
+        "target": "13_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          973,
+          480,
+          250,
+          52
+        ],
+        "label": "Pronto  1/2",
+        "target": "13_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Preparation de 15 s ou Intermission de 8 s.",
+      "actions": "Construir continua disponível. Pronto envia SetReady; pode cancelar enquanto fase aceita. Grupo inicia mais cedo por unanimidade ativa. Intervalo troca título e mostra próxima onda.",
+      "feedback": "Contagem deriva do fim da fase em simTime; nunca de tween. Texto Preparação ou Próxima onda. Ao zerar por servidor, botão some e HUD muda para onda ativa.",
+      "rules": "Não oferecer pular onda quando houver inimigos vivos. Participante ausente há 30 s deixa de contar para unanimidade. Tutorial usa checkpoints próprios.",
+      "acceptance": "Dois cliques de pronto não iniciam duas ondas. Mudar a velocidade atualiza contagem de forma coerente."
+    },
+    "png": "png/12_preparacao.png",
+    "svg": "svg/12_preparacao.svg"
+  },
+  {
+    "id": "13_combate",
+    "title": "Combate principal",
+    "goal": "Manter rota, recursos e ações sempre legíveis.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      }
+    ],
+    "specification": {
+      "entry": "Wave ativa; UI de referência usa valores demonstrativos de uma sessão cooperativa.",
+      "actions": "Quatro slots selecionam torre; toque no tabuleiro seleciona entidade ou célula; Pulso abre confirmação; 2x vota; Opções abre painel sem pausar. Atalhos 1–4 e U conforme contexto.",
+      "feedback": "Vida da base, onda, sucata pessoal, grupo e limite sempre legíveis. Alteração de saldo interpola em 200 ms apenas visualmente; autoridade e preço usam valor confirmado.",
+      "rules": "HUD não cobre entrada, saída ou rota. Detalhes fecham ao tocar vazio. Inimigo inspecionado abre 34. Grupo durante combate é leitura de participantes, sem editar equipe nem entrar em outra sala.",
+      "acceptance": "Com 32 torres e chefe, ainda é possível selecionar e construir. Não há faixa comercial no combate."
+    },
+    "png": "png/13_combate.png",
+    "svg": "svg/13_combate.svg"
+  },
+  {
+    "id": "14_posicionar",
+    "title": "Posicionar uma torre",
+    "goal": "Confirmar posição e custo antes de gastar.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          983,
+          383,
+          238,
+          52
+        ],
+        "text": "Construir • 250",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          983,
+          463,
+          238,
+          52
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "13_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          983,
+          383,
+          238,
+          52
+        ],
+        "label": "Construir • 250",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          983,
+          463,
+          238,
+          52
+        ],
+        "label": "Cancelar",
+        "target": "13_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Slot de torre equipado selecionado e célula candidata válida.",
+      "actions": "Toque na célula move o fantasma; Construir envia PlaceTower com coordenadas inteiras; Cancelar ou Esc sai sem gasto. Mostrar alcance e Circuito previsto a partir das regras reais.",
+      "feedback": "Estados: escolhendo célula, válida, pendente, construída ou rejeitada. Construída usa escala 0,90→1 em 180 ms; só confirmar gasto e som de sucesso após ACK.",
+      "rules": "Sem movimento de torre após compra. Um comando pendente por ação. Outra pessoa pode ocupar célula antes do ACK; atualizar e manter fantasma para nova escolha. Limite geral e por espécie visíveis.",
+      "acceptance": "Selecionar e cancelar dez vezes não gasta sucata. Na disputa de célula, apenas um gasto e uma torre."
+    },
+    "png": "png/14_posicionar.png",
+    "svg": "svg/14_posicionar.svg"
+  },
+  {
+    "id": "15_posicao_invalida",
+    "title": "Posicionamento inválido",
+    "goal": "Confirmar posição e custo antes de gastar.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          983,
+          383,
+          238,
+          52
+        ],
+        "text": "Escolha outra célula",
+        "enabled": false,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          983,
+          463,
+          238,
+          52
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "13_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          983,
+          463,
+          238,
+          52
+        ],
+        "label": "Cancelar",
+        "target": "13_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Célula de caminho, bloqueadora, ocupada, fora do tabuleiro ou fora de alcance do input válido.",
+      "actions": "Mover fantasma para outra célula; Cancelar volta ao combate. Confirmar fica indisponível e traz motivo específico: Caminho, Ocupada, Limite atingido ou Faltam N sucatas.",
+      "feedback": "Célula usa X e contorno além de cor. Nunca vibração obrigatória. Erro do servidor vira texto perto do botão, sem toast cobrindo a posição.",
+      "rules": "Escala de zoom não altera coordenada lógica. Toque sobre HUD nunca atravessa para o mapa. Célula inválida não manda pedido de compra.",
+      "acceptance": "Testar quatro bordas, safe area, zoom, pan e orientação; mesma célula mostrada e enviada."
+    },
+    "png": "png/15_posicao_invalida.png",
+    "svg": "svg/15_posicao_invalida.svg"
+  },
+  {
+    "id": "16_torre_selecionada",
+    "title": "Torre selecionada",
+    "goal": "Inspecionar, melhorar e alterar o alvo.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          982,
+          352,
+          235,
+          52
+        ],
+        "text": "Melhorar • 200",
+        "enabled": true,
+        "target": "16_torre_selecionada"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          982,
+          422,
+          235,
+          52
+        ],
+        "text": "Alvo: Primeiro",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_7",
+        "class": "TextButton",
+        "rect": [
+          982,
+          492,
+          235,
+          52
+        ],
+        "text": "Vender • 175",
+        "enabled": true,
+        "target": "18_venda"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          982,
+          352,
+          235,
+          52
+        ],
+        "label": "Melhorar • 200",
+        "target": "16_torre_selecionada"
+      },
+      {
+        "rect": [
+          982,
+          422,
+          235,
+          52
+        ],
+        "label": "Alvo: Primeiro",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          982,
+          492,
+          235,
+          52
+        ],
+        "label": "Vender • 175",
+        "target": "18_venda"
+      }
+    ],
+    "specification": {
+      "entry": "Torre ainda ativa escolhida no tabuleiro.",
+      "actions": "Mostrar dono, estado, dano, intervalo, alcance e Circuito. Melhorar L0/L1 avança um estado; L2 abre 17. Alvo abre Primeiro, Último, Forte e Perto. Vender abre 18.",
+      "feedback": "Comparação antes/depois inclui custo incremental. Apenas proprietário vê ações de mutação. Torre aliada mostra dono e atributos em leitura. L3 exibe Especialização máxima.",
+      "rules": "Se entidade sumir, fechar painel e limpar alcance. Comando pendente bloqueia somente suas ações. U funciona apenas com upgrade único válido e sem campo de texto focado.",
+      "acceptance": "Não vender ou melhorar aliado. Atualizar alvo só após confirmação; manter seleção se outra pessoa construir perto."
+    },
+    "png": "png/16_torre_selecionada.png",
+    "svg": "svg/16_torre_selecionada.svg"
+  },
+  {
+    "id": "17_especializacao",
+    "title": "Especialização",
+    "goal": "Comparar duas escolhas permanentes para a torre.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          274,
+          469,
+          350,
+          52
+        ],
+        "text": "Escolher • 900",
+        "enabled": true,
+        "target": "17_especializacao"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          654,
+          469,
+          350,
+          52
+        ],
+        "text": "Escolher • 1000",
+        "enabled": true,
+        "target": "17_especializacao"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          274,
+          469,
+          350,
+          52
+        ],
+        "label": "Escolher • 900",
+        "target": "17_especializacao"
+      },
+      {
+        "rect": [
+          654,
+          469,
+          350,
+          52
+        ],
+        "label": "Escolher • 1000",
+        "target": "17_especializacao"
+      }
+    ],
+    "specification": {
+      "entry": "Torre própria em L2.",
+      "actions": "Mostrar dois caminhos com nomes, custo incremental, atributos e função. Escolher abre confirmação específica com torre, opção e preço; confirmar envia UpgradeTower L3A ou L3B.",
+      "feedback": "Painel comparativo preserva estado do combate. Escolha pendente impede alternativa simultânea. Sucesso troca sprite e mostra especialização no detalhe.",
+      "rules": "Escolha exclusiva até vender. Cancelar mantém L2. Usar dados de cada torre, não os números de Dardo em todas. Saldo insuficiente identifica valor faltante.",
+      "acceptance": "Confirmar Rajada e tentar Fura lata no mesmo frame produz somente uma compra. Fechar modal restaura foco à opção anterior."
+    },
+    "png": "png/17_especializacao.png",
+    "svg": "svg/17_especializacao.svg"
+  },
+  {
+    "id": "18_venda",
+    "title": "Confirmação de venda",
+    "goal": "Evitar perdas por toque acidental.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          397,
+          433,
+          210,
+          52
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          627,
+          433,
+          256,
+          52
+        ],
+        "text": "Vender • 175",
+        "enabled": true,
+        "target": "13_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          397,
+          433,
+          210,
+          52
+        ],
+        "label": "Cancelar",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          627,
+          433,
+          256,
+          52
+        ],
+        "label": "Vender • 175",
+        "target": "13_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Vender acionado em torre própria.",
+      "actions": "Modal informa nome, reembolso floor(investido×0,70) e impacto no Circuito. Cancelar é foco inicial; Vender confirma SellTower.",
+      "feedback": "Botão danger com texto claro. Pendente preserva modal; sucesso fecha, remove seleção e anuncia sucata devolvida. Erro mantém mensagem ou fecha se torre já não existe.",
+      "rules": "Valor vem do estado confirmado do servidor. Não vender por Delete, duplo toque no mapa ou Escape. Cancelar não manda comando.",
+      "acceptance": "Dardo L0 devolve 175; L1 com total 450 devolve 315. Repetir pedido não duplica reembolso."
+    },
+    "png": "png/18_venda.png",
+    "svg": "svg/18_venda.svg"
+  },
+  {
+    "id": "19_chefe",
+    "title": "Chefe e aviso de habilidade",
+    "goal": "Antecipar perigo sem esconder o caminho.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      }
+    ],
+    "specification": {
+      "entry": "Chefe vivo ou habilidade com telegraph ativo.",
+      "actions": "Barra de chefe mostra nome, vida e estado. Aviso fixo de área no tabuleiro e texto de contagem; seleção permite ver resistência e contrajogo.",
+      "feedback": "Aspirador: Poeira em 2 s e área fixa. Rei: escudo e Armadura 55% por 5 s após aviso. Breu: estrela e Invocação em 2 s. Evitar flashes de tela inteira.",
+      "rules": "Um aviso não bloqueia controles. Texto persiste no modo reduzido; fim e cancelamento seguem eventos do servidor. Vida zero só encerra quando onda realmente termina.",
+      "acceptance": "Morte durante aviso remove telegraph; invocados existentes permanecem. HUD do boss cabe no celular sem ocultar vida da base."
+    },
+    "png": "png/19_chefe.png",
+    "svg": "svg/19_chefe.svg"
+  },
+  {
+    "id": "20_pulso",
+    "title": "Pulso compartilhado",
+    "goal": "Confirmar um recurso de emergência para o grupo.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          397,
+          433,
+          210,
+          52
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          627,
+          433,
+          256,
+          52
+        ],
+        "text": "Usar agora",
+        "enabled": true,
+        "target": "13_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          397,
+          433,
+          210,
+          52
+        ],
+        "label": "Cancelar",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          627,
+          433,
+          256,
+          52
+        ],
+        "label": "Usar agora",
+        "target": "13_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Pulso disponível tocado durante combate.",
+      "actions": "Primeiro toque abre resumo; Usar agora envia CastPulse. Cancelar fecha. Dano mostrado usa 180×fator cooperativo, com resistência por alvo; lentidão 30% por 3 s, atenuada em chefes.",
+      "feedback": "Disponível, confirmação, pendente e recarga com segundos restantes. Se aliado usar enquanto modal aberto, fechar e informar Pulso usado por nome.",
+      "rules": "Recarga compartilhada de 60 s de simulação; começa pronta. Não cobrar recurso. Não criar voto ou usar só pelo primeiro toque.",
+      "acceptance": "Dois clientes confirmando juntos consomem uma única carga. 2x reduz o tempo real da recarga sem reduzir seu valor em simTime."
+    },
+    "png": "png/20_pulso.png",
+    "svg": "svg/20_pulso.svg"
+  },
+  {
+    "id": "21_tutorial",
+    "title": "Tutorial contextual",
+    "goal": "Ensinar uma decisão por vez.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Solo",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          973,
+          480,
+          250,
+          52
+        ],
+        "text": "Iniciar onda",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          989,
+          378,
+          230,
+          52
+        ],
+        "text": "Pular explicações",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Solo",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          973,
+          480,
+          250,
+          52
+        ],
+        "label": "Iniciar onda",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          989,
+          378,
+          230,
+          52
+        ],
+        "label": "Pular explicações",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Conta nova aceita tutorial ou reabre no menu.",
+      "actions": "Cinco passos: Dardo (3,3); iniciar onda; Goma (3,4) e Circuito; Dardo L1; concluir terceira onda. Destaque acompanha o elemento e aceita a ação real como avanço.",
+      "feedback": "Um balão por vez. Pular explicações encerra a sequência sem conceder 180 botões; unidades iniciais permanecem. Falha reinicia checkpoint da onda.",
+      "rules": "Tutorial usa 1.200 sucatas e velocidade 1x. Não reutilizar números do HUD de campanha. Bloqueio de clique limitado à tarefa, mantendo opções e saída acessíveis.",
+      "acceptance": "Uma conta recebe recompensa tutorial uma vez, após salvar. Reabrir tutorial não duplica botões; passo não avança só por fechar balão."
+    },
+    "png": "png/21_tutorial.png",
+    "svg": "svg/21_tutorial.svg"
+  },
+  {
+    "id": "22_treino",
+    "title": "Treino",
+    "goal": "Experimentar todas as torres sem gastar progresso.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Solo",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "Velocidade • 1x",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          982,
+          253,
+          235,
+          52
+        ],
+        "text": "Fiapo  ›",
+        "enabled": true,
+        "target": "22_treino"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          982,
+          323,
+          112,
+          52
+        ],
+        "text": "Gerar 1",
+        "enabled": true,
+        "target": "22_treino"
+      },
+      {
+        "id": "button_7",
+        "class": "TextButton",
+        "rect": [
+          1104,
+          323,
+          113,
+          52
+        ],
+        "text": "Gerar 10",
+        "enabled": true,
+        "target": "22_treino"
+      },
+      {
+        "id": "button_8",
+        "class": "TextButton",
+        "rect": [
+          982,
+          393,
+          235,
+          52
+        ],
+        "text": "Alcances • ligados",
+        "enabled": true,
+        "target": "22_treino"
+      },
+      {
+        "id": "button_9",
+        "class": "TextButton",
+        "rect": [
+          982,
+          463,
+          235,
+          52
+        ],
+        "text": "Limpar tabuleiro",
+        "enabled": true,
+        "target": "22_treino"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Solo",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "Velocidade • 1x",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          982,
+          253,
+          235,
+          52
+        ],
+        "label": "Fiapo  ›",
+        "target": "22_treino"
+      },
+      {
+        "rect": [
+          982,
+          323,
+          112,
+          52
+        ],
+        "label": "Gerar 1",
+        "target": "22_treino"
+      },
+      {
+        "rect": [
+          1104,
+          323,
+          113,
+          52
+        ],
+        "label": "Gerar 10",
+        "target": "22_treino"
+      },
+      {
+        "rect": [
+          982,
+          393,
+          235,
+          52
+        ],
+        "label": "Alcances • ligados",
+        "target": "22_treino"
+      },
+      {
+        "rect": [
+          982,
+          463,
+          235,
+          52
+        ],
+        "label": "Limpar tabuleiro",
+        "target": "22_treino"
+      }
+    ],
+    "specification": {
+      "entry": "Modo solo separado da campanha, inclusive quando perfil falha.",
+      "actions": "Disponibilizar seis torres por seletor de elenco no painel; usar slots rápidos para as escolhidas. Seletor de inimigo inclui comuns e chefes; Gerar 1/10, limpar e alternar indicadores.",
+      "feedback": "Exibir Treino sem recompensa e Sucata ilimitada. Limpar pede confirmação e remove entidades do treino. Especializações livres respeitam caminho de estados para demonstração.",
+      "rules": "Sem persistência de moedas, domínio ou compras. Catálogo de treino não modifica ownedTowerIds. Falha de perfil continua permitindo sair e tentar recarregar.",
+      "acceptance": "Gerar chefe no treino não dá vitória de campanha. Sair devolve perfil e equipe reais intactos."
+    },
+    "png": "png/22_treino.png",
+    "svg": "svg/22_treino.svg"
+  },
+  {
+    "id": "23_vitoria",
+    "title": "Vitória e revanche",
+    "goal": "Entender o resultado e escolher a próxima ação.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          312,
+          550,
+          306,
+          52
+        ],
+        "text": "Voltar ao menu",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          642,
+          550,
+          325,
+          52
+        ],
+        "text": "Revanche  1/2",
+        "enabled": true,
+        "target": "05_grupo"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          312,
+          550,
+          306,
+          52
+        ],
+        "label": "Voltar ao menu",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          642,
+          550,
+          325,
+          52
+        ],
+        "label": "Revanche  1/2",
+        "target": "05_grupo"
+      }
+    ],
+    "specification": {
+      "entry": "Servidor confirma Won e a recompensa foi persistida.",
+      "actions": "Mostrar mapa, dificuldade, ondas e ganho de botões; domínio somente para torres elegíveis e desbloqueios reais. Revanche marca pronto; Voltar ao menu é decisão individual.",
+      "feedback": "Entrada de painel 240 ms e celebração curta 450 ms, desligada em movimento reduzido. Salvo só após ACK durável. Enquanto não salvo, usar 25.",
+      "rules": "Vitória Normal +120 e Desafio +160. Não mostrar todos os desbloqueios em toda vitória. Revanche espera presentes, com regra de ausentes de 30 s.",
+      "acceptance": "Uma vitória já premiada não concede novamente ao reabrir resultado. Grupo não inicia revanche sem unanimidade dos presentes."
+    },
+    "png": "png/23_vitoria.png",
+    "svg": "svg/23_vitoria.svg"
+  },
+  {
+    "id": "24_derrota",
+    "title": "Derrota",
+    "goal": "Entender o resultado e escolher a próxima ação.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          312,
+          550,
+          306,
+          52
+        ],
+        "text": "Voltar ao menu",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          642,
+          550,
+          325,
+          52
+        ],
+        "text": "Revanche  1/2",
+        "enabled": true,
+        "target": "05_grupo"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          312,
+          550,
+          306,
+          52
+        ],
+        "label": "Voltar ao menu",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          642,
+          550,
+          325,
+          52
+        ],
+        "label": "Revanche  1/2",
+        "target": "05_grupo"
+      }
+    ],
+    "specification": {
+      "entry": "Servidor confirma Lost e recompensa de participação foi salva.",
+      "actions": "Mostrar ondas concluídas e 4×ondas, máximo 60 botões; uma dica ligada à causa observada ou dica geral sem inventar diagnóstico. Revanche e Menu.",
+      "feedback": "Tom acolhedor, sem culpa nem ranking de dano. Falha ao salvar usa 25. Dica não exige compra ou ressurreição.",
+      "rules": "Sem oferta paga para continuar. Derrota tem precedência se base zera no mesmo passo da última morte. Domínio só se as condições originais forem cumpridas.",
+      "acceptance": "Sete ondas concluídas rendem 28, não a onda em andamento. Nunca mostrar vitória porque animação de chefe acabou."
+    },
+    "png": "png/24_derrota.png",
+    "svg": "svg/24_derrota.svg"
+  },
+  {
+    "id": "25_recompensa_pendente",
+    "title": "Recompensa pendente",
+    "goal": "Explicar o salvamento sem prometer saldo confirmado.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          340,
+          481,
+          280,
+          52
+        ],
+        "text": "Verificar novamente",
+        "enabled": true,
+        "target": "25_recompensa_pendente"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          646,
+          481,
+          294,
+          52
+        ],
+        "text": "Voltar ao menu",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          340,
+          481,
+          280,
+          52
+        ],
+        "label": "Verificar novamente",
+        "target": "25_recompensa_pendente"
+      },
+      {
+        "rect": [
+          646,
+          481,
+          294,
+          52
+        ],
+        "label": "Voltar ao menu",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Resultado conhecido mas confirmação persistente ainda não concluída.",
+      "actions": "Mostrar pendência sem som de moeda. Verificar novamente dispara reconciliação limitada; Menu permite sair da tela sem apagar estado pendente.",
+      "feedback": "Confirmado muda para resultado salvo. Indisponível mantém status e orientação. Atualização automática com espera progressiva, evitando spam manual.",
+      "rules": "Distinguir resultado durável registrado de tentativa ainda não registrada. Só prometer consulta futura quando houver registro. Caso contrário: Não foi possível confirmar o resultado. Nenhuma promessa de recompensa recuperável sem registro.",
+      "acceptance": "Repetir reconciliação preserva matchId e não duplica saldo. Reabrir sessão resolve registros reais pendentes."
+    },
+    "png": "png/25_recompensa_pendente.png",
+    "svg": "svg/25_recompensa_pendente.svg"
+  },
+  {
+    "id": "26_conexao",
+    "title": "Falhas de perfil e conexão",
+    "goal": "Recuperar com opções claras e sem sobrescrever dados.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          342,
+          466,
+          280,
+          52
+        ],
+        "text": "Tentar novamente",
+        "enabled": true,
+        "target": "01_entrada"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          647,
+          466,
+          290,
+          52
+        ],
+        "text": "Entrar no treino",
+        "enabled": true,
+        "target": "22_treino"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          342,
+          466,
+          280,
+          52
+        ],
+        "label": "Tentar novamente",
+        "target": "01_entrada"
+      },
+      {
+        "rect": [
+          647,
+          466,
+          290,
+          52
+        ],
+        "label": "Entrar no treino",
+        "target": "22_treino"
+      }
+    ],
+    "specification": {
+      "entry": "Falha inicial de perfil ou conexão perdida durante a sessão.",
+      "actions": "Perfil indisponível: Tentar novamente ou Treino. Em combate: aviso Reconectando, impedir comandos e pedir snapshot quando transporte retorna. Menu segue confirmação de saída.",
+      "feedback": "Não apagar o tabuleiro no primeiro atraso. Após 2 s sem atualização, mostrar Sinal instável; após 5 s, reconciliação e bloqueio de novas mutações. Retomada depende do mesmo servidor.",
+      "rules": "Não prometer reconexão entre servidores. Sem perfil válido, nunca comprar ou salvar defaults. Se partida acabou, abrir resultado real ou menu com explicação.",
+      "acceptance": "Simular rede lenta, indisponível e retorno: torres e carteira reconciliadas, nenhum gasto reenviado com novo ID automaticamente."
+    },
+    "png": "png/26_conexao.png",
+    "svg": "svg/26_conexao.svg"
+  },
+  {
+    "id": "27_sair",
+    "title": "Sair da partida",
+    "goal": "Explicar consequências antes da saída.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          397,
+          433,
+          210,
+          52
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          627,
+          433,
+          256,
+          52
+        ],
+        "text": "Sair da partida",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          397,
+          433,
+          210,
+          52
+        ],
+        "label": "Cancelar",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          627,
+          433,
+          256,
+          52
+        ],
+        "label": "Sair da partida",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Sair acionado no menu de partida; também no modo vertical durante combate.",
+      "actions": "Cancelar retorna à seleção anterior; Sair solicita saída e volta ao menu após confirmação de estado. Texto explica ausência no resultado e combate contínuo.",
+      "feedback": "Ação destrutiva visual em danger, Cancelar como foco inicial. Não usar frase absoluta de perda de toda a conta. Repetição fica bloqueada enquanto pedido pendente.",
+      "rules": "Não chamar saída do Roblox para voltar ao lobby 2D. Preferências locais e inventário persistem. Torres de ausente seguem regras do servidor.",
+      "acceptance": "Abrir e cancelar preserva câmera e seleção. Não transportar companheiros ao menu."
+    },
+    "png": "png/27_sair.png",
+    "svg": "svg/27_sair.svg"
+  },
+  {
+    "id": "28_mobile_combate",
+    "title": "Combate no celular",
+    "goal": "Reorganizar controles para paisagem sem reduzir alvos.",
+    "kind": "mobile",
+    "width": 844,
+    "height": 390,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          661,
+          13,
+          171,
+          44
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          532,
+          330,
+          150,
+          48
+        ],
+        "text": "Pulso",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          694,
+          330,
+          138,
+          48
+        ],
+        "text": "2x 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          661,
+          13,
+          171,
+          44
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          12,
+          330,
+          112,
+          48
+        ],
+        "label": "Posicionar dardo",
+        "target": "29_mobile_posicionar"
+      },
+      {
+        "rect": [
+          136,
+          330,
+          112,
+          48
+        ],
+        "label": "Posicionar pipoca",
+        "target": "29_mobile_posicionar"
+      },
+      {
+        "rect": [
+          260,
+          330,
+          112,
+          48
+        ],
+        "label": "Posicionar goma",
+        "target": "29_mobile_posicionar"
+      },
+      {
+        "rect": [
+          384,
+          330,
+          112,
+          48
+        ],
+        "label": "Posicionar lupa",
+        "target": "29_mobile_posicionar"
+      },
+      {
+        "rect": [
+          532,
+          330,
+          150,
+          48
+        ],
+        "label": "Pulso",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          694,
+          330,
+          138,
+          48
+        ],
+        "label": "2x 1/2",
+        "target": "31_estados"
+      }
+    ],
+    "specification": {
+      "entry": "Viewport em paisagem compacto; composição dedicada 844×390.",
+      "actions": "Topo mantém base, onda e sucata; slots ficam em faixa inferior. Opções inclui grupo e configurações. Pulso e velocidade continuam visíveis. Inimigo abre ficha compacta.",
+      "feedback": "Tabuleiro completo mantém 16:10 e espaço livre de HUD. Células com menos de 36 px acionam modo ampliado ao construir, tela 29.",
+      "rules": "Botões mínimo 44 px, meta 48, após escala. Imagem exportada maior não define tamanho de toque. Em 896×414, distribuir espaço extra sem esticar o mundo.",
+      "acceptance": "Cinco construções consecutivas com dedo sem acionar slot vizinho. Nenhuma ação depende de hover ou arrasto preciso."
+    },
+    "png": "png/28_mobile_combate.png",
+    "svg": "svg/28_mobile_combate.svg"
+  },
+  {
+    "id": "29_mobile_posicionar",
+    "title": "Construção no celular",
+    "goal": "Ampliar a região de construção e manter confirmação acessível.",
+    "kind": "mobile",
+    "width": 844,
+    "height": 390,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          12,
+          13,
+          195,
+          44
+        ],
+        "text": "Visão completa",
+        "enabled": true,
+        "target": "28_mobile_combate"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          604,
+          254,
+          211,
+          48
+        ],
+        "text": "Construir • 250",
+        "enabled": true,
+        "target": "28_mobile_combate"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          604,
+          317,
+          211,
+          48
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "28_mobile_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          12,
+          13,
+          195,
+          44
+        ],
+        "label": "Visão completa",
+        "target": "28_mobile_combate"
+      },
+      {
+        "rect": [
+          604,
+          254,
+          211,
+          48
+        ],
+        "label": "Construir • 250",
+        "target": "28_mobile_combate"
+      },
+      {
+        "rect": [
+          604,
+          317,
+          211,
+          48
+        ],
+        "label": "Cancelar",
+        "target": "28_mobile_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Selecionar torre com células pequenas no celular.",
+      "actions": "Ampliar para célula mínima de 36 px; manter fantasma visível e painel lateral. Dois dedos movem mapa; Visão completa sai do zoom; confirmar ou cancelar restaura câmera anterior.",
+      "feedback": "Mover não confirma. Um dedo seleciona célula; quando segundo dedo entrar, cancelar gesto de seleção pendente e iniciar pan. Soltar não compra.",
+      "rules": "Clamp do pan impede perder o tabuleiro. Screen→board deve descontar posição e escala reais uma vez; safe area não duplicada. Pinch opcional nunca único meio de zoom.",
+      "acceptance": "Testar célula junto aos quatro cantos e área sob o painel: input bloqueado sobre interface, coordenada exata fora dela."
+    },
+    "png": "png/29_mobile_posicionar.png",
+    "svg": "svg/29_mobile_posicionar.svg"
+  },
+  {
+    "id": "30_orientacao",
+    "title": "Orientação vertical",
+    "goal": "Explicar a orientação suportada e manter acesso às opções.",
+    "kind": "portrait",
+    "width": 390,
+    "height": 844,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          49,
+          477,
+          292,
+          52
+        ],
+        "text": "Configurações",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          49,
+          546,
+          292,
+          52
+        ],
+        "text": "Voltar ao menu",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          49,
+          477,
+          292,
+          52
+        ],
+        "label": "Configurações",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          49,
+          546,
+          292,
+          52
+        ],
+        "label": "Voltar ao menu",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Viewport vertical ou área insuficiente para gameplay.",
+      "actions": "Pedir girar com ilustração simples. Configurações permanece disponível. Voltar ao menu passa por confirmação se houver partida ativa.",
+      "feedback": "Ao girar, reconstruir layout mantendo seleção e estado. Durante combate mostrar A partida continua para evitar impressão de pausa.",
+      "rules": "Não forçar landscape por API sem alternativa. Não anunciar gameplay vertical otimizado. Todo menu preserva botão de saída, mesmo no telefone estreito.",
+      "acceptance": "Girar durante modal ou pedido pendente não cria novo comando nem fecha confirmação inesperadamente."
+    },
+    "png": "png/30_orientacao.png",
+    "svg": "svg/30_orientacao.svg"
+  },
+  {
+    "id": "31_estados",
+    "title": "Biblioteca de estados",
+    "goal": "Padronizar cliques, foco, erros, avisos e carregamento.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          48,
+          166,
+          278,
+          52
+        ],
+        "text": "Normal",
+        "enabled": true,
+        "target": null
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          348,
+          166,
+          278,
+          52
+        ],
+        "text": "Foco",
+        "enabled": true,
+        "target": null
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          648,
+          166,
+          278,
+          52
+        ],
+        "text": "Pressionado",
+        "enabled": true,
+        "target": null
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          948,
+          166,
+          278,
+          52
+        ],
+        "text": "Faltam 120",
+        "enabled": false,
+        "target": null
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          666,
+          462,
+          254,
+          52
+        ],
+        "text": "Votar em 2x",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_7",
+        "class": "TextButton",
+        "rect": [
+          942,
+          462,
+          265,
+          52
+        ],
+        "text": "Voltar a 1x",
+        "enabled": true,
+        "target": "13_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          48,
+          166,
+          278,
+          52
+        ],
+        "label": "Normal",
+        "target": null
+      },
+      {
+        "rect": [
+          348,
+          166,
+          278,
+          52
+        ],
+        "label": "Foco",
+        "target": null
+      },
+      {
+        "rect": [
+          648,
+          166,
+          278,
+          52
+        ],
+        "label": "Pressionado",
+        "target": null
+      },
+      {
+        "rect": [
+          666,
+          462,
+          254,
+          52
+        ],
+        "label": "Votar em 2x",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          942,
+          462,
+          265,
+          52
+        ],
+        "label": "Voltar a 1x",
+        "target": "13_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Referência de componentes, não uma tela navegável do jogo publicado.",
+      "actions": "Implementar botão normal, hover/foco, pressionado, indisponível e pendente. Dropdown de alvo tem quatro opções; popover 2x mostra votos, retorno 1x e participantes faltantes.",
+      "feedback": "Toast de sucesso 2,5 s, informação 4 s; erro relevante fica inline até nova ação. Fila máxima de 3, deduplicada. Tooltip surge em foco e toque informativo, sem impedir tarefa.",
+      "rules": "Ícones e texto suplementam cor. Touch não fica preso em hover. A velocidade depende de unanimidade para 2x; qualquer participante pode retornar a 1x.",
+      "acceptance": "Clicar dez vezes com 500 ms de latência envia uma única ação pendente. Encerrar painel cancela tweens e devolve foco."
+    },
+    "png": "png/31_estados.png",
+    "svg": "svg/31_estados.svg"
+  },
+  {
+    "id": "32_desbloqueio",
+    "title": "Confirmar desbloqueio",
+    "goal": "Comprar uma torre com botões e confirmar o resultado.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          398,
+          518,
+          210,
+          52
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "07_torre"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          630,
+          518,
+          250,
+          52
+        ],
+        "text": "Desbloquear",
+        "enabled": true,
+        "target": "06_colecao"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          398,
+          518,
+          210,
+          52
+        ],
+        "label": "Cancelar",
+        "target": "07_torre"
+      },
+      {
+        "rect": [
+          630,
+          518,
+          250,
+          52
+        ],
+        "label": "Desbloquear",
+        "target": "06_colecao"
+      }
+    ],
+    "specification": {
+      "entry": "Comprar torre bloqueada na coleção.",
+      "actions": "Confirmar mostra preço em botões, saldo atual e saldo projetado. Desbloquear envia BuyTower; cancelar volta ao detalhe. Sucesso oferece Equipar e Continuar.",
+      "feedback": "Pendente mantém preço e bloqueia repetição. Falta de saldo apresenta valor atualizado. Já possuída é sucesso idempotente sem novo débito.",
+      "rules": "Preço não é enviado como autoridade. Persistência precisa confirmar antes de exibir propriedade definitiva. Nenhuma compra de Robux neste fluxo.",
+      "acceptance": "Lupa com 300 botões deixa 60. Uma resposta atrasada de outra tela não abre modal fora de contexto, mas atualiza o estado global."
+    },
+    "png": "png/32_desbloqueio.png",
+    "svg": "svg/32_desbloqueio.svg"
+  },
+  {
+    "id": "33_convites",
+    "title": "Convidar jogadores",
+    "goal": "Enviar convites somente a pessoas elegíveis.",
+    "kind": "menu",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          872,
+          195,
+          239,
+          52
+        ],
+        "text": "Convidar",
+        "enabled": true,
+        "target": "33_convites"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          872,
+          306,
+          239,
+          52
+        ],
+        "text": "Enviado",
+        "enabled": false,
+        "target": "33_convites"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          872,
+          417,
+          239,
+          52
+        ],
+        "text": "Indisponível",
+        "enabled": false,
+        "target": "33_convites"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          872,
+          195,
+          239,
+          52
+        ],
+        "label": "Convidar",
+        "target": "33_convites"
+      }
+    ],
+    "specification": {
+      "entry": "Grupo com vaga abre lista de presentes.",
+      "actions": "Convidar envia intenção ao servidor; destinatário recebe cartão com remetente, mapa, Aceitar e Recusar. Recusar fecha; Aceitar tenta ingresso atômico. Convite expira em 30 s reais como decisão de UI.",
+      "feedback": "Enviado, aceito, recusado, expirado, grupo cheio e em partida. Cooldown de 5 s por destinatário; não repetir automaticamente. Mostrar convite nativo só se API disponível.",
+      "rules": "Servidor valida remetente, vaga, sessão e token de convite. Fechar cartão não altera partida atual; convites não forçam saída nem interrompem combate.",
+      "acceptance": "Dois aceites para última vaga resultam em uma entrada. Convite expirado nunca é aceito só porque o botão ainda estava na tela."
+    },
+    "png": "png/33_convites.png",
+    "svg": "svg/33_convites.svg"
+  },
+  {
+    "id": "34_inimigo",
+    "title": "Inspecionar inimigo",
+    "goal": "Entender resistência e habilidade sem interromper o combate.",
+    "kind": "combat",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "text": "Grupo  2/4",
+        "enabled": true,
+        "target": "05_grupo"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "text": "Opções",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "text": "Pulso de Luz",
+        "enabled": true,
+        "target": "20_pulso"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "text": "2x  •  votar 1/2",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          983,
+          473,
+          234,
+          52
+        ],
+        "text": "Fechar",
+        "enabled": true,
+        "target": "13_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          895,
+          56,
+          145,
+          48
+        ],
+        "label": "Grupo  2/4",
+        "target": "05_grupo"
+      },
+      {
+        "rect": [
+          1060,
+          56,
+          178,
+          48
+        ],
+        "label": "Opções",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          176,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar dardo",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          327,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar pipoca",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          478,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar goma",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          629,
+          622,
+          137,
+          74
+        ],
+        "label": "Posicionar lupa",
+        "target": "14_posicionar"
+      },
+      {
+        "rect": [
+          795,
+          638,
+          200,
+          52
+        ],
+        "label": "Pulso de Luz",
+        "target": "20_pulso"
+      },
+      {
+        "rect": [
+          1014,
+          638,
+          224,
+          52
+        ],
+        "label": "2x  •  votar 1/2",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          983,
+          473,
+          234,
+          52
+        ],
+        "label": "Fechar",
+        "target": "13_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Toque no inimigo, com prioridade de torre na célula conforme seleção original.",
+      "actions": "Ficha mostra nome, vida atual/max, resistências e habilidade em frase curta. Fechar ou tocar vazio remove ficha. Não há comandos de ataque manual.",
+      "feedback": "Atualizar só entidade selecionada; morte fecha e não troca automaticamente para outro inimigo. Boss usa mesma ficha com timers da habilidade.",
+      "rules": "Contrajogo deriva de resistência real. Não rotular Névoa como invisível nem inventar antiaéreo. Latinha tem 45% físico, não energia.",
+      "acceptance": "Inimigo morto e sprite reutilizado não herda ficha antiga. Validação por entityId e geração do objeto."
+    },
+    "png": "png/34_inimigo.png",
+    "svg": "svg/34_inimigo.svg"
+  },
+  {
+    "id": "35_mobile_menu",
+    "title": "Menu no celular",
+    "goal": "Manter o acesso principal sem navegação escondida.",
+    "kind": "mobile",
+    "width": 844,
+    "height": 390,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          28,
+          157,
+          394,
+          56
+        ],
+        "text": "Jogar",
+        "enabled": true,
+        "target": "03_mapas"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          28,
+          232,
+          188,
+          52
+        ],
+        "text": "Coleção",
+        "enabled": true,
+        "target": "06_colecao"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          234,
+          232,
+          188,
+          52
+        ],
+        "text": "Treino",
+        "enabled": true,
+        "target": "22_treino"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          28,
+          305,
+          188,
+          52
+        ],
+        "text": "Configurações",
+        "enabled": true,
+        "target": "10_opcoes"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          234,
+          305,
+          188,
+          52
+        ],
+        "text": "Tutorial",
+        "enabled": true,
+        "target": "21_tutorial"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          28,
+          157,
+          394,
+          56
+        ],
+        "label": "Jogar",
+        "target": "03_mapas"
+      },
+      {
+        "rect": [
+          28,
+          232,
+          188,
+          52
+        ],
+        "label": "Coleção",
+        "target": "06_colecao"
+      },
+      {
+        "rect": [
+          234,
+          232,
+          188,
+          52
+        ],
+        "label": "Treino",
+        "target": "22_treino"
+      },
+      {
+        "rect": [
+          28,
+          305,
+          188,
+          52
+        ],
+        "label": "Configurações",
+        "target": "10_opcoes"
+      },
+      {
+        "rect": [
+          234,
+          305,
+          188,
+          52
+        ],
+        "label": "Tutorial",
+        "target": "21_tutorial"
+      }
+    ],
+    "specification": {
+      "entry": "Versão compacta do menu 02.",
+      "actions": "Jogar dominante; Coleção e Treino na segunda linha; Configurações e Tutorial abaixo. Loja opcional fica em Coleção → Aparências quando habilitada, sem substituir Jogar.",
+      "feedback": "Arte decorativa à direita pode diminuir ou desaparecer com fonte grande. Botões mantêm texto e altura. Saldo de botões separado da faixa de ações.",
+      "rules": "Não reduzir o desktop inteiro por UIScale. Menus de dados viram listas roláveis; topo e Voltar permanecem fixos.",
+      "acceptance": "Testar 844×390 e texto ampliado: nenhuma ação sai da tela e nenhuma informação vital depende da ilustração."
+    },
+    "png": "png/35_mobile_menu.png",
+    "svg": "svg/35_mobile_menu.svg"
+  },
+  {
+    "id": "36_mobile_detalhe",
+    "title": "Detalhe no celular",
+    "goal": "Melhorar uma torre sem cobrir sua posição.",
+    "kind": "mobile",
+    "width": 844,
+    "height": 390,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          572,
+          220,
+          241,
+          48
+        ],
+        "text": "Melhorar • 200",
+        "enabled": true,
+        "target": "36_mobile_detalhe"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          572,
+          283,
+          115,
+          48
+        ],
+        "text": "Alvo",
+        "enabled": true,
+        "target": "31_estados"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          700,
+          283,
+          113,
+          48
+        ],
+        "text": "Vender",
+        "enabled": true,
+        "target": "18_venda"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          573,
+          336,
+          240,
+          44
+        ],
+        "text": "Recolher",
+        "enabled": true,
+        "target": "28_mobile_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          572,
+          220,
+          241,
+          48
+        ],
+        "label": "Melhorar • 200",
+        "target": "36_mobile_detalhe"
+      },
+      {
+        "rect": [
+          572,
+          283,
+          115,
+          48
+        ],
+        "label": "Alvo",
+        "target": "31_estados"
+      },
+      {
+        "rect": [
+          700,
+          283,
+          113,
+          48
+        ],
+        "label": "Vender",
+        "target": "18_venda"
+      },
+      {
+        "rect": [
+          573,
+          336,
+          240,
+          44
+        ],
+        "label": "Recolher",
+        "target": "28_mobile_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Torre selecionada no celular; folha lateral recolhível.",
+      "actions": "Melhorar envia upgrade único; Alvo abre lista; Vender abre confirmação; Recolher fecha. Ao abrir, reenquadrar mapa para manter torre selecionada visível.",
+      "feedback": "Comparação compacta com unidade, expansão opcional para Circuito e atributos secundários. Folha adapta rolagem ao texto grande.",
+      "rules": "Esta folha lateral é a forma compacta do painel recolhível previsto no projeto. Não cobrir alvo por baixo; ajustar BoardTransform e restaurar câmera ao fechar.",
+      "acceptance": "Abrir e recolher durante combate não move torre nem altera coordenada lógica. Botão vender nunca encosta no botão melhorar."
+    },
+    "png": "png/36_mobile_detalhe.png",
+    "svg": "svg/36_mobile_detalhe.svg"
+  },
+  {
+    "id": "37_botoes",
+    "title": "Todos os estados de botão",
+    "goal": "Referência visual de resposta ao toque e ao teclado.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          68,
+          255,
+          240,
+          52
+        ],
+        "text": "Construir • 250",
+        "enabled": true,
+        "target": null
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          368,
+          255,
+          240,
+          52
+        ],
+        "text": "Construir • 250",
+        "enabled": true,
+        "target": null
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          668,
+          255,
+          240,
+          52
+        ],
+        "text": "Construir • 250",
+        "enabled": true,
+        "target": null
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          968,
+          255,
+          240,
+          52
+        ],
+        "text": "Faltam 120 sucatas",
+        "enabled": false,
+        "target": null
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          68,
+          490,
+          240,
+          52
+        ],
+        "text": "Confirmando…",
+        "enabled": false,
+        "target": null
+      },
+      {
+        "id": "button_7",
+        "class": "TextButton",
+        "rect": [
+          368,
+          490,
+          240,
+          52
+        ],
+        "text": "✓ Confirmado",
+        "enabled": true,
+        "target": null
+      },
+      {
+        "id": "button_8",
+        "class": "TextButton",
+        "rect": [
+          668,
+          490,
+          240,
+          52
+        ],
+        "text": "! Tentar novamente",
+        "enabled": true,
+        "target": null
+      },
+      {
+        "id": "button_9",
+        "class": "TextButton",
+        "rect": [
+          968,
+          490,
+          240,
+          52
+        ],
+        "text": "Selecionado",
+        "enabled": true,
+        "target": null
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          68,
+          255,
+          240,
+          52
+        ],
+        "label": "Construir • 250",
+        "target": null
+      },
+      {
+        "rect": [
+          368,
+          255,
+          240,
+          52
+        ],
+        "label": "Construir • 250",
+        "target": null
+      },
+      {
+        "rect": [
+          668,
+          255,
+          240,
+          52
+        ],
+        "label": "Construir • 250",
+        "target": null
+      },
+      {
+        "rect": [
+          368,
+          490,
+          240,
+          52
+        ],
+        "label": "✓ Confirmado",
+        "target": null
+      },
+      {
+        "rect": [
+          668,
+          490,
+          240,
+          52
+        ],
+        "label": "! Tentar novamente",
+        "target": null
+      },
+      {
+        "rect": [
+          968,
+          490,
+          240,
+          52
+        ],
+        "label": "Selecionado",
+        "target": null
+      }
+    ],
+    "specification": {
+      "entry": "Biblioteca de componentes, usada por todas as telas.",
+      "actions": "Implementar os oito estados apresentados em um único componente. Foco é navegação, selecionado é valor persistente de uma escolha; não confundir os dois.",
+      "feedback": "Usar receita de animação correspondente, mas manter texto nativo. Confirmando inclui indicador discreto; no modo reduzido, usar texto estático em lugar de rotação.",
+      "rules": "Esta prancha não é tela do jogador. Pressionado tem compressão temporária; desabilitado não recebe ação. Foco continua visível em todos os temas.",
+      "acceptance": "Passar por todos os estados com mouse, toque e teclado. Cada instância mantém uma só conexão de Activated e cancela efeitos no cleanup."
+    },
+    "png": "png/37_botoes.png",
+    "svg": "svg/37_botoes.svg"
+  },
+  {
+    "id": "38_confirmacoes",
+    "title": "Confirmações de ações",
+    "goal": "Padronizar escolha, preço e cancelamento.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          68,
+          306,
+          205,
+          52
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          293,
+          306,
+          310,
+          52
+        ],
+        "text": "Escolher Rajada",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          670,
+          306,
+          205,
+          52
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          895,
+          306,
+          310,
+          52
+        ],
+        "text": "Trocar por Lupa",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          68,
+          566,
+          205,
+          52
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_7",
+        "class": "TextButton",
+        "rect": [
+          293,
+          566,
+          310,
+          52
+        ],
+        "text": "Limpar",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_8",
+        "class": "TextButton",
+        "rect": [
+          670,
+          566,
+          205,
+          52
+        ],
+        "text": "Cancelar",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_9",
+        "class": "TextButton",
+        "rect": [
+          895,
+          566,
+          310,
+          52
+        ],
+        "text": "Continuar",
+        "enabled": true,
+        "target": "13_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          68,
+          306,
+          205,
+          52
+        ],
+        "label": "Cancelar",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          293,
+          306,
+          310,
+          52
+        ],
+        "label": "Escolher Rajada",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          670,
+          306,
+          205,
+          52
+        ],
+        "label": "Cancelar",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          895,
+          306,
+          310,
+          52
+        ],
+        "label": "Trocar por Lupa",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          68,
+          566,
+          205,
+          52
+        ],
+        "label": "Cancelar",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          293,
+          566,
+          310,
+          52
+        ],
+        "label": "Limpar",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          670,
+          566,
+          205,
+          52
+        ],
+        "label": "Cancelar",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          895,
+          566,
+          310,
+          52
+        ],
+        "label": "Continuar",
+        "target": "13_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Variantes do modal compartilhado para escolhas com consequência.",
+      "actions": "Especialização confirma ramo e preço. Substituição exige selecionar o slot antes do botão Trocar. Limpar remove apenas entidades do treino. Tutorial repetido explica ausência de nova recompensa.",
+      "feedback": "Modal compartilha margens, scrim, foco inicial no cancelamento e retorno de foco. Botão principal inclui a ação específica, sem genérico Sim.",
+      "rules": "No modal de tutorial repetido, não precisa haver Cancelar no produto final; Continuar basta. Textos são dinâmicos por torre/valor. A referência mostra a família de modais.",
+      "acceptance": "Confirmar uma vez, cancelar e fechar pelo teclado produzem resultados distintos e previsíveis; nunca enviar comando no simples abrir."
+    },
+    "png": "png/38_confirmacoes.png",
+    "svg": "svg/38_confirmacoes.svg"
+  },
+  {
+    "id": "39_erros",
+    "title": "Erros e bloqueios",
+    "goal": "Dar uma ação de recuperação para cada problema.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          68,
+          312,
+          344,
+          52
+        ],
+        "text": "Escolher célula",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          468,
+          312,
+          344,
+          52
+        ],
+        "text": "Faltam 120",
+        "enabled": false,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          868,
+          312,
+          344,
+          52
+        ],
+        "text": "Ver minhas torres",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          68,
+          572,
+          344,
+          52
+        ],
+        "text": "Fechar",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          468,
+          572,
+          344,
+          52
+        ],
+        "text": "Tentar novamente",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_7",
+        "class": "TextButton",
+        "rect": [
+          868,
+          572,
+          344,
+          52
+        ],
+        "text": "Entendi",
+        "enabled": true,
+        "target": "13_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          68,
+          312,
+          344,
+          52
+        ],
+        "label": "Escolher célula",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          868,
+          312,
+          344,
+          52
+        ],
+        "label": "Ver minhas torres",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          68,
+          572,
+          344,
+          52
+        ],
+        "label": "Fechar",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          468,
+          572,
+          344,
+          52
+        ],
+        "label": "Tentar novamente",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          868,
+          572,
+          344,
+          52
+        ],
+        "label": "Entendi",
+        "target": "13_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Erros conhecidos retornados pelo servidor ou validados localmente.",
+      "actions": "Cada bloco representa um estado inline ou modal curto junto à ação original. Escolher célula restaura posicionamento. Ver minhas torres apenas muda seleção/câmera.",
+      "feedback": "Não reiniciar interface inteira em erro. Preservar informação útil e remover pendência. Mensagem persistente some ao corrigir causa; erro de transação antiga fica em toast contextual.",
+      "rules": "Falta de saldo não direciona à monetização. Para taxa limitada, permitir repetir só após espera; botão não precisa piscar. Limites refletem participantes da largada.",
+      "acceptance": "Testar todos os códigos do contrato de rede e um código desconhecido com fallback Não foi possível concluir. Tente novamente."
+    },
+    "png": "png/39_erros.png",
+    "svg": "svg/39_erros.svg"
+  },
+  {
+    "id": "40_grupo_estados",
+    "title": "Convites e votação",
+    "goal": "Cooperação clara antes e durante a partida.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          68,
+          312,
+          344,
+          52
+        ],
+        "text": "Aceitar",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          468,
+          312,
+          344,
+          52
+        ],
+        "text": "Enviado",
+        "enabled": false,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          868,
+          312,
+          344,
+          52
+        ],
+        "text": "Ver salas",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          68,
+          572,
+          344,
+          52
+        ],
+        "text": "Cancelar voto",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          468,
+          572,
+          344,
+          52
+        ],
+        "text": "Voltar a 1x",
+        "enabled": true,
+        "target": "13_combate"
+      },
+      {
+        "id": "button_7",
+        "class": "TextButton",
+        "rect": [
+          868,
+          572,
+          344,
+          52
+        ],
+        "text": "Entendi",
+        "enabled": true,
+        "target": "13_combate"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          68,
+          312,
+          344,
+          52
+        ],
+        "label": "Aceitar",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          868,
+          312,
+          344,
+          52
+        ],
+        "label": "Ver salas",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          68,
+          572,
+          344,
+          52
+        ],
+        "label": "Cancelar voto",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          468,
+          572,
+          344,
+          52
+        ],
+        "label": "Voltar a 1x",
+        "target": "13_combate"
+      },
+      {
+        "rect": [
+          868,
+          572,
+          344,
+          52
+        ],
+        "label": "Entendi",
+        "target": "13_combate"
+      }
+    ],
+    "specification": {
+      "entry": "Convite recebido, aceito/pendente ou mudança da velocidade e presença.",
+      "actions": "Convite oferece Aceitar e Recusar com alvos de 48 px; expiração remove ambos. Cancelar voto volta a 1x. Voltar a 1x envia solicitação sem exigir votação.",
+      "feedback": "Cada cartão é exemplo independente. Prontidão e velocidade são contagens distintas. Nome, forma de dono e estado textual vêm de membros reais.",
+      "rules": "Recusar, desenhado como texto na prancha, deve ser TextButton com área mínima de 48 px no produto. Nenhum convite muda partida atual automaticamente.",
+      "acceptance": "Ocultar convite expirado, remover ausente da unanimidade após regra de 30 s e reconciliar retorno pelo UserId."
+    },
+    "png": "png/40_grupo_estados.png",
+    "svg": "svg/40_grupo_estados.svg"
+  },
+  {
+    "id": "41_boss_estados",
+    "title": "Avisos dos três chefes",
+    "goal": "Diferenciar habilidade, contagem e efeito ativo.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Comparação das três famílias de aviso e estado ativo.",
+      "actions": "Mesmo BossBar com dados específicos de cada chefe. No combate, apresentar apenas avisos dos chefes realmente ativos, nunca três painéis comparativos.",
+      "feedback": "Aviso e efeito ativo são estados sucessivos. Poeira: contorno no chão. Escudo: ícone de lata. Invocação: estrela. A prancha compara textos; ícones funcionais devem acompanhar no produto.",
+      "rules": "Vida e resistência efetiva vêm do estado replicado. Sem assumir dano físico como energia. No celular usar faixa compacta abaixo do HUD e aviso curto lateral, sem cobrir rota.",
+      "acceptance": "Cancelar aviso na morte, preservar invocados existentes e atualizar contagem em 1x/2x sem reiniciar timers."
+    },
+    "png": "png/41_boss_estados.png",
+    "svg": "svg/41_boss_estados.svg"
+  },
+  {
+    "id": "42_recuperacao",
+    "title": "Carregamento e recuperação",
+    "goal": "Separar demora, falha e sucesso real.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          68,
+          312,
+          344,
+          52
+        ],
+        "text": "Continuar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          468,
+          312,
+          344,
+          52
+        ],
+        "text": "Recarregar imagem",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          868,
+          312,
+          344,
+          52
+        ],
+        "text": "Aguardando",
+        "enabled": false,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          68,
+          572,
+          344,
+          52
+        ],
+        "text": "Tentar novamente",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          468,
+          572,
+          344,
+          52
+        ],
+        "text": "Verificar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_7",
+        "class": "TextButton",
+        "rect": [
+          868,
+          572,
+          344,
+          52
+        ],
+        "text": "Voltar ao menu",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          68,
+          312,
+          344,
+          52
+        ],
+        "label": "Continuar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          468,
+          312,
+          344,
+          52
+        ],
+        "label": "Recarregar imagem",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          68,
+          572,
+          344,
+          52
+        ],
+        "label": "Tentar novamente",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          468,
+          572,
+          344,
+          52
+        ],
+        "label": "Verificar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          868,
+          572,
+          344,
+          52
+        ],
+        "label": "Voltar ao menu",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Falhas de assets, sessão, transporte ou persistência.",
+      "actions": "Imagens faltantes usam retrato com nome e ícone neutro. Recarregar é limitado. Perfil bloqueado por outra sessão permite treino. Resultado não registrado tem mensagem diferente de pendente durável.",
+      "feedback": "Enquanto reconecta, mostrar o último estado como desatualizado e impedir mutações. Não simular sucesso nem zerar carteira para esconder erro.",
+      "rules": "Continuar com fallback requer tabuleiro e controles legíveis. Bloqueio de perfil nunca autoriza salvar defaults. Tentativas usam cooldown real e não dependem de 2x.",
+      "acceptance": "Desligar rede em cada etapa e confirmar caminho de volta. Sem estado impossível de Carregando permanente sem orientação."
+    },
+    "png": "png/42_recuperacao.png",
+    "svg": "svg/42_recuperacao.svg"
+  },
+  {
+    "id": "43_colecao_estados",
+    "title": "Estados da coleção",
+    "goal": "Orientar equipe, desbloqueio e aparência.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          70,
+          309,
+          531,
+          52
+        ],
+        "text": "Escolher torre",
+        "enabled": true,
+        "target": "06_colecao"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          672,
+          309,
+          531,
+          52
+        ],
+        "text": "Equipar Lupa",
+        "enabled": true,
+        "target": "06_colecao"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          70,
+          569,
+          531,
+          52
+        ],
+        "text": "Ver atributos",
+        "enabled": true,
+        "target": "06_colecao"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          672,
+          569,
+          531,
+          52
+        ],
+        "text": "Experimentar torre",
+        "enabled": true,
+        "target": "06_colecao"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          70,
+          309,
+          531,
+          52
+        ],
+        "label": "Escolher torre",
+        "target": "06_colecao"
+      },
+      {
+        "rect": [
+          672,
+          309,
+          531,
+          52
+        ],
+        "label": "Equipar Lupa",
+        "target": "06_colecao"
+      },
+      {
+        "rect": [
+          70,
+          569,
+          531,
+          52
+        ],
+        "label": "Ver atributos",
+        "target": "06_colecao"
+      },
+      {
+        "rect": [
+          672,
+          569,
+          531,
+          52
+        ],
+        "label": "Experimentar torre",
+        "target": "06_colecao"
+      }
+    ],
+    "specification": {
+      "entry": "Equipe com vaga, compra salva, partida ativa ou cosmético bloqueado.",
+      "actions": "Equipar Lupa após sucesso abre escolha de slot se necessário. Ver atributos é leitura. Aparência bloqueada exibe critério de domínio sem botão de compra que burle a regra.",
+      "feedback": "Novo desbloqueio pode usar estrela e fade curto; modo reduzido mantém rótulo estático. Espaço vazio é intencional e não recebe alerta vermelho.",
+      "rules": "Não equipar automaticamente uma torre sem pedido. Não trocar moedas. Perfil e partida possuem snapshots distintos para preservar loadout da largada.",
+      "acceptance": "Reabrir coleção conserva seleção e saldo confirmado; recompensas de domínio não são dadas apenas por abrir o painel."
+    },
+    "png": "png/43_colecao_estados.png",
+    "svg": "svg/43_colecao_estados.svg"
+  },
+  {
+    "id": "44_resultados_estados",
+    "title": "Recompensas e conquistas",
+    "goal": "Mostrar apenas o progresso que foi confirmado.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          70,
+          309,
+          531,
+          52
+        ],
+        "text": "Conhecer a coleção",
+        "enabled": true,
+        "target": "06_colecao"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          672,
+          309,
+          531,
+          52
+        ],
+        "text": "Ver mapas",
+        "enabled": true,
+        "target": "03_mapas"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          70,
+          569,
+          531,
+          52
+        ],
+        "text": "Ver domínio",
+        "enabled": true,
+        "target": "08_cosmeticos"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          672,
+          569,
+          531,
+          52
+        ],
+        "text": "Cancelar pronto",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          70,
+          309,
+          531,
+          52
+        ],
+        "label": "Conhecer a coleção",
+        "target": "06_colecao"
+      },
+      {
+        "rect": [
+          672,
+          309,
+          531,
+          52
+        ],
+        "label": "Ver mapas",
+        "target": "03_mapas"
+      },
+      {
+        "rect": [
+          70,
+          569,
+          531,
+          52
+        ],
+        "label": "Ver domínio",
+        "target": "08_cosmeticos"
+      },
+      {
+        "rect": [
+          672,
+          569,
+          531,
+          52
+        ],
+        "label": "Cancelar pronto",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Conclusão tutorial, mapa liberado, marco de domínio ou revanche aguardando.",
+      "actions": "Apresentar no máximo um destaque por vez no resultado, com fila finita. Ação direciona à seção relevante. Cancelar pronto retira intenção de revanche antes da nova partida.",
+      "feedback": "Tutorial +180 uma única vez. Domínio +10 por vitória somente quando elegível; marco é cruzamento real. Mapas mostram apenas novo desbloqueio daquele resultado.",
+      "rules": "No atraso de persistência, segurar destaque Salvo e usar tela 25. Não confundir botões com sucata restante. Revanche não bloqueia Menu.",
+      "acceptance": "Reprocessar matchId não repete popup de ganho nem desbloqueio; fila se limpa ao sair do resultado."
+    },
+    "png": "png/44_resultados_estados.png",
+    "svg": "svg/44_resultados_estados.svg"
+  },
+  {
+    "id": "45_menus_contextuais",
+    "title": "Menus e feedbacks de combate",
+    "goal": "Detalhes aparecem quando o jogador precisa deles.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          71,
+          233,
+          323,
+          52
+        ],
+        "text": "✓ Primeiro",
+        "enabled": true,
+        "target": "16_torre_selecionada"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          71,
+          319,
+          323,
+          52
+        ],
+        "text": "Último",
+        "enabled": true,
+        "target": "16_torre_selecionada"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          71,
+          405,
+          323,
+          52
+        ],
+        "text": "Forte",
+        "enabled": true,
+        "target": "16_torre_selecionada"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          71,
+          491,
+          323,
+          52
+        ],
+        "text": "Perto",
+        "enabled": true,
+        "target": "16_torre_selecionada"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          71,
+          233,
+          323,
+          52
+        ],
+        "label": "✓ Primeiro",
+        "target": "16_torre_selecionada"
+      },
+      {
+        "rect": [
+          71,
+          319,
+          323,
+          52
+        ],
+        "label": "Último",
+        "target": "16_torre_selecionada"
+      },
+      {
+        "rect": [
+          71,
+          405,
+          323,
+          52
+        ],
+        "label": "Forte",
+        "target": "16_torre_selecionada"
+      },
+      {
+        "rect": [
+          71,
+          491,
+          323,
+          52
+        ],
+        "label": "Perto",
+        "target": "16_torre_selecionada"
+      }
+    ],
+    "specification": {
+      "entry": "Alvo, Circuito selecionado, recarga do Pulso e toast local.",
+      "actions": "Quatro alvos mapeiam First, Last, Strongest e Closest conforme a especificação original. Circuito mostra parceiro e bônus reais. Toast é informativo e não é botão.",
+      "feedback": "Menu de alvo fecha após seleção aceita ou toque fora. Recarga mostra segundos inteiros e preenchimento, sem contagem negativa. Pulso usado por aliado fecha confirmação obsoleta.",
+      "rules": "Verificar nomes reais dos enums antes de integrar; não alterar algoritmo de alvo para adequar a tradução. Resistências também usam tooltip com descrição em uma frase.",
+      "acceptance": "Abrir alvo não vende torre. Selecionar modo atual é idempotente. Recarregar snapshot mantém cooldown correto."
+    },
+    "png": "png/45_menus_contextuais.png",
+    "svg": "svg/45_menus_contextuais.svg"
+  },
+  {
+    "id": "46_loja_estados",
+    "title": "Estados da loja",
+    "goal": "Usar preço e confirmação reais da plataforma.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          70,
+          309,
+          531,
+          52
+        ],
+        "text": "Carregando",
+        "enabled": false,
+        "target": "08_cosmeticos"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          672,
+          309,
+          531,
+          52
+        ],
+        "text": "Comprar • {preço} Robux",
+        "enabled": true,
+        "target": "08_cosmeticos"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          70,
+          569,
+          531,
+          52
+        ],
+        "text": "Voltar para jogar",
+        "enabled": true,
+        "target": "08_cosmeticos"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          672,
+          569,
+          531,
+          52
+        ],
+        "text": "Equipar aparências",
+        "enabled": true,
+        "target": "08_cosmeticos"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      },
+      {
+        "rect": [
+          672,
+          309,
+          531,
+          52
+        ],
+        "label": "Comprar • {preço} Robux",
+        "target": "08_cosmeticos"
+      },
+      {
+        "rect": [
+          70,
+          569,
+          531,
+          52
+        ],
+        "label": "Voltar para jogar",
+        "target": "08_cosmeticos"
+      },
+      {
+        "rect": [
+          672,
+          569,
+          531,
+          52
+        ],
+        "label": "Equipar aparências",
+        "target": "08_cosmeticos"
+      }
+    ],
+    "specification": {
+      "entry": "Produto opcional em consulta, disponível, cancelado ou já possuído.",
+      "actions": "Estado disponível substitui {preço} pelo valor localizado retornado pela plataforma. Botão abre PromptGamePassPurchase; a confirmação visual é do Roblox. Equipar só para posse validada.",
+      "feedback": "Nunca apresentar a expressão {preço} no jogo. Se consulta falhar ou skins não estiverem prontas, ocultar compra e usar indisponibilidade da tela 09.",
+      "rules": "Preço regional e disponibilidade são dinâmicos. Cancelar não é erro e não mostra penalização. A arte comercial final precisa corresponder ao conteúdo entregue.",
+      "acceptance": "Teste consulta pendente, falha, cancelamento, posse anterior e conclusão com nova consulta no servidor antes de conceder."
+    },
+    "png": "png/46_loja_estados.png",
+    "svg": "svg/46_loja_estados.svg"
+  },
+  {
+    "id": "47_mobile_colecao",
+    "title": "Coleção no celular",
+    "goal": "Navegar no elenco com rolagem e equipe fixa.",
+    "kind": "mobile",
+    "width": 844,
+    "height": 390,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          12,
+          12,
+          112,
+          44
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "35_mobile_menu"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          12,
+          334,
+          162,
+          44
+        ],
+        "text": "Próximo",
+        "enabled": true,
+        "target": "47_mobile_colecao"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          186,
+          334,
+          357,
+          44
+        ],
+        "text": "Equipe 3/4 • editar",
+        "enabled": true,
+        "target": "06_colecao"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          558,
+          334,
+          274,
+          44
+        ],
+        "text": "Salvar equipe",
+        "enabled": true,
+        "target": "35_mobile_menu"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          12,
+          12,
+          112,
+          44
+        ],
+        "label": "‹ Voltar",
+        "target": "35_mobile_menu"
+      },
+      {
+        "rect": [
+          12,
+          334,
+          162,
+          44
+        ],
+        "label": "Próximo",
+        "target": "47_mobile_colecao"
+      },
+      {
+        "rect": [
+          186,
+          334,
+          357,
+          44
+        ],
+        "label": "Equipe 3/4 • editar",
+        "target": "06_colecao"
+      },
+      {
+        "rect": [
+          558,
+          334,
+          274,
+          44
+        ],
+        "label": "Salvar equipe",
+        "target": "35_mobile_menu"
+      }
+    ],
+    "specification": {
+      "entry": "Coleção em paisagem com pouco espaço vertical.",
+      "actions": "Lista horizontal com Próximo/Anterior como alternativa ao deslize; equipe e Salvar ficam fixos. Escolher cartão abre detalhe compacto. Grade de duas colunas é alternativa para tablet alto.",
+      "feedback": "No exemplo aparecem quatro dos seis personagens; Maestro e Voltz ficam na próxima página. Navegação preserva índice e não altera equipe sozinha.",
+      "rules": "Com texto ampliado, reduzir decoração e trocar para lista rolável; manter 44 px mínimos. Não encolher todas as seis cartas até ficarem ilegíveis.",
+      "acceptance": "Acessar todos os seis personagens por toque e teclado, sem depender de gesto. Voltar restaura o menu compacto."
+    },
+    "png": "png/47_mobile_colecao.png",
+    "svg": "svg/47_mobile_colecao.svg"
+  },
+  {
+    "id": "48_mobile_mapas",
+    "title": "Mapas no celular",
+    "goal": "Uma escolha clara, sem cartões minúsculos.",
+    "kind": "mobile",
+    "width": 844,
+    "height": 390,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          12,
+          12,
+          112,
+          44
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "35_mobile_menu"
+      },
+      {
+        "id": "button_2",
+        "class": "TextButton",
+        "rect": [
+          32,
+          326,
+          94,
+          44
+        ],
+        "text": "‹",
+        "enabled": true,
+        "target": "48_mobile_mapas"
+      },
+      {
+        "id": "button_3",
+        "class": "TextButton",
+        "rect": [
+          311,
+          326,
+          94,
+          44
+        ],
+        "text": "›",
+        "enabled": true,
+        "target": "48_mobile_mapas"
+      },
+      {
+        "id": "button_4",
+        "class": "TextButton",
+        "rect": [
+          454,
+          187,
+          173,
+          52
+        ],
+        "text": "Normal",
+        "enabled": true,
+        "target": "48_mobile_mapas"
+      },
+      {
+        "id": "button_5",
+        "class": "TextButton",
+        "rect": [
+          644,
+          187,
+          187,
+          52
+        ],
+        "text": "Desafio",
+        "enabled": false,
+        "target": null
+      },
+      {
+        "id": "button_6",
+        "class": "TextButton",
+        "rect": [
+          454,
+          253,
+          377,
+          52
+        ],
+        "text": "Jogar solo",
+        "enabled": true,
+        "target": "11_carregamento"
+      },
+      {
+        "id": "button_7",
+        "class": "TextButton",
+        "rect": [
+          454,
+          320,
+          377,
+          52
+        ],
+        "text": "Jogar com amigos",
+        "enabled": true,
+        "target": "04_salas"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          12,
+          12,
+          112,
+          44
+        ],
+        "label": "‹ Voltar",
+        "target": "35_mobile_menu"
+      },
+      {
+        "rect": [
+          32,
+          326,
+          94,
+          44
+        ],
+        "label": "‹",
+        "target": "48_mobile_mapas"
+      },
+      {
+        "rect": [
+          311,
+          326,
+          94,
+          44
+        ],
+        "label": "›",
+        "target": "48_mobile_mapas"
+      },
+      {
+        "rect": [
+          454,
+          187,
+          173,
+          52
+        ],
+        "label": "Normal",
+        "target": "48_mobile_mapas"
+      },
+      {
+        "rect": [
+          454,
+          253,
+          377,
+          52
+        ],
+        "label": "Jogar solo",
+        "target": "11_carregamento"
+      },
+      {
+        "rect": [
+          454,
+          320,
+          377,
+          52
+        ],
+        "label": "Jogar com amigos",
+        "target": "04_salas"
+      }
+    ],
+    "specification": {
+      "entry": "Seleção de mapa no layout compacto.",
+      "actions": "Um cartão por vez, com anterior/próximo e indicador 1 de 3. Normal/Desafio mantêm seleção exclusiva. Solo inicia após validação; Amigos abre cooperação.",
+      "feedback": "Mapa bloqueado continua consultável com requisito e botões de iniciar indisponíveis. Começar não muda ao apenas navegar a imagem.",
+      "rules": "Barra inferior e cartão respeitam safe area. Trocar índice invalida Desafio se o novo mapa não o possui; explicar a condição.",
+      "acceptance": "Percorrer três mapas sem arrasto, conferir disponibilidade por grupo e manter conteúdo sem corte em inglês."
+    },
+    "png": "png/48_mobile_mapas.png",
+    "svg": "svg/48_mobile_mapas.svg"
+  },
+  {
+    "id": "49_icones",
+    "title": "Ícones funcionais",
+    "goal": "Assets transparentes separados para a implementação.",
+    "kind": "states",
+    "width": 1280,
+    "height": 720,
+    "elements": [
+      {
+        "id": "button_1",
+        "class": "TextButton",
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "text": "‹ Voltar",
+        "enabled": true,
+        "target": "02_inicio"
+      }
+    ],
+    "hotspots": [
+      {
+        "rect": [
+          40,
+          56,
+          112,
+          48
+        ],
+        "label": "‹ Voltar",
+        "target": "02_inicio"
+      }
+    ],
+    "specification": {
+      "entry": "Biblioteca funcional compartilhada entre HUD, menus e feedbacks.",
+      "actions": "Importar PNGs individuais de icones/ ou usar SVG como fonte de manutenção fora do Studio. Aplicar ImageColor3 para temas compatíveis. Nomes técnicos não aparecem para o jogador.",
+      "feedback": "Ícones de 128 px possuem fundo transparente e contorno ink. Uso usual 20–28 px; ampliar alvo clicável para 44–48 px independentemente do desenho. Texto acompanha ações principais.",
+      "rules": "Botões persistentes usam ícone buttons e sucata usa scrap; não reutilizar o mesmo símbolo. Escudo físico é physical; energia usa energy; cura usa heal. Ícone sozinho nunca substitui a explicação de resistência.",
+      "acceptance": "Conferir alpha, legibilidade a 24 px e labels associados. robloxAssetId fica vazio no manifesto até upload real. Não enviar SVG diretamente como ImageLabel."
+    },
+    "png": "png/49_icones.png",
+    "svg": "svg/49_icones.svg"
+  }
+]

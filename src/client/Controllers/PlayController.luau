@@ -12,6 +12,9 @@ local Simulation = require(ReplicatedStorage.Shared.Sim.Simulation)
 local Circuits = require(ReplicatedStorage.Shared.Rules.Circuits)
 local Ui = require(script.Parent.Parent.View.Ui)
 local Theme = require(script.Parent.Parent.View.Theme)
+local Modal = require(script.Parent.Parent.UI.Modal)
+local Store = require(script.Parent.Parent.UI.Store)
+local Toasts = require(script.Parent.Parent.UI.Toasts)
 local BoardTransform = require(script.Parent.Parent.View.BoardTransform)
 local BoardRenderer = require(script.Parent.Parent.View.BoardRenderer)
 local Hud = require(script.Parent.Parent.View.Hud)
@@ -36,13 +39,24 @@ local selectedTowerId: number? = nil
 local onLeftCallback: (() -> ())? = nil
 local onResultCallback: ((any) -> ())? = nil
 local pendingCommand = false
+local pulseModal: Modal.Controls? = nil
+local leaveModal: Modal.Controls? = nil
 local currentLoadout: { string } = {}
 local hudCallbacks: Hud.Callbacks
 local lastBossBannerAt = 0
 
 local function toastError(code: string?)
-	Ui.toast(root, L("error." .. (code or "INVALID_STATE")), true)
+	Toasts.error(code)
 	AudioController.play("ui_error")
+end
+
+-- Enquanto a reconciliação está em andamento, novas mutações ficam bloqueadas (guia, tela 26).
+local function canMutate(): boolean
+	if Store.canMutate() then
+		return true
+	end
+	Toasts.show(L("connection.blocked"), "error", "connection:blocked")
+	return false
 end
 
 -- ---------------------------------------------------------------------------
@@ -415,14 +429,8 @@ local function handleEvents(view: MatchController.MatchView, events: { Types.Net
 			AudioController.play("boss_spawn", true)
 			lastBossBannerAt = os.clock()
 		elseif e.kind == "bossTelegraph" and e.enemyDefId then
-			hud:setBossBanner(
-				L(
-					"boss.telegraph",
-					{ name = L("enemy." .. e.enemyDefId), ability = L("boss." .. e.enemyDefId .. ".ability") }
-				)
-			)
+			-- o aviso com contagem vive na BossBar (derivado de simTime); aqui só o som
 			AudioController.play("boss_telegraph", true)
-			lastBossBannerAt = os.clock()
 		elseif e.kind == "bossAbility" then
 			AudioController.play("boss_ability", true)
 			task.delay(2, function()
@@ -437,6 +445,17 @@ local function handleEvents(view: MatchController.MatchView, events: { Types.Net
 		elseif e.kind == "pulse" then
 			AudioController.play("base_pulse", true)
 			hud:disarmPulse()
+			-- aliado usou enquanto a confirmação estava aberta: fecha e informa quem usou
+			if pulseModal then
+				(pulseModal :: Modal.Controls):close()
+				pulseModal = nil
+				local who = if e.userId then MatchController.participantName(e.userId) else nil
+				Toasts.show(
+					if who then L("hud.pulseUsedBy", { name = who }) else L("hud.pulseUsed"),
+					"info",
+					"pulse:used"
+				)
+			end
 		elseif e.kind == "circuitChanged" and e.circuitId and e.towerId then
 			local t = view.towers[e.towerId :: number]
 			if t and t.o == MatchController.localUserId then
@@ -536,7 +555,10 @@ end
 
 PlayController.pendingLoadout = {} :: { string }
 
-function PlayController.init(parent: GuiObject, callbacks: { onLeft: () -> (), onResult: (any) -> () })
+function PlayController.init(
+	parent: GuiObject,
+	callbacks: { onLeft: () -> (), onResult: (any) -> (), onOpenSettings: () -> () }
+)
 	onLeftCallback = callbacks.onLeft
 	onResultCallback = callbacks.onResult
 	root = Ui.frame(
@@ -557,42 +579,42 @@ function PlayController.init(parent: GuiObject, callbacks: { onLeft: () -> (), o
 		onCancelBuild = exitBuild,
 		onPulse = function()
 			local view = MatchController.current()
-			if not view then
+			if not view or not canMutate() then
 				return
 			end
-			if hud:isPulseArmed() then
-				hud:disarmPulse()
-				MatchController.command("CastPulse", {}, function(response)
-					if not response.ok then
-						toastError(response.errorCode)
-					end
-				end)
-			else
-				hud:armPulse(4)
-				Ui.toast(
-					root,
-					L("hud.pulseConfirm", {
-						damage = math.floor(
-							Balance.pulse.damage
-									* (1 + Balance.coopAdditionalHPPerPlayer * (#view.snapshot.participants - 1))
-								+ 0.5
-						),
-					})
-				)
+			if pulseModal then
+				return -- uma confirmação por vez
 			end
+			local damage = math.floor(
+				Balance.pulse.damage * (1 + Balance.coopAdditionalHPPerPlayer * (#view.snapshot.participants - 1)) + 0.5
+			)
+			pulseModal = Modal.open(root, {
+				title = L("hud.pulse"),
+				body = L("hud.pulseSummary", {
+					damage = damage,
+					slow = math.floor(Balance.pulse.slow * 100 + 0.5),
+					duration = Ui.formatDecimal(Balance.pulse.slowDuration, 1),
+					cooldown = Balance.pulse.cooldown,
+				}),
+				confirmText = L("hud.pulseUse"),
+				opener = hud.pulseButton.instance,
+				onConfirm = function(controls)
+					controls:setPending(true)
+					MatchController.command("CastPulse", {}, function(response)
+						pulseModal = nil
+						controls:close()
+						if not response.ok then
+							toastError(response.errorCode)
+						end
+					end)
+				end,
+				onCancel = function()
+					pulseModal = nil
+				end,
+			})
 		end,
-		onSpeed = function()
-			local view = MatchController.current()
-			if not view then
-				return
-			end
-			local myVote = 1
-			for _, p in ipairs(view.snapshot.participants) do
-				if p.userId == MatchController.localUserId then
-					myVote = p.speedVote
-				end
-			end
-			MatchController.command("VoteSpeed", { value = if myVote == 2 then 1 else 2 }, function(response)
+		onSpeedVote = function(value: number)
+			MatchController.command("VoteSpeed", { value = value }, function(response)
 				if not response.ok then
 					toastError(response.errorCode)
 				end
@@ -616,9 +638,26 @@ function PlayController.init(parent: GuiObject, callbacks: { onLeft: () -> (), o
 			end)
 		end,
 		onLeave = function()
-			Ui.confirm(root, L("hud.leave"), L("hud.leaveConfirm"), L("hud.leave"), L("common.cancel"), true, function()
-				MatchController.command("LeaveMatch", {}, nil)
-			end)
+			if leaveModal then
+				return -- repetição bloqueada enquanto o pedido está pendente
+			end
+			leaveModal = Modal.open(root, {
+				title = L("hud.leave"),
+				body = L("hud.leaveConfirm"),
+				confirmText = L("hud.leaveAction"),
+				danger = true,
+				opener = hud.optionsButton.instance,
+				onConfirm = function(controls)
+					controls:setPending(true)
+					MatchController.command("LeaveMatch", {}, function()
+						leaveModal = nil
+						controls:close()
+					end)
+				end,
+				onCancel = function()
+					leaveModal = nil
+				end,
+			})
 		end,
 		onZoomReset = function()
 			transform:reset(true)
@@ -655,6 +694,7 @@ function PlayController.init(parent: GuiObject, callbacks: { onLeft: () -> (), o
 			selectTower(nil)
 			hud:showEnemyDetail(nil)
 		end,
+		onOpenSettings = callbacks.onOpenSettings,
 		onTrainingSpawn = function(enemyId, count)
 			MatchController.command("TrainingSpawn", { enemyId = enemyId, count = count }, function(response)
 				if not response.ok then
@@ -761,16 +801,8 @@ function PlayController.init(parent: GuiObject, callbacks: { onLeft: () -> (), o
 	end)
 end
 
--- Reconstrói o HUD quando o modo de layout muda (redimensionamento/rotação) e reajusta larguras
-function PlayController.relayout()
-	if not hud then
-		return
-	end
-	local mobile = Responsive.isCompact()
-	if hud.mobile == mobile then
-		hud:refit()
-		return
-	end
+-- Reconstrói o HUD do zero (troca de modo de layout ou de idioma) preservando seleção e estado.
+local function rebuildHud(mobile: boolean)
 	local old = hud
 	hud = Hud.new(root, hudCallbacks, mobile)
 	transform.viewport.Parent = hud.boardArea
@@ -783,6 +815,27 @@ function PlayController.relayout()
 		refreshBuildPreview()
 		hud:update(view, view.snapshot.wallet, MatchController.myTowerCount(), mobile)
 	end
+end
+
+-- Reconstrói o HUD quando o modo de layout muda (redimensionamento/rotação) e reajusta larguras
+function PlayController.relayout()
+	if not hud then
+		return
+	end
+	local mobile = Responsive.isCompact()
+	if hud.mobile == mobile then
+		hud:refit()
+		return
+	end
+	rebuildHud(mobile)
+end
+
+-- Trocar o idioma reescreve rótulos fixos do HUD (legendas, atalhos, painéis contextuais).
+function PlayController.rebuildForLocale()
+	if not hud then
+		return
+	end
+	rebuildHud(Responsive.isCompact())
 end
 
 function PlayController.isActive(): boolean
