@@ -44,6 +44,15 @@ DERIVED = {
     "tapeDark": "#C6BBA7",
     "night": "#DAD4ED",
     "nightDark": "#9F9CB2",
+    # Revamp 2026-09-18 — cenário ilustrado em volta do tabuleiro e profundidade dos painéis.
+    # Nenhuma delas é cor de texto: só preenchimento, gradiente, sombra e halo.
+    "forest": "#0F2A1E",  # folhagem mais escura da moldura
+    "forestMid": "#1B4630",  # folhagem média
+    "leaf": "#2F7A4F",  # folha iluminada
+    "leafLight": "#5FA86A",  # folha ao sol
+    "skyHigh": "#1B3A52",  # topo do gradiente atrás do tabuleiro
+    "glowWarm": "#FFE9A8",  # brilho quente (halo, lustro, faísca)
+    "inkDeep": "#0D1626",  # sombra projetada e fundo de vinheta
 }
 
 # Pares texto/fundo que precisam passar em contraste. "large" segue o mínimo 3:1 do guia;

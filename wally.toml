@@ -1,0 +1,24 @@
+[package]
+name = "quintal/quintal-em-guarda"
+version = "0.2.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "UNLICENSED"
+private = true
+exclude = ["**"]
+
+# Bibliotecas de terceiros fixadas por versão (Wally 0.3.2, ver toolchain.toml).
+# Fusion  — interface reativa: toda a UI do jogo é escrita com escopos/estados Fusion.
+# Charm   — átomos de estado compartilhados entre controladores e interface (0.10.0: require
+#           clássico, que o Lune e o luau-lsp resolvem; 0.11 usa require-by-string).
+# ByteNet — definição tipada dos pacotes de rede (substitui os RemoteEvents à mão).
+# Trove   — limpeza determinística de conexões e instâncias.
+[dependencies]
+Fusion = "elttob/fusion@0.3.0"
+Charm = "littensy/charm@0.10.0"
+ByteNet = "ffrostflame/bytenet@0.4.6"
+Trove = "sleitnick/trove@1.8.0"
+
+# ProfileStore roda só no servidor (sessão travada + DataStore).
+[server-dependencies]
+ProfileStore = "lm-loleris/profilestore@1.0.3"

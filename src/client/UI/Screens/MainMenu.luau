@@ -1,387 +1,330 @@
 --!strict
--- 02_inicio e 35_mobile_menu: menu inicial com uma única ação principal.
+-- Tela de entrada. É a vitrine da direção de arte: marca grande à esquerda, pilha de botões
+-- com chanfro e, à direita, o mascote sobre um disco de papel com o Farol de Pilha ao lado.
 --
--- Contrato:
---  * Jogar é a única ação dourada dominante e é encontrável em segundos, sem hover obrigatório;
---  * Loja só existe com feature flag e produto válido — desativada, o espaço dela some;
---  * nada de missões diárias, gacha ou popup de compra;
---  * saldo de botões vem do perfil e fica separado da faixa de ações;
---  * a arte decorativa encolhe (e some com texto ampliado) sem levar nenhuma informação vital.
+-- Tudo vem dos átomos: saldo de botões, equipe salva e estado do perfil. Nenhum texto fixo em
+-- português mora aqui — as frases saem de Config/Localization.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Assets = require(ReplicatedStorage.Shared.Config.Assets)
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
+local Fusion = require(ReplicatedStorage.Shared.Lib.Fusion)
+local Actions = require(script.Parent.Parent.Parent.State.Actions)
+local Atoms = require(script.Parent.Parent.Parent.State.Atoms)
+local Bridge = require(script.Parent.Parent.Parent.State.Bridge)
+local Selectors = require(script.Parent.Parent.Parent.State.Selectors)
+local GameFlow = require(script.Parent.Parent.Parent.Controllers.GameFlow)
 local Theme = require(script.Parent.Parent.Parent.View.Theme)
-local Responsive = require(script.Parent.Parent.Parent.View.Responsive)
-local Accessibility = require(script.Parent.Parent.Accessibility)
-local Components = require(script.Parent.Parent.Components)
-local Store = require(script.Parent.Parent.Store)
+local Kit = require(script.Parent.Parent.Kit)
 
-local MainMenu = {}
-MainMenu.__index = MainMenu
+local Children = Fusion.Children
 
 local L = Localization.get
 
-export type Callbacks = {
-	onPlay: () -> (),
-	onCollection: () -> (),
-	onTraining: () -> (),
-	onSettings: () -> (),
-	onTutorial: () -> (),
-	onShop: () -> (),
-	onRetryProfile: () -> (),
-}
+export type Props = { visible: Fusion.UsedAs<boolean> }
 
-export type MainMenu = typeof(setmetatable(
-	{} :: {
-		root: Frame,
-		callbacks: Callbacks,
-		buttons: { [string]: Components.Button },
-		compact: boolean,
-		artHolder: Frame,
-		teamPill: Frame,
-		teamPillText: TextLabel,
-		balanceChip: Components.Chip,
-		statusLabel: TextLabel,
-		shopEnabled: boolean,
-	},
-	MainMenu
-))
-
-local function clear(frame: Frame)
-	for _, child in ipairs(frame:GetChildren()) do
-		child:Destroy()
+local function heroImage(): string?
+	local entry = Assets.get(Assets.towerKey("dardo", "L0"))
+	if not entry then
+		return nil
 	end
+	return entry.portrait or entry.image
 end
 
-function MainMenu.new(parent: Instance, callbacks: Callbacks): MainMenu
-	local root = Components.frame(parent, "MainMenu", {
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Theme.colors.sage,
-		Visible = false,
-	})
-	local self = setmetatable({
-		root = root,
-		callbacks = callbacks,
-		buttons = {},
-		compact = Responsive.isCompact(),
-		shopEnabled = false,
-	}, MainMenu) :: any
-	MainMenu.build(self)
-	return self
-end
-
-function MainMenu.build(self: MainMenu)
-	clear(self.root)
-	local compact = Responsive.isCompact()
-	self.compact = compact
-	self.buttons = {}
-	local root = self.root
-
-	-- decoração de fundo (não interativa)
-	local decor = Components.frame(root, "Decor", { Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1 })
-	decor.Active = false
-	local blobs: { { position: UDim2, size: number } } = {
-		{ position = UDim2.fromScale(0.82, -0.22), size = 460 },
-		{ position = UDim2.fromScale(-0.14, 0.66), size = 340 },
-	}
-	for index, blob in ipairs(blobs) do
-		local circle = Components.frame(decor, "Blob" .. index, {
-			Position = blob.position,
-			Size = UDim2.fromOffset(blob.size, blob.size),
-			BackgroundColor3 = Theme.colors.sageDeep,
-			BackgroundTransparency = 0.45,
-		})
-		circle.Active = false
-		Components.corner(circle, 999)
-	end
-
-	-- selo "Brinquedos em missão" e saldo de botões, fora da faixa de ações
-	local badge = Components.panel(root, "Badge", {
-		Size = UDim2.fromOffset(10, 30),
-		AutomaticSize = Enum.AutomaticSize.X,
-		Position = UDim2.fromOffset(if compact then 20 else 40, if compact then 14 else 34),
-		BackgroundColor3 = Theme.colors.surface,
-		ZIndex = 2,
-	}, { radius = Theme.sizes.pillCorner, shadow = false })
-	badge.Active = false
-	Components.padding(badge, 14, 4)
-	Components.label(badge, "Text", Components.upper(L("app.tagline")), {
-		Size = UDim2.fromOffset(0, 22),
-		AutomaticSize = Enum.AutomaticSize.X,
-		TextSize = Theme.sizes.caption,
-		Font = Theme.fonts.bodyBold,
-		TextColor3 = Theme.colors.muted,
-		TextWrapped = false,
-		ZIndex = 3,
-	})
-
-	self.balanceChip = Components.statChip(root, "Balance", L("common.buttons"), {
-		Size = UDim2.fromOffset(10, 34),
-		AutomaticSize = Enum.AutomaticSize.X,
-		Position = UDim2.new(1, -(if compact then 20 else 40), 0, if compact then 14 else 34),
-		AnchorPoint = Vector2.new(1, 0),
-		BackgroundColor3 = Theme.colors.gold,
-		ZIndex = 2,
-	}, "ui_buttons")
-
-	self.statusLabel = Components.caption(root, "Status", "", {
-		Size = UDim2.new(0, 360, 0, 18),
-		Position = UDim2.new(1, -(if compact then 20 else 40), 0, if compact then 50 else 72),
-		AnchorPoint = Vector2.new(1, 0),
-		TextXAlignment = Enum.TextXAlignment.Right,
-		TextColor3 = Theme.colors.danger,
-		Visible = false,
-		ZIndex = 3,
-	})
-
-	local columnWidth = if compact then math.huge else 400
-	local column = Components.frame(root, "Column", {
-		Size = if compact then UDim2.new(1, -40, 1, -(78 + 20)) else UDim2.new(0, columnWidth, 1, -(120 + 40)),
-		Position = if compact then UDim2.fromOffset(20, 78) else UDim2.fromOffset(40, 120),
-		BackgroundTransparency = 1,
-		ZIndex = 2,
-	})
-
-	local heroSize = if compact then 34 else 64
-	Components.title(column, "Hero", Components.upper(L("app.title")), {
-		Size = UDim2.new(1, 0, 0, if compact then 44 else 150),
-		TextSize = Accessibility.scaleText(heroSize),
-		TextWrapped = true,
-		TextYAlignment = Enum.TextYAlignment.Top,
-		ZIndex = 3,
-	})
-	Components.label(column, "Subtitle", L("app.subtitle"), {
-		Size = UDim2.new(1, 0, 0, 24),
-		Position = UDim2.fromOffset(0, if compact then 46 else 156),
-		TextColor3 = Theme.colors.muted,
-		ZIndex = 3,
-	})
-
-	-- faixa de ações: rolável para caber com texto ampliado sem sair da tela
-	local actions = Components.scroller(column, "Actions", {
-		Size = UDim2.new(1, 0, 1, -(if compact then 76 else 192)),
-		Position = UDim2.fromOffset(0, if compact then 76 else 192),
-		ZIndex = 3,
-	})
-	local grid = Components.list(actions, Enum.FillDirection.Horizontal, 10)
-	grid.Wraps = true
-	grid.VerticalAlignment = Enum.VerticalAlignment.Top
-	grid.HorizontalAlignment = Enum.HorizontalAlignment.Left
-
-	local fullWidth = UDim2.new(1, 0, 0, if compact then 54 else 62)
-	local halfWidth = UDim2.new(0.5, -5, 0, Theme.sizes.buttonTarget + 4)
-
-	self.buttons.play = Components.button(actions, {
-		name = "Play",
-		text = L("menu.play"),
-		kind = "primary",
-		icon = "ui_play",
-		size = fullWidth,
-		layoutOrder = 1,
-		textSize = if compact then 20 else 24,
-		zIndex = 4,
-		onActivate = self.callbacks.onPlay,
-	})
-	self.buttons.collection = Components.button(actions, {
-		name = "Collection",
-		text = L("menu.collection"),
-		kind = "secondary",
-		size = halfWidth,
-		layoutOrder = 2,
-		zIndex = 4,
-		onActivate = self.callbacks.onCollection,
-	})
-	self.buttons.training = Components.button(actions, {
-		name = "Training",
-		text = L("menu.training"),
-		kind = "secondary",
-		size = halfWidth,
-		layoutOrder = 3,
-		zIndex = 4,
-		onActivate = self.callbacks.onTraining,
-	})
-	self.buttons.settings = Components.button(actions, {
-		name = "Settings",
-		text = L("menu.settings"),
-		kind = "secondary",
-		icon = "ui_settings",
-		size = UDim2.new(1, 0, 0, Theme.sizes.buttonTarget + 4),
-		layoutOrder = 4,
-		zIndex = 4,
-		onActivate = self.callbacks.onSettings,
-	})
-	self.buttons.tutorial = Components.button(actions, {
-		name = "Tutorial",
-		text = L("menu.tutorial"),
-		kind = "secondary",
-		size = halfWidth,
-		layoutOrder = 5,
-		zIndex = 4,
-		onActivate = self.callbacks.onTutorial,
-	})
-	self.buttons.shop = Components.button(actions, {
-		name = "Shop",
-		text = L("menu.shop"),
-		kind = "ghost",
-		size = halfWidth,
-		layoutOrder = 6,
-		visible = false,
-		zIndex = 4,
-		onActivate = self.callbacks.onShop,
-	})
-
-	-- arte decorativa: some no compacto com texto ampliado, sem levar informação junto
-	local showArt = not compact or not Accessibility.get().largeText
-	self.artHolder = Components.frame(root, "Art", {
-		Size = if compact then UDim2.fromOffset(190, 190) else UDim2.fromOffset(420, 420),
-		Position = if compact then UDim2.new(1, -30, 0.55, 0) else UDim2.new(0.72, 0, 0.48, 0),
-		AnchorPoint = if compact then Vector2.new(1, 0.5) else Vector2.new(0.5, 0.5),
-		BackgroundTransparency = 1,
-		Visible = showArt,
-		ZIndex = 1,
-	})
-	self.artHolder.Active = false
-	local disc = Components.frame(self.artHolder, "Disc", {
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Theme.colors.surface,
-		ZIndex = 1,
-	})
-	disc.Active = false
-	Components.corner(disc, 999)
-	Components.stroke(disc, Theme.colors.ink, 2)
-	local heroEntry = Assets.get(Assets.towerKey("dardo", "L0"))
-	if heroEntry and (heroEntry.portrait or heroEntry.image) then
-		local art = Instance.new("ImageLabel")
-		art.Name = "Hero"
-		art.BackgroundTransparency = 1
-		art.Image = (heroEntry.portrait or heroEntry.image) :: string
-		art.ScaleType = Enum.ScaleType.Fit
-		art.Size = UDim2.fromScale(0.82, 0.82)
-		art.Position = UDim2.fromScale(0.5, 0.5)
-		art.AnchorPoint = Vector2.new(0.5, 0.5)
-		art.Active = false
-		art.ZIndex = 2
-		art.Parent = self.artHolder
-	end
-	local baseEntry = Assets.get("base_farol_pilha")
-	if baseEntry and baseEntry.image then
-		local lighthouse = Instance.new("ImageLabel")
-		lighthouse.Name = "Base"
-		lighthouse.BackgroundTransparency = 1
-		lighthouse.Image = baseEntry.image :: string
-		lighthouse.ScaleType = Enum.ScaleType.Fit
-		lighthouse.Size = UDim2.fromScale(0.3, 0.3)
-		lighthouse.Position = UDim2.fromScale(0.92, 0.88)
-		lighthouse.AnchorPoint = Vector2.new(0.5, 0.5)
-		lighthouse.Active = false
-		lighthouse.ZIndex = 3
-		lighthouse.Parent = self.artHolder
-	end
-
-	self.teamPill = Components.frame(root, "TeamPill", {
-		Size = UDim2.fromOffset(10, 30),
-		AutomaticSize = Enum.AutomaticSize.X,
-		Position = if compact then UDim2.new(1, -30, 1, -18) else UDim2.new(0.72, 0, 0.92, 0),
-		AnchorPoint = if compact then Vector2.new(1, 1) else Vector2.new(0.5, 0.5),
-		BackgroundColor3 = Theme.colors.teal,
-		Visible = showArt,
-		ZIndex = 3,
-	})
-	self.teamPill.Active = false
-	Components.corner(self.teamPill, 999)
-	Components.padding(self.teamPill, 16, 4)
-	-- reconstruir a faixa não pode perder o estado da loja (feature flag do servidor)
-	MainMenu.setShopEnabled(self, self.shopEnabled)
-
-	self.teamPillText = Components.label(self.teamPill, "Text", "", {
-		Size = UDim2.fromOffset(0, 22),
-		AutomaticSize = Enum.AutomaticSize.X,
-		TextSize = Theme.sizes.caption,
-		Font = Theme.fonts.bodyBold,
-		TextColor3 = Theme.colors.ink,
-		TextWrapped = false,
-		ZIndex = 4,
-	})
-end
-
-function MainMenu.setShopEnabled(self: MainMenu, enabled: boolean)
-	self.shopEnabled = enabled
-	if self.buttons.shop then
-		-- desativada, a loja não ocupa espaço nenhum no menu
-		self.buttons.shop.instance.Visible = enabled
-	end
-end
-
-function MainMenu.render(self: MainMenu)
-	local profile = Store.profile()
-	local status = Store.get().profileStatus
-
-	self.balanceChip:setValue(if profile then tostring(profile.buttons or 0) else "—")
-	self.balanceChip.instance.Visible = profile ~= nil
-
-	if profile and not Store.isPersistent() then
-		self.statusLabel.Text = L("app.progressNotSaved")
-		self.statusLabel.Visible = true
-	elseif not profile and status ~= "loading" then
-		self.statusLabel.Text = L("app.profileUnavailableShort")
-		self.statusLabel.Visible = true
-	else
-		self.statusLabel.Visible = false
-	end
-
-	local play = self.buttons.play
-	if not profile then
-		play:setText(L("common.retry"), L("app.profileUnavailableShort"))
-		play:setAvailable(true)
-		play:onActivate(self.callbacks.onRetryProfile)
-	elseif not profile.tutorialCompleted then
-		-- primeiro acesso: tutorial com opção clara de pular (dentro do próprio tutorial)
-		play:setText(L("menu.tutorial"), L("menu.startTutorialHint"))
-		play:setAvailable(true)
-		play:onActivate(self.callbacks.onTutorial)
-	else
-		play:setText(L("menu.play"), L("menu.playHint"))
-		play:setAvailable(true)
-		play:onActivate(self.callbacks.onPlay)
-	end
-
-	local tutorial = self.buttons.tutorial
-	tutorial:setText(if profile and profile.tutorialCompleted then L("menu.replayTutorial") else L("menu.tutorial"))
-	tutorial:setAvailable(profile ~= nil, if profile then nil else L("app.loading"))
-	self.buttons.collection:setAvailable(profile ~= nil, if profile then nil else L("app.loading"))
-
-	-- resumo da equipe no selo decorativo: nunca é a única fonte da informação
-	local loadout: { string } = if profile then (profile.loadout or {}) else {}
-	if #loadout == 0 then
-		self.teamPillText.Text = Components.upper(L("menu.teamEmpty"))
-	else
-		local names = {}
-		for _, id in ipairs(loadout) do
-			local def = Catalog.getTower(id)
-			table.insert(names, if def then def.name else id)
+return function(scope: Kit.Scope, props: Props): Frame
+	local buttons = Bridge.map(scope, Atoms.profile, function()
+		return Selectors.buttons()
+	end)
+	local profileStatus = Bridge.use(scope, Atoms.profileStatus)
+	local compact = Bridge.use(scope, Atoms.compact)
+	local team = Bridge.map(scope, Atoms.profile, function(): string
+		local names: { string } = {}
+		for _, towerId in ipairs(Selectors.loadout()) do
+			local def = Catalog.getTower(towerId)
+			if def then
+				table.insert(names, def.name)
+			end
 		end
-		self.teamPillText.Text = Components.upper(L("menu.teamReady", { team = table.concat(names, " · ") }))
-	end
-end
-
-function MainMenu.relayout(self: MainMenu)
-	if Responsive.isCompact() ~= self.compact then
-		MainMenu.build(self)
-		if self.root.Visible then
-			MainMenu.render(self)
+		if #names == 0 then
+			return L("menu.teamEmpty")
 		end
-	end
-end
+		return L("menu.teamReady", { team = table.concat(names, " · ") })
+	end)
+	local profileBroken = scope:Computed(function(use)
+		local status = use(profileStatus)
+		return status ~= "ready" and status ~= "volatile"
+	end)
 
-function MainMenu.show(self: MainMenu)
-	self.root.Visible = true
-	MainMenu.render(self)
-end
+	local left = scope:New("Frame")({
+		Name = "Brand",
+		BackgroundTransparency = 1,
+		Size = scope:Computed(function(use)
+			return if use(compact) then UDim2.new(0.62, 0, 1, -40) else UDim2.new(0.52, 0, 1, -64)
+		end),
+		Position = UDim2.fromOffset(40, 32),
+		[Children] = Kit.children(
+			Kit.list(scope, { Padding = UDim.new(0, 14) }),
+			Kit.tag(scope, {
+				text = string.upper(L("app.tagline")),
+				color = Theme.colors.paper,
+				textColor = Theme.colors.tealDark,
+				frame = { LayoutOrder = 1, ZIndex = 3 },
+			}),
+			Kit.title(scope, {
+				Name = "Title",
+				Text = string.upper(L("app.title")),
+				TextSize = scope:Computed(function(use)
+					return if use(compact) then 44 else 64
+				end),
+				TextColor3 = Theme.colors.ink,
+				TextWrapped = true,
+				Size = UDim2.new(1, 0, 0, 0),
+				AutomaticSize = Enum.AutomaticSize.Y,
+				LayoutOrder = 2,
+				ZIndex = 3,
+			}),
+			Kit.text(scope, {
+				Name = "Subtitle",
+				Text = L("app.subtitle"),
+				TextSize = 18,
+				TextColor3 = Theme.colors.tealDark,
+				Font = Theme.fonts.bodyMedium,
+				Size = UDim2.new(1, 0, 0, 24),
+				LayoutOrder = 3,
+				ZIndex = 3,
+			}),
+			-- Aviso de perfil indisponível: explica e oferece saída, sem bloquear a tela.
+			Kit.panel(scope, {
+				name = "ProfileWarning",
+				visible = profileBroken,
+				size = UDim2.new(1, -20, 0, 0),
+				automaticSize = Enum.AutomaticSize.Y,
+				color = Theme.colors.dangerSoft,
+				strokeColor = Theme.colors.danger,
+				radius = Kit.radius.chip,
+				padding = 14,
+				layoutOrder = 4,
+				gloss = false,
+				layout = Kit.list(scope, { Padding = UDim.new(0, 8) }),
+				children = Kit.children(
+					Kit.text(scope, {
+						Text = L("app.profileUnavailable"),
+						TextColor3 = Theme.colors.danger,
+						TextSize = 14,
+						Size = UDim2.new(1, 0, 0, 0),
+						AutomaticSize = Enum.AutomaticSize.Y,
+						LayoutOrder = 1,
+						ZIndex = 4,
+					}),
+					Kit.button(scope, {
+						name = "Retry",
+						text = L("common.retry"),
+						kind = "danger",
+						size = UDim2.new(0, 200, 0, 44),
+						layoutOrder = 2,
+						zIndex = 4,
+						onActivate = GameFlow.retryProfile,
+					})
+				),
+			}),
+			Kit.button(scope, {
+				name = "Tutorial",
+				text = L("menu.tutorial"),
+				sub = L("menu.startTutorialHint"),
+				kind = "primary",
+				icon = "ui_play",
+				size = UDim2.new(1, -20, 0, 76),
+				layoutOrder = 5,
+				zIndex = 3,
+				onActivate = GameFlow.startTutorial,
+			}),
+			scope:New("Frame")({
+				Name = "Row",
+				BackgroundTransparency = 1,
+				Size = UDim2.new(1, -20, 0, 60),
+				LayoutOrder = 6,
+				ZIndex = 3,
+				[Children] = Kit.children(
+					Kit.list(scope, {
+						FillDirection = Enum.FillDirection.Horizontal,
+						Padding = UDim.new(0, 12),
+						VerticalAlignment = Enum.VerticalAlignment.Center,
+					}),
+					Kit.button(scope, {
+						name = "Play",
+						text = L("menu.play"),
+						sub = L("menu.playHint"),
+						kind = "cyan",
+						size = UDim2.new(0.5, -6, 1, 0),
+						layoutOrder = 1,
+						zIndex = 4,
+						onActivate = function()
+							Actions.navigate("maps")
+						end,
+					}),
+					Kit.button(scope, {
+						name = "Collection",
+						text = L("menu.collection"),
+						kind = "secondary",
+						size = UDim2.new(0.5, -6, 1, 0),
+						layoutOrder = 2,
+						zIndex = 4,
+						onActivate = function()
+							Actions.navigate("collection")
+						end,
+					})
+				),
+			}),
+			scope:New("Frame")({
+				Name = "Row2",
+				BackgroundTransparency = 1,
+				Size = UDim2.new(1, -20, 0, 56),
+				LayoutOrder = 7,
+				ZIndex = 3,
+				[Children] = Kit.children(
+					Kit.list(scope, {
+						FillDirection = Enum.FillDirection.Horizontal,
+						Padding = UDim.new(0, 12),
+						VerticalAlignment = Enum.VerticalAlignment.Center,
+					}),
+					Kit.button(scope, {
+						name = "Training",
+						text = L("menu.training"),
+						kind = "quiet",
+						size = UDim2.new(0.34, -8, 1, 0),
+						layoutOrder = 1,
+						zIndex = 4,
+						onActivate = function()
+							GameFlow.startTraining("jardim")
+						end,
+					}),
+					Kit.button(scope, {
+						name = "Shop",
+						text = L("menu.shop"),
+						kind = "quiet",
+						size = UDim2.new(0.33, -8, 1, 0),
+						layoutOrder = 2,
+						zIndex = 4,
+						onActivate = function()
+							Actions.push("shop")
+						end,
+					}),
+					Kit.button(scope, {
+						name = "Settings",
+						text = L("menu.settings"),
+						kind = "quiet",
+						icon = "ui_settings",
+						size = UDim2.new(0.33, -8, 1, 0),
+						layoutOrder = 3,
+						zIndex = 4,
+						onActivate = function()
+							Actions.push("settings")
+						end,
+					})
+				),
+			})
+		),
+	})
 
-function MainMenu.hide(self: MainMenu)
-	self.root.Visible = false
-end
+	local heroArt = heroImage()
+	local right = scope:New("Frame")({
+		Name = "Hero",
+		BackgroundTransparency = 1,
+		Size = UDim2.new(0.42, 0, 1, -80),
+		Position = UDim2.new(1, -40, 0, 40),
+		AnchorPoint = Vector2.new(1, 0),
+		Visible = scope:Computed(function(use)
+			return not use(compact)
+		end),
+		[Children] = Kit.children(
+			-- disco de papel atrás do mascote (o contorno grosso é marca da direção de arte)
+			scope:New("Frame")({
+				Name = "Disc",
+				BackgroundColor3 = Theme.colors.paper,
+				BorderSizePixel = 0,
+				Size = UDim2.fromScale(0.86, 0.86),
+				Position = UDim2.fromScale(0.5, 0.44),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				ZIndex = 2,
+				[Children] = Kit.children(
+					Kit.corner(scope, 9999),
+					Kit.stroke(scope, Theme.colors.ink, 3),
+					scope:New("UIAspectRatioConstraint")({ AspectRatio = 1 }),
+					if heroArt
+						then scope:New("ImageLabel")({
+							Name = "Mascot",
+							BackgroundTransparency = 1,
+							Image = heroArt,
+							ScaleType = Enum.ScaleType.Fit,
+							Size = UDim2.fromScale(0.78, 0.78),
+							Position = UDim2.fromScale(0.5, 0.52),
+							AnchorPoint = Vector2.new(0.5, 0.5),
+							ZIndex = 3,
+						})
+						else Kit.title(scope, {
+							Text = "★",
+							TextSize = 64,
+							TextXAlignment = Enum.TextXAlignment.Center,
+							Size = UDim2.fromScale(1, 1),
+							ZIndex = 3,
+						})
+				),
+			}),
+			scope:New("ImageLabel")({
+				Name = "Lighthouse",
+				BackgroundTransparency = 1,
+				Image = Assets.image("base_farol_pilha") or "",
+				ScaleType = Enum.ScaleType.Fit,
+				Size = UDim2.fromScale(0.26, 0.26),
+				Position = UDim2.fromScale(0.88, 0.78),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				ZIndex = 4,
+			}),
+			Kit.panel(scope, {
+				name = "Team",
+				size = UDim2.new(0, 0, 0, 44),
+				automaticSize = Enum.AutomaticSize.X,
+				position = UDim2.fromScale(0.5, 0.96),
+				anchorPoint = Vector2.new(0.5, 1),
+				color = Theme.colors.teal,
+				radius = Kit.radius.pill,
+				padding = 18,
+				paddingVertical = 8,
+				zIndex = 5,
+				children = Kit.children(Kit.text(scope, {
+					Name = "TeamText",
+					Text = team,
+					TextColor3 = Theme.colors.ink,
+					Font = Theme.fonts.bodyBold,
+					TextSize = 15,
+					TextWrapped = false,
+					AutomaticSize = Enum.AutomaticSize.X,
+					Size = UDim2.new(0, 0, 1, 0),
+					ZIndex = 6,
+				})),
+			})
+		),
+	})
 
-return MainMenu
+	local balance = Kit.chip(scope, {
+		name = "Buttons",
+		icon = "ui_buttons",
+		caption = L("common.buttons"),
+		value = scope:Computed(function(use)
+			return tostring(use(buttons))
+		end),
+		accent = Theme.colors.gold,
+		width = UDim2.new(0, 0, 0, 52),
+	})
+	balance.Position = UDim2.new(1, -40, 0, 32)
+	balance.AnchorPoint = Vector2.new(1, 0)
+
+	return scope:New("Frame")({
+		Name = "MainMenu",
+		BackgroundTransparency = 1,
+		Size = UDim2.fromScale(1, 1),
+		Visible = props.visible,
+		[Children] = Kit.children(left, right, balance),
+	})
+end

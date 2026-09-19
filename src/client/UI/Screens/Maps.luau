@@ -1,53 +1,33 @@
 --!strict
--- 03_mapas e 48_mobile_mapas: escolher missão e entrar solo ou com amigos.
+-- Escolha de mapa e dificuldade. Três cartões lado a lado (um por vez no celular), cadeado com
+-- o motivo em linguagem do jogador e duas saídas: sozinho ou com amigos.
 --
--- Contrato:
---  * Normal e Desafio são seleção exclusiva; Desafio só depois de vencer o Normal daquele mapa;
---  * mapa bloqueado continua consultável e mostra a condição em texto;
---  * "Começar" desabilitado explica qual integrante ainda não desbloqueou o mapa;
---  * dados de desbloqueio são do servidor; entrar não custa botões;
---  * no celular, um cartão por vez com anterior/próximo e indicador "1 de 3", sem arrasto obrigatório.
+-- Em grupo, só o líder muda a seleção; a mudança vai para o servidor (PartySetup), que limpa a
+-- prontidão de todo mundo.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Assets = require(ReplicatedStorage.Shared.Config.Assets)
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
+local Fusion = require(ReplicatedStorage.Shared.Lib.Fusion)
+local Actions = require(script.Parent.Parent.Parent.State.Actions)
+local Atoms = require(script.Parent.Parent.Parent.State.Atoms)
+local Bridge = require(script.Parent.Parent.Parent.State.Bridge)
+local Selectors = require(script.Parent.Parent.Parent.State.Selectors)
+local Commands = require(script.Parent.Parent.Parent.Net.Commands)
+local GameFlow = require(script.Parent.Parent.Parent.Controllers.GameFlow)
 local Theme = require(script.Parent.Parent.Parent.View.Theme)
-local Responsive = require(script.Parent.Parent.Parent.View.Responsive)
-local Components = require(script.Parent.Parent.Components)
-local Chrome = require(script.Parent.Chrome)
-local Store = require(script.Parent.Parent.Store)
+local Kit = require(script.Parent.Parent.Kit)
 
-local Maps = {}
-Maps.__index = Maps
+local Children = Fusion.Children
+local peek = Fusion.peek
 
 local L = Localization.get
 
 local MAP_ORDER = { "jardim", "oficina", "sotao" }
-local DIFFICULTIES = { "normal", "desafio" }
 
-export type Callbacks = {
-	onBack: () -> (),
-	onSolo: (mapId: string, difficulty: string) -> (),
-	onFriends: (mapId: string, difficulty: string) -> (),
-	onSelectionChanged: (mapId: string, difficulty: string) -> (),
-}
-
-export type Maps = typeof(setmetatable(
-	{} :: {
-		chrome: Chrome.Screen,
-		callbacks: Callbacks,
-		selectedMap: string,
-		selectedDifficulty: string,
-		pageIndex: number,
-		buttons: { Components.Button },
-		compact: boolean,
-		soloButton: Components.Button?,
-		friendsButton: Components.Button?,
-	},
-	Maps
-))
+export type Props = { visible: Fusion.UsedAs<boolean> }
 
 local function unlockKey(mapId: string, difficulty: string): string
 	return mapId .. ":" .. difficulty
@@ -77,311 +57,262 @@ local function lockReason(mapId: string, difficulty: string): string
 	return L("menu.lockedMap", { map = if map then map.name else previous })
 end
 
-function Maps.new(parent: Instance, callbacks: Callbacks): Maps
-	local self = setmetatable({
-		callbacks = callbacks,
-		selectedMap = "jardim",
-		selectedDifficulty = "normal",
-		pageIndex = 1,
-		buttons = {},
-		compact = Responsive.isCompact(),
-	}, Maps) :: any
-	self.chrome = Chrome.new(parent, {
+return function(scope: Kit.Scope, props: Props): Frame
+	local selectedMap: Fusion.Value<string> = scope:Value("jardim")
+	local difficulty: Fusion.Value<string> = scope:Value("normal")
+	local profile = Bridge.use(scope, Atoms.profile)
+	local lobby = Bridge.use(scope, Atoms.lobby)
+
+	local canConfigure = scope:Computed(function(use)
+		local _ = use(lobby)
+		local party = Selectors.party()
+		if not party then
+			return true
+		end
+		return party.leaderId == Players.LocalPlayer.UserId
+	end)
+
+	-- Seleção nova: em grupo o líder propaga para todo mundo.
+	local function choose(mapId: string?, mode: string?)
+		if not peek(canConfigure) then
+			Actions.toast(L("menu.leaderOnly"), "info")
+			return
+		end
+		if mapId then
+			selectedMap:set(mapId)
+		end
+		if mode then
+			difficulty:set(mode)
+		end
+		if Selectors.party() then
+			Commands.send("party:setup", "PartySetup", { mapId = peek(selectedMap), mode = peek(difficulty) }, {
+				onError = function(code)
+					if code ~= "NOT_OWNER" then
+						Actions.toast(L("error." .. code), "error")
+					end
+				end,
+			})
+		end
+	end
+
+	local cards: { any } = {
+		Kit.list(scope, {
+			FillDirection = Enum.FillDirection.Horizontal,
+			Padding = UDim.new(0, 16),
+			VerticalAlignment = Enum.VerticalAlignment.Top,
+		}),
+	}
+	for index, mapId in ipairs(MAP_ORDER) do
+		local map = Catalog.getMap(mapId)
+		if map then
+			local unlocked = scope:Computed(function(use)
+				-- Kit.read evita que Luau unifique os tipos de dois `use` na mesma closure
+				return isUnlocked(Kit.read(use, profile), mapId, Kit.read(use, difficulty))
+			end)
+			local selected = scope:Computed(function(use)
+				return use(selectedMap) == mapId
+			end)
+			table.insert(
+				cards,
+				Kit.pressable(scope, {
+					name = "Map_" .. mapId,
+					size = UDim2.new(0.33, -12, 1, 0),
+					layoutOrder = index,
+					zIndex = 3,
+					onActivate = function()
+						choose(mapId, nil)
+					end,
+					children = Kit.children(Kit.panel(scope, {
+						name = "Card",
+						size = UDim2.fromScale(1, 1),
+						color = scope:Computed(function(use)
+							return if use(selected) then Theme.colors.cream else Theme.colors.paper
+						end),
+						strokeColor = scope:Computed(function(use)
+							return if use(selected) then Theme.colors.gold else Theme.colors.ink
+						end),
+						padding = 16,
+						zIndex = 3,
+						layout = Kit.list(scope, { Padding = UDim.new(0, 8) }),
+						children = Kit.children(
+							scope:New("ImageLabel")({
+								Name = "Ground",
+								BackgroundColor3 = Theme.colors.sage,
+								BorderSizePixel = 0,
+								Image = Assets.image(Assets.groundKey(mapId)) or "",
+								ScaleType = Enum.ScaleType.Crop,
+								Size = UDim2.new(1, 0, 0, 96),
+								LayoutOrder = 1,
+								ZIndex = 4,
+								[Children] = Kit.children(
+									Kit.corner(scope, 12),
+									Kit.stroke(scope, Theme.colors.ink, 2)
+								),
+							}),
+							Kit.title(scope, {
+								Name = "Name",
+								Text = map.name,
+								TextSize = 22,
+								Size = UDim2.new(1, 0, 0, 28),
+								LayoutOrder = 2,
+								ZIndex = 4,
+							}),
+							Kit.caption(scope, {
+								Name = "Boss",
+								Text = L("maps.boss", { name = L("enemy." .. map.boss) }),
+								Size = UDim2.new(1, 0, 0, 18),
+								LayoutOrder = 3,
+								ZIndex = 4,
+							}),
+							Kit.panel(scope, {
+								name = "Lock",
+								visible = scope:Computed(function(use)
+									return not use(unlocked)
+								end),
+								size = UDim2.new(1, 0, 0, 0),
+								automaticSize = Enum.AutomaticSize.Y,
+								color = Theme.colors.sage,
+								strokeColor = Theme.colors.muted,
+								radius = Kit.radius.chip,
+								padding = 10,
+								layoutOrder = 4,
+								shadow = false,
+								gloss = false,
+								children = Kit.children(Kit.caption(scope, {
+									Text = scope:Computed(function(use)
+										return lockReason(mapId, use(difficulty))
+									end),
+									Size = UDim2.new(1, 0, 0, 0),
+									AutomaticSize = Enum.AutomaticSize.Y,
+									ZIndex = 5,
+								})),
+							})
+						),
+					})),
+				})
+			)
+		end
+	end
+
+	local difficultyRow = scope:New("Frame")({
+		Name = "Difficulty",
+		BackgroundTransparency = 1,
+		Size = UDim2.new(1, 0, 0, 56),
+		Position = UDim2.new(0, 0, 1, -140),
+		ZIndex = 3,
+		[Children] = Kit.children(
+			Kit.list(scope, {
+				FillDirection = Enum.FillDirection.Horizontal,
+				Padding = UDim.new(0, 10),
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+			}),
+			Kit.caption(scope, {
+				Text = L("menu.difficulty"),
+				Size = UDim2.new(0, 110, 1, 0),
+				LayoutOrder = 1,
+				ZIndex = 4,
+			}),
+			Kit.button(scope, {
+				name = "Normal",
+				text = L("menu.difficulty.normal"),
+				kind = "secondary",
+				selected = scope:Computed(function(use)
+					return use(difficulty) == "normal"
+				end),
+				size = UDim2.fromOffset(180, 48),
+				layoutOrder = 2,
+				zIndex = 4,
+				onActivate = function()
+					choose(nil, "normal")
+				end,
+			}),
+			Kit.button(scope, {
+				name = "Desafio",
+				text = L("menu.difficulty.desafio"),
+				kind = "secondary",
+				selected = scope:Computed(function(use)
+					return use(difficulty) == "desafio"
+				end),
+				size = UDim2.fromOffset(180, 48),
+				layoutOrder = 3,
+				zIndex = 4,
+				onActivate = function()
+					choose(nil, "desafio")
+				end,
+			})
+		),
+	})
+
+	local actionsRow = scope:New("Frame")({
+		Name = "Actions",
+		BackgroundTransparency = 1,
+		Size = UDim2.new(1, 0, 0, 64),
+		Position = UDim2.new(0, 0, 1, -72),
+		ZIndex = 3,
+		[Children] = Kit.children(
+			Kit.list(scope, {
+				FillDirection = Enum.FillDirection.Horizontal,
+				Padding = UDim.new(0, 12),
+				HorizontalAlignment = Enum.HorizontalAlignment.Right,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+			}),
+			Kit.button(scope, {
+				name = "Friends",
+				text = L("maps.friends"),
+				kind = "secondary",
+				icon = "ui_group",
+				size = UDim2.fromOffset(240, 60),
+				layoutOrder = 1,
+				zIndex = 4,
+				onActivate = function()
+					Actions.navigate("rooms")
+				end,
+			}),
+			Kit.button(scope, {
+				name = "Solo",
+				text = L("maps.solo"),
+				kind = "primary",
+				icon = "ui_play",
+				size = UDim2.fromOffset(280, 60),
+				layoutOrder = 2,
+				zIndex = 4,
+				disabled = scope:Computed(function(use)
+					return not isUnlocked(Kit.read(use, profile), Kit.read(use, selectedMap), Kit.read(use, difficulty))
+				end),
+				sub = scope:Computed(function(use)
+					local mapId = Kit.read(use, selectedMap)
+					local mode = Kit.read(use, difficulty)
+					if not isUnlocked(Kit.read(use, profile), mapId, mode) then
+						return lockReason(mapId, mode)
+					end
+					return ""
+				end),
+				onActivate = function()
+					GameFlow.startMatch(peek(selectedMap), peek(difficulty), "normal")
+				end,
+			})
+		),
+	})
+
+	local screen = Kit.screen(scope, {
 		name = "MapsScreen",
 		title = L("maps.title"),
 		subtitle = L("maps.subtitle"),
-		onBack = callbacks.onBack,
-	})
-	return self
-end
-
-function Maps.setSelection(self: Maps, mapId: string, difficulty: string)
-	self.selectedMap = mapId
-	self.selectedDifficulty = difficulty
-	local index = table.find(MAP_ORDER, mapId)
-	if index then
-		self.pageIndex = index
-	end
-	if self.chrome.root.Visible then
-		Maps.render(self)
-	end
-end
-
--- Cartão de mapa: imagem do terreno, nome, resumo e estado de bloqueio.
-local function mapCard(
-	self: Maps,
-	parent: Instance,
-	mapId: string,
-	size: UDim2,
-	order: number,
-	profile: { [string]: any }?
-): Components.Button
-	local map = Catalog.getMap(mapId)
-	local name = if map then map.name else mapId
-	local selected = self.selectedMap == mapId
-	local unlocked = isUnlocked(profile, mapId, self.selectedDifficulty)
-	local card = Components.button(parent, {
-		name = "Map_" .. mapId,
-		text = name,
-		kind = if selected then "primary" else "secondary",
-		size = size,
-		layoutOrder = order,
-		textAlign = Enum.TextXAlignment.Left,
-		textSize = Theme.sizes.bodyLarge,
-		zIndex = 3,
-		onActivate = function()
-			self.selectedMap = mapId
-			local index = table.find(MAP_ORDER, mapId)
-			if index then
-				self.pageIndex = index
-			end
-			-- trocar de mapa pode invalidar o Desafio: volta ao Normal e explica a condição
-			if self.selectedDifficulty == "desafio" and not isUnlocked(profile, mapId, "desafio") then
-				self.selectedDifficulty = "normal"
-			end
-			self.callbacks.onSelectionChanged(self.selectedMap, self.selectedDifficulty)
-			Maps.render(self)
+		visible = props.visible,
+		onBack = function()
+			Actions.navigate("menu")
 		end,
+		children = Kit.children(
+			scope:New("Frame")({
+				Name = "Cards",
+				BackgroundTransparency = 1,
+				Size = UDim2.new(1, 0, 0, 280),
+				ZIndex = 3,
+				[Children] = cards,
+			}),
+			difficultyRow,
+			actionsRow
+		),
 	})
-	card.label.Position = UDim2.new(0, 14, 0, -40)
-	card.label.Size = UDim2.new(1, -28, 0, 30)
-	card.label.TextYAlignment = Enum.TextYAlignment.Bottom
-
-	local ground = Assets.get(Assets.groundKey(mapId))
-	if ground and ground.image then
-		local image = Instance.new("ImageLabel")
-		image.Name = "Ground"
-		image.BackgroundTransparency = 1
-		image.Image = ground.image :: string
-		image.ScaleType = Enum.ScaleType.Crop
-		image.Size = UDim2.new(1, -20, 0, 108)
-		image.Position = UDim2.fromOffset(10, 10)
-		image.ZIndex = card.instance.ZIndex + 1
-		image.Active = false
-		image.Parent = card.instance
-		Components.corner(image, 12)
-		Components.stroke(image, Theme.colors.ink, 2)
-	else
-		-- imagem rejeitada ou ainda não publicada: retrato neutro com o nome, sem bloquear a rota
-		local fallback = Components.frame(card.instance, "GroundFallback", {
-			Size = UDim2.new(1, -20, 0, 108),
-			Position = UDim2.fromOffset(10, 10),
-			BackgroundColor3 = Theme.colors.sageDeep,
-			ZIndex = card.instance.ZIndex + 1,
-		})
-		fallback.Active = false
-		Components.corner(fallback, 12)
-		Components.label(fallback, "Name", name, {
-			Size = UDim2.fromScale(1, 1),
-			TextXAlignment = Enum.TextXAlignment.Center,
-			TextColor3 = Theme.colors.muted,
-			ZIndex = fallback.ZIndex + 1,
-		})
-	end
-
-	if map then
-		Components.caption(card.instance, "Boss", L("maps.boss", { name = L("enemy." .. map.boss) }), {
-			Size = UDim2.new(1, -28, 0, 18),
-			Position = UDim2.new(0, 14, 1, -46),
-			ZIndex = card.instance.ZIndex + 1,
-		})
-	end
-	if not unlocked then
-		card:setAvailable(false, lockReason(mapId, self.selectedDifficulty))
-		card.sub.Size = UDim2.new(1, -28, 0, 32)
-		card.sub.Position = UDim2.new(0, 14, 1, -30)
-		card.sub.TextWrapped = true
-	else
-		card:setSelected(selected)
-	end
-	table.insert(self.buttons, card)
-	return card
+	return screen.instance
 end
-
-function Maps.render(self: Maps)
-	local chrome = self.chrome
-	chrome:refreshBalance()
-	for _, button in ipairs(self.buttons) do
-		button:destroy()
-	end
-	table.clear(self.buttons)
-	chrome:clearBody()
-
-	local compact = Responsive.isCompact()
-	self.compact = compact
-	local profile = Store.profile()
-	local party = Store.party()
-	local isLeader = party ~= nil and party.leaderId == Players.LocalPlayer.UserId
-	local canConfigure = party == nil or isLeader
-
-	local body = chrome.body
-	local cardsHeight = if compact then 170 else 210
-	local cardsArea = Components.frame(body, "Cards", {
-		Size = UDim2.new(1, 0, 0, cardsHeight),
-		BackgroundTransparency = 1,
-		ZIndex = 2,
-	})
-
-	if compact then
-		-- 48: um cartão por vez, com anterior/próximo e indicador; nenhum gesto obrigatório
-		local mapId = MAP_ORDER[self.pageIndex]
-		mapCard(self, cardsArea, mapId, UDim2.new(1, -200, 1, 0), 1, profile).instance.Position =
-			UDim2.fromOffset(96, 0)
-		local previous = Components.button(cardsArea, {
-			name = "Previous",
-			text = "‹",
-			kind = "secondary",
-			size = UDim2.fromOffset(84, Theme.sizes.buttonTarget),
-			position = UDim2.new(0, 0, 0.5, -24),
-			zIndex = 3,
-			onActivate = function()
-				self.pageIndex = ((self.pageIndex - 2) % #MAP_ORDER) + 1
-				self.selectedMap = MAP_ORDER[self.pageIndex]
-				self.callbacks.onSelectionChanged(self.selectedMap, self.selectedDifficulty)
-				Maps.render(self)
-			end,
-		})
-		local nextButton = Components.button(cardsArea, {
-			name = "Next",
-			text = "›",
-			kind = "secondary",
-			size = UDim2.fromOffset(84, Theme.sizes.buttonTarget),
-			position = UDim2.new(1, -84, 0.5, -24),
-			zIndex = 3,
-			onActivate = function()
-				self.pageIndex = (self.pageIndex % #MAP_ORDER) + 1
-				self.selectedMap = MAP_ORDER[self.pageIndex]
-				self.callbacks.onSelectionChanged(self.selectedMap, self.selectedDifficulty)
-				Maps.render(self)
-			end,
-		})
-		previous:setAvailable(canConfigure, if canConfigure then nil else L("menu.leaderOnly"))
-		nextButton:setAvailable(canConfigure, if canConfigure then nil else L("menu.leaderOnly"))
-		table.insert(self.buttons, previous)
-		table.insert(self.buttons, nextButton)
-		Components.caption(cardsArea, "Pager", L("maps.pager", { index = self.pageIndex, total = #MAP_ORDER }), {
-			Size = UDim2.new(1, 0, 0, 18),
-			Position = UDim2.new(0, 0, 1, -18),
-			TextXAlignment = Enum.TextXAlignment.Center,
-			ZIndex = 4,
-		})
-	else
-		local layout = Components.list(cardsArea, Enum.FillDirection.Horizontal, 14)
-		layout.VerticalAlignment = Enum.VerticalAlignment.Top
-		for index, mapId in ipairs(MAP_ORDER) do
-			mapCard(self, cardsArea, mapId, UDim2.new(1 / 3, -10, 1, 0), index, profile)
-		end
-	end
-
-	-- dificuldade: seleção exclusiva
-	local diffRow = Components.frame(body, "Difficulty", {
-		Size = UDim2.new(1, 0, 0, Theme.sizes.buttonTarget + 8),
-		Position = UDim2.new(0, 0, 0, cardsHeight + 14),
-		BackgroundTransparency = 1,
-		ZIndex = 2,
-	})
-	Components.list(diffRow, Enum.FillDirection.Horizontal, 10)
-	Components.label(diffRow, "Caption", L("menu.difficulty"), {
-		Size = UDim2.fromOffset(120, 24),
-		Font = Theme.fonts.bodyBold,
-		TextWrapped = false,
-		LayoutOrder = 1,
-		ZIndex = 3,
-	})
-	for index, difficulty in ipairs(DIFFICULTIES) do
-		local unlocked = isUnlocked(profile, self.selectedMap, difficulty)
-		local button = Components.button(diffRow, {
-			name = "Diff_" .. difficulty,
-			text = L("menu.difficulty." .. difficulty),
-			kind = if self.selectedDifficulty == difficulty then "primary" else "secondary",
-			size = UDim2.fromOffset(if compact then 160 else 185, Theme.sizes.buttonTarget),
-			layoutOrder = index + 1,
-			zIndex = 3,
-			onActivate = function()
-				self.selectedDifficulty = difficulty
-				self.callbacks.onSelectionChanged(self.selectedMap, difficulty)
-				Maps.render(self)
-			end,
-		})
-		button:setSelected(self.selectedDifficulty == difficulty)
-		if not unlocked then
-			button:setAvailable(false, lockReason(self.selectedMap, difficulty))
-		elseif not canConfigure then
-			button:setAvailable(false, L("menu.leaderOnly"))
-		end
-		table.insert(self.buttons, button)
-	end
-
-	-- ações: solo e cooperação
-	local actions = Components.frame(body, "Actions", {
-		Size = UDim2.new(1, 0, 0, Theme.sizes.buttonTarget + 8),
-		Position = UDim2.new(0, 0, 1, -(Theme.sizes.buttonTarget + 8)),
-		BackgroundTransparency = 1,
-		ZIndex = 2,
-	})
-	Components.list(actions, Enum.FillDirection.Horizontal, 12, Enum.HorizontalAlignment.Right)
-
-	local ready = isUnlocked(profile, self.selectedMap, self.selectedDifficulty)
-	local blockedMember: string? = nil
-	if party then
-		for _, member in ipairs(party.members) do
-			if not member.unlocked then
-				blockedMember = member.name
-				break
-			end
-		end
-	end
-
-	local friends = Components.button(actions, {
-		name = "Friends",
-		text = L("maps.friends"),
-		kind = "secondary",
-		icon = "ui_group",
-		size = UDim2.fromOffset(if compact then 230 else 280, Theme.sizes.buttonTarget),
-		layoutOrder = 1,
-		zIndex = 3,
-		onActivate = function()
-			self.callbacks.onFriends(self.selectedMap, self.selectedDifficulty)
-		end,
-	})
-	local solo = Components.button(actions, {
-		name = "Solo",
-		text = L("maps.solo"),
-		kind = "primary",
-		icon = "ui_play",
-		size = UDim2.fromOffset(if compact then 200 else 254, Theme.sizes.buttonTarget),
-		layoutOrder = 2,
-		zIndex = 3,
-		onActivate = function()
-			self.callbacks.onSolo(self.selectedMap, self.selectedDifficulty)
-		end,
-	})
-	if not profile then
-		solo:setAvailable(false, L("app.profileUnavailableShort"))
-		friends:setAvailable(false, L("app.profileUnavailableShort"))
-	elseif not ready then
-		solo:setAvailable(false, lockReason(self.selectedMap, self.selectedDifficulty))
-	elseif blockedMember then
-		-- explica QUAL integrante ainda não desbloqueou, não um "indisponível" genérico
-		solo:setAvailable(false, L("maps.memberLocked", { name = blockedMember }))
-	end
-	table.insert(self.buttons, solo)
-	table.insert(self.buttons, friends)
-	self.soloButton = solo
-	self.friendsButton = friends
-end
-
-function Maps.show(self: Maps)
-	self.chrome:show()
-	Maps.render(self)
-end
-
-function Maps.hide(self: Maps)
-	self.chrome:hide()
-end
-
-function Maps.selection(self: Maps): (string, string)
-	return self.selectedMap, self.selectedDifficulty
-end
-
-return Maps

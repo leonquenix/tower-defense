@@ -2,6 +2,20 @@
 
 Lista objetiva do que depende da conta Roblox, de produção artística ou de decisão do responsável. Nada abaixo foi executado automaticamente.
 
+## Antes de qualquer coisa (depois do revamp de 2026-09-19)
+
+A. **Instalar as dependências**: `.toolchain/bin/wally install`. Sem isso, `Packages/` e
+   `ServerPackages/` não existem e nem o Studio nem os testes carregam (Fusion, Charm, ByteNet,
+   Trove e ProfileStore vêm daí). As pastas são geradas e ficam fora do git; `wally.lock` é quem
+   garante as mesmas versões para todo mundo.
+B. **Conferir a preferência de movimento reduzido** ao avaliar a apresentação: nesta máquina
+   `GuiService.ReducedMotionEnabled` está **ligado**, e o jogo respeita isso desligando tremor,
+   partículas e deslocamentos. Para ver o acabamento completo, desligue "Reduced Motion" nas
+   configurações do Roblox/Studio (ou em Configurações → Conforto, dentro do jogo).
+C. **Verificação visual das telas** continua pendente: a sessão de Play desta entrega rodou com a
+   janela sem renderizar (viewport 1×1), então a conferência foi por árvore de Gui e console, sem
+   captura de tela. Repetir com a janela visível e preencher `docs/ui_coverage.json`.
+
 ## Publicação e conta
 
 0. **Salvar o place** depois de sincronizar pelo Rojo: File → Save to Roblox. *Atualizado em 2026-09-18*: o place aberto é `Tower Defense`, PlaceId `85307223725202`, universo `10766698519`, pertencente a um **grupo** (CreatorId 926034474). Ele nasceu como cópia do place do Board Games Club; o conteúdo do outro jogo foi removido nesta sessão e a limpeza precisa ser salva.

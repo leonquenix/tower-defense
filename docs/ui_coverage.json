@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "note": "Declaração por prancha: onde a tela vive, quais estados existem e o que foi verificado. tools/check_ui_coverage.py compara com UI_Quintal_em_Guarda_v1/dados/telas.json e gera docs/UI_COVERAGE.md. 'studio' só pode ser true para o que foi realmente exercitado em uma sessão de Play.",
+  "note": "Declaração por prancha: onde a tela vive, quais estados existem e o que foi verificado. tools/check_ui_coverage.py compara com UI_Quintal_em_Guarda_v1/dados/telas.json e gera docs/UI_COVERAGE.md. 'studio' só pode ser true para o que foi realmente exercitado em uma sessão de Play. Revamp 2026-09-19: as telas passaram a ser Fusion (src/client/UI/Screens e /Overlays) sobre átomos Charm.",
   "statusLegend": {
     "implemented": "componentes nativos montados e ligados aos serviços",
     "studio": "exercitado numa sessão de Play do Studio nesta entrega",
@@ -20,7 +20,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play no Studio sem acesso a DataStore: a variante de perfil indisponível apareceu com Tentar novamente e Treino."
+      "evidence": "Play 2026-09-19: entrada montada e troca para o menu quando o perfil chegou."
     },
     "02_inicio": {
       "kind": "screen",
@@ -35,7 +35,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Menu renderizado com Jogar dourado único, saldo separado e loja ausente (feature flag desligada)."
+      "evidence": "Play 2026-09-19: menu com saldo, equipe salva e os seis botões (captura de tela)."
     },
     "03_mapas": {
       "kind": "screen",
@@ -50,7 +50,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Estados de bloqueio vêm de profile.mapUnlocks; falta exercitar com perfil persistido."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "04_salas": {
       "kind": "screen",
@@ -67,12 +67,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Disputa da última vaga exige dois clientes; ver docs/MANUAL_ACTIONS.md."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "05_grupo": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/PartyScreen.luau"
+        "src/client/UI/Screens/Party.luau"
       ],
       "states": [
         "líder",
@@ -83,12 +83,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Requer dois clientes."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "06_colecao": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/CollectionScreen.luau"
+        "src/client/UI/Screens/Collection.luau"
       ],
       "states": [
         "possuída",
@@ -99,13 +99,14 @@
         "leitura em partida"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Seis cartas com custo de desbloqueio e de construção, quatro vagas e Salvar com motivo."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "07_torre": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/TowerDetail.luau"
+        "src/client/UI/Screens/Collection.luau",
+        "src/client/UI/Screens/HudDetail.luau"
       ],
       "states": [
         "possuída",
@@ -114,8 +115,8 @@
         "já equipada"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Lupa mostrou 240 botões para desbloquear e 500 sucatas para construir, com Faltam 240 botões."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "08_cosmeticos": {
       "kind": "screen",
@@ -130,12 +131,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Concessão por marco exige um resultado salvo; ver pendências."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "09_loja": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/ShopScreen.luau"
+        "src/client/UI/Screens/Shop.luau"
       ],
       "states": [
         "consultando",
@@ -147,12 +148,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Sem passe criado, o servidor responde enabled=false; os demais estados dependem de um passe real."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "10_opcoes": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/SettingsScreen.luau"
+        "src/client/UI/Screens/Settings.luau"
       ],
       "states": [
         "sliders",
@@ -162,13 +163,13 @@
         "aberta em partida"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Aberta durante a onda 1 do tutorial: o combate seguiu e a troca PT-BR/EN reescreveu moldura, tela e HUD."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "11_carregamento": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/MatchLoading.luau"
+        "src/client/UI/Screens/Loading.luau"
       ],
       "states": [
         "progresso real",
@@ -178,12 +179,12 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Exibida entre StartMatch e o primeiro snapshot; progresso contou os assets essenciais resolvidos."
+      "evidence": "Play 2026-09-19: rota 'loading' enquanto o servidor não confirmava a partida."
     },
     "12_preparacao": {
       "kind": "screen",
       "modules": [
-        "src/client/View/Hud.luau"
+        "src/client/UI/Screens/Hud.luau"
       ],
       "states": [
         "preparação",
@@ -193,13 +194,13 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Faixa superior mostrou Farol 100/100, Onda 00/03 e Pronto; a onda começou pelo servidor."
+      "evidence": "Play 2026-09-19: Farol 100/100, Onda 00/03, 'Pronto →' e 1.200 de sucata."
     },
     "13_combate": {
       "kind": "screen",
       "modules": [
-        "src/client/View/Hud.luau",
-        "src/client/View/HudPanels.luau"
+        "src/client/UI/Screens/Hud.luau",
+        "src/client/UI/Screens/HudDetail.luau"
       ],
       "states": [
         "onda ativa",
@@ -209,13 +210,13 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Onda 01/03 com HUD completo; Opções abriu com grupo em leitura, Configurações e Sair."
+      "evidence": "Play 2026-09-19: doca com Dardo/Pipoca/Goma, onda 1 com projéteis, números de dano, anéis de impacto e partículas de morte (amostragem da camada de efeitos)."
     },
     "14_posicionar": {
       "kind": "screen",
       "modules": [
-        "src/client/Controllers/PlayController.luau",
-        "src/client/View/Hud.luau"
+        "src/client/Controllers/BoardPresenter.luau",
+        "src/client/UI/Screens/Hud.luau"
       ],
       "states": [
         "escolhendo célula",
@@ -226,12 +227,12 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Construir Dardo debitou 250 de 1.200 e o contador foi para 1/18 só após o ACK."
+      "evidence": "Play 2026-09-19: carta -> célula -> 'Construir por 250'; sucata 1.200 → 950 e Torres 1/18."
     },
     "15_posicao_invalida": {
       "kind": "screen",
       "modules": [
-        "src/client/Controllers/PlayController.luau",
+        "src/client/Controllers/BoardPresenter.luau",
         "src/client/View/BoardRenderer.luau"
       ],
       "states": [
@@ -243,12 +244,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Motivos vêm de evaluateCell; falta percorrer as quatro bordas com zoom e pan."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "16_torre_selecionada": {
       "kind": "screen",
       "modules": [
-        "src/client/View/Hud.luau"
+        "src/client/UI/Screens/HudDetail.luau"
       ],
       "states": [
         "própria",
@@ -258,13 +259,13 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Dardo L0 abriu com comparação inline e as ações fixas na base do painel."
+      "evidence": "Play 2026-09-19: clique na torre abre o detalhe (Dardo · L0, dano/intervalo/alcance, Melhorar/Alvo/Vender)."
     },
     "17_especializacao": {
       "kind": "screen",
       "modules": [
-        "src/client/View/Hud.luau",
-        "src/client/UI/Modal.luau"
+        "src/client/UI/Screens/HudDetail.luau",
+        "src/client/UI/Overlays/ModalHost.luau"
       ],
       "states": [
         "comparação",
@@ -274,13 +275,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige chegar a L2 numa partida completa."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "18_venda": {
       "kind": "screen",
       "modules": [
-        "src/client/View/Hud.luau",
-        "src/client/UI/Modal.luau"
+        "src/client/UI/Screens/HudDetail.luau",
+        "src/client/UI/Overlays/ModalHost.luau"
       ],
       "states": [
         "confirmação",
@@ -289,13 +290,14 @@
         "torre já removida"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Dardo L0 devolveu 175 sucatas; Cancelar era o foco inicial e a seleção foi limpa no sucesso."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "19_chefe": {
       "kind": "screen",
       "modules": [
-        "src/client/View/HudPanels.luau"
+        "src/client/UI/Screens/Hud.luau",
+        "src/client/View/BoardRenderer.luau"
       ],
       "states": [
         "vivo",
@@ -304,13 +306,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige chegar à onda de chefe ou gerar no treino."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "20_pulso": {
       "kind": "screen",
       "modules": [
-        "src/client/Controllers/PlayController.luau",
-        "src/client/UI/Modal.luau"
+        "src/client/Controllers/GameFlow.luau",
+        "src/client/UI/Overlays/ModalHost.luau"
       ],
       "states": [
         "disponível",
@@ -321,13 +323,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Confirmação simultânea exige dois clientes."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "21_tutorial": {
       "kind": "screen",
       "modules": [
-        "src/client/View/Hud.luau",
-        "src/client/Controllers/PlayController.luau"
+        "src/client/UI/Screens/Hud.luau",
+        "src/client/Controllers/GameFlow.luau"
       ],
       "states": [
         "cinco passos",
@@ -336,12 +338,12 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Passos 1 a 3 percorridos: colocar Dardo, iniciar onda e a instrução do Circuito com Goma."
+      "evidence": "Play 2026-09-19: etapas 1→5 no fluxo real (Dardo guiado, onda, Goma guiada, melhoria) e encerramento com vitória."
     },
     "22_treino": {
       "kind": "screen",
       "modules": [
-        "src/client/View/Hud.luau"
+        "src/client/UI/Screens/Hud.luau"
       ],
       "states": [
         "seletor de inimigo",
@@ -351,12 +353,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Falta uma sessão de treino completa com chefes."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "23_vitoria": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/ResultScreen.luau"
+        "src/client/UI/Screens/Result.luau"
       ],
       "states": [
         "salvo",
@@ -364,13 +366,13 @@
         "destaques"
       ],
       "implemented": true,
-      "studio": false,
-      "evidence": "Exige vencer uma partida com perfil persistido."
+      "studio": true,
+      "evidence": "Play 2026-09-19: 'Farol protegido!', 3/3 ondas, 'Recompensa 180 botões · Recompensa salva' (ProfileStore com API Services)."
     },
     "24_derrota": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/ResultScreen.luau"
+        "src/client/UI/Screens/Result.luau"
       ],
       "states": [
         "ondas concluídas",
@@ -379,12 +381,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige perder uma partida."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "25_recompensa_pendente": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/ResultScreen.luau"
+        "src/client/UI/Screens/Result.luau"
       ],
       "states": [
         "pendente",
@@ -394,13 +396,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige falha de persistência controlada."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "26_conexao": {
       "kind": "screen",
       "modules": [
         "src/client/UI/Screens/Boot.luau",
-        "src/client/View/HudPanels.luau"
+        "src/client/UI/Screens/Hud.luau"
       ],
       "states": [
         "perfil indisponível",
@@ -408,14 +410,14 @@
         "reconciliando"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Perfil indisponível exercitado; os estados de rede têm cobertura em tests/specs/08_ui_state.spec.luau."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "27_sair": {
       "kind": "screen",
       "modules": [
-        "src/client/Controllers/PlayController.luau",
-        "src/client/UI/Modal.luau"
+        "src/client/Controllers/GameFlow.luau",
+        "src/client/UI/Overlays/ModalHost.luau"
       ],
       "states": [
         "confirmação",
@@ -423,12 +425,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Modal montado pelo mesmo caminho da venda, que foi verificado."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "28_mobile_combate": {
       "kind": "screen",
       "modules": [
-        "src/client/View/Hud.luau"
+        "src/client/UI/Screens/Hud.luau"
       ],
       "states": [
         "colunas laterais",
@@ -437,13 +439,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige emulação de dispositivo em 844x390."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "29_mobile_posicionar": {
       "kind": "screen",
       "modules": [
         "src/client/View/BoardTransform.luau",
-        "src/client/Controllers/PlayController.luau"
+        "src/client/Controllers/BoardPresenter.luau"
       ],
       "states": [
         "região ampliada",
@@ -452,12 +454,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige toque real."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "30_orientacao": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/Orientation.luau"
+        "src/client/UI/Overlays/Orientation.luau"
       ],
       "states": [
         "fora de partida",
@@ -465,14 +467,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige emulação em 390x844."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "31_estados": {
       "kind": "library",
       "modules": [
-        "src/client/UI/Components.luau",
-        "src/client/UI/Toasts.luau",
-        "src/client/View/HudPanels.luau"
+        "src/client/UI/Kit.luau",
+        "src/client/UI/Overlays/Toasts.luau"
       ],
       "states": [
         "botões",
@@ -482,14 +483,14 @@
         "popover de velocidade"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Componentes exercitados pelas telas; não existe página de biblioteca no jogo publicado."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "32_desbloqueio": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/TowerDetail.luau",
-        "src/client/UI/Modal.luau"
+        "src/client/UI/Screens/Collection.luau",
+        "src/client/UI/Overlays/ModalHost.luau"
       ],
       "states": [
         "confirmação",
@@ -499,14 +500,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige saldo de botões num perfil persistido."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "33_convites": {
       "kind": "screen",
       "modules": [
         "src/client/UI/Screens/Invites.luau",
-        "src/client/UI/InviteCards.luau",
-        "src/server/Services/PartyService.luau"
+        "src/client/UI/Overlays/InviteCards.luau"
       ],
       "states": [
         "convidar",
@@ -519,12 +519,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Token, expiração de 30 s e cooldown de 5 s cobertos em tests/specs/08_ui_state.spec.luau; o fluxo real exige dois clientes."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "34_inimigo": {
       "kind": "screen",
       "modules": [
-        "src/client/View/Hud.luau"
+        "src/client/UI/Screens/HudDetail.luau"
       ],
       "states": [
         "vida",
@@ -534,7 +534,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige inimigo vivo no tabuleiro."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "35_mobile_menu": {
       "kind": "screen",
@@ -547,12 +547,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige emulação em 844x390."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "36_mobile_detalhe": {
       "kind": "screen",
       "modules": [
-        "src/client/View/Hud.luau"
+        "src/client/UI/Screens/HudDetail.luau"
       ],
       "states": [
         "folha inferior",
@@ -560,12 +560,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige emulação em 844x390."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "37_botoes": {
       "kind": "library",
       "modules": [
-        "src/client/UI/Components.luau"
+        "src/client/UI/Kit.luau",
+        "src/client/UI/Skin.luau"
       ],
       "states": [
         "normal",
@@ -578,13 +579,13 @@
         "selecionado"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Um único componente cobre os oito estados; foco, pressionado, indisponível e sucesso vistos no Play."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "38_confirmacoes": {
       "kind": "library",
       "modules": [
-        "src/client/UI/Modal.luau"
+        "src/client/UI/Overlays/ModalHost.luau"
       ],
       "states": [
         "venda",
@@ -594,14 +595,14 @@
         "tutorial repetido"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Família única de modais; foco inicial no cancelamento verificado na venda."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "39_erros": {
       "kind": "library",
       "modules": [
-        "src/client/UI/Toasts.luau",
-        "src/client/UI/Components.luau"
+        "src/client/UI/Overlays/Toasts.luau",
+        "src/client/UI/Kit.luau"
       ],
       "states": [
         "inline",
@@ -611,13 +612,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Cobertura de códigos em tests/specs/08_ui_state.spec.luau."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "40_grupo_estados": {
       "kind": "library",
       "modules": [
-        "src/client/UI/InviteCards.luau",
-        "src/client/View/HudPanels.luau"
+        "src/client/UI/Screens/Party.luau",
+        "src/client/UI/Overlays/InviteCards.luau"
       ],
       "states": [
         "convite",
@@ -628,12 +629,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige dois clientes."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "41_boss_estados": {
       "kind": "library",
       "modules": [
-        "src/client/View/HudPanels.luau"
+        "src/client/UI/Screens/Hud.luau",
+        "src/client/View/BoardRenderer.luau"
       ],
       "states": [
         "Aspirador",
@@ -643,14 +645,14 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Uma BossBar por chefe ativo; nunca três painéis comparativos."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "42_recuperacao": {
       "kind": "library",
       "modules": [
         "src/client/UI/Screens/Boot.luau",
-        "src/client/UI/Screens/MatchLoading.luau",
-        "src/client/View/HudPanels.luau"
+        "src/client/UI/Screens/Loading.luau",
+        "src/client/UI/Screens/Hud.luau"
       ],
       "states": [
         "imagem faltando",
@@ -659,13 +661,13 @@
         "resultado não registrado"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Perfil bloqueado por falta de acesso a DataStore levou ao caminho de treino, sem salvar defaults."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "43_colecao_estados": {
       "kind": "library",
       "modules": [
-        "src/client/UI/Screens/CollectionScreen.luau"
+        "src/client/UI/Screens/Collection.luau"
       ],
       "states": [
         "vaga livre",
@@ -674,13 +676,13 @@
         "cosmético bloqueado"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Vaga livre sem alerta e equipe em leitura durante a partida."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "44_resultados_estados": {
       "kind": "library",
       "modules": [
-        "src/client/UI/Screens/ResultScreen.luau"
+        "src/client/UI/Screens/Result.luau"
       ],
       "states": [
         "um destaque por vez",
@@ -688,14 +690,14 @@
         "revanche aguardando"
       ],
       "implemented": true,
-      "studio": false,
-      "evidence": "Exige resultados reais."
+      "studio": true,
+      "evidence": "Play 2026-09-19: contribuição e domínio exibidos; 'Verificar novamente' oculto quando a recompensa foi salva."
     },
     "45_menus_contextuais": {
       "kind": "library",
       "modules": [
-        "src/client/View/HudPanels.luau",
-        "src/client/UI/Toasts.luau"
+        "src/client/UI/Screens/HudDetail.luau",
+        "src/client/UI/Overlays/Toasts.luau"
       ],
       "states": [
         "alvo",
@@ -705,12 +707,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Os quatro alvos vêm de Catalog.TARGET_MODES, sem tradução alterando o algoritmo."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "46_loja_estados": {
       "kind": "library",
       "modules": [
-        "src/client/UI/Screens/ShopScreen.luau"
+        "src/client/UI/Screens/Shop.luau"
       ],
       "states": [
         "consulta",
@@ -720,12 +722,12 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige passe real."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "47_mobile_colecao": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/CollectionScreen.luau"
+        "src/client/UI/Screens/Collection.luau"
       ],
       "states": [
         "paginada",
@@ -734,7 +736,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige emulação em 844x390."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "48_mobile_mapas": {
       "kind": "screen",
@@ -747,13 +749,13 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Exige emulação em 844x390."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     },
     "49_icones": {
       "kind": "library",
       "modules": [
         "src/shared/Config/UiIcons.luau",
-        "src/client/UI/Components.luau"
+        "src/client/UI/Kit.luau"
       ],
       "states": [
         "24 ícones enviados",
@@ -761,8 +763,8 @@
         "rótulo acessível"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Os 24 IDs reais estão no registro e carregaram 24/24 numa sessão de Play; sem upload a ferramenta volta a emitir image = nil e o cliente desenha o glifo."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
     }
   }
 }

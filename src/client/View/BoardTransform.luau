@@ -48,12 +48,34 @@ function BoardTransform.new(parent: GuiObject): BoardTransform
 	aspect.DominantAxis = Enum.DominantAxis.Width
 	aspect.Parent = window
 	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0, 14)
+	corner.CornerRadius = UDim.new(0, 18)
 	corner.Parent = window
 	local stroke = Instance.new("UIStroke")
 	stroke.Color = Theme.colors.ink
-	stroke.Thickness = 2
+	stroke.Thickness = 3
 	stroke.Parent = window
+
+	-- Sombra projetada do tabuleiro: dá a sensação de "prancha apoiada no quintal".
+	-- Fica atrás da janela (irmã), porque um filho nunca desenha atrás do pai.
+	local shadow = Instance.new("Frame")
+	shadow.Name = "BoardShadow"
+	shadow.BackgroundColor3 = Theme.colors.inkDeep
+	shadow.BackgroundTransparency = 0.72
+	shadow.BorderSizePixel = 0
+	shadow.AnchorPoint = Vector2.new(0.5, 0.5)
+	shadow.Position = UDim2.new(0.5, 0, 0.5, 8)
+	shadow.Size = UDim2.fromScale(1, 1)
+	shadow.ZIndex = -1
+	shadow.Active = false
+	local shadowCorner = Instance.new("UICorner")
+	shadowCorner.CornerRadius = UDim.new(0, 24)
+	shadowCorner.Parent = shadow
+	local shadowAspect = Instance.new("UIAspectRatioConstraint")
+	shadowAspect.AspectRatio = Grid.COLUMNS / Grid.ROWS
+	shadowAspect.AspectType = Enum.AspectType.FitWithinMaxSize
+	shadowAspect.DominantAxis = Enum.DominantAxis.Width
+	shadowAspect.Parent = shadow
+	shadow.Parent = viewport
 
 	local world = Instance.new("Frame")
 	world.Name = "World"

@@ -1,0 +1,26 @@
+local Atoms = load("Client/State/Atoms")
+
+describe("Atoms / reatividade", function()
+	it("um átomo notifica quem assina quando o valor muda", function()
+		Atoms.clear()
+		local seen = nil
+		local Charm = load("Packages/Charm")
+		local unsubscribe = Charm.subscribe(Atoms.connection, function(value)
+			seen = value
+		end)
+		Atoms.connection("unstable")
+		expect(seen).toBe("unstable")
+		expect(Atoms.connection()).toBe("unstable")
+		unsubscribe()
+	end)
+
+	it("mutate troca a tabela em vez de editá-la no lugar", function()
+		Atoms.clear()
+		local before = Atoms.invites()
+		Atoms.mutate(Atoms.invites, function(list)
+			table.insert(list, { inviteId = "i1" })
+		end)
+		expect(#before).toBe(0)
+		expect(#Atoms.invites()).toBe(1)
+	end)
+end)

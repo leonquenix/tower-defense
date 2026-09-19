@@ -5,7 +5,7 @@ local MarketplaceService = game:GetService("MarketplaceService")
 local Shared = game:GetService("ReplicatedStorage").Shared
 local Types = require(Shared.Types)
 local Products = require(Shared.Config.Products)
-local ProfileService = require(script.Parent.ProfileService)
+local PlayerDataService = require(script.Parent.PlayerDataService)
 local TelemetryService = require(script.Parent.TelemetryService)
 
 local ShopService = {}
@@ -43,7 +43,7 @@ local function ownsPass(player: Player): boolean
 end
 
 local function grantFounder(player: Player)
-	ProfileService.mutate(player, function(p: Types.Profile)
+	PlayerDataService.mutate(player, function(p: Types.Profile)
 		for _, c in ipairs(Products.founderCosmetics) do
 			if table.find(p.cosmeticsOwned, c.id) == nil then
 				table.insert(p.cosmeticsOwned, c.id)

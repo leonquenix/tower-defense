@@ -1,42 +1,40 @@
 --!strict
--- Configurações locais (espelho do perfil) com sinal de mudança.
+-- Preferências locais (espelho do que está salvo no perfil), guardadas no átomo Atoms.settings.
+--
+-- Mudar aqui é imediato na tela; persistir é outra coisa (a tela de Configurações manda
+-- SaveSettings). Assim, um servidor fora do ar não impede o jogador de baixar a música.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Types = require(ReplicatedStorage.Shared.Types)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local ProfileSchema = require(ReplicatedStorage.Shared.Profile.ProfileSchema)
-local Ui = require(script.Parent.Parent.View.Ui)
+local Types = require(ReplicatedStorage.Shared.Types)
+local Charm = require(ReplicatedStorage.Shared.Lib.Charm)
+local Atoms = require(script.Parent.Parent.State.Atoms)
+local Accessibility = require(script.Parent.Parent.UI.Accessibility)
 
 local SettingsController = {}
 
-local current: Types.ProfileSettings = ProfileSchema.defaultSettings()
-local listeners: { (Types.ProfileSettings) -> () } = {}
--- Trocar o idioma precisa reconstruir texto já desenhado (HUD, moldura das telas), por isso
--- tem um sinal próprio além do listener geral de preferências.
 local localeListeners: { (locale: string) -> () } = {}
-local appliedLocale = current.locale
+local appliedLocale = ProfileSchema.defaultSettings().locale
 
-local function emit()
-	Ui.setReducedMotion(current.reducedMotion)
-	Localization.setLocale(current.locale)
-	for _, fn in ipairs(listeners) do
-		task.spawn(fn, current)
-	end
-	if current.locale ~= appliedLocale then
-		appliedLocale = current.locale
-		for _, fn in ipairs(localeListeners) do
-			task.spawn(fn, current.locale)
-		end
-	end
-end
+Atoms.settings(ProfileSchema.defaultSettings())
 
 function SettingsController.get(): Types.ProfileSettings
-	return current
+	return Atoms.settings() or ProfileSchema.defaultSettings()
 end
 
+-- Aplica um conjunto parcial de preferências já saneado pelo esquema compartilhado.
 function SettingsController.apply(settings: { [string]: any })
-	current = ProfileSchema.sanitizeSettings(settings, current)
-	emit()
+	local next_ = ProfileSchema.sanitizeSettings(settings, SettingsController.get())
+	Atoms.settings(next_)
+	Accessibility.setGamePreferences(next_.reducedMotion, next_.reducedParticles)
+	Localization.setLocale(next_.locale)
+	if next_.locale ~= appliedLocale then
+		appliedLocale = next_.locale
+		for _, fn in ipairs(localeListeners) do
+			task.spawn(fn, next_.locale)
+		end
+	end
 end
 
 function SettingsController.set(key: string, value: any)
@@ -45,18 +43,21 @@ function SettingsController.set(key: string, value: any)
 	SettingsController.apply(patch)
 end
 
-function SettingsController.onChanged(fn: (Types.ProfileSettings) -> ())
-	table.insert(listeners, fn)
+function SettingsController.onChanged(fn: (Types.ProfileSettings) -> ()): () -> ()
+	return Charm.subscribe(Atoms.settings, function(value: Types.ProfileSettings?)
+		if value then
+			fn(value)
+		end
+	end)
 end
 
+-- Trocar o idioma reescreve texto já desenhado, então a árvore de interface é remontada.
 function SettingsController.onLocaleChanged(fn: (locale: string) -> ())
 	table.insert(localeListeners, fn)
 end
 
 function SettingsController.reducedMotion(): boolean
-	return current.reducedMotion
+	return SettingsController.get().reducedMotion
 end
-
-emit()
 
 return SettingsController

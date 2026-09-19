@@ -9,9 +9,10 @@ local Balance = require(Shared.Config.Balance)
 local Catalog = require(Shared.Config.Catalog)
 local Protocol = require(Shared.Net.Protocol)
 local ProfileSchema = require(Shared.Profile.ProfileSchema)
-local ProfileService = require(script.Parent.ProfileService)
+local PlayerDataService = require(script.Parent.PlayerDataService)
 local MatchService = require(script.Parent.MatchService)
 local TelemetryService = require(script.Parent.TelemetryService)
+local Server = require(script.Parent.Parent.Net.Server)
 
 local PartyService = {}
 
@@ -44,7 +45,6 @@ local partyOf: { [number]: string } = {}
 local invites: { [string]: Invite } = {}
 -- Último convite enviado por (remetente -> destinatário), para o cooldown de 5 s.
 local lastInviteAt: { [string]: number } = {}
-local lobbyRemote: RemoteEvent
 local broadcastScheduled = false
 
 local function pruneInvites(now: number)
@@ -73,7 +73,7 @@ local function partyView(party: Party): { [string]: any }
 	local members = {}
 	for _, userId in ipairs(party.members) do
 		local player = playerById(userId)
-		local profile = if player then ProfileService.get(player) else nil
+		local profile = if player then PlayerDataService.get(player) else nil
 		table.insert(members, {
 			userId = userId,
 			name = if player then player.DisplayName else "?",
@@ -121,7 +121,7 @@ function PartyService.lobbyView(player: Player): { [string]: any }
 	local partyId = partyOf[player.UserId]
 	local party = if partyId then parties[partyId] else nil
 	return {
-		profile = ProfileService.clientView(player),
+		profile = PlayerDataService.clientView(player),
 		party = if party then partyView(party) else nil,
 		rooms = rooms,
 		players = present,
@@ -132,7 +132,7 @@ function PartyService.lobbyView(player: Player): { [string]: any }
 end
 
 function PartyService.sendLobby(player: Player)
-	lobbyRemote:FireClient(player, "lobby", PartyService.lobbyView(player))
+	Server.sendLobby(player, "lobby", PartyService.lobbyView(player))
 end
 
 function PartyService.broadcast()
@@ -205,7 +205,7 @@ local function startMatchFor(
 		if MatchService.isInMatch(player.UserId) then
 			return result(false, Protocol.ERROR.INVALID_STATE)
 		end
-		local profile = ProfileService.get(player)
+		local profile = PlayerDataService.get(player)
 		if mode == "normal" then
 			if not profile then
 				return result(false, Protocol.ERROR.PROFILE_UNAVAILABLE)
@@ -217,7 +217,7 @@ local function startMatchFor(
 				return result(false, Protocol.ERROR.INVALID_STATE, { reason = "empty_loadout", userId = player.UserId })
 			end
 		end
-		if mode == "tutorial" and profile == nil and ProfileService.getStatus(player) ~= "unavailable" then
+		if mode == "tutorial" and profile == nil and PlayerDataService.getStatus(player) ~= "unavailable" then
 			return result(false, Protocol.ERROR.PROFILE_UNAVAILABLE)
 		end
 	end
@@ -299,7 +299,7 @@ function PartyService.handle(player: Player, action: string, payload: { [string]
 			expiresAt = now + INVITE_TTL,
 		}
 		invites[invite.inviteId] = invite
-		lobbyRemote:FireClient(target, "invite", {
+		Server.sendLobby(target, "invite", {
 			inviteId = invite.inviteId,
 			partyId = inviteParty.id,
 			fromName = player.DisplayName,
@@ -459,9 +459,8 @@ function PartyService.onPlayerRemoving(player: Player)
 	PartyService.broadcast()
 end
 
-function PartyService.init(remote: RemoteEvent)
-	lobbyRemote = remote
-	ProfileService.onSessionChanged(function(player: Player)
+function PartyService.init()
+	PlayerDataService.onSessionChanged(function(player: Player)
 		if player.Parent == Players and not MatchService.isInMatch(player.UserId) then
 			PartyService.sendLobby(player)
 		end

@@ -186,6 +186,14 @@ function InputController.init(boardTransform: BoardTransform.BoardTransform, cb:
 	table.insert(connections, UserInputService.InputEnded:Connect(onInputEnded))
 end
 
+-- Desliga a entrada e solta as conexões (usado ao trocar de lugar ou ao sair do jogo).
+function InputController.destroy()
+	for _, connection in ipairs(connections) do
+		connection:Disconnect()
+	end
+	table.clear(connections)
+end
+
 function InputController.setEnabled(value: boolean)
 	enabled = value
 	if not value then

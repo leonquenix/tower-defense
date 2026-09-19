@@ -70,24 +70,52 @@ local function addChild(parent, child)
 	rawget(parent, "_children")[rawget(child, "Name")] = child
 end
 
+-- Pacotes do Wally: cada pasta em _Index tem default.project.json apontando para src/.
+-- O Rojo monta esse src como o próprio módulo; aqui fazemos o mesmo para que
+-- require(ReplicatedStorage.Packages.Charm) funcione igual dentro e fora do Studio.
+local function projectPathOf(dirPath)
+	local manifest = dirPath .. "/default.project.json"
+	if not fs.isFile(manifest) then
+		return nil
+	end
+	local source = fs.readFile(manifest)
+	local sub = source:match('"%$path"%s*:%s*"([^"]+)"')
+	if sub and fs.isDir(dirPath .. "/" .. sub) then
+		return dirPath .. "/" .. sub
+	end
+	return nil
+end
+
+local function scriptKindOf(name)
+	if name:match("%.server$") then
+		return name:gsub("%.server$", ""), "Script"
+	elseif name:match("%.client$") then
+		return name:gsub("%.client$", ""), "LocalScript"
+	end
+	return name, "ModuleScript"
+end
+
 local function mountDir(dirPath, parentNode)
 	for _, entry in ipairs(fs.readDir(dirPath)) do
 		local full = dirPath .. "/" .. entry
 		if fs.isDir(full) then
-			local folder = Node.new(entry, parentNode, "Folder", nil)
-			addChild(parentNode, folder)
-			mountDir(full, folder)
-		elseif entry:match("%.luau$") then
-			local name = entry:gsub("%.luau$", "")
-			local kind = "ModuleScript"
-			if name:match("%.server$") then
-				name = name:gsub("%.server$", "")
-				kind = "Script"
-			elseif name:match("%.client$") then
-				name = name:gsub("%.client$", "")
-				kind = "LocalScript"
+			local contentPath = projectPathOf(full) or full
+			-- uma pasta com init.luau vira o próprio ModuleScript (convenção do Rojo)
+			local initFile = nil
+			for _, candidate in ipairs({ "/init.luau", "/init.lua" }) do
+				if fs.isFile(contentPath .. candidate) then
+					initFile = contentPath .. candidate
+				end
 			end
-			addChild(parentNode, Node.new(name, parentNode, kind, full))
+			local node = Node.new(entry, parentNode, if initFile then "ModuleScript" else "Folder", initFile)
+			addChild(parentNode, node)
+			mountDir(contentPath, node)
+		elseif entry:match("%.luau$") or entry:match("%.lua$") then
+			local base = entry:gsub("%.luau$", ""):gsub("%.lua$", "")
+			if base ~= "init" then
+				local name, kind = scriptKindOf(base)
+				addChild(parentNode, Node.new(name, parentNode, kind, full))
+			end
 		end
 	end
 end
@@ -169,6 +197,17 @@ function Loader.init(projectRoot)
 	local client = Node.new("Client", sps, "Folder", nil)
 	addChild(sps, client)
 	mountDir(projectRoot .. "/src/client", client)
+	-- dependências do Wally (Packages/ e ServerPackages/), quando já instaladas
+	if fs.isDir(projectRoot .. "/Packages") then
+		local packages = Node.new("Packages", rs, "Folder", nil)
+		addChild(rs, packages)
+		mountDir(projectRoot .. "/Packages", packages)
+	end
+	if fs.isDir(projectRoot .. "/ServerPackages") then
+		local serverPackages = Node.new("ServerPackages", sss, "Folder", nil)
+		addChild(sss, serverPackages)
+		mountDir(projectRoot .. "/ServerPackages", serverPackages)
+	end
 	return game
 end
 
@@ -183,6 +222,10 @@ function Loader.require(path)
 				node = services.ServerScriptService.Server
 			elseif part == "Client" then
 				node = services.StarterPlayer.StarterPlayerScripts.Client
+			elseif part == "Packages" then
+				node = services.ReplicatedStorage.Packages
+			elseif part == "ServerPackages" then
+				node = services.ServerScriptService.ServerPackages
 			else
 				error("raiz desconhecida: " .. part)
 			end

@@ -1,8 +1,8 @@
 {
-  "elapsedSeconds": 0.017342291655950248,
+  "elapsedSeconds": 0.01821424998342991,
   "failed": 0,
   "failures": {},
-  "passed": 140,
+  "passed": 161,
   "suites": [
     {
       "name": "Grid",
@@ -653,7 +653,7 @@
       ]
     },
     {
-      "name": "Store / convites",
+      "name": "Estado / convites",
       "tests": [
         {
           "name": "um convite vencido deixa de ser aceitável e some depois da carência",
@@ -670,11 +670,15 @@
         {
           "name": "cooldown por destinatário é de 5 s e não repete automaticamente",
           "ok": true
+        },
+        {
+          "name": "átomo troca a lista inteira: quem já leu não vê mudança por baixo",
+          "ok": true
         }
       ]
     },
     {
-      "name": "Store / conexão",
+      "name": "Estado / conexão",
       "tests": [
         {
           "name": "2 s sem atualização é sinal instável e 5 s bloqueia mutações",
@@ -687,7 +691,37 @@
       ]
     },
     {
-      "name": "Store / recompensa pendente",
+      "name": "Estado / avisos curtos",
+      "tests": [
+        {
+          "name": "a fila guarda no máximo três avisos",
+          "ok": true
+        },
+        {
+          "name": "o mesmo texto não entra duas vezes em menos de um segundo",
+          "ok": true
+        },
+        {
+          "name": "avisos vencidos saem da fila",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Estado / navegação",
+      "tests": [
+        {
+          "name": "push guarda a origem e back volta para ela",
+          "ok": true
+        },
+        {
+          "name": "navigate limpa a pilha: a tela lateral não vira origem",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Estado / resultado pendente",
       "tests": [
         {
           "name": "guarda e limpa o resultado pendente sem apagar o matchId",
@@ -728,7 +762,97 @@
           "ok": true
         }
       ]
+    },
+    {
+      "name": "Codec / snapshot",
+      "tests": [
+        {
+          "name": "ida e volta preserva os campos usados pelo cliente",
+          "ok": true
+        },
+        {
+          "name": "prazo sem fim volta como math.huge (float não guarda infinito útil)",
+          "ok": true
+        },
+        {
+          "name": "um id de inimigo desconhecido não derruba o cliente",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Codec / eventos",
+      "tests": [
+        {
+          "name": "ida e volta de um ataque com alvos",
+          "ok": true
+        },
+        {
+          "name": "célula, fase e circuito atravessam como ids",
+          "ok": true
+        },
+        {
+          "name": "evento fora da lista viaja pelo nome, sem virar 'unknown'",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Enums / ids estáveis",
+      "tests": [
+        {
+          "name": "todo inimigo e chefe do balanceamento tem id",
+          "ok": true
+        },
+        {
+          "name": "ids cabem em um byte (o fio usa uint8)",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Atoms / reatividade",
+      "tests": [
+        {
+          "name": "um átomo notifica quem assina quando o valor muda",
+          "ok": true
+        },
+        {
+          "name": "mutate troca a tabela em vez de editá-la no lugar",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "UiMotion / receitas do revamp",
+      "tests": [
+        {
+          "name": "todas as receitas de suco existem com a duração declarada nos dados",
+          "ok": true
+        },
+        {
+          "name": "toda receita descreve o que acontece com movimento reduzido",
+          "ok": true
+        },
+        {
+          "name": "nenhum efeito de combate passa de 1 s: a leitura da onda vem antes da festa",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Enums / o fio não cresce com o catálogo",
+      "tests": [
+        {
+          "name": "inimigos, torres e eventos cabem em um byte com folga",
+          "ok": true
+        },
+        {
+          "name": "id 0 é reservado para ausente",
+          "ok": true
+        }
+      ]
     }
   ],
-  "timestamp": "2026-09-18T18:44:24Z"
+  "timestamp": "2026-09-19T05:26:09Z"
 }

@@ -45,11 +45,14 @@ local function robloxTextScale(): number
 	return TEXT_SCALE[value.Name] or 1
 end
 
+-- Movimento reduzido tira deslocamento, tremor e escala — não tira a informação do combate.
+-- Projétil, clarão de impacto e número de dano são o que conta o que está acontecendo no
+-- tabuleiro; quem quiser menos enfeite ainda pode desligar partículas em Configurações.
 local function recompute()
 	local scale = robloxTextScale()
 	local next_: State = {
 		reducedMotion = gameReducedMotion or robloxReducedMotion(),
-		reducedParticles = gameReducedParticles or gameReducedMotion or robloxReducedMotion(),
+		reducedParticles = gameReducedParticles,
 		textScale = scale,
 		largeText = scale > 1.05,
 	}

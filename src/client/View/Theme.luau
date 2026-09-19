@@ -39,6 +39,14 @@ Theme.colors = {
 	night = UiTokens.color("night"),
 	nightDark = UiTokens.color("nightDark"),
 	backdrop = UiTokens.color("backdrop"),
+	-- cenário ilustrado do revamp (só preenchimento: nenhuma dessas carrega texto)
+	forest = UiTokens.color("forest"),
+	forestMid = UiTokens.color("forestMid"),
+	leaf = UiTokens.color("leaf"),
+	leafLight = UiTokens.color("leafLight"),
+	skyHigh = UiTokens.color("skyHigh"),
+	glowWarm = UiTokens.color("glowWarm"),
+	inkDeep = UiTokens.color("inkDeep"),
 }
 
 -- Cores e formas de dono (círculo, quadrado, triângulo, losango)

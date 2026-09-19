@@ -1,7 +1,8 @@
 {
   "name": "QuintalEmGuarda",
   "globIgnorePaths": [
-    "**/.DS_Store"
+    "**/.DS_Store",
+    "**/ProfileStoreTest.server.luau"
   ],
   "tree": {
     "$className": "DataModel",
@@ -9,12 +10,18 @@
       "$className": "ReplicatedStorage",
       "Shared": {
         "$path": "src/shared"
+      },
+      "Packages": {
+        "$path": "Packages"
       }
     },
     "ServerScriptService": {
       "$className": "ServerScriptService",
       "Server": {
         "$path": "src/server"
+      },
+      "ServerPackages": {
+        "$path": "ServerPackages"
       }
     },
     "StarterPlayer": {

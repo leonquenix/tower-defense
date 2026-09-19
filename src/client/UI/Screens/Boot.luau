@@ -1,213 +1,143 @@
 --!strict
--- 01_entrada, 26_conexao e 42_recuperacao: entrada da experiência e recuperação de falhas.
---
--- Contrato:
---  * texto por etapa, nunca porcentagem inventada;
---  * depois de 10 s reais aparecem "Tentar novamente" e "Treino"; o tempo limite não cria perfil vazio;
---  * uma tentativa pendente por vez;
---  * perfil indisponível vira a variante 26 (mesma tela, outro conteúdo) — sem navegação duplicada;
---  * falha de imagem não bloqueia: o jogo segue com nome e silhueta local.
-local Localization = require(game:GetService("ReplicatedStorage").Shared.Config.Localization)
-local Theme = require(script.Parent.Parent.Parent.View.Theme)
-local Components = require(script.Parent.Parent.Components)
-local CommandAdapter = require(script.Parent.Parent.CommandAdapter)
-local Store = require(script.Parent.Parent.Store)
+-- Entrada: enquanto o perfil carrega. Depois de alguns segundos explica a demora e oferece
+-- tentar de novo ou entrar no treino — nunca finge que carregou nem grava um perfil vazio.
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Boot = {}
-Boot.__index = Boot
+local Localization = require(ReplicatedStorage.Shared.Config.Localization)
+local Fusion = require(ReplicatedStorage.Shared.Lib.Fusion)
+local Actions = require(script.Parent.Parent.Parent.State.Actions)
+local Atoms = require(script.Parent.Parent.Parent.State.Atoms)
+local Bridge = require(script.Parent.Parent.Parent.State.Bridge)
+local GameFlow = require(script.Parent.Parent.Parent.Controllers.GameFlow)
+local Theme = require(script.Parent.Parent.Parent.View.Theme)
+local Kit = require(script.Parent.Parent.Kit)
+
+local Children = Fusion.Children
 
 local L = Localization.get
 
-local RECOVERY_AFTER = 10 -- segundos reais até oferecer recuperação
+export type Props = { visible: Fusion.UsedAs<boolean>, elapsed: Fusion.UsedAs<number> }
 
-export type Callbacks = {
-	onTraining: () -> (),
-	onSettings: () -> (),
-}
+local SLOW_AFTER = 6
 
-export type Boot = typeof(setmetatable(
-	{} :: {
-		root: Frame,
-		panel: Frame,
-		stepLabel: TextLabel,
-		detailLabel: TextLabel,
-		retry: Components.Button,
-		training: Components.Button,
-		settings: Components.Button,
-		callbacks: Callbacks,
-		shownAt: number,
-		steps: { string },
-		recoveryVisible: boolean,
-		ticker: thread?,
-	},
-	Boot
-))
+return function(scope: Kit.Scope, props: Props): Frame
+	local status = Bridge.use(scope, Atoms.profileStatus)
+	local slow = scope:Computed(function(use)
+		return Kit.read(use, props.elapsed) >= SLOW_AFTER
+	end)
 
-function Boot.new(parent: Instance, callbacks: Callbacks): Boot
-	local root = Components.frame(parent, "Boot", {
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Theme.colors.sage,
-		Visible = false,
-	})
-	local panel = Components.panel(root, "Panel", {
-		Size = UDim2.new(0, 520, 0, 10),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		Position = UDim2.fromScale(0.5, 0.5),
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		ZIndex = 2,
-	}, { tape = true, shadow = false })
-	local maxSize = Instance.new("UISizeConstraint")
-	maxSize.MaxSize = Vector2.new(520, 460)
-	maxSize.MinSize = Vector2.new(280, 0)
-	maxSize.Parent = panel
-	Components.padding(panel, 24, 22)
-	local layout = Components.list(panel, Enum.FillDirection.Vertical, 12)
-	layout.VerticalAlignment = Enum.VerticalAlignment.Top
-
-	Components.title(panel, "Title", L("app.title"), {
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		TextSize = 34,
-		LayoutOrder = 1,
-		ZIndex = 3,
-	})
-	local stepLabel = Components.label(panel, "Step", L("boot.profile"), {
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		Font = Theme.fonts.bodyMedium,
-		LayoutOrder = 2,
-		ZIndex = 3,
-	})
-	local detailLabel = Components.caption(panel, "Detail", "", {
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		LayoutOrder = 3,
-		ZIndex = 3,
-	})
-	local actions = Components.frame(panel, "Actions", {
-		Size = UDim2.new(1, 0, 0, Theme.sizes.buttonTarget),
+	return scope:New("Frame")({
+		Name = "BootScreen",
 		BackgroundTransparency = 1,
-		LayoutOrder = 4,
-		ZIndex = 3,
+		Size = UDim2.fromScale(1, 1),
+		Visible = props.visible,
+		[Children] = Kit.children(Kit.panel(scope, {
+			name = "Card",
+			size = UDim2.new(0, 520, 0, 0),
+			automaticSize = Enum.AutomaticSize.Y,
+			position = UDim2.fromScale(0.5, 0.5),
+			anchorPoint = Vector2.new(0.5, 0.5),
+			padding = 28,
+			layout = Kit.list(scope, { Padding = UDim.new(0, 14) }),
+			children = Kit.children(
+				Kit.title(scope, {
+					Text = L("app.title"),
+					TextSize = 34,
+					Size = UDim2.new(1, 0, 0, 40),
+					LayoutOrder = 1,
+					ZIndex = 3,
+				}),
+				Kit.text(scope, {
+					Name = "Status",
+					Text = scope:Computed(function(use)
+						local current = use(status)
+						if current == "unavailable" or current == "locked" then
+							return L("app.profileUnavailable")
+						end
+						return L("boot.profile")
+					end),
+					TextColor3 = Theme.colors.muted,
+					Size = UDim2.new(1, 0, 0, 0),
+					AutomaticSize = Enum.AutomaticSize.Y,
+					LayoutOrder = 2,
+					ZIndex = 3,
+				}),
+				-- barra de progresso indeterminada: só sinaliza atividade, não promete prazo
+				Kit.bar(scope, {
+					value = scope:Computed(function(use)
+						local elapsed: number = Kit.read(use, props.elapsed)
+						return math.min((elapsed % 3) / 3, 1)
+					end),
+					color = Theme.colors.cyan,
+					height = 8,
+					layoutOrder = 3,
+				}),
+				Kit.caption(scope, {
+					Name = "Slow",
+					Text = L("boot.slow"),
+					Visible = slow,
+					Size = UDim2.new(1, 0, 0, 0),
+					AutomaticSize = Enum.AutomaticSize.Y,
+					LayoutOrder = 4,
+					ZIndex = 3,
+				}),
+				Kit.caption(scope, {
+					Name = "NoDefaults",
+					Text = L("boot.noDefaults"),
+					Visible = slow,
+					Size = UDim2.new(1, 0, 0, 0),
+					AutomaticSize = Enum.AutomaticSize.Y,
+					LayoutOrder = 5,
+					ZIndex = 3,
+				}),
+				scope:New("Frame")({
+					Name = "Actions",
+					BackgroundTransparency = 1,
+					Visible = slow,
+					Size = UDim2.new(1, 0, 0, 52),
+					LayoutOrder = 6,
+					ZIndex = 3,
+					[Children] = Kit.children(
+						Kit.list(scope, {
+							FillDirection = Enum.FillDirection.Horizontal,
+							Padding = UDim.new(0, 10),
+							VerticalAlignment = Enum.VerticalAlignment.Center,
+						}),
+						Kit.button(scope, {
+							name = "Retry",
+							text = L("common.retry"),
+							kind = "primary",
+							size = UDim2.fromOffset(200, 48),
+							layoutOrder = 1,
+							zIndex = 4,
+							onActivate = GameFlow.retryProfile,
+						}),
+						Kit.button(scope, {
+							name = "Training",
+							text = L("boot.training"),
+							kind = "secondary",
+							size = UDim2.fromOffset(200, 48),
+							layoutOrder = 2,
+							zIndex = 4,
+							onActivate = function()
+								GameFlow.startTraining("jardim")
+							end,
+						}),
+						Kit.button(scope, {
+							name = "Settings",
+							text = L("menu.settings"),
+							kind = "quiet",
+							icon = "ui_settings",
+							size = UDim2.fromOffset(180, 48),
+							layoutOrder = 3,
+							zIndex = 4,
+							onActivate = function()
+								Actions.push("settings")
+							end,
+						})
+					),
+				})
+			),
+		})),
 	})
-	Components.list(actions, Enum.FillDirection.Horizontal, 10)
-
-	local self = setmetatable({
-		root = root,
-		panel = panel,
-		stepLabel = stepLabel,
-		detailLabel = detailLabel,
-		callbacks = callbacks,
-		shownAt = os.clock(),
-		steps = {},
-		recoveryVisible = false,
-		ticker = nil,
-	}, Boot) :: any
-
-	self.retry = Components.button(actions, {
-		name = "Retry",
-		text = L("common.retry"),
-		kind = "primary",
-		size = UDim2.fromOffset(200, Theme.sizes.buttonTarget),
-		layoutOrder = 1,
-		zIndex = 4,
-		visible = false,
-		onActivate = function()
-			Boot.requestRetry(self)
-		end,
-	})
-	self.training = Components.button(actions, {
-		name = "Training",
-		text = L("boot.training"),
-		kind = "secondary",
-		size = UDim2.fromOffset(200, Theme.sizes.buttonTarget),
-		layoutOrder = 2,
-		zIndex = 4,
-		visible = false,
-		onActivate = callbacks.onTraining,
-	})
-	self.settings = Components.button(actions, {
-		name = "Settings",
-		text = L("menu.settings"),
-		kind = "ghost",
-		icon = "ui_settings",
-		size = UDim2.fromOffset(190, Theme.sizes.buttonTarget),
-		layoutOrder = 3,
-		zIndex = 4,
-		onActivate = callbacks.onSettings,
-	})
-	return self
 end
-
--- Uma tentativa pendente por vez: o botão fica em "Confirmando" até a resposta.
-function Boot.requestRetry(self: Boot)
-	if CommandAdapter.isPending("boot:retry") then
-		return
-	end
-	self.retry:setPending(true)
-	CommandAdapter.send("boot:retry", "RetryProfile", {}, {
-		onSuccess = function()
-			self.retry:setPending(false)
-			self.detailLabel.Text = L("boot.retrying")
-		end,
-		onError = function(code)
-			self.retry:setPending(false)
-			self.retry:showError(L("boot.retryFailed"))
-			self.detailLabel.Text = if Localization.has("error." .. code)
-				then L("error." .. code)
-				else L("error.UNKNOWN")
-		end,
-	})
-end
-
--- `steps` são etapas reais já resolvidas (perfil, mapa, elenco, chefe): sem porcentagem inventada.
-function Boot.setSteps(self: Boot, steps: { string })
-	self.steps = steps
-	self.stepLabel.Text = if #steps == 0 then L("boot.profile") else steps[#steps]
-end
-
-function Boot.update(self: Boot)
-	if not self.root.Visible then
-		return
-	end
-	local status = Store.get().profileStatus
-	local elapsed = os.clock() - self.shownAt
-	local unavailable = status ~= "loading" and Store.profile() == nil
-
-	if unavailable then
-		-- variante 26: perfil indisponível com duas saídas claras e nenhum default persistido
-		self.stepLabel.Text = L("app.profileUnavailable")
-		self.detailLabel.Text = L("boot.noDefaults")
-		self.retry.instance.Visible = true
-		self.training.instance.Visible = true
-		self.recoveryVisible = true
-		return
-	end
-
-	if elapsed >= RECOVERY_AFTER and not self.recoveryVisible then
-		-- 42: demora reconhecida, com recuperação e alternativa, sem declarar falha
-		self.recoveryVisible = true
-		self.retry.instance.Visible = true
-		self.training.instance.Visible = true
-		self.detailLabel.Text = L("boot.slow")
-	end
-	if not self.recoveryVisible then
-		self.detailLabel.Text = L("boot.pleaseWait")
-	end
-end
-
-function Boot.show(self: Boot)
-	self.root.Visible = true
-	self.shownAt = os.clock()
-	self.recoveryVisible = false
-	self.retry.instance.Visible = false
-	self.training.instance.Visible = false
-	self.retry:clearResult()
-	Boot.update(self)
-end
-
-function Boot.hide(self: Boot)
-	self.root.Visible = false
-end
-
-return Boot

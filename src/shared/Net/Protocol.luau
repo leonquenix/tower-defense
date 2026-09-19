@@ -1,14 +1,13 @@
 --!strict
 -- Contrato de rede: nomes de ações, códigos de erro e validação de forma dos payloads.
--- Validação é pura: rejeita campos desconhecidos, tabelas profundas, strings longas, NaN e infinitos
--- antes de qualquer operação custosa.
+--
+-- O transporte é ByteNet (Net/Packets); aqui ficam só as regras puras, testáveis fora do Studio:
+-- validação de envelope, limites de taxa por balde e janela de deduplicação por requestId.
+-- Validação rejeita campos desconhecidos, strings longas, NaN e infinitos antes de qualquer
+-- operação custosa.
 local Protocol = {}
 
 Protocol.VERSION = 1
-Protocol.REMOTE_FOLDER = "QuintalNet"
-Protocol.COMMAND_REMOTE = "Command" -- RemoteFunction: cliente -> servidor (intenção), resposta síncrona
-Protocol.STATE_REMOTE = "State" -- RemoteEvent: servidor -> cliente (snapshots e deltas da partida)
-Protocol.LOBBY_REMOTE = "Lobby" -- RemoteEvent: servidor -> cliente (perfil, party, salas)
 Protocol.MAX_REQUEST_ID = 40
 Protocol.MAX_STRING = 64
 Protocol.MAX_DEPTH = 3

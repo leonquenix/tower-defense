@@ -1,4 +1,56 @@
-# TEST_REPORT — Quintal em Guarda (2026-09-16)
+# TEST_REPORT — Quintal em Guarda
+
+## 0. Revamp 2026-09-19 (Wally, Fusion, Charm, ByteNet, ProfileStore)
+
+| Verificação | Comando | Resultado |
+| --- | --- | --- |
+| Testes de regras e estado (Lune 0.9.3) | `lune run tests/run.luau` | **161 aprovados, 0 reprovados** (`tests/last_run.json`) |
+| Análise estática estrita (luau-lsp 1.69.0) | `luau-lsp analyze … src/` | 0 erros |
+| Lint (selene 0.31.0) | `selene src/` | 0 erros, 0 avisos |
+| Formatação (StyLua 2.1.0) | `stylua --check src/ tests/` | conforme |
+| Dependências | `wally install` | 5 pacotes instalados a partir de `wally.lock` |
+| Fachadas tipadas | `python3 tools/check_package_facades.py` | 3 referências alinhadas com `wally.lock` |
+| Cobertura de pranchas | `python3 tools/check_ui_coverage.py` | 49/49 implementadas, 5 exercitadas no Studio |
+| Build do lugar | `rojo build default.project.json` | gerado (404 KB, código + pacotes) |
+
+Testes novos desta entrega: `09_codec` (ida e volta de snapshot/eventos e id desconhecido sem
+derrubar o cliente), `10_state` (reatividade dos átomos) e `11_juice` (durações das receitas de
+animação e limites dos enums). `08_ui_state` foi reescrito contra `State/Actions` + `State/Selectors`
+no lugar do store antigo.
+
+### Sessão de Play no Studio (2026-09-19)
+
+Executado com o Rojo sincronizando o lugar aberto. Evidência coletada por inspeção da árvore de
+Gui e do console (a janela de Play estava com viewport 1×1 nesta máquina, então **não há captura de
+tela**; a conferência visual continua pendente):
+
+- entrada → menu assim que o perfil carregou (ProfileStore com API Services ligado);
+- tutorial iniciado pelo fluxo real (`StartMatch` → partida → quadros a 10 Hz);
+- faixa superior: Farol 100/100, Onda 00/03, "Pronto →", 1.200 de sucata, Torres 0/18;
+- doca: Dardo (250), Pipoca (450) e Goma (300) com retrato carregado;
+- tabuleiro montado (397 descendentes; camadas chão/caminho/sombras/entidades);
+- console sem erros depois das correções listadas em `docs/MILESTONES.md` (M7).
+
+### Segunda rodada (mesma data, janela visível)
+
+Com a janela do Play visível foi possível **ver** a interface, e dez defeitos apareceram — de
+cenário escuro sob texto escuro até o tutorial que não avançava. A lista completa, com a causa de
+cada um, está em `docs/MILESTONES.md` (M7, "Segunda rodada no Studio"). Verificado depois das
+correções: menu legível, cartas de torre com retrato/nome/custo, fichas do HUD com ícone visível,
+tabuleiro desenhado e console limpo.
+
+Pendente desta rodada: terminar o tutorial inteiro (colocar Dardo, vencer a onda 1, colocar Goma,
+melhorar e chegar ao resultado) com a tela destravada.
+
+### O que esta sessão **não** verificou
+
+Nada de multiplayer real, DataStore de produção, matriz de dispositivos, latência simulada ou
+conferência visual das 49 pranchas. O relatório de 2026-09-16 abaixo continua valendo para as partes
+que não foram reescritas (simulação, regras, balanceamento, assets).
+
+---
+
+# TEST_REPORT — entrega anterior (2026-09-16)
 
 Este relatório separa **executado**, **não executado** e **bloqueado**. Nenhum número de balanceamento foi validado com jogadores; os valores continuam sendo o catálogo inicial.
 

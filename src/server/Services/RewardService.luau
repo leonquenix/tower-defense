@@ -7,7 +7,7 @@ local RunService = game:GetService("RunService")
 local Shared = game:GetService("ReplicatedStorage").Shared
 local Types = require(Shared.Types)
 local ProfileSchema = require(Shared.Profile.ProfileSchema)
-local ProfileService = require(script.Parent.ProfileService)
+local PlayerDataService = require(script.Parent.PlayerDataService)
 local TelemetryService = require(script.Parent.TelemetryService)
 
 local RewardService = {}
@@ -85,8 +85,8 @@ local function applyToPlayer(
 ): UserOutcome
 	local outcome: UserOutcome =
 		{ status = "none", buttons = 0, mastery = {}, milestones = {}, unlocked = {}, grantedCosmetics = {} }
-	local profile = ProfileService.get(player)
-	local session = ProfileService.getSession(player)
+	local profile = PlayerDataService.get(player)
+	local session = PlayerDataService.getSession(player)
 	if not profile or not session then
 		outcome.status = "unavailable"
 		return outcome
@@ -94,7 +94,7 @@ local function applyToPlayer(
 	local masteryForUser = record.masteryByUser[tostring(player.UserId)] or {}
 	local now = os.time()
 	local applyResult: ProfileSchema.ApplyResultOutcome? = nil
-	local mutated = ProfileService.mutate(player, function(p: Types.Profile)
+	local mutated = PlayerDataService.mutate(player, function(p: Types.Profile)
 		applyResult = ProfileSchema.applyMatchResult(p, {
 			matchId = record.matchId,
 			buttons = record.buttonsPerPlayer,
@@ -128,7 +128,7 @@ local function applyToPlayer(
 		outcome.status = "unsaved"
 		return outcome
 	end
-	local saved = ProfileService.save(player, false)
+	local saved = PlayerDataService.save(player, false)
 	if saved then
 		outcome.status = "saved"
 		markApplied(record.matchId, player.UserId)
@@ -142,14 +142,14 @@ end
 function RewardService.registerPending(players: { Player }, matchId: string)
 	local now = os.time()
 	for _, player in ipairs(players) do
-		ProfileService.mutate(player, function(p: Types.Profile)
+		PlayerDataService.mutate(player, function(p: Types.Profile)
 			table.insert(p.pendingResults, { matchId = matchId, createdAt = now })
 			while #p.pendingResults > 16 do
 				table.remove(p.pendingResults, 1)
 			end
 		end)
 		task.spawn(function()
-			ProfileService.save(player, false)
+			PlayerDataService.save(player, false)
 		end)
 	end
 end
@@ -213,7 +213,7 @@ function RewardService.settle(
 			outcomes[participant.userId] =
 				{ status = "none", buttons = 0, mastery = {}, milestones = {}, unlocked = {}, grantedCosmetics = {} }
 			-- remove referência pendente mesmo sem recompensa
-			ProfileService.mutate(player, function(p: Types.Profile)
+			PlayerDataService.mutate(player, function(p: Types.Profile)
 				for i = #p.pendingResults, 1, -1 do
 					if p.pendingResults[i].matchId == state.matchId then
 						table.remove(p.pendingResults, i)
@@ -243,7 +243,7 @@ end
 
 -- Ao carregar o perfil: reconcilia resultados pendentes com o ledger.
 function RewardService.reconcilePending(player: Player)
-	local profile = ProfileService.get(player)
+	local profile = PlayerDataService.get(player)
 	if not profile or #profile.pendingResults == 0 then
 		return
 	end
@@ -255,7 +255,7 @@ function RewardService.reconcilePending(player: Player)
 	local now = os.time()
 	for _, ref in ipairs(refs) do
 		if now - ref.createdAt > ProfileSchema.REWARD_RETENTION_SECONDS then
-			ProfileService.mutate(player, function(p: Types.Profile)
+			PlayerDataService.mutate(player, function(p: Types.Profile)
 				for i = #p.pendingResults, 1, -1 do
 					if p.pendingResults[i].matchId == ref.matchId then
 						table.remove(p.pendingResults, i)
@@ -275,7 +275,7 @@ function RewardService.reconcilePending(player: Player)
 						{ userId = player.UserId, matchId = ref.matchId, status = outcome.status }
 					)
 				else
-					ProfileService.mutate(player, function(p: Types.Profile)
+					PlayerDataService.mutate(player, function(p: Types.Profile)
 						for i = #p.pendingResults, 1, -1 do
 							if p.pendingResults[i].matchId == ref.matchId then
 								table.remove(p.pendingResults, i)
@@ -286,7 +286,7 @@ function RewardService.reconcilePending(player: Player)
 			elseif ok and record == nil and now - ref.createdAt > 3600 then
 				-- partida sem resultado durável há mais de 1 h: registra abandono e remove
 				TelemetryService.log("pending_abandoned", { userId = player.UserId, matchId = ref.matchId })
-				ProfileService.mutate(player, function(p: Types.Profile)
+				PlayerDataService.mutate(player, function(p: Types.Profile)
 					for i = #p.pendingResults, 1, -1 do
 						if p.pendingResults[i].matchId == ref.matchId then
 							table.remove(p.pendingResults, i)
@@ -299,13 +299,13 @@ function RewardService.reconcilePending(player: Player)
 end
 
 function RewardService.init()
-	ProfileService.onSessionChanged(function(player: Player, session: ProfileService.Session)
+	PlayerDataService.onSessionChanged(function(player: Player, session: PlayerDataService.Session)
 		if session.status == "ready" then
 			task.spawn(RewardService.reconcilePending, player)
 		end
 	end)
 	for _, player in ipairs(Players:GetPlayers()) do
-		if ProfileService.getStatus(player) == "ready" then
+		if PlayerDataService.getStatus(player) == "ready" then
 			task.spawn(RewardService.reconcilePending, player)
 		end
 	end

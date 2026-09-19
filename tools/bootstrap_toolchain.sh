@@ -20,8 +20,9 @@ fetch lune "https://github.com/lune-org/lune/releases/download/v0.9.3/lune-0.9.3
 fetch stylua "https://github.com/JohnnyMorganz/StyLua/releases/download/v2.1.0/stylua-$STYLUA_ARCH.zip"
 fetch luau-lsp "https://github.com/JohnnyMorganz/luau-lsp/releases/download/1.69.0/luau-lsp-macos.zip"
 fetch selene "https://github.com/Kampfkarren/selene/releases/download/0.31.0/selene-0.31.0-macos.zip"
+fetch wally "https://github.com/UpliftGames/wally/releases/download/v0.3.2/wally-v0.3.2-macos.zip"
 if [[ ! -f "$ROOT/.toolchain/globalTypes.d.luau" ]]; then
   curl -sL -o "$ROOT/.toolchain/globalTypes.d.luau" "https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/main/scripts/globalTypes.d.luau"
 fi
 echo "Toolchain pronta em $BIN"
-"$BIN/rojo" --version; "$BIN/lune" --version; "$BIN/stylua" --version; "$BIN/luau-lsp" --version; "$BIN/selene" --version
+"$BIN/rojo" --version; "$BIN/lune" --version; "$BIN/stylua" --version; "$BIN/luau-lsp" --version; "$BIN/selene" --version; "$BIN/wally" --version

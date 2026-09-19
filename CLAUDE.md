@@ -24,6 +24,31 @@ Siga os marcos M0 a M6 do documento e o prompt completo. Faça primeiro a partid
 
 Implemente movimentos procedurais como apresentação inicial e registre que os quadros finais ainda faltam. Não pare em um plano, não invente resultados de Studio e não publique a experiência sem autorização específica. Entregue evidências, testes disponíveis e ações manuais reais.
 
+## Revamp: arquitetura atual (2026-09-19)
+
+O projeto deixou de ser um MVP escrito à mão. As dependências vêm do **Wally** (`wally.toml`,
+`wally.lock`; `Packages/` e `ServerPackages/` são gerados e não entram no git — rode
+`.toolchain/bin/wally install`):
+
+- **Fusion 0.3** desenha toda a interface (`src/client/UI`): `Kit` é a biblioteca de componentes,
+  `Skin` a camada de profundidade/cenário, `App` monta camadas e rotas, `Screens/` e `Overlays/`
+  são as telas. Não crie botão, modal ou aviso fora do Kit.
+- **Charm 0.10** guarda o estado do cliente (`src/client/State`): `Atoms` (fatos), `Selectors`
+  (derivações), `Actions` (mutações) e `Bridge` (Charm → Fusion). A interface só lê.
+- **ByteNet 0.4.6** é o transporte (`src/shared/Net/Packets`). `Enums` e `Codec` são puros e
+  testados; `Protocol` continua com validação, limites de taxa e deduplicação.
+- **ProfileStore 1.0.3** persiste perfis em `src/server/Services/PlayerDataService.luau`.
+- Fachadas tipadas em `src/shared/Lib/` fixam o caminho do índice do Wally;
+  `tools/check_package_facades.py` confere contra o lock.
+
+O tabuleiro (`src/client/View`) continua imperativo de propósito: é um renderizador de sprites a
+60 Hz com pool. `View/Juice` concentra tremor, clarão, partículas e números, sempre atrás das
+preferências de conforto e sempre disparado por evento já confirmado pelo servidor.
+
+Removidos no revamp (não recrie): `UI/Router`, `UI/Store`, `UI/Modal`, `UI/Toasts`,
+`UI/Components`, `UI/Focus`, `UI/Layers`, `UI/CommandAdapter`, `View/Ui`, `View/Motion`,
+`View/Hud`, `View/HudPanels`, `Controllers/PlayController` e `Controllers/ScreenController`.
+
 ## Estado da implementação (2026-09-16)
 
 O jogo foi implementado nesta raiz: `src/` (Luau estrito), `tests/` (Lune), `tools/` (geradores), `assets/export/` (exports e uploads), `docs/` (SETUP, TEST_REPORT, MANUAL_ACTIONS, MILESTONES) e `build/`. Leia `docs/SETUP.md` para abrir e testar. `Config/Balance.luau`, `Config/Maps.luau` e `Config/Assets.luau` são gerados: altere o JSON ou o registro e rode as ferramentas em `tools/`, nunca edite os módulos gerados à mão.
@@ -36,7 +61,9 @@ O jogo foi implementado nesta raiz: `src/` (Luau estrito), `tests/` (Lune), `too
 
 As 49 pranchas de `UI_Quintal_em_Guarda_v1` estão implementadas como componentes nativos. Os insumos de build (dados, ícones, guia, exemplos) foram copiados para `UI_Quintal_em_Guarda_v1/` na raiz; as pranchas PNG/SVG continuam no Drive e são **referência**, nunca interface — nada de `ImageLabel` de tela inteira.
 
-A base fica em `src/client/UI/` (Accessibility, Anim, Focus, Components, Modal, Toasts, CommandAdapter, Layers, Router, Store, InviteCards e `Screens/`) e em `src/client/View/HudPanels.luau` para o combate. `View/Ui.luau` é só um adaptador sobre esses componentes: não crie botões, modais ou toasts fora deles.
+A base **era** `src/client/UI/` (Anim, Components, Modal, Toasts, Router, Store…) com `View/Hud`
+para o combate. Depois do revamp de 2026-09-19 tudo isso foi substituído por Fusion + Charm: veja a
+seção "Revamp" acima. A tabela prancha → módulo vive em `docs/ui_coverage.json`.
 
 `Config/UiTokens.luau`, `Config/UiMotion.luau` e `Config/UiIcons.luau` são **gerados** por `tools/import_ui_tokens.py` e `tools/export_ui_icons.py`; altere o JSON do pacote e rode as ferramentas. O gerador de tokens falha quando um par texto/fundo cai abaixo do contraste mínimo. `tools/check_ui_coverage.py` valida `docs/ui_coverage.json` contra as 49 pranchas e gera `docs/UI_COVERAGE.md`: ao mexer numa tela, atualize a linha dela.
 

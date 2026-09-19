@@ -5,6 +5,10 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Types = require(ReplicatedStorage.Shared.Types)
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
+local Actions = require(script.Parent.Parent.State.Actions)
+local Atoms = require(script.Parent.Parent.State.Atoms)
 local Client = require(script.Parent.Parent.Net.Client)
 
 local MatchController = {}
@@ -180,7 +184,11 @@ local function applySnapshot(snapshot: Types.MatchSnapshot)
 			towers[t.id] = t
 		end
 		current.towers = towers
+		Atoms.towers(towers)
 	end
+	-- A interface lê os átomos; este módulo continua dono da interpolação para o tabuleiro.
+	Actions.setSnapshot(snapshot)
+	Actions.noteFrame(now)
 end
 
 local function onState(kind: string, payload: any, extra: any)
@@ -191,6 +199,23 @@ local function onState(kind: string, payload: any, extra: any)
 		if view and extra and typeof(extra) == "table" and extra.tutorialStep then
 			(view :: MatchView).tutorialStep = extra.tutorialStep
 		end
+		Atoms.inMatch(true)
+		Atoms.matchResult(nil)
+		Atoms.rematch(nil)
+		-- cartas da doca: treino libera todas, tutorial usa as iniciais, o resto usa a equipe salva
+		local snapshot = payload :: Types.MatchSnapshot
+		if snapshot.trainingUnlockAll then
+			local all: { string } = {}
+			for _, tower in ipairs(Balance.towers) do
+				table.insert(all, tower.id)
+			end
+			Atoms.loadout(all)
+		elseif snapshot.mode == "tutorial" or #Atoms.loadout() == 0 then
+			-- tutorial usa as iniciais; equipe vazia também cai nelas para a doca nunca ficar vazia
+			Atoms.loadout(Catalog.starterTowerIds())
+		end
+		Actions.setTutorial(if payload.mode == "tutorial" then (payload.tutorialStep or 1) else nil, false)
+		Actions.navigate("play")
 		emit("start", view, extra)
 	elseif kind == "frame" then
 		if not view then
@@ -208,20 +233,32 @@ local function onState(kind: string, payload: any, extra: any)
 			(view :: MatchView).result = payload.result;
 			(view :: MatchView).rewardOutcome = payload.outcome
 		end
+		Atoms.matchResult(payload)
 		emit("result", payload)
 	elseif kind == "left" then
 		view = nil
 		lastRevision = -1
+		Atoms.inMatch(false)
+		Atoms.matchResult(nil)
+		Atoms.towers({})
+		Actions.setSnapshot(nil)
+		Actions.setTutorial(nil, false)
+		Actions.exitBuild()
+		Actions.selectTower(nil)
+		Actions.selectEnemy(nil)
+		Actions.navigate("menu")
 		emit("left", payload)
 	elseif kind == "tutorial" then
 		if view then
 			(view :: MatchView).tutorialStep = payload.step
 		end
+		Actions.setTutorial(payload.step, payload.retry == true)
 		emit("tutorial", payload.step, payload.retry == true)
 	elseif kind == "rematch" then
 		if view then
 			(view :: MatchView).rematch = { ready = payload.ready, total = payload.total }
 		end
+		Atoms.rematch({ ready = payload.ready, total = payload.total })
 		emit("rematch", payload.ready, payload.total)
 	end
 end

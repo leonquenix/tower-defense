@@ -12,7 +12,8 @@ local Grid = require(ReplicatedStorage.Shared.Math.Grid)
 local Path = require(ReplicatedStorage.Shared.Math.Path)
 local Simulation = require(ReplicatedStorage.Shared.Sim.Simulation)
 local Theme = require(script.Parent.Theme)
-local Ui = require(script.Parent.Ui)
+local Skin = require(script.Parent.Parent.UI.Skin)
+local Juice = require(script.Parent.Juice)
 local BoardTransform = require(script.Parent.BoardTransform)
 local SpritePool = require(script.Parent.SpritePool)
 local TowerAnimator = require(script.Parent.TowerAnimator)
@@ -172,7 +173,7 @@ function BoardRenderer.new(transform: BoardTransform.BoardTransform): Renderer
 		v.animator:restore()
 	end)
 	self.numberPool = SpritePool.new(function(): TextLabel
-		local l = Ui.label(self.layers.effects, "Dmg", "", {
+		local l = Skin.label(self.layers.effects, "Dmg", "", {
 			Size = UDim2.fromScale(1.2 / Grid.COLUMNS, 0.5 / Grid.ROWS),
 			AnchorPoint = Vector2.new(0.5, 1),
 			Font = Theme.fonts.numbers,
@@ -190,14 +191,14 @@ function BoardRenderer.new(transform: BoardTransform.BoardTransform): Renderer
 		l.Visible = false
 	end)
 	self.dotPool = SpritePool.new(function(): Frame
-		local d = Ui.frame(self.layers.effects, "Dot", {
+		local d = Skin.frame(self.layers.effects, "Dot", {
 			Size = cellsToScale(0.18),
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			BackgroundColor3 = Theme.colors.gold,
 			ZIndex = Z.effects + 5,
 			Visible = false,
 		})
-		Ui.corner(d, 999)
+		Skin.corner(d, 999)
 		return d
 	end, function(d: Frame)
 		d.Visible = false
@@ -217,7 +218,7 @@ local function clearChildren(f: Frame)
 	end
 end
 
-local function makeImage(parent: Frame, key: string, cells: number, z: number): (ImageLabel, TextLabel)
+local function makeImage(parent: Frame, key: string, _cells: number, z: number): (ImageLabel, TextLabel)
 	local entry = Assets.get(key)
 	local image = Instance.new("ImageLabel")
 	image.Name = "Image"
@@ -229,7 +230,7 @@ local function makeImage(parent: Frame, key: string, cells: number, z: number): 
 	image.ZIndex = z
 	image.Image = if entry and entry.image then entry.image :: string else ""
 	image.Parent = parent
-	local fallback = Ui.label(parent, "Fallback", key, {
+	local fallback = Skin.label(parent, "Fallback", key, {
 		Size = UDim2.fromScale(0.8, 0.5),
 		Position = UDim2.fromScale(0.5, 0.45),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -240,8 +241,8 @@ local function makeImage(parent: Frame, key: string, cells: number, z: number): 
 		Visible = image.Image == "",
 		ZIndex = z,
 	})
-	Ui.corner(fallback, 8)
-	Ui.stroke(fallback, Theme.colors.muted, 1)
+	Skin.corner(fallback, 8)
+	Skin.stroke(fallback, Theme.colors.muted, 1)
 	return image, fallback
 end
 
@@ -266,7 +267,7 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 
 	-- chão com fundo sólido por baixo da margem transparente
 	local groundEntry = Assets.get(Assets.groundKey(mapId))
-	local backing = Ui.frame(self.layers.ground, "Backing", { Size = UDim2.fromScale(1, 1), ZIndex = Z.ground })
+	local backing = Skin.frame(self.layers.ground, "Backing", { Size = UDim2.fromScale(1, 1), ZIndex = Z.ground })
 	if groundEntry and groundEntry.backingColor then
 		local c = groundEntry.backingColor
 		backing.BackgroundColor3 = Color3.fromRGB(c[1], c[2], c[3])
@@ -283,32 +284,77 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	ground.Parent = self.layers.ground
 	self.transform.window.BackgroundColor3 = backing.BackgroundColor3
 
+	-- Luz do alto: clareia o topo do terreno e escurece a base, como na direção de arte.
+	local sun = Instance.new("UIGradient")
+	sun.Rotation = 90
+	sun.Color = ColorSequence.new(Color3.new(1, 1, 1), Color3.fromRGB(198, 205, 190))
+	sun.Transparency = NumberSequence.new({
+		NumberSequenceKeypoint.new(0, 0),
+		NumberSequenceKeypoint.new(1, 0),
+	})
+	sun.Parent = ground
+
+	-- Xadrez discreto: ajuda a contar células sem desenhar uma grade dura por cima da arte.
+	local tiles = Skin.frame(self.layers.ground, "Tiles", {
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		ZIndex = Z.ground + 2,
+	})
+	for x = 0, Grid.COLUMNS - 1 do
+		for y = 0, Grid.ROWS - 1 do
+			if (x + y) % 2 == 0 then
+				local tile = Skin.frame(tiles, "T", {
+					Size = cellsToScale(1),
+					Position = self.transform:logicalToScale(x, y),
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundColor3 = Theme.colors.white,
+					BackgroundTransparency = 0.94,
+					ZIndex = Z.ground + 2,
+				})
+				Skin.corner(tile, 4)
+			end
+		end
+	end
+
+	-- Vinheta interna: as bordas do tabuleiro escurecem e o olho vai para o centro.
+	Skin.vignette(self.layers.ground, 0.32).ZIndex = Z.ground + 3
+
 	-- caminho a partir dos dados canônicos
 	local colors = Theme.pathColors[mapId] or Theme.pathColors.jardim
 	for _, cell in ipairs(map.pathCells) do
-		local outline = Ui.frame(self.layers.path, "PathOutline", {
+		-- sombra curta sob a trilha: a terra batida fica "afundada" no gramado
+		local shade = Skin.frame(self.layers.path, "PathShade", {
+			Size = cellsToScale(1.22),
+			Position = self.transform:logicalToScale(cell[1], cell[2] + 0.06),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			BackgroundColor3 = Theme.colors.inkDeep,
+			BackgroundTransparency = 0.82,
+			ZIndex = Z.path - 1,
+		})
+		Skin.corner(shade, 12)
+		local outline = Skin.frame(self.layers.path, "PathOutline", {
 			Size = cellsToScale(1.16),
 			Position = self.transform:logicalToScale(cell[1], cell[2]),
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			BackgroundColor3 = colors[2],
 			ZIndex = Z.path,
 		})
-		Ui.corner(outline, 6)
-		local fill = Ui.frame(self.layers.path, "PathFill", {
+		Skin.corner(outline, 10)
+		local fill = Skin.frame(self.layers.path, "PathFill", {
 			Size = cellsToScale(1.0),
 			Position = self.transform:logicalToScale(cell[1], cell[2]),
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			BackgroundColor3 = colors[1],
 			ZIndex = Z.path + 1,
 		})
-		Ui.corner(fill, 4)
+		Skin.corner(fill, 8)
 	end
 	-- setas nas curvas e na entrada
 	for i = 1, #map.path - 1 do
 		local a, b = map.path[i], map.path[i + 1]
 		local dx, dy = math.sign(b[1] - a[1]), math.sign(b[2] - a[2])
 		local angle = if dx == 1 then 0 elseif dx == -1 then 180 elseif dy == 1 then 90 else -90
-		local arrow = Ui.label(self.layers.path, "Arrow", "➜", {
+		local arrow = Skin.label(self.layers.path, "Arrow", "➜", {
 			Size = cellsToScale(0.6),
 			Position = self.transform:logicalToScale(a[1], a[2]),
 			AnchorPoint = Vector2.new(0.5, 0.5),
@@ -321,7 +367,7 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 		arrow.Font = Theme.fonts.bodyBold
 	end
 	local entry = map.path[1]
-	Ui.label(self.layers.path, "Entrada", Localization.get("common.unknown") == "" and "" or "▶", {
+	Skin.label(self.layers.path, "Entrada", Localization.get("common.unknown") == "" and "" or "▶", {
 		Size = cellsToScale(0.5),
 		Position = self.transform:logicalToScale(entry[1] - 0.55, entry[2]),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -343,7 +389,7 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	for i, cell in ipairs(map.blocked) do
 		local key = propKeys[((i - 1) % math.max(#propKeys, 1)) + 1]
 		if key then
-			local holder = Ui.frame(self.layers.shadows, "Prop", {
+			local holder = Skin.frame(self.layers.shadows, "Prop", {
 				Size = cellsToScale(PROP_CELLS),
 				Position = self.transform:logicalToScale(cell[1], cell[2] + 0.1),
 				AnchorPoint = Vector2.new(0.5, 0.82),
@@ -356,7 +402,16 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	-- Farol de Pilha na saída
 	local last = map.path[#map.path]
 	self.baseCell = last
-	local baseHolder = Ui.frame(self.layers.entities, "Base", {
+	local glow = Skin.frame(self.layers.shadows, "BaseGlow", {
+		Size = cellsToScale(3.4),
+		Position = self.transform:logicalToScale(last[1], last[2]),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundColor3 = Theme.colors.glowWarm,
+		BackgroundTransparency = 0.86,
+		ZIndex = Z.shadows + 1,
+	})
+	Skin.corner(glow, 9999)
+	local baseHolder = Skin.frame(self.layers.entities, "Base", {
 		Size = cellsToScale(BASE_CELLS),
 		Position = self.transform:logicalToScale(last[1], last[2] + 0.15),
 		AnchorPoint = Vector2.new(0.5, 0.82),
@@ -379,7 +434,7 @@ end
 function BoardRenderer.createTowerVisual(self: Renderer, data: Types.TowerSnapshot): TowerVisual
 	local key = Assets.towerKey(data.d, data.st)
 	local depth = Z.entities + math.floor(data.y * 100)
-	local container = Ui.frame(self.layers.entities, "Tower_" .. data.id, {
+	local container = Skin.frame(self.layers.entities, "Tower_" .. data.id, {
 		Size = cellsToScale(TOWER_CELLS),
 		Position = self.transform:logicalToScale(data.x, data.y),
 		AnchorPoint = Vector2.new(0.5, 0.82),
@@ -391,7 +446,7 @@ function BoardRenderer.createTowerVisual(self: Renderer, data: Types.TowerSnapsh
 		fallback.Text = Theme.towerGlyphs[data.d] .. " " .. data.st
 		fallback.BackgroundColor3 = Theme.towerColors[data.d] or Theme.colors.creamDark
 	end
-	local shadow = Ui.frame(self.layers.shadows, "Shadow_" .. data.id, {
+	local shadow = Skin.frame(self.layers.shadows, "Shadow_" .. data.id, {
 		Size = UDim2.fromScale(0.72 / Grid.COLUMNS, 0.22 / Grid.ROWS),
 		Position = self.transform:logicalToScale(data.x, data.y + 0.02),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -399,9 +454,9 @@ function BoardRenderer.createTowerVisual(self: Renderer, data: Types.TowerSnapsh
 		BackgroundTransparency = 0.78,
 		ZIndex = Z.shadows,
 	})
-	Ui.corner(shadow, 999)
+	Skin.corner(shadow, 999)
 	local glyph, color = ownerBadgeText(data.o)
-	local badge = Ui.label(container, "Badge", glyph, {
+	local badge = Skin.label(container, "Badge", glyph, {
 		Size = UDim2.fromScale(0.22, 0.22),
 		Position = UDim2.fromScale(0.86, 0.72),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -413,9 +468,9 @@ function BoardRenderer.createTowerVisual(self: Renderer, data: Types.TowerSnapsh
 		ZIndex = depth + 1,
 		Visible = false,
 	})
-	Ui.corner(badge, 999)
-	Ui.stroke(badge, Theme.colors.ink, 1)
-	local dust = Ui.label(container, "Dust", "≋", {
+	Skin.corner(badge, 999)
+	Skin.stroke(badge, Theme.colors.ink, 1)
+	local dust = Skin.label(container, "Dust", "≋", {
 		Size = UDim2.fromScale(0.3, 0.3),
 		Position = UDim2.fromScale(0.5, 0.05),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -427,6 +482,15 @@ function BoardRenderer.createTowerVisual(self: Renderer, data: Types.TowerSnapsh
 	})
 	local entryAsset = Assets.get(key)
 	local animator = TowerAnimator.new(image, data.d, if entryAsset then entryAsset.anchorY else 0.82)
+	-- a torre nasce com um salto curto e um anel de poeira na célula
+	Juice.pop(container, 0.82)
+	Juice.ring(
+		self.layers.effects,
+		self.transform:logicalToScale(data.x, data.y),
+		0.4 / Grid.COLUMNS,
+		1.6 / Grid.COLUMNS,
+		Theme.towerColors[data.d] or Theme.colors.gold
+	)
 	return {
 		container = container,
 		image = image,
@@ -513,7 +577,7 @@ function BoardRenderer.syncCircuits(self: Renderer, towers: { [number]: Types.To
 			local a, b = pair.a, pair.b
 			local horizontal = a.y == b.y
 			local mx, my = (a.x + b.x) / 2, (a.y + b.y) / 2
-			local line = Ui.frame(self.layers.circuits, "Circuit_" .. key, {
+			local line = Skin.frame(self.layers.circuits, "Circuit_" .. key, {
 				Size = if horizontal
 					then UDim2.fromScale(1 / Grid.COLUMNS, 0.09 / Grid.ROWS)
 					else UDim2.fromScale(0.09 / Grid.COLUMNS, 1 / Grid.ROWS),
@@ -522,10 +586,10 @@ function BoardRenderer.syncCircuits(self: Renderer, towers: { [number]: Types.To
 				BackgroundColor3 = Theme.colors.cyan,
 				ZIndex = Z.circuits,
 			})
-			Ui.corner(line, 999)
-			Ui.stroke(line, Theme.colors.ink, 1)
+			Skin.corner(line, 999)
+			Skin.stroke(line, Theme.colors.ink, 1)
 			for _, t in ipairs({ a, b }) do
-				local dot = Ui.frame(line, "End", {
+				local dot = Skin.frame(line, "End", {
 					Size = if horizontal then UDim2.fromScale(0.2, 2.6) else UDim2.fromScale(2.6, 0.2),
 					Position = if t == a
 						then (if horizontal then UDim2.fromScale(0.05, 0.5) else UDim2.fromScale(0.5, 0.05))
@@ -534,12 +598,12 @@ function BoardRenderer.syncCircuits(self: Renderer, towers: { [number]: Types.To
 					BackgroundColor3 = Theme.colors.cyan,
 					ZIndex = Z.circuits + 1,
 				})
-				Ui.corner(dot, 999)
-				Ui.stroke(dot, Theme.colors.ink, 1)
+				Skin.corner(dot, 999)
+				Skin.stroke(dot, Theme.colors.ink, 1)
 			end
 			if self.circuitPattern == "dashed" then
 				for i = 1, 3 do
-					local gap = Ui.frame(line, "Gap", {
+					local gap = Skin.frame(line, "Gap", {
 						Size = if horizontal then UDim2.fromScale(0.08, 1.2) else UDim2.fromScale(1.2, 0.08),
 						Position = if horizontal
 							then UDim2.fromScale(0.2 + 0.2 * i, 0.5)
@@ -563,7 +627,7 @@ end
 -- ---------------------------------------------------------------------------
 
 function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
-	local container = Ui.frame(self.layers.entities, "Enemy", {
+	local container = Skin.frame(self.layers.entities, "Enemy", {
 		Size = cellsToScale(ENEMY_CELLS),
 		AnchorPoint = Vector2.new(0.5, 0.82),
 		BackgroundTransparency = 1,
@@ -579,9 +643,9 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 	image.Size = UDim2.fromScale(1, 1)
 	image.ZIndex = Z.entities
 	image.Parent = container
-	local stroke = Ui.stroke(image, Theme.colors.gold, 3)
+	local stroke = Skin.stroke(image, Theme.colors.gold, 3)
 	stroke.Enabled = false
-	local fallback = Ui.label(container, "Fallback", "?", {
+	local fallback = Skin.label(container, "Fallback", "?", {
 		Size = UDim2.fromScale(0.7, 0.7),
 		Position = UDim2.fromScale(0.5, 0.45),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -593,9 +657,9 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 		Visible = false,
 		ZIndex = Z.entities,
 	})
-	Ui.corner(fallback, 999)
-	Ui.stroke(fallback, Theme.colors.ink, 2)
-	local shadow = Ui.frame(self.layers.shadows, "EnemyShadow", {
+	Skin.corner(fallback, 999)
+	Skin.stroke(fallback, Theme.colors.ink, 2)
+	local shadow = Skin.frame(self.layers.shadows, "EnemyShadow", {
 		Size = UDim2.fromScale(0.55 / Grid.COLUMNS, 0.18 / Grid.ROWS),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		BackgroundColor3 = Theme.colors.ink,
@@ -603,22 +667,22 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 		ZIndex = Z.shadows + 1,
 		Visible = false,
 	})
-	Ui.corner(shadow, 999)
-	local hpBack = Ui.frame(container, "HpBack", {
+	Skin.corner(shadow, 999)
+	local hpBack = Skin.frame(container, "HpBack", {
 		Size = UDim2.fromScale(0.8, 0.07),
 		Position = UDim2.fromScale(0.5, 0.06),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		BackgroundColor3 = Theme.colors.ink,
 		ZIndex = Z.entities + 2,
 	})
-	Ui.corner(hpBack, 999)
-	local hpFill = Ui.frame(hpBack, "HpFill", {
+	Skin.corner(hpBack, 999)
+	local hpFill = Skin.frame(hpBack, "HpFill", {
 		Size = UDim2.fromScale(1, 1),
 		BackgroundColor3 = Theme.colors.coral,
 		ZIndex = Z.entities + 3,
 	})
-	Ui.corner(hpFill, 999)
-	local status = Ui.label(container, "Status", "", {
+	Skin.corner(hpFill, 999)
+	local status = Skin.label(container, "Status", "", {
 		Size = UDim2.fromScale(1, 0.18),
 		Position = UDim2.fromScale(0.5, -0.06),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -629,7 +693,7 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 		TextStrokeColor3 = Theme.colors.ink,
 		ZIndex = Z.entities + 3,
 	})
-	local name = Ui.label(container, "Name", "", {
+	local name = Skin.label(container, "Name", "", {
 		Size = UDim2.fromScale(1.6, 0.16),
 		Position = UDim2.fromScale(0.5, -0.2),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -643,7 +707,7 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 		ZIndex = Z.entities + 3,
 	})
 	-- resistência: ícone com forma própria à esquerda da barra (nunca só cor)
-	local resist = Ui.label(container, "Resist", "", {
+	local resist = Skin.label(container, "Resist", "", {
 		Size = UDim2.fromScale(0.26, 0.16),
 		Position = UDim2.fromScale(0.05, 0.06),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -656,7 +720,7 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 		ZIndex = Z.entities + 4,
 	})
 	-- aviso do chefe com contagem em segundos de simulação
-	local badge = Ui.label(container, "Badge", "", {
+	local badge = Skin.label(container, "Badge", "", {
 		Size = UDim2.fromScale(0.9, 0.18),
 		Position = UDim2.fromScale(0.5, -0.12),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -669,7 +733,7 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 		Visible = false,
 		ZIndex = Z.entities + 5,
 	})
-	local healMark = Ui.label(container, "Heal", "✚", {
+	local healMark = Skin.label(container, "Heal", "✚", {
 		Size = UDim2.fromScale(0.3, 0.2),
 		Position = UDim2.fromScale(0.85, 0.1),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -822,25 +886,21 @@ function BoardRenderer.playEnemyExit(self: Renderer, id: number, kind: "death" |
 		TweenService:Create(visual.image, TweenInfo.new(duration, Enum.EasingStyle.Quad), { ImageTransparency = 1 })
 	tween:Play()
 	if kind == "death" and not self.reducedParticles then
-		for _ = 1, 3 do
-			local dot = self.dotPool:acquire()
-			dot.BackgroundColor3 = Theme.colors.enemy
-			dot.Position = self.transform:logicalToScale(visual.px + (math.random() - 0.5) * 0.3, visual.py - 0.2)
-			dot.Visible = true
-			local target = self.transform:logicalToScale(
-				visual.px + (math.random() - 0.5) * 0.9,
-				visual.py - 0.9 - math.random() * 0.4
-			)
-			local t = TweenService:Create(
-				dot,
-				TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-				{ Position = target, BackgroundTransparency = 1 }
-			)
-			t:Play()
-			t.Completed:Once(function()
-				self.dotPool:release(dot)
-			end)
-		end
+		-- estouro em leque + anel curto: a morte precisa ser lida de relance no meio da onda
+		local position = self.transform:logicalToScale(visual.px, visual.py - 0.25)
+		Juice.burst(self.layers.effects, position, {
+			count = if visual.isBoss then 14 else 7,
+			color = if visual.isBoss then Theme.colors.gold else Theme.colors.enemy,
+			spread = if visual.isBoss then 0.06 else 0.035,
+			size = 0.01,
+		})
+		Juice.ring(
+			self.layers.effects,
+			position,
+			0.3 / Grid.COLUMNS,
+			(if visual.isBoss then 3.2 else 1.4) / Grid.COLUMNS,
+			if visual.isBoss then Theme.colors.gold else Theme.colors.enemy
+		)
 	end
 	tween.Completed:Once(function()
 		visual.image.ImageTransparency = 0
@@ -853,6 +913,7 @@ function BoardRenderer.playEnemyHit(self: Renderer, enemyId: number)
 	local visual = self.enemies[enemyId]
 	if visual and not visual.dying then
 		visual.animator:playHit()
+		Juice.hitFlash(visual.image)
 	end
 end
 
@@ -877,15 +938,15 @@ local function ringFrame(
 	thickness: number,
 	z: number
 ): Frame
-	local ring = Ui.frame(self.layers.effects, "Ring", {
+	local ring = Skin.frame(self.layers.effects, "Ring", {
 		Size = cellsToScale(radiusCells * 2),
 		Position = self.transform:logicalToScale(px, py),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		BackgroundTransparency = 1,
 		ZIndex = z,
 	})
-	Ui.corner(ring, 999)
-	Ui.stroke(ring, color, thickness)
+	Skin.corner(ring, 999)
+	Skin.stroke(ring, color, thickness)
 	return ring
 end
 
@@ -943,7 +1004,7 @@ function BoardRenderer.playAttack(self: Renderer, towerId: number, seq: number, 
 			if ex and ey then
 				local dx, dy = ex - prevX, (ey - 0.3) - prevY
 				local length = math.sqrt(dx * dx + dy * dy)
-				local line = Ui.frame(self.layers.effects, "Chain", {
+				local line = Skin.frame(self.layers.effects, "Chain", {
 					Size = UDim2.fromScale(length / Grid.COLUMNS, 0.08 / Grid.ROWS),
 					Position = self.transform:logicalToScale((prevX + ex) / 2, (prevY + ey - 0.3) / 2),
 					AnchorPoint = Vector2.new(0.5, 0.5),
@@ -1036,10 +1097,17 @@ function BoardRenderer.showDamage(self: Renderer, towerId: number, enemyId: numb
 	label.TextTransparency = 0
 	label.Visible = true
 	self.damageAgg[key] = { label = label, amount = amount, at = now }
+	-- sobe em arco com um salto curto de tamanho (juice_float): leitura rápida do dano
 	local rise = TweenService:Create(label, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-		Position = self.transform:logicalToScale(px, py - 1.3),
+		Position = self.transform:logicalToScale(px + (math.random() - 0.5) * 0.35, py - 1.35),
 		TextTransparency = 1,
 	})
+	label.Size = UDim2.fromScale(0.9 / Grid.COLUMNS, 0.38 / Grid.ROWS)
+	if not self.reducedMotion then
+		TweenService:Create(label, TweenInfo.new(0.14, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+			Size = UDim2.fromScale(1.4 / Grid.COLUMNS, 0.6 / Grid.ROWS),
+		}):Play()
+	end
 	rise:Play()
 	rise.Completed:Once(function()
 		self.activeNumbers -= 1
@@ -1095,7 +1163,7 @@ function BoardRenderer.setTelegraph(
 		local ring = ringFrame(self, cell[1], cell[2], radius, Theme.colors.danger, 3, Z.effects + 2)
 		ring.BackgroundTransparency = 0.85
 		ring.BackgroundColor3 = Theme.colors.danger
-		Ui.label(ring, "Icon", "≋", {
+		Skin.label(ring, "Icon", "≋", {
 			Size = UDim2.fromScale(0.3, 0.3),
 			Position = UDim2.fromScale(0.5, 0.5),
 			AnchorPoint = Vector2.new(0.5, 0.5),
@@ -1213,7 +1281,7 @@ function BoardRenderer.setSelected(self: Renderer, towerId: number?)
 		self.selectionRange:Destroy()
 		self.selectionRange = nil
 	end
-	for key, line in pairs(self.circuitLines) do
+	for _, line in pairs(self.circuitLines) do
 		line.BackgroundColor3 = Theme.colors.cyan
 		local stroke = line:FindFirstChildOfClass("UIStroke")
 		if stroke then
@@ -1228,15 +1296,15 @@ function BoardRenderer.setSelected(self: Renderer, towerId: number?)
 		return
 	end
 	local data = visual.data
-	local sel = Ui.frame(self.layers.selection, "Selection", {
+	local sel = Skin.frame(self.layers.selection, "Selection", {
 		Size = cellsToScale(1.0),
 		Position = self.transform:logicalToScale(data.x, data.y),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		BackgroundTransparency = 1,
 		ZIndex = Z.selection,
 	})
-	Ui.corner(sel, 8)
-	Ui.stroke(sel, Theme.colors.gold, 3)
+	Skin.corner(sel, 8)
+	Skin.stroke(sel, Theme.colors.gold, 3)
 	self.selection = sel
 	local stats = Catalog.getStateStats(data.d, data.st)
 	if stats then
@@ -1292,7 +1360,7 @@ function BoardRenderer.setBuildPreview(self: Renderer, preview: BuildPreview?)
 	end
 	if preview.validCells then
 		for _, cell in ipairs(preview.validCells) do
-			local f = Ui.frame(self.layers.cells, "ValidCell", {
+			local f = Skin.frame(self.layers.cells, "ValidCell", {
 				Size = cellsToScale(0.86),
 				Position = self.transform:logicalToScale(cell[1], cell[2]),
 				AnchorPoint = Vector2.new(0.5, 0.5),
@@ -1300,7 +1368,7 @@ function BoardRenderer.setBuildPreview(self: Renderer, preview: BuildPreview?)
 				BackgroundTransparency = 0.82,
 				ZIndex = Z.cells,
 			})
-			Ui.corner(f, 6)
+			Skin.corner(f, 6)
 			table.insert(self.buildCells, f)
 		end
 	end
@@ -1308,7 +1376,7 @@ function BoardRenderer.setBuildPreview(self: Renderer, preview: BuildPreview?)
 	if x == nil or y == nil then
 		return
 	end
-	local ghost = Ui.frame(self.layers.effects, "Ghost", {
+	local ghost = Skin.frame(self.layers.effects, "Ghost", {
 		Size = cellsToScale(TOWER_CELLS),
 		Position = self.transform:logicalToScale(x, y),
 		AnchorPoint = Vector2.new(0.5, 0.82),
@@ -1321,7 +1389,7 @@ function BoardRenderer.setBuildPreview(self: Renderer, preview: BuildPreview?)
 	if img == "" then
 		fallback.Text = Theme.towerGlyphs[preview.towerId]
 	end
-	local cellMark = Ui.frame(ghost, "CellMark", {
+	local cellMark = Skin.frame(ghost, "CellMark", {
 		Size = UDim2.fromScale(1 / TOWER_CELLS, 1 / TOWER_CELLS),
 		Position = UDim2.fromScale(0.5, 0.82),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -1329,10 +1397,10 @@ function BoardRenderer.setBuildPreview(self: Renderer, preview: BuildPreview?)
 		BackgroundTransparency = 0.6,
 		ZIndex = Z.effects + 9,
 	})
-	Ui.corner(cellMark, 6)
-	Ui.stroke(cellMark, if preview.valid then Theme.colors.teal else Theme.colors.danger, 2)
+	Skin.corner(cellMark, 6)
+	Skin.stroke(cellMark, if preview.valid then Theme.colors.teal else Theme.colors.danger, 2)
 	if not preview.valid then
-		Ui.label(ghost, "Invalid", "✕ " .. Localization.get(preview.reason or "build.invalidCell"), {
+		Skin.label(ghost, "Invalid", "✕ " .. Localization.get(preview.reason or "build.invalidCell"), {
 			Size = UDim2.fromScale(2.4, 0.22),
 			Position = UDim2.fromScale(0.5, 1.0),
 			AnchorPoint = Vector2.new(0.5, 0),
@@ -1365,7 +1433,7 @@ function BoardRenderer.setBuildPreview(self: Renderer, preview: BuildPreview?)
 		local partner = self.towers[preview.partnerId]
 		if partner then
 			local horizontal = partner.data.y == y
-			local line = Ui.frame(self.layers.effects, "PreviewCircuit", {
+			local line = Skin.frame(self.layers.effects, "PreviewCircuit", {
 				Size = if horizontal
 					then UDim2.fromScale(1 / Grid.COLUMNS, 0.09 / Grid.ROWS)
 					else UDim2.fromScale(0.09 / Grid.COLUMNS, 1 / Grid.ROWS),
@@ -1374,8 +1442,8 @@ function BoardRenderer.setBuildPreview(self: Renderer, preview: BuildPreview?)
 				BackgroundColor3 = Theme.colors.gold,
 				ZIndex = Z.effects + 7,
 			})
-			Ui.corner(line, 999)
-			Ui.stroke(line, Theme.colors.ink, 1)
+			Skin.corner(line, 999)
+			Skin.stroke(line, Theme.colors.ink, 1)
 			self.previewLine = line
 		end
 	end
@@ -1390,7 +1458,7 @@ function BoardRenderer.setShowRanges(self: Renderer, value: boolean)
 	if not value then
 		return
 	end
-	local holder = Ui.frame(
+	local holder = Skin.frame(
 		self.layers.selection,
 		"AllRanges",
 		{ Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, ZIndex = Z.selection }

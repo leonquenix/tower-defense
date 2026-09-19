@@ -1,6 +1,6 @@
 --!strict
 -- ARQUIVO GERADO por tools/import_ui_tokens.py a partir de
--- UI_Quintal_em_Guarda_v1/dados/animacoes.json (sha256 191147ab4b94019de36c37cd5277dfd77deee3141c16383cf51484a70853d34d)
+-- UI_Quintal_em_Guarda_v1/dados/animacoes.json (sha256 6077f6b305c1af3de7d8f385b7ea7eefabdda23289aa5978f53389db4e1866d3)
 -- Não edite à mão: altere o JSON e rode a ferramenta.
 -- duration em segundos; style/direction nomeiam Enum.EasingStyle/Enum.EasingDirection.
 -- normal e reduced descrevem o efeito esperado (o código lê as duas variantes).
@@ -21,6 +21,13 @@ local UiMotion: { [string]: Recipe } = {
 		reduced = "Valor final imediato",
 		style = "Linear",
 	},
+	banner = {
+		direction = "Out",
+		duration = 0.42,
+		normal = "faixa de onda entra do topo, segura 1,2 s e sai",
+		reduced = "Faixa aparece e some em 80 ms",
+		style = "Back",
+	},
 	boss_warning = {
 		direction = "Out",
 		duration = 2,
@@ -33,6 +40,13 @@ local UiMotion: { [string]: Recipe } = {
 		duration = 0.18,
 		normal = "sprite escala 0,90 → 1 sem deslocar célula",
 		reduced = "Escala 1 imediata",
+		style = "Back",
+	},
+	card_select = {
+		direction = "Out",
+		duration = 0.14,
+		normal = "carta selecionada sobe 6 px e ganha halo dourado",
+		reduced = "Somente halo dourado",
 		style = "Back",
 	},
 	cooldown = {
@@ -48,6 +62,55 @@ local UiMotion: { [string]: Recipe } = {
 		normal = "escala 1 → 1,03; contorno de foco 3 px",
 		reduced = "Somente contorno",
 		style = "Quad",
+	},
+	juice_burst = {
+		direction = "Out",
+		duration = 0.42,
+		normal = "até 8 partículas em leque a partir do impacto",
+		reduced = "Nenhuma partícula",
+		style = "Quad",
+	},
+	juice_collect = {
+		direction = "InOut",
+		duration = 0.52,
+		normal = "sucata ganha voa do inimigo até a ficha de saldo",
+		reduced = "Saldo atualiza sem voo",
+		style = "Quad",
+	},
+	juice_float = {
+		direction = "Out",
+		duration = 0.7,
+		normal = "número de dano sobe em arco, cresce e some",
+		reduced = "Número estático que some em 80 ms",
+		style = "Quad",
+	},
+	juice_hit = {
+		direction = "Out",
+		duration = 0.09,
+		normal = "clarão branco no sprite atingido, 90 ms",
+		reduced = "Clarão sem deformação, 80 ms",
+		style = "Quad",
+	},
+	juice_pop = {
+		direction = "Out",
+		duration = 0.22,
+		normal = "escala 0,86 → 1 com leve ultrapassagem (cartas, fichas e selos)",
+		reduced = "Escala 1 imediata",
+		style = "Back",
+	},
+	juice_press = {
+		direction = "Out",
+		duration = 0.07,
+		normal = "botão afunda 3 px sobre o chanfro e volta ao soltar",
+		reduced = "Somente mudança de preenchimento",
+		style = "Quad",
+	},
+	juice_shake = {
+		direction = "Out",
+		duration = 0.26,
+		normal = "tremor do tabuleiro com amplitude decrescente (vazamento e chefe)",
+		reduced = "Sem tremor: pisca a borda do tabuleiro",
+		style = "Sine",
 	},
 	modal_enter = {
 		direction = "Out",

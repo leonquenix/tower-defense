@@ -8,6 +8,7 @@ local Protocol = require(Shared.Net.Protocol)
 local MatchService = require(script.Parent.MatchService)
 local PartyService = require(script.Parent.PartyService)
 local MenuService = require(script.Parent.MenuService)
+local Server = require(script.Parent.Parent.Net.Server)
 local TelemetryService = require(script.Parent.TelemetryService)
 
 local CommandService = {}
@@ -90,7 +91,7 @@ local function dispatch(player: Player, envelope: Protocol.Envelope): { [string]
 	return MenuService.handle(player, action, envelope.payload)
 end
 
-local function onInvoke(player: Player, raw: any): { [string]: any }
+local function handle(player: Player, raw: any): { [string]: any }
 	local session = sessions[player.UserId]
 	if not session then
 		session = newSession()
@@ -139,8 +140,20 @@ local function onInvoke(player: Player, raw: any): { [string]: any }
 	return response
 end
 
-function CommandService.init(remote: RemoteFunction)
-	remote.OnServerInvoke = onInvoke
+function CommandService.init()
+	Server.onCommand(function(player: Player, command: Server.Command)
+		-- o envelope continua sendo validado aqui: ByteNet garante o formato do pacote,
+		-- não o conteúdo do payload (que viaja como tabela livre).
+		local response = handle(player, {
+			protocolVersion = Protocol.VERSION,
+			sessionSequence = command.seq,
+			requestId = command.id,
+			action = command.action,
+			payload = command.payload,
+		})
+		local requestId = if typeof(command.id) == "string" then command.id else ""
+		Server.respond(player, requestId, response)
+	end)
 	Players.PlayerRemoving:Connect(function(player: Player)
 		-- nova sessão ao reconectar: a janela de deduplicação recomeça
 		sessions[player.UserId] = nil

@@ -5,7 +5,7 @@ local Types = require(Shared.Types)
 local Protocol = require(Shared.Net.Protocol)
 local Products = require(Shared.Config.Products)
 local ProfileSchema = require(Shared.Profile.ProfileSchema)
-local ProfileService = require(script.Parent.ProfileService)
+local PlayerDataService = require(script.Parent.PlayerDataService)
 local RewardService = require(script.Parent.RewardService)
 local ShopService = require(script.Parent.ShopService)
 local TelemetryService = require(script.Parent.TelemetryService)
@@ -23,12 +23,12 @@ local function result(ok: boolean, code: string?, extra: { [string]: any }?): { 
 end
 
 local function withProfile(player: Player, fn: (Types.Profile) -> (boolean, string?)): { [string]: any }
-	local profile = ProfileService.get(player)
+	local profile = PlayerDataService.get(player)
 	if not profile then
 		return result(false, Protocol.ERROR.PROFILE_UNAVAILABLE)
 	end
 	local ok, err: string? = true, nil
-	local mutated = ProfileService.mutate(player, function(p: Types.Profile)
+	local mutated = PlayerDataService.mutate(player, function(p: Types.Profile)
 		ok, err = fn(p)
 	end)
 	if not mutated then
@@ -37,7 +37,7 @@ local function withProfile(player: Player, fn: (Types.Profile) -> (boolean, stri
 	if not ok then
 		return result(false, err)
 	end
-	return result(true, nil, { profile = ProfileService.clientView(player) })
+	return result(true, nil, { profile = PlayerDataService.clientView(player) })
 end
 
 function MenuService.handle(player: Player, action: string, payload: { [string]: any }): { [string]: any }
@@ -52,7 +52,7 @@ function MenuService.handle(player: Player, action: string, payload: { [string]:
 		if r.ok then
 			TelemetryService.log("tower_bought", { userId = player.UserId, towerId = payload.towerId })
 			task.spawn(function()
-				ProfileService.save(player, false)
+				PlayerDataService.save(player, false)
 			end)
 		end
 		return r
@@ -84,13 +84,13 @@ function MenuService.handle(player: Player, action: string, payload: { [string]:
 		local ok, err = ShopService.prompt(player)
 		return result(ok, err)
 	elseif action == "ClaimPending" then
-		if not ProfileService.get(player) then
+		if not PlayerDataService.get(player) then
 			return result(false, Protocol.ERROR.PROFILE_UNAVAILABLE)
 		end
 		RewardService.reconcilePending(player)
-		return result(true, nil, { profile = ProfileService.clientView(player) })
+		return result(true, nil, { profile = PlayerDataService.clientView(player) })
 	elseif action == "RetryProfile" then
-		ProfileService.retryLoad(player)
+		PlayerDataService.retryLoad(player)
 		return result(true)
 	end
 	return result(false, Protocol.ERROR.BAD_REQUEST)

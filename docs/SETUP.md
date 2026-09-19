@@ -7,6 +7,7 @@ Projeto Roblox 2D (Luau estrito + Rojo). Esta pasta (`Quintal_em_Guarda_Pacote_C
 | Ferramenta | Versão fixada | Uso |
 | --- | --- | --- |
 | Rojo | 7.5.1 | sync com o Studio e build do `.rbxl` |
+| Wally | 0.3.2 | dependências de terceiros (`wally.toml` / `wally.lock`) |
 | Lune | 0.9.3 | testes de regras fora do Studio (`tests/`) |
 | luau-lsp | 1.69.0 | análise estática estrita (`--!strict`) |
 | selene | 0.31.0 | lint |
@@ -21,6 +22,27 @@ bash tools/bootstrap_toolchain.sh
 ```
 
 O script baixa os binários fixados em `rokit.toml` para `.toolchain/bin/` e o arquivo de tipos do Roblox (`.toolchain/globalTypes.d.luau`). Quem usa [rokit](https://github.com/rojo-rbx/rokit) pode simplesmente rodar `rokit install`.
+
+## Dependências (Wally)
+
+```bash
+.toolchain/bin/wally install
+```
+
+Cria `Packages/` (compartilhado) e `ServerPackages/` (só servidor). As duas pastas são geradas e
+não entram no git; `wally.lock` entra, então todo mundo instala exatamente as mesmas versões.
+
+| Pacote | Versão | Para quê |
+| --- | --- | --- |
+| `elttob/fusion` | 0.3.0 | interface reativa: todas as telas e o HUD |
+| `littensy/charm` | 0.10.0 | átomos de estado do cliente (0.10 usa `require` clássico, que Lune e luau-lsp resolvem) |
+| `ffrostflame/bytenet` | 0.4.6 | pacotes binários tipados no lugar de RemoteEvents à mão |
+| `sleitnick/trove` | 1.8.0 | limpeza determinística de conexões |
+| `lm-loleris/profilestore` | 1.0.3 | perfis com trava de sessão (só servidor) |
+
+As fachadas tipadas em `src/shared/Lib/` fixam o caminho do índice do Wally porque o arquivo de
+ligação gerado esconde os tipos do analisador. `python3 tools/check_package_facades.py` confere se
+esses caminhos continuam iguais ao `wally.lock` depois de qualquer atualização.
 
 ## Gerar dados e assets
 
@@ -125,21 +147,50 @@ Os DataStores usam nomes com sufixo `_studio` quando rodando no Studio, separand
 Ação `DevCommand` (aceita apenas no Studio ou para UserIds em `DEV_ALLOWLIST` de `MatchService.luau`): `grantScrap`, `startWave`, `killAll`, `setBaseHP`, `summary`. Exemplo pelo console do cliente:
 
 ```lua
-game.ReplicatedStorage.QuintalNet.Command:InvokeServer({protocolVersion=1, sessionSequence=999990, requestId="dev-1", action="DevCommand", payload={command="grantScrap", arg=5000}})
+-- o transporte é ByteNet: o caminho normal é o mesmo do jogo
+local Client = require(game.Players.LocalPlayer.PlayerScripts.Client.Net.Client)
+Client.request("DevCommand", { command = "grantScrap", arg = 5000 })
 ```
 
 ## Estrutura
 
 ```
-default.project.json     árvore Rojo (ReplicatedStorage/Shared, ServerScriptService/Server, StarterPlayerScripts/Client)
-src/shared               Types, Config (gerados), Math, Rules, Sim (simulação pura), Net/Protocol, Profile, Util
-src/server               Bootstrap + Services (Match, Command, Party, Menu, Profile, Reward, Shop, Telemetry)
-src/client               Bootstrap + Controllers (Screen, Play, Match, Input, Settings, Audio) + View (Board, Hud, Menu, TowerAnimator, EnemyAnimator, ...)
-tests/                   runner Lune, loader Roblox-like e specs
+default.project.json     árvore Rojo (Shared, Packages, Server, ServerPackages, Client)
+wally.toml / wally.lock  dependências de terceiros
+src/shared               Types, Config (gerados), Math, Rules, Sim (simulação pura), Profile, Util
+  Lib/                   fachadas tipadas de Fusion, Charm e Trove
+  Net/                   Protocol (validação pura), Enums + Codec (puros), Packets (ByteNet)
+src/server               Bootstrap + Net/Server (fachada ByteNet) + Services
+                         (Match, Command, Party, Menu, PlayerData, Reward, Shop, Telemetry)
+src/client
+  State/                 Atoms (Charm), Selectors, Actions, Bridge (Charm -> Fusion)
+  Net/                   Client (pedido/resposta sobre ByteNet) e Commands (uma pendência por chave)
+  UI/                    Kit (componentes Fusion), Skin (profundidade e cenário), App (camadas e rotas),
+                         Screens/ e Overlays/
+  View/                  tabuleiro imperativo: BoardTransform, BoardRenderer, Juice, animadores, Theme
+  Controllers/           Match (rede -> átomos), BoardPresenter, GameFlow, Input, Settings, Audio
+tests/                   runner Lune, loader Roblox-like (inclui Packages) e specs
 tools/                   geradores e exportadores (Python) + bootstrap da toolchain
 assets/export            exports normalizados, manifesto de export, log de uploads e placeholders
-docs/                    SETUP, TEST_REPORT, MANUAL_ACTIONS, MILESTONES
+docs/                    SETUP, TEST_REPORT, MANUAL_ACTIONS, MILESTONES, UI_COVERAGE
 ```
+
+## Arquitetura do cliente (revamp 2026-09-19)
+
+Fluxo de um toque, do botão ao pixel:
+
+1. a tela (Fusion) chama `Controllers/GameFlow`;
+2. `GameFlow` chama `Net/Commands`, que garante **uma pendência por chave** e preserva o
+   `requestId` numa repetição (o servidor deduplica em vez de cobrar duas vezes);
+3. `Net/Client` manda o pacote `command` e espera o `result` correlacionado;
+4. o servidor valida em `Net/Protocol`, aplica na simulação e responde;
+5. o próximo quadro chega como pacote `frame` (snapshot + eventos), é decodificado por
+   `Net/Codec` e escrito nos átomos Charm;
+6. a interface reage por leitura dos átomos; o tabuleiro (imperativo, 60 Hz) desenha o que
+   `MatchController` interpolou.
+
+Nenhum passo do caminho de volta confia no cliente: dano, preço e resultado continuam sendo do
+servidor. `View/Juice` só é chamado por eventos que o servidor já confirmou.
 
 ## Inimigos, chefes e movimento
 
@@ -149,4 +200,8 @@ As 11 poses são estáticas: não existe atlas nem recorte por quadro. Ao produz
 
 ## Responsividade
 
-`View/Responsive.luau` escolhe o modo de layout (computador ou compacto) e uma escala uniforme (≥ 1) a partir do tamanho real da janela; `View/Motion.luau` concentra as transições. Para ajustar limites, edite `Responsive.MIN_DESKTOP` e as referências `REFERENCE_DESKTOP`/`REFERENCE_COMPACT`. O HUD e o menu são reconstruídos automaticamente quando o modo muda.
+`View/Responsive.luau` escolhe o modo de layout (computador ou compacto) e uma escala uniforme (≥ 1)
+a partir do tamanho real da janela. As transições vivem nos próprios componentes (molas e tweens do
+Fusion, com durações de `Config/UiMotion`). Para ajustar limites, edite `Responsive.MIN_DESKTOP` e as
+referências `REFERENCE_DESKTOP`/`REFERENCE_COMPACT`. Quando o modo muda — ou quando o idioma muda —
+`UI/App.mount()` remonta a árvore inteira: texto e layout são escritos na construção.

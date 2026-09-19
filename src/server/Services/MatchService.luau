@@ -12,7 +12,8 @@ local Catalog = require(Shared.Config.Catalog)
 local Simulation = require(Shared.Sim.Simulation)
 local Snapshot = require(Shared.Sim.Snapshot)
 local Protocol = require(Shared.Net.Protocol)
-local ProfileService = require(script.Parent.ProfileService)
+local Server = require(script.Parent.Parent.Net.Server)
+local PlayerDataService = require(script.Parent.PlayerDataService)
 local RewardService = require(script.Parent.RewardService)
 local TelemetryService = require(script.Parent.TelemetryService)
 
@@ -58,12 +59,16 @@ export type Match = {
 
 local matches: { [string]: Match } = {}
 local playerMatch: { [number]: string } = {}
-local stateRemote: RemoteEvent
 local onPlayerFreed: ((Player) -> ())? = nil
 local onRematch: ((Match, { Player }) -> ())? = nil
 
+-- Quadros vão por ByteNet (Server.sendFrame codifica o snapshot); avisos raros usam sendMatchInfo.
 local function send(player: Player, kind: string, payload: any, extra: any?)
-	stateRemote:FireClient(player, kind, payload, extra)
+	if kind == "frame" then
+		Server.sendFrame(player, payload, extra or {})
+		return
+	end
+	Server.sendMatchInfo(player, kind, payload, extra)
 end
 
 local function connectedPlayers(match: Match): { [number]: Player }
@@ -104,7 +109,7 @@ function MatchService.start(request: StartRequest): (Match?, string?)
 		if playerMatch[player.UserId] then
 			return nil, "INVALID_STATE"
 		end
-		local profile = ProfileService.get(player)
+		local profile = PlayerDataService.get(player)
 		local loadout = if profile then table.clone(profile.loadout) else Catalog.starterTowerIds()
 		if request.mode == "tutorial" then
 			loadout = Catalog.starterTowerIds()
@@ -283,7 +288,7 @@ local function settle(match: Match)
 				result = state.result,
 				stats = state.stats,
 				outcome = outcomes[userId],
-				profile = ProfileService.clientView(player),
+				profile = PlayerDataService.clientView(player),
 			})
 			TelemetryService.funnel(player, "match", 2, "match_end", match.id)
 		end
@@ -473,7 +478,7 @@ function MatchService.handle(player: Player, action: string, payload: { [string]
 				end
 			end
 		end
-		local profile = ProfileService.get(player)
+		local profile = PlayerDataService.get(player)
 		local unlocked = if profile then profile.ownedTowerIds else Catalog.starterTowerIds()
 		local cr, events =
 			Simulation.placeTower(state, userId, payload.towerId, payload.x, payload.y, { unlockedTowerIds = unlocked })
@@ -528,7 +533,7 @@ function MatchService.handle(player: Player, action: string, payload: { [string]
 			return result(false, Protocol.ERROR.INVALID_STATE)
 		end
 		match.tutorialSkipped = true
-		ProfileService.mutate(player, function(p: Types.Profile)
+		PlayerDataService.mutate(player, function(p: Types.Profile)
 			p.tutorialCompleted = true
 		end)
 		leaveMatch(match, player)
@@ -670,11 +675,7 @@ local function heartbeat(dt: number)
 	end
 end
 
-function MatchService.init(
-	remote: RemoteEvent,
-	callbacks: { onPlayerFreed: (Player) -> (), onRematch: (Match, { Player }) -> () }
-)
-	stateRemote = remote
+function MatchService.init(callbacks: { onPlayerFreed: (Player) -> (), onRematch: (Match, { Player }) -> () })
 	onPlayerFreed = callbacks.onPlayerFreed
 	onRematch = callbacks.onRematch
 	RunService.Heartbeat:Connect(heartbeat)

@@ -82,5 +82,68 @@
     "easing": "Linear",
     "normal": "preenchimento calculado por readyAt − simTime",
     "reduced": "Mesmo preenchimento, sem pulso"
+  },
+  {
+    "id": "juice_pop",
+    "durationMs": 220,
+    "easing": "Back Out",
+    "normal": "escala 0,86 → 1 com leve ultrapassagem (cartas, fichas e selos)",
+    "reduced": "Escala 1 imediata"
+  },
+  {
+    "id": "juice_press",
+    "durationMs": 70,
+    "easing": "Quad Out",
+    "normal": "botão afunda 3 px sobre o chanfro e volta ao soltar",
+    "reduced": "Somente mudança de preenchimento"
+  },
+  {
+    "id": "juice_hit",
+    "durationMs": 90,
+    "easing": "Quad Out",
+    "normal": "clarão branco no sprite atingido, 90 ms",
+    "reduced": "Clarão sem deformação, 80 ms"
+  },
+  {
+    "id": "juice_shake",
+    "durationMs": 260,
+    "easing": "Sine Out",
+    "normal": "tremor do tabuleiro com amplitude decrescente (vazamento e chefe)",
+    "reduced": "Sem tremor: pisca a borda do tabuleiro"
+  },
+  {
+    "id": "juice_float",
+    "durationMs": 700,
+    "easing": "Quad Out",
+    "normal": "número de dano sobe em arco, cresce e some",
+    "reduced": "Número estático que some em 80 ms"
+  },
+  {
+    "id": "juice_burst",
+    "durationMs": 420,
+    "easing": "Quad Out",
+    "normal": "até 8 partículas em leque a partir do impacto",
+    "reduced": "Nenhuma partícula"
+  },
+  {
+    "id": "juice_collect",
+    "durationMs": 520,
+    "easing": "Quad InOut",
+    "normal": "sucata ganha voa do inimigo até a ficha de saldo",
+    "reduced": "Saldo atualiza sem voo"
+  },
+  {
+    "id": "banner",
+    "durationMs": 420,
+    "easing": "Back Out",
+    "normal": "faixa de onda entra do topo, segura 1,2 s e sai",
+    "reduced": "Faixa aparece e some em 80 ms"
+  },
+  {
+    "id": "card_select",
+    "durationMs": 140,
+    "easing": "Back Out",
+    "normal": "carta selecionada sobe 6 px e ganha halo dourado",
+    "reduced": "Somente halo dourado"
   }
 ]
