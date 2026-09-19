@@ -795,7 +795,7 @@
     {
       "id": "jardim",
       "name": "Jardim de Papel",
-      "unlock": "tutorial",
+      "unlock": null,
       "hpMultiplier": 1,
       "path": [
         [
@@ -1126,7 +1126,6 @@
     "markStacking": "maximum"
   },
   "rewards": {
-    "tutorialButtons": 180,
     "lossButtonsPerWave": 4,
     "lossButtonsCap": 60,
     "masteryWin": 10,
@@ -1174,45 +1173,217 @@
     "founderPassId": null,
     "proposedRobuxPrice": 149
   },
-  "tutorial": {
-    "startingCash": 1200,
-    "waves": [
-      [
-        {
-          "enemy": "fiapo",
-          "count": 1
-        }
-      ],
-      [
-        {
-          "enemy": "fiapo",
-          "count": 4
-        },
-        {
-          "enemy": "corrisco",
-          "count": 2
-        }
-      ],
-      [
-        {
-          "enemy": "fiapo",
-          "count": 6
-        },
-        {
-          "enemy": "bolota",
-          "count": 1
-        }
-      ]
-    ],
-    "guidedCells": {
-      "dardo": [
-        4,
-        3
-      ],
-      "goma": [
-        4,
-        4
-      ]
-    }
+  "earlyWaveBonusPerSecond": 5,
+  "earlyWaveBonusMax": 80,
+  "campaign": {
+    "buttonsPerStar": 25,
+    "note": "Fases da campanha. A primeira estrela é sempre vencer; as outras duas saem de objectives, avaliados pelo servidor com as estatisticas da partida (Rules/Stars). waves = quantas ondas da tabela global a fase usa.",
+    "levels": [
+      {
+        "id": "1",
+        "mapId": "jardim",
+        "waves": 3,
+        "hpScale": 1.0,
+        "startingCash": 650,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "maxTowers",
+            "value": 3
+          }
+        ],
+        "manualWaveStart": true,
+        "intro": true,
+        "introTower": "dardo",
+        "introCell": [
+          4,
+          3
+        ]
+      },
+      {
+        "id": "2",
+        "mapId": "jardim",
+        "waves": 5,
+        "hpScale": 1.0,
+        "startingCash": 650,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "onlyTowers",
+            "towers": [
+              "dardo",
+              "pipoca"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3",
+        "mapId": "jardim",
+        "waves": 7,
+        "hpScale": 1.0,
+        "startingCash": 700,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "rushAll"
+          }
+        ]
+      },
+      {
+        "id": "4",
+        "mapId": "jardim",
+        "waves": 9,
+        "hpScale": 1.0,
+        "startingCash": 700,
+        "objectives": [
+          {
+            "kind": "maxDamage",
+            "value": 20
+          },
+          {
+            "kind": "maxTowers",
+            "value": 6
+          }
+        ]
+      },
+      {
+        "id": "5",
+        "mapId": "jardim",
+        "waves": 12,
+        "hpScale": 1.1,
+        "startingCash": 750,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "rushAll"
+          }
+        ]
+      },
+      {
+        "id": "6",
+        "mapId": "oficina",
+        "waves": 8,
+        "hpScale": 1.0,
+        "startingCash": 700,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "maxTowers",
+            "value": 5
+          }
+        ]
+      },
+      {
+        "id": "7",
+        "mapId": "oficina",
+        "waves": 10,
+        "hpScale": 1.1,
+        "startingCash": 750,
+        "objectives": [
+          {
+            "kind": "maxDamage",
+            "value": 15
+          },
+          {
+            "kind": "rushAll"
+          }
+        ]
+      },
+      {
+        "id": "8",
+        "mapId": "oficina",
+        "waves": 14,
+        "hpScale": 1.15,
+        "startingCash": 800,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "onlyTowers",
+            "towers": [
+              "dardo",
+              "pipoca",
+              "goma"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "9",
+        "mapId": "oficina",
+        "waves": 16,
+        "hpScale": 1.2,
+        "startingCash": 850,
+        "objectives": [
+          {
+            "kind": "maxDamage",
+            "value": 25
+          },
+          {
+            "kind": "maxTowers",
+            "value": 9
+          }
+        ]
+      },
+      {
+        "id": "10",
+        "mapId": "sotao",
+        "waves": 12,
+        "hpScale": 1.2,
+        "startingCash": 800,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "maxTowers",
+            "value": 7
+          }
+        ]
+      },
+      {
+        "id": "11",
+        "mapId": "sotao",
+        "waves": 16,
+        "hpScale": 1.3,
+        "startingCash": 850,
+        "objectives": [
+          {
+            "kind": "maxDamage",
+            "value": 20
+          },
+          {
+            "kind": "rushAll"
+          }
+        ]
+      },
+      {
+        "id": "12",
+        "mapId": "sotao",
+        "waves": 20,
+        "hpScale": 1.4,
+        "startingCash": 900,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "rushAll"
+          }
+        ]
+      }
+    ]
   }
 }

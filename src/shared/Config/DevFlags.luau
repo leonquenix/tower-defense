@@ -8,6 +8,10 @@ local DevFlags = {
 	-- Ligado em 2026-09-19 a pedido do responsável, para jogar livremente entre os cenários
 	-- enquanto a arte dos mapas é refeita.
 	unlockAllMaps = true,
+
+	-- Mostra o guia da primeira fase toda vez, ignorando o `campaignIntroSeen` do perfil.
+	-- Serve para conferir o guia sem apagar o perfil; em produção fica false.
+	alwaysShowIntro = false,
 }
 
 return DevFlags

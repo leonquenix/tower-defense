@@ -1,6 +1,7 @@
 local ProfileSchema = load("Shared/Profile/ProfileSchema")
 local Localization = load("Shared/Config/Localization")
 local DevFlags = load("Shared/Config/DevFlags")
+local Balance = load("Shared/Config/Balance")
 
 describe("ProfileSchema", function()
 	it("perfil padrão possui as três torres iniciais equipadas", function()
@@ -10,7 +11,7 @@ describe("ProfileSchema", function()
 		expect(p.buttons).toBe(0)
 		expect(ProfileSchema.validate(p)).toBe(true)
 	end)
-	it("P07: migração v1 -> v2 é idempotente", function()
+	it("P07: migração de perfil antigo é idempotente", function()
 		local v1 = {
 			schemaVersion = 1,
 			buttons = 300,
@@ -36,7 +37,7 @@ describe("ProfileSchema", function()
 		}
 		local once, changed = ProfileSchema.migrate(v1, 1000)
 		expect(changed).toBe(true)
-		expect(once.schemaVersion).toBe(2)
+		expect(once.schemaVersion).toBe(ProfileSchema.CURRENT_VERSION)
 		expect(once.tutorialCompleted).toBe(true)
 		expect(once.pendingResults).toEqual({})
 		expect(once.lifetimeStats.buttonsEarned).toBe(0)
@@ -71,8 +72,7 @@ describe("ProfileSchema", function()
 		expect(r1.applied).toBe(true)
 		expect(p.buttons).toBe(120)
 		expect(p.masteryByTower.dardo.points).toBe(10)
-		expect(p.mapUnlocks["oficina:normal"]).toBe(true)
-		expect(p.mapUnlocks["jardim:desafio"]).toBe(true)
+		expect(p.campaign["1"]).toBe(nil) -- sem levelId, nada de estrela
 		local r2 = ProfileSchema.applyMatchResult(p, input)
 		expect(r2.applied).toBe(false)
 		expect(r2.reason).toBe("duplicate")
@@ -116,25 +116,45 @@ describe("ProfileSchema", function()
 		expect(r.reason).toBe("ledger_full")
 		expect(p.buttons).toBe(0)
 	end)
-	it("P06: tutorial concluído duas vezes concede 180 uma única vez (chave tutorial-v1)", function()
+	it("P06: estrelas de uma fase são guardadas e pagas uma vez", function()
 		local p = ProfileSchema.default(0)
 		local input = {
-			matchId = ProfileSchema.TUTORIAL_KEY,
-			buttons = 180,
+			matchId = "m-fase-1",
+			buttons = 120,
 			masteryByTower = {},
 			outcome = "won",
-			mode = "tutorial",
+			mode = "normal",
 			mapId = "jardim",
 			difficulty = "normal",
 			wavesCompleted = 3,
+			levelId = "1",
+			stars = 2,
 			createdAt = 10,
 			now = 20,
 		}
-		expect(ProfileSchema.applyMatchResult(p, input).applied).toBe(true)
-		expect(p.buttons).toBe(180)
-		expect(p.tutorialCompleted).toBe(true)
+		local first = ProfileSchema.applyMatchResult(p, input)
+		expect(first.applied).toBe(true)
+		expect(first.newStars).toBe(2)
+		expect(first.unlockedLevelId).toBe("2")
+		expect(p.campaign["1"]).toBe(2)
+		expect(p.buttons).toBe(120 + 2 * Balance.campaign.buttonsPerStar)
+		-- repetir a mesma partida não paga de novo
 		expect(ProfileSchema.applyMatchResult(p, input).applied).toBe(false)
-		expect(p.buttons).toBe(180)
+		-- voltar com resultado pior mantém o melhor
+		local worse = table.clone(input)
+		worse.matchId = "m-fase-1b"
+		worse.stars = 1
+		local second = ProfileSchema.applyMatchResult(p, worse)
+		expect(second.applied).toBe(true)
+		expect(second.newStars).toBe(0)
+		expect(p.campaign["1"]).toBe(2)
+		-- melhorar paga só a diferença
+		local better = table.clone(input)
+		better.matchId = "m-fase-1c"
+		better.stars = 3
+		local third = ProfileSchema.applyMatchResult(p, better)
+		expect(third.newStars).toBe(1)
+		expect(p.campaign["1"]).toBe(3)
 	end)
 	it("marcos de domínio são registrados uma vez", function()
 		local p = ProfileSchema.default(0)
@@ -185,22 +205,21 @@ describe("ProfileSchema", function()
 		expect(p.loadout).toEqual({ "goma", "dardo" })
 		expect(ProfileSchema.setLoadout(p, { "dardo", "pipoca", "goma", "dardo", "pipoca" }, 1)).toBe(false)
 	end)
-	it("desbloqueio de mapas segue a campanha", function()
-		-- a regra é testada direto, sem passar pelo interruptor de desenvolvimento
+	it("desbloqueio segue a campanha: uma estrela abre a fase seguinte", function()
 		local p = ProfileSchema.default(0)
-		expect(ProfileSchema.campaignUnlocked(p, "jardim", "normal")).toBe(false)
-		p.tutorialCompleted = true
-		expect(ProfileSchema.campaignUnlocked(p, "jardim", "normal")).toBe(true)
-		expect(ProfileSchema.campaignUnlocked(p, "oficina", "normal")).toBe(false)
-		ProfileSchema.applyWinUnlocks(p, "jardim", "normal")
-		expect(ProfileSchema.campaignUnlocked(p, "oficina", "normal")).toBe(true)
-		expect(ProfileSchema.campaignUnlocked(p, "jardim", "desafio")).toBe(true)
-		expect(ProfileSchema.campaignUnlocked(p, "sotao", "normal")).toBe(false)
+		local levels = Balance.campaign.levels
+		expect(ProfileSchema.campaignUnlocked(p, levels[1].id)).toBe(true)
+		expect(ProfileSchema.campaignUnlocked(p, levels[2].id)).toBe(false)
+		ProfileSchema.applyLevelResult(p, levels[1].id, 1)
+		expect(ProfileSchema.campaignUnlocked(p, levels[2].id)).toBe(true)
+		expect(ProfileSchema.campaignUnlocked(p, levels[3].id)).toBe(false)
+		expect(ProfileSchema.campaignUnlocked(p, "fase-que-nao-existe")).toBe(false)
 	end)
 	it("interruptor de desenvolvimento abre tudo", function()
 		local p = ProfileSchema.default(0)
-		local expected = DevFlags.unlockAllMaps or ProfileSchema.campaignUnlocked(p, "sotao", "desafio")
-		expect(ProfileSchema.isMapUnlocked(p, "sotao", "desafio")).toBe(expected)
+		local last = Balance.campaign.levels[#Balance.campaign.levels]
+		local expected = DevFlags.unlockAllMaps or ProfileSchema.campaignUnlocked(p, last.id)
+		expect(ProfileSchema.isLevelUnlocked(p, last.id)).toBe(expected)
 	end)
 	it("sanitiza configurações", function()
 		local s = ProfileSchema.sanitizeSettings(

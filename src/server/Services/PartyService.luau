@@ -21,7 +21,7 @@ export type Party = {
 	leaderId: number,
 	members: { number }, -- ordem de entrada (mais antigo primeiro)
 	ready: { [number]: boolean },
-	mapId: string,
+	levelId: string,
 	difficulty: Types.Difficulty,
 	createdAt: number,
 	inMatchId: string?,
@@ -79,14 +79,14 @@ local function partyView(party: Party): { [string]: any }
 			name = if player then player.DisplayName else "?",
 			ready = party.ready[userId] == true or userId == party.leaderId,
 			loadout = if profile then table.clone(profile.loadout) else {},
-			unlocked = if profile then ProfileSchema.isMapUnlocked(profile, party.mapId, party.difficulty) else false,
+			unlocked = if profile then ProfileSchema.isLevelUnlocked(profile, party.levelId) else false,
 		})
 	end
 	return {
 		id = party.id,
 		leaderId = party.leaderId,
 		members = members,
-		mapId = party.mapId,
+		levelId = party.levelId,
 		difficulty = party.difficulty,
 		inMatch = party.inMatchId ~= nil,
 	}
@@ -101,7 +101,7 @@ function PartyService.lobbyView(player: Player): { [string]: any }
 				id = party.id,
 				leaderName = if leader then leader.DisplayName else "?",
 				size = #party.members,
-				mapId = party.mapId,
+				levelId = party.levelId,
 				difficulty = party.difficulty,
 			})
 		end
@@ -181,7 +181,7 @@ local function createParty(player: Player): Party
 		leaderId = player.UserId,
 		members = { player.UserId },
 		ready = {},
-		mapId = "jardim",
+		levelId = Catalog.firstLevelId(),
 		difficulty = "normal",
 		createdAt = os.clock(),
 		inMatchId = nil,
@@ -193,7 +193,8 @@ end
 
 local function startMatchFor(
 	players: { Player },
-	mapId: string,
+	levelId: string?,
+	mapId: string?,
 	difficulty: Types.Difficulty,
 	mode: Types.MatchMode,
 	partyId: string?
@@ -210,19 +211,17 @@ local function startMatchFor(
 			if not profile then
 				return result(false, Protocol.ERROR.PROFILE_UNAVAILABLE)
 			end
-			if not ProfileSchema.isMapUnlocked(profile, mapId, difficulty) then
-				return result(false, Protocol.ERROR.INVALID_STATE, { reason = "map_locked", userId = player.UserId })
+			if not levelId or not ProfileSchema.isLevelUnlocked(profile, levelId) then
+				return result(false, Protocol.ERROR.INVALID_STATE, { reason = "level_locked", userId = player.UserId })
 			end
 			if #profile.loadout == 0 then
 				return result(false, Protocol.ERROR.INVALID_STATE, { reason = "empty_loadout", userId = player.UserId })
 			end
 		end
-		if mode == "tutorial" and profile == nil and PlayerDataService.getStatus(player) ~= "unavailable" then
-			return result(false, Protocol.ERROR.PROFILE_UNAVAILABLE)
-		end
 	end
 	local match, err = MatchService.start({
 		players = players,
+		levelId = levelId,
 		mapId = mapId,
 		difficulty = difficulty,
 		mode = mode,
@@ -304,7 +303,7 @@ function PartyService.handle(player: Player, action: string, payload: { [string]
 			partyId = inviteParty.id,
 			fromName = player.DisplayName,
 			fromUserId = userId,
-			mapId = inviteParty.mapId,
+			levelId = inviteParty.levelId,
 			difficulty = inviteParty.difficulty,
 			expiresIn = INVITE_TTL,
 		})
@@ -361,42 +360,36 @@ function PartyService.handle(player: Player, action: string, payload: { [string]
 		if not party or party.leaderId ~= userId then
 			return result(false, Protocol.ERROR.NOT_OWNER)
 		end
-		if not Catalog.getMap(payload.mapId) or not Catalog.getDifficulty(payload.mode) then
+		if not Catalog.getLevel(payload.levelId) or not Catalog.getDifficulty(payload.mode) then
 			return result(false, Protocol.ERROR.BAD_REQUEST)
 		end
-		party.mapId = payload.mapId
+		party.levelId = payload.levelId
 		party.difficulty = payload.mode
 		party.ready = {}
 		PartyService.broadcast()
 		return result(true)
 	elseif action == "StartMatch" then
-		local matchMode: Types.MatchMode = "normal"
-		if payload.matchMode == "tutorial" or payload.matchMode == "training" then
-			matchMode = payload.matchMode
+		-- treino é solo, por mapa solto; campanha sempre por fase
+		if payload.matchMode == "training" then
+			if not Catalog.getMap(payload.mapId) then
+				return result(false, Protocol.ERROR.BAD_REQUEST)
+			end
+			return startMatchFor({ player }, nil, payload.mapId, "normal", "training", nil)
 		end
 		local difficulty = payload.mode
 		if difficulty ~= "normal" and difficulty ~= "desafio" then
 			return result(false, Protocol.ERROR.BAD_REQUEST)
 		end
-		if not Catalog.getMap(payload.mapId) then
+		local level = Catalog.getLevel(payload.levelId)
+		if not level then
 			return result(false, Protocol.ERROR.BAD_REQUEST)
-		end
-		if matchMode ~= "normal" then
-			-- tutorial e treino são sempre solo e não exigem party
-			return startMatchFor(
-				{ player },
-				if matchMode == "tutorial" then "jardim" else payload.mapId,
-				"normal",
-				matchMode,
-				nil
-			)
 		end
 		if not party or #party.members == 1 then
 			if party then
-				party.mapId = payload.mapId
+				party.levelId = level.id
 				party.difficulty = difficulty
 			end
-			return startMatchFor({ player }, payload.mapId, difficulty, "normal", if party then party.id else nil)
+			return startMatchFor({ player }, level.id, nil, difficulty, "normal", if party then party.id else nil)
 		end
 		if party.leaderId ~= userId then
 			return result(false, Protocol.ERROR.NOT_OWNER)
@@ -412,7 +405,7 @@ function PartyService.handle(player: Player, action: string, payload: { [string]
 			end
 			table.insert(players, member)
 		end
-		return startMatchFor(players, party.mapId, party.difficulty, "normal", party.id)
+		return startMatchFor(players, party.levelId, nil, party.difficulty, "normal", party.id)
 	end
 	return result(false, Protocol.ERROR.BAD_REQUEST)
 end
@@ -425,7 +418,15 @@ function PartyService.onRematch(previous: MatchService.Match, players: { Player 
 	if party then
 		party.inMatchId = nil
 	end
-	local r = startMatchFor(players, state.mapId, state.difficulty, state.mode, partyId)
+	-- revanche: mesma fase (ou mesmo mapa, no treino)
+	local r = startMatchFor(
+		players,
+		state.levelId,
+		if state.levelId then nil else state.mapId,
+		state.difficulty,
+		state.mode,
+		partyId
+	)
 	if not r.ok then
 		for _, player in ipairs(players) do
 			PartyService.sendLobby(player)

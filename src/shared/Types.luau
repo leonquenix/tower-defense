@@ -6,7 +6,7 @@ export type TowerStateId = "L0" | "L1" | "L2" | "L3A" | "L3B"
 export type TargetMode = "first" | "last" | "strongest" | "closest"
 export type DamageType = "physical" | "energy" | "none"
 export type Difficulty = "normal" | "desafio"
-export type MatchMode = "normal" | "tutorial" | "training"
+export type MatchMode = "normal" | "training"
 export type Phase =
 	"Lobby"
 	| "Loading"
@@ -105,7 +105,7 @@ export type WaveDef = {
 export type MapDef = {
 	id: string,
 	name: string,
-	unlock: string,
+	unlock: string?,
 	hpMultiplier: number,
 	path: { Cell },
 	blocked: { Cell },
@@ -142,7 +142,6 @@ export type EffectsDef = {
 }
 
 export type RewardsDef = {
-	tutorialButtons: number,
 	lossButtonsPerWave: number,
 	lossButtonsCap: number,
 	masteryWin: number,
@@ -152,10 +151,41 @@ export type RewardsDef = {
 	masteryMilestones: { number },
 }
 
-export type TutorialDef = {
+-- Campanha: fases declaradas em dados. A primeira estrela é sempre vencer; as outras duas saem
+-- dos objetivos, avaliados pelo servidor a partir das estatísticas da partida (Rules/Stars).
+export type ObjectiveDef = {
+	kind: string, -- noLeak | maxDamage | maxTowers | onlyTowers | rushAll
+	value: number?,
+	towers: { string }?,
+}
+
+export type LevelDef = {
+	id: string,
+	mapId: string,
+	waves: number, -- quantas ondas da tabela global a fase usa
+	hpScale: number,
 	startingCash: number,
-	waves: { { WaveGroup } },
-	guidedCells: { [string]: Cell },
+	objectives: { ObjectiveDef },
+	-- só a primeira fase: as ondas esperam o jogador chamar, e o guia inicial aparece uma vez
+	manualWaveStart: boolean?,
+	intro: boolean?,
+	introTower: string?,
+	introCell: Cell?,
+}
+
+export type CampaignDef = {
+	buttonsPerStar: number,
+	note: string,
+	levels: { LevelDef },
+}
+
+-- Estatísticas de uma partida de campanha (é o que decide as estrelas).
+export type CampaignStats = {
+	damageTaken: number,
+	towersBuilt: number,
+	towerIds: { [string]: boolean },
+	wavesRushed: number,
+	wavesTotal: number,
 }
 
 export type ShopDef = {
@@ -190,7 +220,7 @@ export type BalanceData = {
 	pulse: PulseDef,
 	effects: EffectsDef,
 	rewards: RewardsDef,
-	tutorial: TutorialDef,
+	campaign: CampaignDef,
 	shop: ShopDef,
 	partyMax: number,
 	serverMaxPlayers: number,
@@ -199,6 +229,9 @@ export type BalanceData = {
 	coopAdditionalHPPerPlayer: number,
 	preparationSeconds: number,
 	intermissionSeconds: number,
+	-- bônus por chamar a onda antes do cronômetro: sucatas por segundo poupado, com teto
+	earlyWaveBonusPerSecond: number,
+	earlyWaveBonusMax: number,
 	sellRefund: number,
 }
 
@@ -297,11 +330,21 @@ export type MatchConfig = {
 	seed: number,
 	speedMultiplier: number?,
 	trainingUnlockAll: boolean?,
+	-- campanha: a fase manda em ondas, vida, sucata inicial e ritmo das ondas
+	levelId: string?,
+	waves: number?,
+	hpScale: number?,
+	startingCash: number?,
+	manualWaveStart: boolean?,
 }
 
 export type MatchResult = {
 	outcome: "won" | "lost" | "abandoned",
 	wavesCompleted: number,
+	levelId: string?,
+	stars: number,
+	starsEarned: { boolean }, -- vitória, objetivo 1, objetivo 2
+	campaignStats: CampaignStats?,
 	buttonsPerPlayer: number,
 	eligibleUserIds: { number },
 	masteryByUser: { [number]: { [string]: number } },
@@ -346,7 +389,9 @@ export type MatchState = {
 	firstShotAt: number?,
 	activeSecondsByUserTower: { [number]: { [string]: number } },
 	trainingQueue: { TrainingSpawn },
-	tutorialWaves: { { WaveGroup } }?,
+	levelId: string?,
+	manualWaveStart: boolean,
+	campaignStats: CampaignStats,
 	lastSupportPulseAt: { [number]: number },
 }
 
@@ -434,6 +479,10 @@ export type Profile = {
 	cosmeticLoadout: { [string]: string },
 	masteryByTower: { [string]: MasteryRecord },
 	mapUnlocks: { [string]: boolean },
+	-- campanha: estrelas por fase (0..3). Fase sem entrada nunca foi vencida.
+	campaign: { [string]: number },
+	campaignIntroSeen: boolean,
+	-- campos do tutorial antigo: mantidos porque existem em perfis salvos; nada os lê.
 	tutorialRewardClaimed: boolean,
 	tutorialCompleted: boolean,
 	settings: ProfileSettings,
@@ -532,7 +581,11 @@ export type MatchSnapshot = {
 	full: boolean,
 	nextWavePreview: { WaveGroup }?,
 	trainingUnlockAll: boolean,
-	tutorialStep: number?,
+	levelId: string?,
+	-- eco das estatísticas que valem estrela, para o HUD mostrar o progresso ao vivo
+	damageTaken: number,
+	towersBuilt: number,
+	wavesRushed: number,
 }
 
 export type NetEvent = {

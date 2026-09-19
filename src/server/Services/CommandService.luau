@@ -56,8 +56,6 @@ local MATCH_ACTIONS: { [string]: boolean } = {
 	LeaveMatch = true,
 	TrainingSpawn = true,
 	TrainingClear = true,
-	TutorialAdvance = true,
-	TutorialSkip = true,
 	Rematch = true,
 	DevCommand = true,
 }

@@ -1,5 +1,5 @@
 --!strict
--- Fluxos do jogo que atravessam telas: começar partida, sair, revanche, tutorial.
+-- Fluxos do jogo que atravessam telas: começar fase, sair, revanche, comandos de combate.
 --
 -- As telas chamam estas funções em vez de receber uma sopa de callbacks. Nenhuma delas decide
 -- resultado: tudo é pedido ao servidor e confirmado pela resposta ou pelo próximo quadro.
@@ -28,38 +28,54 @@ end
 
 -- Começa uma partida. "Começar" apertado dez vezes continua gerando uma partida só
 -- (uma pendência por chave em Net/Commands).
-function GameFlow.startMatch(mapId: string, difficulty: string, matchMode: string)
+function GameFlow.startLevel(levelId: string, difficulty: string?)
 	if Commands.isPending("match:start") then
+		return
+	end
+	local level = Catalog.getLevel(levelId)
+	if not level then
 		return
 	end
 	Atoms.loadout(GameFlow.loadout())
 	Actions.navigate("loading", {
-		mapId = if matchMode == "tutorial" then "jardim" else mapId,
-		difficulty = difficulty,
+		levelId = levelId,
+		mapId = level.mapId,
+		difficulty = difficulty or "normal",
 		startedAt = os.clock(),
 	})
-	Commands.send("match:start", "StartMatch", { mapId = mapId, mode = difficulty, matchMode = matchMode }, {
-		onError = function(code, response)
-			Actions.navigate("menu")
-			if response.reason == "map_locked" then
-				Actions.toast(L("menu.notAllUnlocked"), "error")
-			elseif response.reason == "not_ready" then
-				Actions.toast(L("party.waitingReady"), "error")
-			elseif response.reason == "empty_loadout" then
-				Actions.toast(L("menu.teamEmpty"), "error")
-			else
-				Actions.toast(L("error." .. code), "error")
-			end
-		end,
-	})
-end
-
-function GameFlow.startTutorial()
-	GameFlow.startMatch("jardim", "normal", "tutorial")
+	Commands.send(
+		"match:start",
+		"StartMatch",
+		{ levelId = levelId, mode = difficulty or "normal", matchMode = "campaign" },
+		{
+			onError = function(code, response)
+				Actions.navigate("menu")
+				if response.reason == "level_locked" then
+					Actions.toast(L("campaign.locked"), "error")
+				elseif response.reason == "not_ready" then
+					Actions.toast(L("party.waitingReady"), "error")
+				elseif response.reason == "empty_loadout" then
+					Actions.toast(L("menu.teamEmpty"), "error")
+				else
+					Actions.toast(L("error." .. code), "error")
+				end
+			end,
+		}
+	)
 end
 
 function GameFlow.startTraining(mapId: string?)
-	GameFlow.startMatch(mapId or "jardim", "normal", "training")
+	if Commands.isPending("match:start") then
+		return
+	end
+	Atoms.loadout(GameFlow.loadout())
+	Actions.navigate("loading", { mapId = mapId or "jardim", difficulty = "normal", startedAt = os.clock() })
+	Commands.send("match:start", "StartMatch", { mapId = mapId or "jardim", matchMode = "training" }, {
+		onError = function(code)
+			Actions.navigate("menu")
+			Actions.toast(L("error." .. code), "error")
+		end,
+	})
 end
 
 -- Sair da partida pede confirmação: o combate continua rodando no servidor enquanto isso.
@@ -79,7 +95,7 @@ end
 -- Sair da partida sem depender da resposta do servidor.
 --
 -- O caminho normal é: pede LeaveMatch, o servidor manda o quadro "left" e MatchController limpa
--- tudo. Mas no fim do tutorial a partida já foi encerrada no servidor, então o pedido volta com
+-- tudo. Mas no fim de uma fase a partida já foi encerrada no servidor, então o pedido volta com
 -- erro e o "left" nunca chega — o jogador ficava preso na tela de combate com o resultado fechado
 -- (trava relatada em 19/09). Agora, se o quadro não vier, o cliente volta sozinho para o menu.
 local LEAVE_TIMEOUT = 2
@@ -111,7 +127,7 @@ function GameFlow.forceReturnToMenu(matchId: string?)
 	Atoms.matchResult(nil)
 	Atoms.towers({})
 	Actions.setSnapshot(nil)
-	Actions.setTutorial(nil, false)
+	Actions.setIntroStep(nil)
 	Actions.exitBuild()
 	Actions.selectTower(nil)
 	Actions.selectEnemy(nil)
@@ -182,22 +198,6 @@ end
 
 function GameFlow.setReady(ready: boolean)
 	combat("match:ready", "SetReady", { ready = ready })
-end
-
-function GameFlow.tutorialAdvance(step: number)
-	combat("tutorial:next", "TutorialAdvance", { step = step })
-end
-
-function GameFlow.tutorialSkip()
-	Actions.openModal({
-		title = L("tutorial.skip"),
-		body = L("tutorial.skipConfirm"),
-		confirmText = L("tutorial.skip"),
-		onConfirm = function()
-			Actions.closeModal()
-			combat("tutorial:skip", "TutorialSkip", {})
-		end,
-	})
 end
 
 function GameFlow.trainingSpawn(enemyId: string, count: number)

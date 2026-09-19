@@ -7,6 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Types = require(ReplicatedStorage.Shared.Types)
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
+local DevFlags = require(ReplicatedStorage.Shared.Config.DevFlags)
 local Actions = require(script.Parent.Parent.State.Actions)
 local Atoms = require(script.Parent.Parent.State.Atoms)
 local Client = require(script.Parent.Parent.Net.Client)
@@ -36,7 +37,6 @@ export type MatchView = {
 	receivedAt: number,
 	enemies: { [number]: EnemyView },
 	towers: { [number]: Types.TowerSnapshot },
-	tutorialStep: number,
 	result: any?,
 	rewardOutcome: any?,
 	rematch: { ready: number, total: number }?,
@@ -119,7 +119,6 @@ local function applySnapshot(snapshot: Types.MatchSnapshot)
 			receivedAt = now,
 			enemies = {},
 			towers = {},
-			tutorialStep = snapshot.tutorialStep or 0,
 			result = nil,
 			rewardOutcome = nil,
 			rematch = nil,
@@ -129,7 +128,6 @@ local function applySnapshot(snapshot: Types.MatchSnapshot)
 	local current = v :: MatchView
 	current.snapshot = snapshot
 	current.receivedAt = now
-	current.tutorialStep = snapshot.tutorialStep or current.tutorialStep
 	local seen: { [number]: boolean } = {}
 	for _, e in ipairs(snapshot.enemies) do
 		seen[e.id] = true
@@ -196,13 +194,10 @@ local function onState(kind: string, payload: any, extra: any)
 		view = nil
 		lastRevision = -1
 		applySnapshot(payload)
-		if view and extra and typeof(extra) == "table" and extra.tutorialStep then
-			(view :: MatchView).tutorialStep = extra.tutorialStep
-		end
 		Atoms.inMatch(true)
 		Atoms.matchResult(nil)
 		Atoms.rematch(nil)
-		-- cartas da doca: treino libera todas, tutorial usa as iniciais, o resto usa a equipe salva
+		-- cartas da coluna: treino libera todas; equipe vazia cai nas iniciais para nunca ficar vazia
 		local snapshot = payload :: Types.MatchSnapshot
 		if snapshot.trainingUnlockAll then
 			local all: { string } = {}
@@ -210,11 +205,14 @@ local function onState(kind: string, payload: any, extra: any)
 				table.insert(all, tower.id)
 			end
 			Atoms.loadout(all)
-		elseif snapshot.mode == "tutorial" or #Atoms.loadout() == 0 then
-			-- tutorial usa as iniciais; equipe vazia também cai nelas para a doca nunca ficar vazia
+		elseif #Atoms.loadout() == 0 then
 			Atoms.loadout(Catalog.starterTowerIds())
 		end
-		Actions.setTutorial(if payload.mode == "tutorial" then (payload.tutorialStep or 1) else nil, false)
+		-- Guia da primeira fase: só na fase marcada e só enquanto o perfil não tiver visto.
+		local level = if snapshot.levelId then Catalog.getLevel(snapshot.levelId) else nil
+		local profile = Atoms.profile()
+		local seen = profile ~= nil and profile.campaignIntroSeen == true and not DevFlags.alwaysShowIntro
+		Actions.setIntroStep(if level and level.intro and not seen then 1 else nil)
 		Actions.navigate("play")
 		emit("start", view, extra)
 	elseif kind == "frame" then
@@ -242,18 +240,12 @@ local function onState(kind: string, payload: any, extra: any)
 		Atoms.matchResult(nil)
 		Atoms.towers({})
 		Actions.setSnapshot(nil)
-		Actions.setTutorial(nil, false)
+		Actions.setIntroStep(nil)
 		Actions.exitBuild()
 		Actions.selectTower(nil)
 		Actions.selectEnemy(nil)
 		Actions.navigate("menu")
 		emit("left", payload)
-	elseif kind == "tutorial" then
-		if view then
-			(view :: MatchView).tutorialStep = payload.step
-		end
-		Actions.setTutorial(payload.step, payload.retry == true)
-		emit("tutorial", payload.step, payload.retry == true)
 	elseif kind == "rematch" then
 		if view then
 			(view :: MatchView).rematch = { ready = payload.ready, total = payload.total }

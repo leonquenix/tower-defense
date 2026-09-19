@@ -46,7 +46,7 @@ Enums.tower = set("tower", ids(Balance.towers :: any))
 Enums.towerState = set("towerState", { "L0", "L1", "L2", "L3A", "L3B" })
 Enums.targetMode = set("targetMode", { "first", "last", "strongest", "closest" })
 Enums.difficulty = set("difficulty", { "normal", "desafio" })
-Enums.matchMode = set("matchMode", { "normal", "tutorial", "training" })
+Enums.matchMode = set("matchMode", { "normal", "training" })
 Enums.map = set("map", ids(Maps :: any))
 Enums.circuit = set("circuit", ids(Balance.circuits :: any))
 Enums.phase = set("phase", {
@@ -79,6 +79,7 @@ Enums.event = set("event", {
 	"waveStart",
 	"waveEnd",
 	"waveIncome",
+	"earlyBonus",
 	"matchEnd",
 	"towerPlaced",
 	"towerSold",
@@ -92,7 +93,7 @@ Enums.event = set("event", {
 })
 
 -- Quadros da partida (servidor -> cliente) e avisos de lobby.
-Enums.frame = set("frame", { "frame", "match", "tutorial", "result", "left", "rematch" })
+Enums.frame = set("frame", { "frame", "match", "result", "left", "rematch" })
 Enums.lobby = set("lobby", { "lobby", "invite", "profile", "shop", "reward" })
 
 -- Converte texto -> id (0 quando nil ou fora da lista).

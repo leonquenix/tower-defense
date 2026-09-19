@@ -9,6 +9,7 @@ local Path = require(script.Parent.Parent.Math.Path)
 local Combat = require(script.Parent.Parent.Rules.Combat)
 local Circuits = require(script.Parent.Parent.Rules.Circuits)
 local Rewards = require(script.Parent.Parent.Rules.Rewards)
+local Stars = require(script.Parent.Parent.Rules.Stars)
 local TableUtil = require(script.Parent.Parent.Util.TableUtil)
 
 local Simulation = {}
@@ -87,10 +88,8 @@ function Simulation.new(config: Types.MatchConfig): Types.MatchState
 	local wallets: { [number]: number } = {}
 	local stats: { [number]: Types.PlayerMatchStats } = {}
 	local active: { [number]: { [string]: number } } = {}
-	local startingCash = Balance.startingCash
-	if config.mode == "tutorial" then
-		startingCash = Balance.tutorial.startingCash
-	end
+	-- a fase manda na sucata inicial; fora da campanha vale o padrão do balanceamento
+	local startingCash = config.startingCash or Balance.startingCash
 	for _, p in ipairs(config.participants) do
 		table.insert(participants, {
 			userId = p.userId,
@@ -108,14 +107,12 @@ function Simulation.new(config: Types.MatchConfig): Types.MatchState
 		active[p.userId] = {}
 	end
 	table.sort(order)
-	local totalWaves = #Balance.waves
-	local tutorialWaves: { { Types.WaveGroup } }? = nil
-	if config.mode == "tutorial" then
-		tutorialWaves = Balance.tutorial.waves
-		totalWaves = #Balance.tutorial.waves
-	elseif config.mode == "training" then
+	local totalWaves = math.clamp(config.waves or #Balance.waves, 1, #Balance.waves)
+	if config.mode == "training" then
 		totalWaves = 0
 	end
+	-- Só a primeira fase espera o jogador chamar cada onda; nas outras o cronômetro corre.
+	local manualWaveStart = config.manualWaveStart == true
 	local state: Types.MatchState = {
 		matchId = config.matchId,
 		configVersion = config.configVersion,
@@ -131,7 +128,7 @@ function Simulation.new(config: Types.MatchConfig): Types.MatchState
 		baseHP = Balance.baseHP,
 		simTime = 0,
 		speedMultiplier = 1,
-		phaseEndsAt = if config.mode == "tutorial" then math.huge else Balance.preparationSeconds,
+		phaseEndsAt = if manualWaveStart then math.huge else Balance.preparationSeconds,
 		enemies = {},
 		enemyOrder = {},
 		towers = {},
@@ -151,8 +148,8 @@ function Simulation.new(config: Types.MatchConfig): Types.MatchState
 		pulseReadyAt = if Balance.pulse.startsCharged then 0 else Balance.pulse.cooldown,
 		bountyCursor = 1,
 		stats = stats,
-		commonHpFactor = map.hpMultiplier * difficulty.hp * coop,
-		bossHpFactor = difficulty.hp * coop,
+		commonHpFactor = map.hpMultiplier * difficulty.hp * coop * (config.hpScale or 1),
+		bossHpFactor = difficulty.hp * coop * (config.hpScale or 1),
 		coopFactor = coop,
 		pathLength = path.totalLength,
 		revision = 0,
@@ -161,7 +158,15 @@ function Simulation.new(config: Types.MatchConfig): Types.MatchState
 		firstShotAt = nil,
 		activeSecondsByUserTower = active,
 		trainingQueue = {},
-		tutorialWaves = tutorialWaves,
+		levelId = config.levelId,
+		manualWaveStart = manualWaveStart,
+		campaignStats = {
+			damageTaken = 0,
+			towersBuilt = 0,
+			towerIds = {},
+			wavesRushed = 0,
+			wavesTotal = totalWaves,
+		},
 		lastSupportPulseAt = {},
 	}
 	return state
@@ -222,21 +227,10 @@ local function towerList(state: Types.MatchState): { Types.Tower }
 end
 Simulation.towerList = towerList
 
+-- A fase usa as N primeiras ondas da tabela global; passar do fim da fase é fim de partida.
 function Simulation.getWaveDef(state: Types.MatchState, index: number): Types.WaveDef?
-	if state.tutorialWaves then
-		local groups = state.tutorialWaves[index]
-		if not groups then
-			return nil
-		end
-		local base = Balance.waves[math.clamp(index, 1, #Balance.waves)]
-		return {
-			wave = index,
-			groups = groups,
-			spawnInterval = base.spawnInterval,
-			groupGap = base.groupGap,
-			bossAfterGroups = false,
-			income = base.income,
-		}
+	if index > state.totalWaves then
+		return nil
 	end
 	return Balance.waves[index]
 end
@@ -401,7 +395,30 @@ local function allActiveReady(state: Types.MatchState): boolean
 	return any
 end
 
+-- Bônus por chamar a onda antes do cronômetro: quanto mais tempo sobrava, maior a sucata.
+-- Fica aqui (e não no cliente) porque é economia: quem soma no bolso é o servidor.
+local function grantEarlyWaveBonus(state: Types.MatchState, index: number, events: { Types.SimEvent })
+	if state.mode == "training" or state.phaseEndsAt == math.huge then
+		return
+	end
+	local remaining = state.phaseEndsAt - state.simTime
+	if remaining <= 0 then
+		return -- o cronômetro acabou sozinho: não houve adiantamento
+	end
+	local seconds = math.ceil(remaining)
+	local bonus = math.min(seconds * Balance.earlyWaveBonusPerSecond, Balance.earlyWaveBonusMax)
+	if bonus <= 0 then
+		return
+	end
+	for _, userId in ipairs(state.participantOrder) do
+		state.wallets[userId] += bonus
+	end
+	state.campaignStats.wavesRushed += 1
+	table.insert(events, event(state, "earlyBonus", { wave = index, amount = bonus }))
+end
+
 local function startWave(state: Types.MatchState, index: number, events: { Types.SimEvent })
+	grantEarlyWaveBonus(state, index, events)
 	state.waveIndex = index
 	state.phase = "Wave"
 	state.waveRuntime = {
@@ -434,6 +451,11 @@ local function finishMatch(state: Types.MatchState, outcome: "won" | "lost", eve
 		end
 		masteryByUser[p.userId] = perTower
 	end
+	-- Estrelas da fase: vitória + os dois objetivos, medidos no que a partida realmente fez.
+	local level = if state.levelId then Catalog.getLevel(state.levelId) else nil
+	local starOutcome = if level
+		then Stars.evaluate(level, outcome == "won", state.campaignStats)
+		else { stars = 0, earned = {} }
 	state.result = {
 		outcome = outcome,
 		wavesCompleted = wavesCompleted,
@@ -442,6 +464,10 @@ local function finishMatch(state: Types.MatchState, outcome: "won" | "lost", eve
 		masteryByUser = masteryByUser,
 		statsByUser = state.stats,
 		durationSim = state.simTime,
+		levelId = state.levelId,
+		stars = starOutcome.stars,
+		starsEarned = starOutcome.earned,
+		campaignStats = state.campaignStats,
 	}
 	state.phase = if outcome == "won" then "Won" else "Lost"
 	table.insert(events, event(state, "matchEnd", { phase = state.phase, wave = wavesCompleted, amount = buttons }))
@@ -461,7 +487,7 @@ local function completeWave(state: Types.MatchState, events: { Types.SimEvent })
 		finishMatch(state, "won", events)
 	else
 		state.phase = "Intermission"
-		state.phaseEndsAt = if state.mode == "tutorial" then math.huge else state.simTime + Balance.intermissionSeconds
+		state.phaseEndsAt = if state.manualWaveStart then math.huge else state.simTime + Balance.intermissionSeconds
 		resetReady(state)
 		table.insert(events, event(state, "phase", { phase = "Intermission" }))
 	end
@@ -560,7 +586,10 @@ local function updateMovement(state: Types.MatchState, dt: number, events: { Typ
 				cancelTelegraph(state, e, events)
 				removeEnemy(state, e)
 				if state.mode ~= "training" then
+					local before = state.baseHP
 					state.baseHP = math.max(0, state.baseHP - e.leak)
+					-- o dano levado é o que decide a estrela de "sem vazamento"
+					state.campaignStats.damageTaken += before - state.baseHP
 				end
 				table.insert(events, event(state, "leak", { entityId = e.id, enemyDefId = e.defId, amount = e.leak }))
 			end
@@ -956,8 +985,9 @@ function Simulation.step(state: Types.MatchState, dtOverride: number?): { Types.
 	state.simTime += dt
 	state.revision += 1
 
-	-- tutorial: preparação e intervalos só terminam por confirmação (Pronto), sem cronômetro
-	local timerElapsed = state.mode ~= "tutorial" and state.simTime >= state.phaseEndsAt
+	-- Com início manual (primeira fase), preparação e intervalo só acabam quando o jogador
+	-- chama a onda: não há cronômetro correndo.
+	local timerElapsed = not state.manualWaveStart and state.simTime >= state.phaseEndsAt
 	if state.phase == "Preparation" then
 		if timerElapsed or allActiveReady(state) then
 			startWave(state, 1, events)
@@ -1108,6 +1138,9 @@ function Simulation.placeTower(
 	table.insert(state.towerOrder, id)
 	state.cellOccupancy[Grid.cellKey(x, y)] = id
 	state.stats[userId].towersPlaced += 1
+	-- objetivos de fase olham quantas torres foram construídas e quais tipos entraram em campo
+	state.campaignStats.towersBuilt += 1
+	state.campaignStats.towerIds[towerId] = true
 	bump(state, userId)
 	table.insert(events, event(state, "towerPlaced", { towerId = id, userId = userId, cell = { x, y }, amount = cost }))
 	recomputeCircuits(state, events)
@@ -1275,8 +1308,8 @@ end
 
 function Simulation.recomputeSpeed(state: Types.MatchState): boolean
 	local target = 2
-	if state.mode == "tutorial" then
-		target = 1
+	if state.manualWaveStart then
+		target = 1 -- a primeira fase é o passo a passo: velocidade dobrada atrapalha
 	else
 		local anyActive = false
 		for _, p in ipairs(state.participants) do
@@ -1310,7 +1343,7 @@ function Simulation.voteSpeed(
 	if value ~= 1 and value ~= 2 then
 		return fail(state, "INVALID_STATE", userId), events
 	end
-	if state.mode == "tutorial" and value == 2 then
+	if state.manualWaveStart and value == 2 then
 		return fail(state, "INVALID_STATE", userId), events
 	end
 	local participant = Simulation.getParticipant(state, userId)
@@ -1374,6 +1407,10 @@ function Simulation.abandon(state: Types.MatchState): { Types.SimEvent }
 		wavesCompleted = math.max(state.waveIndex - 1, 0),
 		buttonsPerPlayer = 0,
 		eligibleUserIds = {},
+		levelId = state.levelId,
+		stars = 0,
+		starsEarned = {},
+		campaignStats = state.campaignStats,
 		masteryByUser = {},
 		statsByUser = state.stats,
 		durationSim = state.simTime,

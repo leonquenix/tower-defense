@@ -32,6 +32,40 @@ local STATUS_TEXT: { [string]: string } = {
 	none = "result.noReward",
 }
 
+-- Uma estrela do resultado. A escala vem de fora: o cartão entrega uma por vez, com mola, para
+-- a conquista ter peso em vez de aparecer pronta.
+local function starText(scope: Kit.Scope, result: Kit.Used<any>, index: number, scale: Kit.Used<number>): TextLabel
+	local label = Kit.text(scope, {
+		Name = "Star" .. index,
+		Text = "★",
+		Font = Theme.fonts.title,
+		TextSize = 44,
+		TextColor3 = scope:Computed(function(use)
+			local payload = Kit.read(use, result)
+			local earned = payload and payload.result and payload.result.starsEarned
+			local got = typeof(earned) == "table" and earned[index] == true
+			return if got then Theme.colors.gold else Theme.colors.sageDeep
+		end),
+		TextXAlignment = Enum.TextXAlignment.Center,
+		Size = UDim2.fromOffset(48, 48),
+		LayoutOrder = index,
+		ZIndex = 43,
+	})
+	local holder = scope:New("UIScale")({ Scale = scale })
+	holder.Parent = label
+	local rotation = scope:New("UIStroke")({
+		Color = Theme.colors.goldDark,
+		Thickness = scope:Computed(function(use)
+			local payload = Kit.read(use, result)
+			local earned = payload and payload.result and payload.result.starsEarned
+			local got = typeof(earned) == "table" and earned[index] == true
+			return if got then 2 else 0
+		end),
+	})
+	rotation.Parent = label
+	return label
+end
+
 return function(scope: Kit.Scope, props: Props): Frame
 	local result = Bridge.use(scope, Atoms.matchResult)
 	local snapshot = Bridge.use(scope, Atoms.snapshot)
@@ -112,6 +146,50 @@ return function(scope: Kit.Scope, props: Props): Frame
 		return lines
 	end)
 
+	-- Entrada do cartão e das estrelas: o resultado chega com um salto, e cada estrela entra
+	-- depois da outra. `seq` avança sozinho quando um resultado novo aparece.
+	local cardScale = scope:Value(0.8)
+	local starScales = { scope:Value(0), scope:Value(0), scope:Value(0) }
+	local cardSpring = scope:Spring(cardScale, 16, 0.55)
+	local starSprings = {
+		scope:Spring(starScales[1], 22, 0.35),
+		scope:Spring(starScales[2], 22, 0.35),
+		scope:Spring(starScales[3], 22, 0.35),
+	}
+	local playedFor: string? = nil
+	local function playEntrance(payload: any)
+		local matchId = payload and payload.result and tostring(payload.result.matchId or payload.status)
+		local key = tostring(matchId) .. tostring(payload and payload.status)
+		if key == playedFor then
+			return
+		end
+		playedFor = key
+		cardScale:set(0.8)
+		for _, value in ipairs(starScales) do
+			value:set(0)
+		end
+		task.defer(function()
+			cardScale:set(1)
+		end)
+		local earned = payload and payload.result and payload.result.starsEarned
+		if typeof(earned) ~= "table" then
+			return
+		end
+		for index = 1, 3 do
+			task.delay(0.35 + index * 0.3, function()
+				-- estrela não conquistada entra menor e apagada: a diferença tem de saltar aos olhos
+				starScales[index]:set(if earned[index] == true then 1 else 0.7)
+			end)
+		end
+	end
+	Bridge.watchAtom(Atoms.matchResult, function(payload: any)
+		if payload then
+			playEntrance(payload)
+		else
+			playedFor = nil
+		end
+	end)
+
 	local contributionText = scope:Computed(function(use)
 		local payload = use(result)
 		local stats = payload and payload.stats
@@ -136,6 +214,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		Visible = props.visible,
 		[Children] = Kit.children(Kit.panel(scope, {
 			name = "Card",
+			scale = cardSpring,
 			size = UDim2.new(0, 560, 0, 0),
 			automaticSize = Enum.AutomaticSize.Y,
 			position = UDim2.fromScale(0.5, 0.5),
@@ -157,13 +236,36 @@ return function(scope: Kit.Scope, props: Props): Frame
 					LayoutOrder = 2,
 					ZIndex = 42,
 				}),
+				-- Estrelas da fase: as três, cheias as conquistadas nesta partida.
+				scope:New("Frame")({
+					Name = "Stars",
+					BackgroundTransparency = 1,
+					Size = UDim2.new(1, 0, 0, 52),
+					Visible = scope:Computed(function(use)
+						local payload = use(result)
+						return payload ~= nil and payload.result ~= nil and payload.result.levelId ~= nil
+					end),
+					LayoutOrder = 3,
+					ZIndex = 42,
+					[Children] = Kit.children(
+						Kit.list(scope, {
+							FillDirection = Enum.FillDirection.Horizontal,
+							Padding = UDim.new(0, 10),
+							HorizontalAlignment = Enum.HorizontalAlignment.Center,
+							VerticalAlignment = Enum.VerticalAlignment.Center,
+						}),
+						starText(scope, result, 1, starSprings[1]),
+						starText(scope, result, 2, starSprings[2]),
+						starText(scope, result, 3, starSprings[3])
+					),
+				}),
 				Kit.panel(scope, {
 					name = "Reward",
 					size = UDim2.new(1, 0, 0, 0),
 					automaticSize = Enum.AutomaticSize.Y,
 					color = Theme.colors.cream,
 					padding = 14,
-					layoutOrder = 3,
+					layoutOrder = 4,
 					shadow = false,
 					zIndex = 42,
 					layout = Kit.list(scope, { Padding = UDim.new(0, 6) }),

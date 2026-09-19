@@ -261,6 +261,8 @@ export type PanelProps = {
 	overlay: { any }?,
 	-- painel que cobre o tabuleiro: engole o toque em vez de deixar passar para a célula atrás
 	blocking: boolean?,
+	-- escala do painel inteiro (entrada com mola); 1 é o tamanho normal
+	scale: Used<number>?,
 }
 
 -- Painel do revamp: um suporte transparente com [sombra, superfície]. A sombra é irmã da
@@ -373,6 +375,9 @@ function Kit.panel(scope: Scope, props: PanelProps): Frame
 		})
 	)
 
+	if props.scale then
+		table.insert(holderChildren, scope:New("UIScale")({ Scale = props.scale }))
+	end
 	return scope:New("Frame")({
 		Name = props.name or "Panel",
 		BackgroundTransparency = 1,

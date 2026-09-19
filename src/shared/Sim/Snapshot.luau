@@ -82,12 +82,7 @@ function Snapshot.participants(state: Types.MatchState): { Types.ParticipantSnap
 	return list
 end
 
-function Snapshot.build(
-	state: Types.MatchState,
-	forUserId: number,
-	full: boolean,
-	tutorialStep: number?
-): Types.MatchSnapshot
+function Snapshot.build(state: Types.MatchState, forUserId: number, full: boolean): Types.MatchSnapshot
 	local nextWave: { Types.WaveGroup }? = nil
 	local previewIndex = if state.phase == "Preparation" then 1 else state.waveIndex + 1
 	local def = Simulation.getWaveDef(state, previewIndex)
@@ -120,7 +115,11 @@ function Snapshot.build(
 		full = full,
 		nextWavePreview = nextWave,
 		trainingUnlockAll = state.trainingUnlockAll,
-		tutorialStep = tutorialStep,
+		levelId = state.levelId,
+		-- eco do que vale estrela: o HUD mostra o progresso sem esperar o fim da partida
+		damageTaken = state.campaignStats.damageTaken,
+		towersBuilt = state.campaignStats.towersBuilt,
+		wavesRushed = state.campaignStats.wavesRushed,
 	}
 end
 

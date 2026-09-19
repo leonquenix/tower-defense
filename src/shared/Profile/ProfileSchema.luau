@@ -8,7 +8,7 @@ local DevFlags = require(script.Parent.Parent.Config.DevFlags)
 
 local ProfileSchema = {}
 
-ProfileSchema.CURRENT_VERSION = 2
+ProfileSchema.CURRENT_VERSION = 3
 ProfileSchema.REWARD_RETENTION_SECONDS = 30 * 24 * 3600
 ProfileSchema.REWARD_LEDGER_LIMIT = 1024
 ProfileSchema.TUTORIAL_KEY = "tutorial-v1"
@@ -35,6 +35,8 @@ function ProfileSchema.default(now: number): Types.Profile
 		cosmeticLoadout = {},
 		masteryByTower = {},
 		mapUnlocks = {},
+		campaign = {},
+		campaignIntroSeen = false,
 		tutorialRewardClaimed = false,
 		tutorialCompleted = false,
 		settings = ProfileSchema.defaultSettings(),
@@ -72,6 +74,23 @@ migrations[1] = function(data: any, now: number): any
 	end
 	if data.lifetimeStats.buttonsEarned == nil then
 		data.lifetimeStats.buttonsEarned = 0
+	end
+	data.updatedAt = now
+	return data
+end
+
+-- v2 -> v3: campanha por fases no lugar do tutorial. Quem já tinha concluído o tutorial começa
+-- com a primeira fase vencida (uma estrela), para não perder o desbloqueio que já tinha.
+migrations[2] = function(data: any, now: number): any
+	data.schemaVersion = 3
+	if typeof(data.campaign) ~= "table" then
+		data.campaign = {}
+	end
+	if data.campaignIntroSeen == nil then
+		data.campaignIntroSeen = data.tutorialCompleted == true
+	end
+	if data.tutorialCompleted == true and data.campaign["1"] == nil then
+		data.campaign["1"] = 1
 	end
 	data.updatedAt = now
 	return data
@@ -191,49 +210,58 @@ function ProfileSchema.sanitizeSettings(input: { [string]: any }, current: Types
 	return out
 end
 
--- Regras de desbloqueio de mapa/dificuldade. Chaves: "jardim:normal", "oficina:desafio" ...
-function ProfileSchema.unlockKey(mapId: string, difficulty: string): string
-	return mapId .. ":" .. difficulty
+-- ---------------------------------------------------------------------------
+-- Campanha
+-- ---------------------------------------------------------------------------
+
+-- Estrelas já conquistadas numa fase (0 quando nunca foi vencida).
+function ProfileSchema.levelStars(profile: Types.Profile, levelId: string): number
+	local stars = profile.campaign[levelId]
+	return if typeof(stars) == "number" then stars else 0
 end
 
--- Regra da campanha, sem atalho: é ela que o jogo de verdade usa e o teste cobre.
-function ProfileSchema.campaignUnlocked(profile: Types.Profile, mapId: string, difficulty: string): boolean
-	if mapId == "jardim" and difficulty == "normal" then
-		return profile.tutorialCompleted or profile.mapUnlocks["jardim:normal"] == true
+-- Regra da campanha, sem atalho: a primeira fase é aberta e cada seguinte pede pelo menos uma
+-- estrela na anterior. É ela que o teste cobre.
+function ProfileSchema.campaignUnlocked(profile: Types.Profile, levelId: string): boolean
+	local levels = Balance.campaign.levels
+	for index, level in ipairs(levels) do
+		if level.id == levelId then
+			if index == 1 then
+				return true
+			end
+			return ProfileSchema.levelStars(profile, levels[index - 1].id) >= 1
+		end
 	end
-	return profile.mapUnlocks[ProfileSchema.unlockKey(mapId, difficulty)] == true
+	return false
 end
 
 -- O que o jogo pergunta. Com o interruptor de desenvolvimento ligado, tudo abre.
-function ProfileSchema.isMapUnlocked(profile: Types.Profile, mapId: string, difficulty: string): boolean
+function ProfileSchema.isLevelUnlocked(profile: Types.Profile, levelId: string): boolean
 	if DevFlags.unlockAllMaps then
 		return true
 	end
-	return ProfileSchema.campaignUnlocked(profile, mapId, difficulty)
+	return ProfileSchema.campaignUnlocked(profile, levelId)
 end
 
--- Aplica desbloqueios após vitória normal/desafio. Retorna chaves novas.
-function ProfileSchema.applyWinUnlocks(profile: Types.Profile, mapId: string, difficulty: string): { string }
-	local added = {}
-	local function unlock(key: string)
-		if not profile.mapUnlocks[key] then
-			profile.mapUnlocks[key] = true
-			table.insert(added, key)
+-- Guarda o melhor resultado de uma fase. Devolve quantas estrelas são novas (o que vira botões)
+-- e a fase que abriu, quando abriu alguma.
+function ProfileSchema.applyLevelResult(profile: Types.Profile, levelId: string, stars: number): (number, string?)
+	local clamped = math.clamp(math.floor(stars), 0, 3)
+	local previous = ProfileSchema.levelStars(profile, levelId)
+	if clamped <= previous then
+		return 0, nil
+	end
+	profile.campaign[levelId] = clamped
+	local unlocked: string? = nil
+	if previous == 0 then
+		local levels = Balance.campaign.levels
+		for index, level in ipairs(levels) do
+			if level.id == levelId and levels[index + 1] then
+				unlocked = levels[index + 1].id
+			end
 		end
 	end
-	if difficulty == "normal" then
-		unlock(ProfileSchema.unlockKey(mapId, "desafio"))
-		local nextMap: string? = nil
-		if mapId == "jardim" then
-			nextMap = "oficina"
-		elseif mapId == "oficina" then
-			nextMap = "sotao"
-		end
-		if nextMap then
-			unlock(ProfileSchema.unlockKey(nextMap, "normal"))
-		end
-	end
-	return added
+	return clamped - previous, unlocked
 end
 
 -- Limpa o ledger de recompensas: remove entradas mais antigas que 30 dias. Retorna se atingiu o limite.
@@ -261,6 +289,9 @@ export type ApplyResultInput = {
 	wavesCompleted: number,
 	enemiesDefeated: number?,
 	towersPlaced: number?,
+	-- campanha: fase jogada e estrelas conquistadas nesta partida
+	levelId: string?,
+	stars: number?,
 	createdAt: number,
 	now: number,
 }
@@ -268,6 +299,9 @@ export type ApplyResultInput = {
 export type ApplyResultOutcome = {
 	applied: boolean,
 	reason: string?,
+	-- estrelas novas nesta fase (viram botões) e a fase que abriu, quando abriu
+	newStars: number,
+	unlockedLevelId: string?,
 	newMilestones: { [string]: { number } },
 	unlocked: { string },
 	-- Cosméticos concedidos pelos marcos de domínio cruzados neste resultado (30/100/250).
@@ -276,8 +310,15 @@ export type ApplyResultOutcome = {
 
 -- Aplica um resultado ao perfil de forma idempotente por matchId. Puro: não grava.
 function ProfileSchema.applyMatchResult(profile: Types.Profile, input: ApplyResultInput): ApplyResultOutcome
-	local out: ApplyResultOutcome =
-		{ applied = false, reason = nil, newMilestones = {}, unlocked = {}, grantedCosmetics = {} }
+	local out: ApplyResultOutcome = {
+		applied = false,
+		reason = nil,
+		newStars = 0,
+		unlockedLevelId = nil,
+		newMilestones = {},
+		unlocked = {},
+		grantedCosmetics = {},
+	}
 	if input.now - input.createdAt > ProfileSchema.REWARD_RETENTION_SECONDS then
 		out.reason = "expired"
 		return out
@@ -335,13 +376,19 @@ function ProfileSchema.applyMatchResult(profile: Types.Profile, input: ApplyResu
 			end
 		end
 	end
-	if input.mode == "normal" and input.outcome == "won" then
-		out.unlocked = ProfileSchema.applyWinUnlocks(profile, input.mapId, input.difficulty)
-	end
-	if input.mode == "tutorial" and input.outcome == "won" then
-		profile.tutorialCompleted = true
-		profile.tutorialRewardClaimed = true
-		profile.mapUnlocks["jardim:normal"] = true
+	-- campanha: guarda o melhor resultado da fase e paga botões por estrela nova
+	if input.levelId and input.outcome == "won" then
+		local newStars, unlockedLevelId = ProfileSchema.applyLevelResult(profile, input.levelId, input.stars or 0)
+		out.newStars = newStars
+		out.unlockedLevelId = unlockedLevelId
+		if newStars > 0 then
+			local bonus = newStars * Balance.campaign.buttonsPerStar
+			profile.buttons += bonus
+			profile.lifetimeStats.buttonsEarned += bonus
+		end
+		if unlockedLevelId then
+			table.insert(out.unlocked, unlockedLevelId)
+		end
 	end
 	-- remove referência pendente
 	for i = #profile.pendingResults, 1, -1 do

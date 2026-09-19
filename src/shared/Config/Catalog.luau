@@ -63,6 +63,30 @@ function Catalog.getMap(id: string): Maps.MapEntry?
 	return mapsById[id]
 end
 
+-- Campanha: fases na ordem em que aparecem na tela, com busca por id.
+local levelsById: { [string]: Types.LevelDef } = {}
+local levelIndexById: { [string]: number } = {}
+for index, level in ipairs(Balance.campaign.levels) do
+	levelsById[level.id] = level
+	levelIndexById[level.id] = index
+end
+
+function Catalog.getLevel(id: string): Types.LevelDef?
+	return levelsById[id]
+end
+
+function Catalog.levelIndex(id: string): number?
+	return levelIndexById[id]
+end
+
+function Catalog.levels(): { Types.LevelDef }
+	return Balance.campaign.levels
+end
+
+function Catalog.firstLevelId(): string
+	return Balance.campaign.levels[1].id
+end
+
 function Catalog.getCircuitFor(towerA: string, towerB: string): Types.CircuitDef?
 	return circuitsByPair[towerA .. "|" .. towerB]
 end

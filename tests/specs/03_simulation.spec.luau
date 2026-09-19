@@ -23,14 +23,20 @@ local function newMatch(opts)
 	for i = 1, (opts.players or 1) do
 		table.insert(parts, participant(100 * i, opts.loadout))
 	end
+	local level = opts.level
 	return Simulation.new({
 		matchId = "m-test",
 		configVersion = "test",
 		mode = opts.mode or "normal",
-		mapId = opts.mapId or "jardim",
+		mapId = if level then level.mapId else (opts.mapId or "jardim"),
 		difficulty = opts.difficulty or "normal",
 		participants = parts,
 		seed = 1,
+		levelId = if level then level.id else nil,
+		waves = if level then level.waves else nil,
+		hpScale = if level then level.hpScale else nil,
+		startingCash = if level then level.startingCash else nil,
+		manualWaveStart = if level then level.manualWaveStart else nil,
 	})
 end
 
@@ -76,6 +82,41 @@ describe("Simulation / comandos", function()
 		expect(r2.ok).toBe(false)
 		expect(r2.errorCode).toBe("OCCUPIED")
 		expect(s.wallets[200]).toBe(650)
+	end)
+	it("chamar a onda antes do cronômetro paga bônus por segundo poupado", function()
+		local s = newMatch()
+		local wallet = s.wallets[100]
+		local seconds = math.ceil(s.phaseEndsAt - s.simTime)
+		local events = {}
+		Simulation.setReady(s, 100, true)
+		for _, e in ipairs(Simulation.step(s)) do
+			table.insert(events, e)
+		end
+		local expected = math.min(seconds * Balance.earlyWaveBonusPerSecond, Balance.earlyWaveBonusMax)
+		expect(expected > 0).toBe(true)
+		expect(s.wallets[100]).toBe(wallet + expected)
+		local bonus = nil
+		for _, e in ipairs(events) do
+			if e.kind == "earlyBonus" then
+				bonus = e
+			end
+		end
+		expect(bonus).toBeTruthy()
+		expect(bonus.amount).toBe(expected)
+		expect(s.phase).toBe("Wave")
+	end)
+	it("deixar o cronômetro acabar não paga bônus", function()
+		local s = newMatch()
+		local wallet = s.wallets[100]
+		-- roda até a preparação vencer sozinha
+		for _ = 1, math.ceil(Balance.preparationSeconds / Simulation.STEP) + 2 do
+			Simulation.step(s)
+			if s.phase == "Wave" then
+				break
+			end
+		end
+		expect(s.phase).toBe("Wave")
+		expect(s.wallets[100]).toBe(wallet)
 	end)
 	it("T04: colocar sobre caminho, bloqueio ou fora do mapa é rejeitado sem gasto", function()
 		local s = newMatch()
@@ -361,16 +402,14 @@ describe("Simulation / partida curta até vitória e derrota", function()
 		expect(s.phase).toBe("Lost")
 		expect(s.result.buttonsPerPlayer).toBe(math.min(4 * s.result.wavesCompleted, 60))
 	end)
-	it("tutorial: três ondas com equipe inicial guiada termina em vitória e 180 botões", function()
-		local s = newMatch({ mode = "tutorial" })
-		expect(s.wallets[100]).toBe(1200)
-		expect(s.totalWaves).toBe(3)
+	it("fase 1: três ondas, sucata da fase e vitória com estrelas", function()
+		local level = Balance.campaign.levels[1]
+		local s = newMatch({ level = level })
+		expect(s.wallets[100]).toBe(level.startingCash)
+		expect(s.totalWaves).toBe(level.waves)
 		expect(Simulation.placeTower(s, 100, "dardo", 4, 3).ok).toBe(true)
 		expect(Simulation.placeTower(s, 100, "goma", 4, 4).ok).toBe(true)
-		expect(Simulation.placeTower(s, 100, "pipoca", 5, 5).ok).toBe(true)
-		local d = s.towerOrder[1]
-		expect(Simulation.upgradeTower(s, 100, d, "L1").ok).toBe(true)
-		-- no tutorial cada fase de espera exige Pronto
+		-- a primeira fase espera "Pronto" em cada espera
 		for _ = 1, 10 * 60 * 20 do
 			if s.phase == "Preparation" or s.phase == "Intermission" then
 				Simulation.setReady(s, 100, true)
@@ -381,12 +420,17 @@ describe("Simulation / partida curta até vitória e derrota", function()
 			end
 		end
 		expect(s.phase).toBe("Won")
-		expect(s.result.wavesCompleted).toBe(3)
-		expect(s.result.buttonsPerPlayer).toBe(180)
+		expect(s.result.wavesCompleted).toBe(level.waves)
+		expect(s.result.levelId).toBe(level.id)
+		-- vencer já é a primeira estrela; as outras duas dependem dos objetivos da fase
+		expect(s.result.starsEarned[1]).toBe(true)
+		expect(#s.result.starsEarned).toBe(3)
+		expect(s.result.stars).toBeGreaterThan(0)
+		expect(s.result.campaignStats.towersBuilt).toBe(2)
 		expect(s.baseHP).toBeGreaterThan(0)
 	end)
-	it("tutorial não inicia onda pelo cronômetro; só com Pronto", function()
-		local s = newMatch({ mode = "tutorial" })
+	it("fase com início manual não solta onda pelo cronômetro", function()
+		local s = newMatch({ level = Balance.campaign.levels[1] })
 		runSteps(s, 40 * 20)
 		expect(s.phase).toBe("Preparation")
 		expect(#s.enemyOrder).toBe(0)
@@ -394,7 +438,13 @@ describe("Simulation / partida curta até vitória e derrota", function()
 		Simulation.step(s)
 		expect(s.phase).toBe("Wave")
 	end)
-	it("2x exige unanimidade e tutorial fica em 1x", function()
+	it("fase sem início manual corre pelo cronômetro", function()
+		local s = newMatch({ level = Balance.campaign.levels[2] })
+		expect(s.totalWaves).toBe(Balance.campaign.levels[2].waves)
+		runSteps(s, math.ceil(Balance.preparationSeconds * 20) + 4)
+		expect(s.phase).toBe("Wave")
+	end)
+	it("2x exige unanimidade e a fase de início manual fica em 1x", function()
 		local s = newMatch({ players = 2 })
 		Simulation.voteSpeed(s, 100, 2)
 		expect(s.speedMultiplier).toBe(1)
@@ -402,7 +452,7 @@ describe("Simulation / partida curta até vitória e derrota", function()
 		expect(s.speedMultiplier).toBe(2)
 		Simulation.voteSpeed(s, 100, 1)
 		expect(s.speedMultiplier).toBe(1)
-		local t = newMatch({ mode = "tutorial" })
+		local t = newMatch({ level = Balance.campaign.levels[1] })
 		expect(Simulation.voteSpeed(t, 100, 2).ok).toBe(false)
 	end)
 	it("participante ausente há 30 s deixa de contar para unanimidade", function()

@@ -1,6 +1,6 @@
 --!strict
 -- ARQUIVO GERADO por tools/import_balance.py a partir de Pacote_Claude_Code/dados/balanceamento_v1.json
--- Não edite à mão. sha256 da origem: 200ce1c3b4c225318e79d6f1515b3a5dadd3f90029745648fb44b62856224226
+-- Não edite à mão. sha256 da origem: 8bb86d8f9d806739e8e95a867a8837826751b087917d0bc267d94315b1be67f1
 local Types = require(script.Parent.Parent.Types)
 
 export type MapEntry = Types.MapDef & { pathCells: { Types.Cell } }
@@ -62,7 +62,6 @@ local Maps: { MapEntry } = {
 			{ 14, 8 },
 			{ 15, 8 },
 		},
-		unlock = "tutorial",
 	},
 	{
 		blocked = {

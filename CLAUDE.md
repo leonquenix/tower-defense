@@ -71,13 +71,17 @@ Os 24 ícones foram enviados em 2026-09-18 e `UiIcons` traz os IDs reais; a mode
 
 ## Mapa desenhado e HUD sangrado (2026-09-19)
 
-O primeiro mapa é uma **cena única** (`Assets_Mapas_v2/jardim_praia_sem_farol.png`): grama, caminho
-e cenário na mesma imagem. `assets/export/map_scene_overrides.json` guarda origem, sha256, id
-publicado, `playRect` (a fração da imagem ocupada pela grade 16×10) e as chaves `includesPath` /
-`includesBase`; `tools/update_asset_registry.py` leva isso para `Config/Assets.luau`. Esta arte
-**não** traz o farol: ele continua desenhado por código na última célula do caminho. Ao trocar a
-arte, meça o `playRect` pelos corredores desenhados (a proporção da área jogável tem de fechar em
-1,600) em vez de estimar.
+Cada mapa é uma **cena única** (piso, caminho e cenário na mesma imagem).
+`assets/export/map_scene_overrides.json` guarda origem, sha256, id publicado, `playRect` (a fração
+da imagem ocupada pela grade 16×10) e as chaves `includesPath` / `includesBase`;
+`tools/update_asset_registry.py` leva isso para `Config/Assets.luau`. As artes atuais **não** trazem
+o Farol: ele continua desenhado por código na última célula do caminho.
+
+Arte nova nunca é encaixada no olho: `python3 tools/fit_map_scene.py <arte.png> --overlay g.png`
+mede a malha de ladrilhos desenhada e devolve `playRect`, a rota em células e os bloqueios, mais
+uma imagem de conferência. A rota do mapa em `balanceamento_v1.json` segue o desenho (e não o
+contrário). Para encomendar arte nova, use `docs/GUIA_ARTE_DE_MAPA.md` e os gabaritos de
+`docs/map_templates/` (gerados por `tools/make_map_template.py`).
 
 `BoardTransform` tem três quadros: `window` (a tela inteira, que recorta), `stage` (a grade 16:10
 centrada — é ele que manda em célula, zoom e deslocamento) e `world` (o zoom). O tabuleiro é
@@ -89,3 +93,42 @@ por ordem de desenho.
 O HUD de combate (`UI/Screens/Hud.luau`) segue a maquete: fichas no canto superior esquerdo,
 velocidade/opções/sair no superior direito, coluna TORRES à direita, contexto no inferior esquerdo
 e, no rodapé, Pulso de Luz e o botão verde Iniciar Onda. Não há mais faixa superior nem doca.
+
+## Entrada, ritmo e interruptores (2026-09-19)
+
+Arrastar (botão esquerdo ou um dedo) move a câmera e **nunca** constrói: o toque parado é que
+constrói. O botão direito parado cancela o modo de construção. O zoom padrão deixa a grade em 86%
+da janela (`BoardTransform.BASE_FIT`).
+
+A torre olha para o alvo espelhando a própria textura (`ImageRectOffset = {w, 0}` com
+`ImageRectSize = {-w, h}`), sem sprite espelhado e sem girar — não recrie o pipeline de espelho.
+
+O fim de onda entra como aviso grande (`Atoms.announce` + `Actions.announce`, limpo pelo relógio
+do `App`), e a contagem da próxima onda é desenhada na entrada do caminho pelo `BoardRenderer`.
+
+`Config/Brand.luau` é **gerado** por `tools/import_brand_assets.py` a partir de
+`assets/export/brand_assets.json` e guarda o logotipo e o fundo da tela de entrada. A ilustração
+só aparece nas rotas `boot`/`menu`; nas outras telas o cenário claro procedural (`Skin.scenery`)
+continua valendo, porque os painéis delas são tinta escura.
+
+`src/shared/Config/DevFlags.luau` é escrito à mão (não é gerado) e vale para cliente e servidor.
+Hoje `unlockAllMaps = true`: a regra de campanha continua em `ProfileSchema.campaignUnlocked`, que
+é o que os testes cobrem. Desligar antes de publicar.
+
+## Campanha por fases (2026-09-19)
+
+Não existe mais tutorial: o jogo é uma campanha de fases declaradas em
+`Pacote_Claude_Code/dados/balanceamento_v1.json` (bloco `campaign`), geradas em `Config/Balance`.
+Cada fase aponta mapa, número de ondas, escala de vida, sucata inicial e **dois objetivos**; a
+primeira estrela é sempre vencer e as outras duas saem desses objetivos, avaliados no servidor por
+`Rules/Stars` (regra pura) sobre `MatchState.campaignStats`. Ao acrescentar um objetivo novo, ele
+precisa existir em três lugares: `Stars.objectiveMet`, a validação em `tools/import_balance.py` e o
+texto em `Localization` (a interface lê pelo mesmo `objectiveText`).
+
+O perfil guarda o melhor resultado por fase em `campaign[levelId]` (v3 do esquema) e a fase
+seguinte abre com pelo menos uma estrela na anterior — `ProfileSchema.campaignUnlocked` é a regra,
+`isLevelUnlocked` é o que o jogo pergunta (respeita `DevFlags.unlockAllMaps`).
+
+A fase 1 é a única com `manualWaveStart` (as ondas esperam o jogador chamar) e `intro`: um guia de
+três passos mostrado uma vez por perfil (`campaignIntroSeen`, marcado pelo servidor quando a
+primeira onda sai). O guia é só apresentação — quem valida construção continua sendo a simulação.

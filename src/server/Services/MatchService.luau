@@ -1,6 +1,6 @@
 --!strict
 -- Instâncias lógicas de partida: passo fixo com acumulador, comandos, replicação a 10 Hz,
--- tutorial com checkpoint, presença, abandono, resultado e revanche.
+-- fases da campanha, presença, abandono, resultado e revanche.
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -41,9 +41,6 @@ export type Match = {
 	lastFullAt: number,
 	pendingEvents: { Types.SimEvent },
 	needFull: boolean,
-	tutorialStep: number,
-	tutorialSkipped: boolean,
-	checkpoint: Types.MatchState?,
 	absentSince: { [number]: number },
 	allAbsentSince: number?,
 	settled: boolean,
@@ -91,7 +88,9 @@ end
 
 export type StartRequest = {
 	players: { Player },
-	mapId: string,
+	-- campanha: a fase manda em mapa, ondas, vida e sucata. Treino continua indo por mapa solto.
+	levelId: string?,
+	mapId: string?,
 	difficulty: Types.Difficulty,
 	mode: Types.MatchMode,
 	partyId: string?,
@@ -101,7 +100,12 @@ function MatchService.start(request: StartRequest): (Match?, string?)
 	if #request.players == 0 or #request.players > Balance.partyMax then
 		return nil, "INVALID_STATE"
 	end
-	if not Catalog.getMap(request.mapId) or not Catalog.getDifficulty(request.difficulty) then
+	local level = if request.levelId then Catalog.getLevel(request.levelId) else nil
+	if request.mode ~= "training" and not level then
+		return nil, "INVALID_STATE" -- toda partida de campanha nasce de uma fase
+	end
+	local mapId = if level then level.mapId else request.mapId
+	if not mapId or not Catalog.getMap(mapId) or not Catalog.getDifficulty(request.difficulty) then
 		return nil, "INVALID_STATE"
 	end
 	local participants: { Types.Participant } = {}
@@ -111,9 +115,6 @@ function MatchService.start(request: StartRequest): (Match?, string?)
 		end
 		local profile = PlayerDataService.get(player)
 		local loadout = if profile then table.clone(profile.loadout) else Catalog.starterTowerIds()
-		if request.mode == "tutorial" then
-			loadout = Catalog.starterTowerIds()
-		end
 		table.insert(participants, {
 			userId = player.UserId,
 			connected = true,
@@ -130,10 +131,15 @@ function MatchService.start(request: StartRequest): (Match?, string?)
 		matchId = matchId,
 		configVersion = Balance.version .. "+" .. Balance.checksum:sub(1, 8),
 		mode = request.mode,
-		mapId = request.mapId,
+		mapId = mapId,
 		difficulty = request.difficulty,
 		participants = participants,
 		seed = math.random(1, 2 ^ 30),
+		levelId = if level then level.id else nil,
+		waves = if level then level.waves else nil,
+		hpScale = if level then level.hpScale else nil,
+		startingCash = if level then level.startingCash else nil,
+		manualWaveStart = if level then level.manualWaveStart else nil,
 	})
 	local now = os.clock()
 	local match: Match = {
@@ -146,9 +152,6 @@ function MatchService.start(request: StartRequest): (Match?, string?)
 		lastFullAt = now,
 		pendingEvents = {},
 		needFull = true,
-		tutorialStep = if request.mode == "tutorial" then 1 else 0,
-		tutorialSkipped = false,
-		checkpoint = nil,
 		absentSince = {},
 		allAbsentSince = nil,
 		settled = false,
@@ -170,12 +173,7 @@ function MatchService.start(request: StartRequest): (Match?, string?)
 		RewardService.registerPending(request.players, matchId)
 	end
 	for _, player in ipairs(request.players) do
-		send(
-			player,
-			"match",
-			Snapshot.build(state, player.UserId, true, match.tutorialStep),
-			{ tutorialStep = match.tutorialStep }
-		)
+		send(player, "match", Snapshot.build(state, player.UserId, true), {})
 		TelemetryService.funnel(player, "match", 1, "match_start", matchId)
 	end
 	TelemetryService.log("match_start", {
@@ -202,67 +200,6 @@ function MatchService.isInMatch(userId: number): boolean
 end
 
 -- ---------------------------------------------------------------------------
--- Tutorial
--- ---------------------------------------------------------------------------
-
-local function setTutorialStep(match: Match, step: number)
-	if match.tutorialStep == step then
-		return
-	end
-	match.tutorialStep = step
-	for _, player in pairs(connectedPlayers(match)) do
-		send(player, "tutorial", { step = step })
-	end
-end
-
-local function applyTutorialEvents(match: Match, events: { Types.SimEvent })
-	if match.state.mode ~= "tutorial" then
-		return
-	end
-	for _, e in ipairs(events) do
-		if e.kind == "towerPlaced" then
-			local tower = match.state.towers[e.towerId :: number]
-			if tower and match.tutorialStep == 1 and tower.defId == "dardo" then
-				setTutorialStep(match, 2)
-			elseif tower and match.tutorialStep == 3 and tower.defId == "goma" then
-				setTutorialStep(match, 4)
-			end
-		elseif e.kind == "waveStart" then
-			match.checkpoint = Simulation.clone(match.state)
-		elseif e.kind == "waveEnd" and e.wave == 1 and match.tutorialStep <= 2 then
-			setTutorialStep(match, 3)
-		elseif e.kind == "towerUpgraded" and match.tutorialStep == 4 then
-			local tower = match.state.towers[e.towerId :: number]
-			if tower and tower.defId == "dardo" then
-				setTutorialStep(match, 5)
-			end
-		elseif e.kind == "matchEnd" and match.state.phase == "Won" then
-			setTutorialStep(match, 6)
-		end
-	end
-end
-
-local function tutorialRestore(match: Match)
-	local checkpoint = match.checkpoint
-	if not checkpoint then
-		return
-	end
-	local restored = Simulation.clone(checkpoint)
-	-- preserva presença atual
-	for _, p in ipairs(match.state.participants) do
-		Simulation.setParticipantPresence(restored, p.userId, p.connected, p.active)
-	end
-	restored.revision = match.state.revision + 1
-	match.state = restored
-	match.needFull = true
-	match.pendingEvents = {}
-	for _, player in pairs(connectedPlayers(match)) do
-		send(player, "tutorial", { step = match.tutorialStep, retry = true })
-	end
-	TelemetryService.log("tutorial_retry", { matchId = match.id, wave = restored.waveIndex })
-end
-
--- ---------------------------------------------------------------------------
 -- Resultado, revanche e encerramento
 -- ---------------------------------------------------------------------------
 
@@ -278,7 +215,7 @@ local function settle(match: Match)
 		send(player, "result", { status = "saving", result = state.result, stats = state.stats })
 	end
 	task.spawn(function()
-		local outcomes = RewardService.settle(state, connected, not match.tutorialSkipped)
+		local outcomes = RewardService.settle(state, connected)
 		match.outcomes = outcomes
 		match.settled = true
 		match.settling = false
@@ -372,12 +309,7 @@ function MatchService.onPlayerAdded(player: Player)
 	for _, e in ipairs(events) do
 		table.insert(match.pendingEvents, e)
 	end
-	send(
-		player,
-		"match",
-		Snapshot.build(match.state, player.UserId, true, match.tutorialStep),
-		{ tutorialStep = match.tutorialStep, rejoin = true }
-	)
+	send(player, "match", Snapshot.build(match.state, player.UserId, true), { rejoin = true })
 	if Simulation.isTerminal(match.state) and match.settled then
 		send(player, "result", {
 			status = "done",
@@ -449,7 +381,6 @@ local function pushEvents(match: Match, events: { Types.SimEvent })
 			match.needFull = true
 		end
 	end
-	applyTutorialEvents(match, events)
 end
 
 function MatchService.handle(player: Player, action: string, payload: { [string]: any }): { [string]: any }
@@ -464,20 +395,6 @@ function MatchService.handle(player: Player, action: string, payload: { [string]
 	local userId = player.UserId
 
 	if action == "PlaceTower" then
-		if state.mode == "tutorial" then
-			local guided = Balance.tutorial.guidedCells
-			if match.tutorialStep == 1 then
-				local cell = guided.dardo
-				if payload.towerId ~= "dardo" or payload.x ~= cell[1] or payload.y ~= cell[2] then
-					return result(false, Protocol.ERROR.INVALID_CELL, { hint = "tutorial.step1" })
-				end
-			elseif match.tutorialStep == 3 and payload.towerId == "goma" then
-				local cell = guided.goma
-				if payload.x ~= cell[1] or payload.y ~= cell[2] then
-					return result(false, Protocol.ERROR.INVALID_CELL, { hint = "tutorial.step3" })
-				end
-			end
-		end
 		local profile = PlayerDataService.get(player)
 		local unlocked = if profile then profile.ownedTowerIds else Catalog.starterTowerIds()
 		local cr, events =
@@ -511,7 +428,7 @@ function MatchService.handle(player: Player, action: string, payload: { [string]
 		return fromSim(cr)
 	elseif action == "RequestSnapshot" then
 		match.needFull = true
-		return result(true, nil, { snapshot = Snapshot.build(state, userId, true, match.tutorialStep) })
+		return result(true, nil, { snapshot = Snapshot.build(state, userId, true) })
 	elseif action == "LeaveMatch" then
 		leaveMatch(match, player)
 		return result(true)
@@ -522,22 +439,6 @@ function MatchService.handle(player: Player, action: string, payload: { [string]
 		pushEvents(match, events)
 		match.needFull = true
 		return fromSim(cr)
-	elseif action == "TutorialAdvance" then
-		if state.mode ~= "tutorial" then
-			return result(false, Protocol.ERROR.INVALID_STATE)
-		end
-		-- avanço de explicação apenas (etapas de ação continuam controladas por eventos)
-		return result(true, nil, { step = match.tutorialStep })
-	elseif action == "TutorialSkip" then
-		if state.mode ~= "tutorial" then
-			return result(false, Protocol.ERROR.INVALID_STATE)
-		end
-		match.tutorialSkipped = true
-		PlayerDataService.mutate(player, function(p: Types.Profile)
-			p.tutorialCompleted = true
-		end)
-		leaveMatch(match, player)
-		return result(true)
 	elseif action == "Rematch" then
 		if not Simulation.isTerminal(state) then
 			return result(false, Protocol.ERROR.INVALID_STATE)
@@ -587,6 +488,28 @@ end
 -- Loop
 -- ---------------------------------------------------------------------------
 
+-- O guia da primeira fase é visto uma vez só: quando a primeira onda sai, o perfil registra.
+local function markIntroSeen(match: Match, events: { Types.SimEvent })
+	local levelId = match.state.levelId
+	if not levelId then
+		return
+	end
+	local level = Catalog.getLevel(levelId)
+	if not level or not level.intro then
+		return
+	end
+	for _, e in ipairs(events) do
+		if e.kind == "waveStart" then
+			for _, player in pairs(connectedPlayers(match)) do
+				PlayerDataService.mutate(player, function(profile: Types.Profile)
+					profile.campaignIntroSeen = true
+				end)
+			end
+			return
+		end
+	end
+end
+
 local function stepMatch(match: Match, dt: number)
 	local state = match.state
 	if Simulation.isTerminal(state) then
@@ -596,6 +519,7 @@ local function stepMatch(match: Match, dt: number)
 	local steps = 0
 	while match.accumulator >= STEP and steps < MAX_STEPS_PER_HEARTBEAT do
 		local events = Simulation.step(state)
+		markIntroSeen(match, events)
 		pushEvents(match, events)
 		match.accumulator -= STEP
 		steps += 1
@@ -619,9 +543,6 @@ local function stepMatch(match: Match, dt: number)
 			match.overloadCount = 0
 		end
 	end
-	if state.mode == "tutorial" and state.phase == "Lost" then
-		tutorialRestore(match)
-	end
 end
 
 local function sendFrames(match: Match, now: number)
@@ -637,7 +558,7 @@ local function sendFrames(match: Match, now: number)
 	local events = match.pendingEvents
 	match.pendingEvents = {}
 	for userId, player in pairs(connectedPlayers(match)) do
-		send(player, "frame", Snapshot.build(match.state, userId, full, match.tutorialStep), events)
+		send(player, "frame", Snapshot.build(match.state, userId, full), events)
 	end
 end
 

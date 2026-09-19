@@ -1,12 +1,14 @@
 --!strict
--- Tela de entrada. É a vitrine da direção de arte: marca grande à esquerda, pilha de botões
--- com chanfro e, à direita, o mascote sobre um disco de papel com o Farol de Pilha ao lado.
+-- Tela de entrada, montada sobre a ilustração de marca: o fundo é desenhado pela camada de
+-- cenário (UI/App), e aqui ficam só o logotipo, a pilha de botões e as duas fichas de canto.
 --
 -- Tudo vem dos átomos: saldo de botões, equipe salva e estado do perfil. Nenhum texto fixo em
--- português mora aqui — as frases saem de Config/Localization.
+-- português mora aqui — as frases saem de Config/Localization. Se o logotipo ainda não estiver
+-- publicado (Config/Brand), a tela desenha o título em texto, sem erro e sem buraco.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Assets = require(ReplicatedStorage.Shared.Config.Assets)
+local Brand = require(ReplicatedStorage.Shared.Config.Brand)
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Fusion = require(ReplicatedStorage.Shared.Lib.Fusion)
@@ -24,16 +26,38 @@ local L = Localization.get
 
 export type Props = { visible: Fusion.UsedAs<boolean> }
 
-local function heroImage(): string?
-	local entry = Assets.get(Assets.towerKey("dardo", "L0"))
-	if not entry then
-		return nil
+local COLUMN_WIDTH = 560
+local LOGO_WIDTH = 430
+
+-- Marca: a arte quando existe, o título escrito quando não existe.
+local function brandMark(scope: Kit.Scope, compact: Kit.Used<boolean>): GuiObject
+	local logo = Brand.logo
+	if logo and logo.image then
+		return scope:New("ImageLabel")({
+			Name = "Logo",
+			BackgroundTransparency = 1,
+			Image = logo.image :: string,
+			ScaleType = Enum.ScaleType.Fit,
+			Size = scope:Computed(function(use)
+				local width = if Kit.read(use, compact) then LOGO_WIDTH * 0.78 else LOGO_WIDTH
+				return UDim2.fromOffset(width, width / logo.aspect)
+			end),
+			LayoutOrder = 1,
+			ZIndex = 3,
+		})
 	end
-	return entry.portrait or entry.image
+	return Kit.title(scope, {
+		Name = "Title",
+		Text = string.upper(L("app.title")),
+		TextSize = 60,
+		TextColor3 = Theme.colors.cream,
+		Size = UDim2.new(1, 0, 0, 72),
+		LayoutOrder = 1,
+		ZIndex = 3,
+	})
 end
 
 return function(scope: Kit.Scope, props: Props): Frame
-	local profile_ = Bridge.use(scope, Atoms.profile)
 	local buttons = Bridge.map(scope, Atoms.profile, function()
 		return Selectors.buttons()
 	end)
@@ -56,61 +80,39 @@ return function(scope: Kit.Scope, props: Props): Frame
 		local status = use(profileStatus)
 		return status ~= "ready" and status ~= "volatile"
 	end)
-	-- Quem já concluiu (ou pulou) o tutorial não precisa vê-lo como chamada principal.
-	local tutorialDone = scope:Computed(function(use)
-		local profile = use(profile_)
-		return profile ~= nil and profile.tutorialCompleted == true
-	end)
-
-	local left = scope:New("Frame")({
+	local column = scope:New("Frame")({
 		Name = "Brand",
 		BackgroundTransparency = 1,
 		Size = scope:Computed(function(use)
-			return if use(compact) then UDim2.new(0.62, 0, 1, -40) else UDim2.new(0.52, 0, 1, -64)
+			local width = if Kit.read(use, compact) then COLUMN_WIDTH * 0.82 else COLUMN_WIDTH
+			return UDim2.new(0, width, 1, -72)
 		end),
-		Position = UDim2.fromOffset(40, 32),
+		Position = UDim2.fromOffset(48, 40),
 		[Children] = Kit.children(
-			Kit.list(scope, { Padding = UDim.new(0, 14) }),
-			Kit.tag(scope, {
-				text = string.upper(L("app.tagline")),
-				color = Theme.colors.paper,
-				textColor = Theme.colors.tealDark,
-				frame = { LayoutOrder = 1, ZIndex = 3 },
-			}),
-			Kit.title(scope, {
-				Name = "Title",
-				Text = string.upper(L("app.title")),
-				TextSize = scope:Computed(function(use)
-					return if use(compact) then 44 else 64
-				end),
-				TextColor3 = Theme.colors.ink,
-				TextWrapped = true,
-				Size = UDim2.new(1, 0, 0, 0),
-				AutomaticSize = Enum.AutomaticSize.Y,
-				LayoutOrder = 2,
-				ZIndex = 3,
-			}),
+			Kit.list(scope, { Padding = UDim.new(0, 12) }),
+			brandMark(scope, compact),
 			Kit.text(scope, {
 				Name = "Subtitle",
-				Text = L("app.subtitle"),
-				TextSize = 18,
-				TextColor3 = Theme.colors.tealDark,
-				Font = Theme.fonts.bodyMedium,
-				Size = UDim2.new(1, 0, 0, 24),
-				LayoutOrder = 3,
+				Text = "— " .. L("app.subtitle") .. " —",
+				TextSize = 20,
+				TextColor3 = Theme.colors.cream,
+				Font = Theme.fonts.bodyBold,
+				TextXAlignment = Enum.TextXAlignment.Center,
+				Size = UDim2.new(0, LOGO_WIDTH, 0, 28),
+				LayoutOrder = 2,
 				ZIndex = 3,
 			}),
 			-- Aviso de perfil indisponível: explica e oferece saída, sem bloquear a tela.
 			Kit.panel(scope, {
 				name = "ProfileWarning",
 				visible = profileBroken,
-				size = UDim2.new(1, -20, 0, 0),
+				size = UDim2.new(1, 0, 0, 0),
 				automaticSize = Enum.AutomaticSize.Y,
 				color = Theme.colors.dangerSoft,
 				strokeColor = Theme.colors.danger,
 				radius = Kit.radius.chip,
 				padding = 14,
-				layoutOrder = 4,
+				layoutOrder = 3,
 				gloss = false,
 				layout = Kit.list(scope, { Padding = UDim.new(0, 8) }),
 				children = Kit.children(
@@ -134,32 +136,63 @@ return function(scope: Kit.Scope, props: Props): Frame
 					})
 				),
 			}),
-			-- Botão principal: tutorial para quem está começando, "Jogar" para quem já passou.
+			-- Chamada principal: larga, dourada, com o subtítulo por baixo do rótulo.
 			Kit.button(scope, {
 				name = "Primary",
-				text = scope:Computed(function(use)
-					return if use(tutorialDone) then L("menu.play") else L("menu.tutorial")
-				end),
-				sub = scope:Computed(function(use)
-					return if use(tutorialDone) then L("menu.playHint") else L("menu.startTutorialHint")
-				end),
+				text = L("menu.campaign"),
+				sub = L("menu.campaignHint"),
 				kind = "primary",
 				icon = "ui_play",
-				size = UDim2.new(1, -20, 0, 76),
-				layoutOrder = 5,
+				textSize = 26,
+				size = UDim2.new(1, 0, 0, 84),
+				layoutOrder = 4,
 				zIndex = 3,
 				onActivate = function()
-					if Fusion.peek(tutorialDone) then
-						Actions.navigate("maps")
-					else
-						GameFlow.startTutorial()
-					end
+					Actions.navigate("campaign")
 				end,
 			}),
 			scope:New("Frame")({
 				Name = "Row",
 				BackgroundTransparency = 1,
-				Size = UDim2.new(1, -20, 0, 60),
+				Size = UDim2.new(1, 0, 0, 68),
+				LayoutOrder = 5,
+				ZIndex = 3,
+				[Children] = Kit.children(
+					Kit.list(scope, {
+						FillDirection = Enum.FillDirection.Horizontal,
+						Padding = UDim.new(0, 12),
+						VerticalAlignment = Enum.VerticalAlignment.Center,
+					}),
+					Kit.button(scope, {
+						name = "Collection",
+						text = L("menu.collection"),
+						sub = L("menu.collectionHint"),
+						kind = "cyan",
+						size = UDim2.new(0.5, -6, 1, 0),
+						layoutOrder = 1,
+						zIndex = 4,
+						onActivate = function()
+							Actions.navigate("collection")
+						end,
+					}),
+					Kit.button(scope, {
+						name = "Training",
+						text = L("menu.training"),
+						sub = L("menu.trainingHint"),
+						kind = "secondary",
+						size = UDim2.new(0.5, -6, 1, 0),
+						layoutOrder = 2,
+						zIndex = 4,
+						onActivate = function()
+							GameFlow.startTraining("jardim")
+						end,
+					})
+				),
+			}),
+			scope:New("Frame")({
+				Name = "Row2",
+				BackgroundTransparency = 1,
+				Size = UDim2.new(1, 0, 0, 64),
 				LayoutOrder = 6,
 				ZIndex = 3,
 				[Children] = Kit.children(
@@ -169,67 +202,13 @@ return function(scope: Kit.Scope, props: Props): Frame
 						VerticalAlignment = Enum.VerticalAlignment.Center,
 					}),
 					Kit.button(scope, {
-						name = "Play",
-						text = scope:Computed(function(use)
-							return if use(tutorialDone) then L("menu.replayTutorial") else L("menu.play")
-						end),
-						sub = scope:Computed(function(use)
-							return if use(tutorialDone) then "" else L("menu.playHint")
-						end),
-						kind = "cyan",
-						size = UDim2.new(0.5, -6, 1, 0),
-						layoutOrder = 1,
-						zIndex = 4,
-						onActivate = function()
-							if Fusion.peek(tutorialDone) then
-								GameFlow.startTutorial()
-							else
-								Actions.navigate("maps")
-							end
-						end,
-					}),
-					Kit.button(scope, {
-						name = "Collection",
-						text = L("menu.collection"),
-						kind = "secondary",
-						size = UDim2.new(0.5, -6, 1, 0),
-						layoutOrder = 2,
-						zIndex = 4,
-						onActivate = function()
-							Actions.navigate("collection")
-						end,
-					})
-				),
-			}),
-			scope:New("Frame")({
-				Name = "Row2",
-				BackgroundTransparency = 1,
-				Size = UDim2.new(1, -20, 0, 56),
-				LayoutOrder = 7,
-				ZIndex = 3,
-				[Children] = Kit.children(
-					Kit.list(scope, {
-						FillDirection = Enum.FillDirection.Horizontal,
-						Padding = UDim.new(0, 12),
-						VerticalAlignment = Enum.VerticalAlignment.Center,
-					}),
-					Kit.button(scope, {
-						name = "Training",
-						text = L("menu.training"),
-						kind = "quiet",
-						size = UDim2.new(0.34, -8, 1, 0),
-						layoutOrder = 1,
-						zIndex = 4,
-						onActivate = function()
-							GameFlow.startTraining("jardim")
-						end,
-					}),
-					Kit.button(scope, {
 						name = "Shop",
 						text = L("menu.shop"),
-						kind = "quiet",
-						size = UDim2.new(0.33, -8, 1, 0),
-						layoutOrder = 2,
+						sub = L("menu.shopHint"),
+						kind = "dark",
+						textSize = 17,
+						size = UDim2.new(0.5, -6, 1, 0),
+						layoutOrder = 1,
 						zIndex = 4,
 						onActivate = function()
 							Actions.push("shop")
@@ -238,10 +217,12 @@ return function(scope: Kit.Scope, props: Props): Frame
 					Kit.button(scope, {
 						name = "Settings",
 						text = L("menu.settings"),
-						kind = "quiet",
+						sub = L("menu.settingsHint"),
+						kind = "dark",
 						icon = "ui_settings",
-						size = UDim2.new(0.33, -8, 1, 0),
-						layoutOrder = 3,
+						textSize = 17,
+						size = UDim2.new(0.5, -6, 1, 0),
+						layoutOrder = 2,
 						zIndex = 4,
 						onActivate = function()
 							Actions.push("settings")
@@ -252,86 +233,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		),
 	})
 
-	local heroArt = heroImage()
-	local right = scope:New("Frame")({
-		Name = "Hero",
-		BackgroundTransparency = 1,
-		Size = UDim2.new(0.42, 0, 1, -80),
-		Position = UDim2.new(1, -40, 0, 40),
-		AnchorPoint = Vector2.new(1, 0),
-		Visible = scope:Computed(function(use)
-			return not use(compact)
-		end),
-		[Children] = Kit.children(
-			-- disco de papel atrás do mascote (o contorno grosso é marca da direção de arte)
-			scope:New("Frame")({
-				Name = "Disc",
-				BackgroundColor3 = Theme.colors.paper,
-				BorderSizePixel = 0,
-				Size = UDim2.fromScale(0.86, 0.86),
-				Position = UDim2.fromScale(0.5, 0.44),
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				ZIndex = 2,
-				[Children] = Kit.children(
-					Kit.corner(scope, 9999),
-					Kit.stroke(scope, Theme.colors.ink, 3),
-					scope:New("UIAspectRatioConstraint")({ AspectRatio = 1 }),
-					if heroArt
-						then scope:New("ImageLabel")({
-							Name = "Mascot",
-							BackgroundTransparency = 1,
-							Image = heroArt,
-							ScaleType = Enum.ScaleType.Fit,
-							Size = UDim2.fromScale(0.78, 0.78),
-							Position = UDim2.fromScale(0.5, 0.52),
-							AnchorPoint = Vector2.new(0.5, 0.5),
-							ZIndex = 3,
-						})
-						else Kit.title(scope, {
-							Text = "★",
-							TextSize = 64,
-							TextXAlignment = Enum.TextXAlignment.Center,
-							Size = UDim2.fromScale(1, 1),
-							ZIndex = 3,
-						})
-				),
-			}),
-			scope:New("ImageLabel")({
-				Name = "Lighthouse",
-				BackgroundTransparency = 1,
-				Image = Assets.image("base_farol_pilha") or "",
-				ScaleType = Enum.ScaleType.Fit,
-				Size = UDim2.fromScale(0.26, 0.26),
-				Position = UDim2.fromScale(0.88, 0.78),
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				ZIndex = 4,
-			}),
-			Kit.panel(scope, {
-				name = "Team",
-				size = UDim2.new(0, 0, 0, 44),
-				automaticSize = Enum.AutomaticSize.X,
-				position = UDim2.fromScale(0.5, 0.96),
-				anchorPoint = Vector2.new(0.5, 1),
-				color = Theme.colors.teal,
-				radius = Kit.radius.pill,
-				padding = 18,
-				paddingVertical = 8,
-				zIndex = 5,
-				children = Kit.children(Kit.text(scope, {
-					Name = "TeamText",
-					Text = team,
-					TextColor3 = Theme.colors.ink,
-					Font = Theme.fonts.bodyBold,
-					TextSize = 15,
-					TextWrapped = false,
-					AutomaticSize = Enum.AutomaticSize.X,
-					Size = UDim2.new(0, 0, 1, 0),
-					ZIndex = 6,
-				})),
-			})
-		),
-	})
-
+	-- Ficha de saldo no canto superior direito, como na maquete.
 	local balance = Kit.chip(scope, {
 		name = "Buttons",
 		icon = "ui_buttons",
@@ -340,16 +242,82 @@ return function(scope: Kit.Scope, props: Props): Frame
 			return tostring(use(buttons))
 		end),
 		accent = Theme.colors.gold,
-		width = UDim2.new(0, 0, 0, 52),
+		width = UDim2.new(0, 0, 0, 56),
 	})
 	balance.Position = UDim2.new(1, -40, 0, 32)
 	balance.AnchorPoint = Vector2.new(1, 0)
+
+	-- Equipe salva no canto inferior direito: texto e os retratos das torres equipadas.
+	local teamIcons = scope:ForValues(
+		Bridge.map(scope, Atoms.profile, function()
+			return Selectors.loadout()
+		end),
+		function(_, innerScope: Kit.Scope, towerId: string)
+			local entry = Assets.get(Assets.towerKey(towerId, "L0"))
+			return innerScope:New("ImageLabel")({
+				Name = "Tower_" .. towerId,
+				BackgroundTransparency = 1,
+				Image = if entry then (entry.portrait or entry.image or "") else "",
+				ScaleType = Enum.ScaleType.Fit,
+				Size = UDim2.fromOffset(34, 34),
+				ZIndex = 6,
+			})
+		end
+	)
+
+	local teamPill = Kit.panel(scope, {
+		name = "Team",
+		size = UDim2.new(0, 0, 0, 52),
+		automaticSize = Enum.AutomaticSize.X,
+		position = UDim2.new(1, -40, 1, -32),
+		anchorPoint = Vector2.new(1, 1),
+		color = Theme.colors.paper,
+		radius = Kit.radius.chip,
+		padding = 16,
+		paddingVertical = 8,
+		zIndex = 5,
+		layout = Kit.list(scope, {
+			FillDirection = Enum.FillDirection.Horizontal,
+			Padding = UDim.new(0, 8),
+			VerticalAlignment = Enum.VerticalAlignment.Center,
+		}),
+		children = Kit.children(
+			Kit.text(scope, {
+				Name = "TeamText",
+				Text = team,
+				TextColor3 = Theme.colors.ink,
+				Font = Theme.fonts.bodyBold,
+				TextSize = 15,
+				TextWrapped = false,
+				AutomaticSize = Enum.AutomaticSize.X,
+				Size = UDim2.new(0, 0, 1, 0),
+				LayoutOrder = 1,
+				ZIndex = 6,
+			}),
+			scope:New("Frame")({
+				Name = "Icons",
+				BackgroundTransparency = 1,
+				Size = UDim2.new(0, 0, 0, 34),
+				AutomaticSize = Enum.AutomaticSize.X,
+				LayoutOrder = 2,
+				ZIndex = 6,
+				[Children] = Kit.children(
+					Kit.list(scope, {
+						FillDirection = Enum.FillDirection.Horizontal,
+						Padding = UDim.new(0, 6),
+						VerticalAlignment = Enum.VerticalAlignment.Center,
+					}),
+					teamIcons
+				),
+			})
+		),
+	})
 
 	return scope:New("Frame")({
 		Name = "MainMenu",
 		BackgroundTransparency = 1,
 		Size = UDim2.fromScale(1, 1),
 		Visible = props.visible,
-		[Children] = Kit.children(left, right, balance),
+		[Children] = Kit.children(column, balance, teamPill),
 	})
 end

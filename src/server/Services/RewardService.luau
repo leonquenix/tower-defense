@@ -81,7 +81,9 @@ end
 local function applyToPlayer(
 	player: Player,
 	record: Types.MatchResultRecord,
-	stats: Types.PlayerMatchStats?
+	stats: Types.PlayerMatchStats?,
+	levelId: string?,
+	stars: number?
 ): UserOutcome
 	local outcome: UserOutcome =
 		{ status = "none", buttons = 0, mastery = {}, milestones = {}, unlocked = {}, grantedCosmetics = {} }
@@ -106,6 +108,8 @@ local function applyToPlayer(
 			wavesCompleted = record.wavesCompleted,
 			enemiesDefeated = nil,
 			towersPlaced = if stats then stats.towersPlaced else nil,
+			levelId = levelId,
+			stars = stars,
 			createdAt = record.createdAt,
 			now = now,
 		})
@@ -157,8 +161,7 @@ end
 -- Liquida um resultado: grava o registro durável e aplica aos participantes conectados e elegíveis.
 function RewardService.settle(
 	state: Types.MatchState,
-	connectedPlayers: { [number]: Player },
-	tutorialClaim: boolean
+	connectedPlayers: { [number]: Player }
 ): { [number]: UserOutcome }
 	local result = state.result
 	local outcomes: { [number]: UserOutcome } = {}
@@ -176,7 +179,7 @@ function RewardService.settle(
 		end
 	end
 	local record: Types.MatchResultRecord = {
-		matchId = if state.mode == "tutorial" then ProfileSchema.TUTORIAL_KEY else state.matchId,
+		matchId = state.matchId,
 		configVersion = state.configVersion,
 		outcome = result.outcome,
 		mode = state.mode,
@@ -191,11 +194,8 @@ function RewardService.settle(
 		partySize = #state.participants,
 	}
 	local rewardable = state.mode ~= "training" and result.outcome ~= "abandoned"
-	if state.mode == "tutorial" and not tutorialClaim then
-		rewardable = false
-	end
 	local ledgerOk = false
-	if rewardable and #eligible > 0 and state.mode ~= "tutorial" then
+	if rewardable and #eligible > 0 then
 		ledgerOk = writeRecord(record)
 	end
 	for _, participant in ipairs(state.participants) do
@@ -219,12 +219,10 @@ function RewardService.settle(
 						table.remove(p.pendingResults, i)
 					end
 				end
-				if state.mode == "tutorial" then
-					p.tutorialCompleted = true
-				end
 			end)
 		else
-			outcomes[participant.userId] = applyToPlayer(player, record, result.statsByUser[participant.userId])
+			outcomes[participant.userId] =
+				applyToPlayer(player, record, result.statsByUser[participant.userId], result.levelId, result.stars)
 		end
 	end
 	TelemetryService.log("match_settled", {

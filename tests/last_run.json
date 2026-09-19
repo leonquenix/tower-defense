@@ -1,8 +1,8 @@
 {
-  "elapsedSeconds": 0.019980666635092348,
+  "elapsedSeconds": 0.020000458345748484,
   "failed": 0,
   "failures": {},
-  "passed": 166,
+  "passed": 177,
   "suites": [
     {
       "name": "Grid",
@@ -203,6 +203,14 @@
           "ok": true
         },
         {
+          "name": "chamar a onda antes do cronômetro paga bônus por segundo poupado",
+          "ok": true
+        },
+        {
+          "name": "deixar o cronômetro acabar não paga bônus",
+          "ok": true
+        },
+        {
           "name": "T04: colocar sobre caminho, bloqueio ou fora do mapa é rejeitado sem gasto",
           "ok": true
         },
@@ -311,15 +319,19 @@
           "ok": true
         },
         {
-          "name": "tutorial: três ondas com equipe inicial guiada termina em vitória e 180 botões",
+          "name": "fase 1: três ondas, sucata da fase e vitória com estrelas",
           "ok": true
         },
         {
-          "name": "tutorial não inicia onda pelo cronômetro; só com Pronto",
+          "name": "fase com início manual não solta onda pelo cronômetro",
           "ok": true
         },
         {
-          "name": "2x exige unanimidade e tutorial fica em 1x",
+          "name": "fase sem início manual corre pelo cronômetro",
+          "ok": true
+        },
+        {
+          "name": "2x exige unanimidade e a fase de início manual fica em 1x",
           "ok": true
         },
         {
@@ -378,7 +390,7 @@
           "ok": true
         },
         {
-          "name": "P07: migração v1 -> v2 é idempotente",
+          "name": "P07: migração de perfil antigo é idempotente",
           "ok": true
         },
         {
@@ -398,7 +410,7 @@
           "ok": true
         },
         {
-          "name": "P06: tutorial concluído duas vezes concede 180 uma única vez (chave tutorial-v1)",
+          "name": "P06: estrelas de uma fase são guardadas e pagas uma vez",
           "ok": true
         },
         {
@@ -414,7 +426,7 @@
           "ok": true
         },
         {
-          "name": "desbloqueio de mapas segue a campanha",
+          "name": "desbloqueio segue a campanha: uma estrela abre a fase seguinte",
           "ok": true
         },
         {
@@ -877,7 +889,44 @@
           "ok": true
         }
       ]
+    },
+    {
+      "name": "Stars / objetivos",
+      "tests": [
+        {
+          "name": "sem vazamento exige dano zero",
+          "ok": true
+        },
+        {
+          "name": "dano máximo aceita o limite e recusa acima",
+          "ok": true
+        },
+        {
+          "name": "teto de torres conta as construídas",
+          "ok": true
+        },
+        {
+          "name": "só estas torres recusa qualquer intrusa e exige ter jogado",
+          "ok": true
+        },
+        {
+          "name": "adiantar todas exige uma chamada por onda",
+          "ok": true
+        },
+        {
+          "name": "objetivo desconhecido nunca vira estrela",
+          "ok": true
+        },
+        {
+          "name": "derrota não leva estrela nenhuma, nem a de objetivo cumprido",
+          "ok": true
+        },
+        {
+          "name": "todas as fases declaram dois objetivos que a regra conhece",
+          "ok": true
+        }
+      ]
     }
   ],
-  "timestamp": "2026-09-19T13:27:30Z"
+  "timestamp": "2026-09-19T15:32:26Z"
 }

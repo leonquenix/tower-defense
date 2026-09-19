@@ -18,7 +18,7 @@ local L = Localization.get
 
 export type Props = { visible: Fusion.UsedAs<boolean> }
 
-type Room = { id: string, leaderName: string, size: number, mapId: string, difficulty: string }
+type Room = { id: string, leaderName: string, size: number, levelId: string, difficulty: string }
 
 return function(scope: Kit.Scope, props: Props): Frame
 	local lobby = Bridge.use(scope, Atoms.lobby)
@@ -47,7 +47,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		subtitle = L("rooms.subtitle"),
 		visible = props.visible,
 		onBack = function()
-			Actions.navigate("maps")
+			Actions.navigate("campaign")
 		end,
 		header = Kit.children(Kit.button(scope, {
 			name = "Create",
@@ -82,7 +82,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 				[Children] = Kit.children(
 					Kit.list(scope, { Padding = UDim.new(0, 10) }),
 					scope:ForValues(rooms, function(_, innerScope: Kit.Scope, room: Room)
-						local map = Catalog.getMap(room.mapId)
+						local level = Catalog.getLevel(room.levelId)
+						local map = if level then Catalog.getMap(level.mapId) else nil
 						return Kit.panel(innerScope, {
 							name = "Room_" .. room.id,
 							size = UDim2.new(1, -8, 0, 84),
@@ -111,7 +112,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 											ZIndex = 4,
 										}),
 										Kit.caption(innerScope, {
-											Text = (if map then map.name else room.mapId) .. " · " .. L(
+											Text = (if map then map.name else room.levelId) .. " · " .. L(
 												"menu.difficulty." .. room.difficulty
 											) .. " · " .. tostring(room.size) .. "/4",
 											Size = UDim2.new(1, 0, 0, 18),
@@ -147,7 +148,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 				anchorPoint = Vector2.new(1, 1),
 				zIndex = 4,
 				onActivate = function()
-					Actions.navigate("maps")
+					Actions.navigate("campaign")
 				end,
 			})
 		),

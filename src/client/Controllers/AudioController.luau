@@ -31,6 +31,7 @@ local SOUND_IDS: { [string]: string? } = {
 	base_pulse = nil,
 	result_win = nil,
 	result_lose = nil,
+	ui_upgrade = nil,
 	unlock = nil,
 	music_menu = nil,
 	music_jardim = nil,

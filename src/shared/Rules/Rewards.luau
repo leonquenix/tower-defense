@@ -60,9 +60,6 @@ function Rewards.buttonsForOutcome(
 	if mode == "training" then
 		return 0
 	end
-	if mode == "tutorial" then
-		return if outcome == "won" then rewards.tutorialButtons else 0
-	end
 	if outcome == "won" then
 		return Rewards.winButtons(difficulty)
 	elseif outcome == "lost" then

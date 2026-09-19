@@ -67,8 +67,7 @@ describe("Path", function()
 		expect(x).toBeCloseTo(jardim.path[2][1])
 		expect(y).toBeCloseTo(jardim.path[2][2])
 		-- meio do segundo trecho
-		local legTwo = math.abs(jardim.path[3][1] - jardim.path[2][1])
-			+ math.abs(jardim.path[3][2] - jardim.path[2][2])
+		local legTwo = math.abs(jardim.path[3][1] - jardim.path[2][1]) + math.abs(jardim.path[3][2] - jardim.path[2][2])
 		x, y = Path.positionAt(path, legOne + legTwo / 2)
 		expect(x).toBeCloseTo((jardim.path[2][1] + jardim.path[3][1]) / 2)
 		expect(y).toBeCloseTo((jardim.path[2][2] + jardim.path[3][2]) / 2)
@@ -81,9 +80,9 @@ describe("Path", function()
 		for _, cell in ipairs(jardim.pathCells) do
 			expect(Path.isPathCell(path, cell[1], cell[2])).toBe(true)
 		end
-		-- célula guiada do tutorial: tem de ser grama, senão o tutorial manda construir no caminho
-		local guided = Balance.tutorial.guidedCells.dardo
-		expect(Path.isPathCell(path, guided[1], guided[2])).toBe(false)
+		-- célula do guia da primeira fase: tem de ser grama, senão o guia manda construir no caminho
+		local intro = Balance.campaign.levels[1].introCell
+		expect(Path.isPathCell(path, intro[1], intro[2])).toBe(false)
 	end)
 	it("rejeita caminhos diagonais", function()
 		expect(function()

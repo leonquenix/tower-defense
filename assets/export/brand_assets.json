@@ -1,0 +1,21 @@
+{
+  "note": "Arte de marca (logotipo e fundo das telas de menu). Não passa pelo pipeline de sprites: não tem âncora, não tem estado e não é recortada. IDs só entram aqui depois de upload verificado; tools/import_brand_assets.py gera src/shared/Config/Brand.luau a partir deste arquivo e nunca inventa rbxassetid.",
+  "assets": {
+    "logo": {
+      "source": "assets/generated/logo.png",
+      "sourceSha256": "277c08d0bc1986121811fce0a9525317bb080639af4a41afb26c7058425efed5",
+      "width": 1973,
+      "height": 797,
+      "image": "rbxassetid://132723613362335",
+      "uploadedAt": "2026-09-19"
+    },
+    "menuBackground": {
+      "source": "assets/generated/background.png",
+      "sourceSha256": "77672a0013690e2613879bba9cdf7cfe87e951421b39078c69b47672cf7926f3",
+      "width": 1672,
+      "height": 941,
+      "image": "rbxassetid://131384553190382",
+      "uploadedAt": "2026-09-19"
+    }
+  }
+}

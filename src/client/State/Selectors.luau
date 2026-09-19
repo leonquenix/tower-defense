@@ -108,11 +108,6 @@ function Selectors.isTraining(): boolean
 	return snapshot ~= nil and snapshot.mode == "training"
 end
 
-function Selectors.isTutorial(): boolean
-	local snapshot = Atoms.snapshot()
-	return snapshot ~= nil and snapshot.mode == "tutorial"
-end
-
 function Selectors.participants(): { Types.ParticipantSnapshot }
 	local snapshot = Atoms.snapshot()
 	return if snapshot then snapshot.participants else {}

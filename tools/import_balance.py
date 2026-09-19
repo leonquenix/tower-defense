@@ -136,7 +136,7 @@ def validate(data):
                 errors.append(f"mapa {m['id']}: bloqueio fora da grade {bt}")
             if bt in cellset:
                 errors.append(f"mapa {m['id']}: bloqueio sobre caminho {bt}")
-        if m["unlock"] != "tutorial" and not m["unlock"].startswith("win:"):
+        if m["unlock"] is not None and not m["unlock"].startswith("win:"):
             errors.append(f"mapa {m['id']}: regra de desbloqueio desconhecida {m['unlock']}")
     for c in data["circuits"]:
         for tid in c["pair"]:
@@ -144,18 +144,48 @@ def validate(data):
                 errors.append(f"circuito {c['id']}: torre desconhecida {tid}")
         if c["effect"] not in {"damage_vs_slowed", "splash_radius_add", "chain_falloff_add"}:
             errors.append(f"circuito {c['id']}: efeito desconhecido {c['effect']}")
-    tut = data["tutorial"]
-    jardim = next(m for m in data["maps"] if m["id"] == "jardim")
-    jcells = set(path_cells(jardim["path"])) | {tuple(b) for b in jardim["blocked"]}
-    for tid, cell in tut["guidedCells"].items():
-        if tid not in tower_ids:
-            errors.append(f"tutorial: torre guiada desconhecida {tid}")
-        if tuple(cell) in jcells:
-            errors.append(f"tutorial: célula guiada {cell} inválida no Jardim")
-    for wave in tut["waves"]:
-        for g in wave:
-            if g["enemy"] not in enemy_ids:
-                errors.append(f"tutorial: inimigo desconhecido {g['enemy']}")
+    # campanha: cada fase aponta para um mapa existente, cabe na tabela de ondas e tem
+    # objetivos que o servidor sabe avaliar (Rules/Stars)
+    map_ids = {m["id"] for m in data["maps"]}
+    known_objectives = {"noLeak", "maxDamage", "maxTowers", "onlyTowers", "rushAll"}
+    seen_levels = set()
+    intro_levels = 0
+    for index, level in enumerate(data["campaign"]["levels"], start=1):
+        where = f"fase {level['id']}"
+        if level["id"] in seen_levels:
+            errors.append(f"{where}: id repetido")
+        seen_levels.add(level["id"])
+        if level["mapId"] not in map_ids:
+            errors.append(f"{where}: mapa desconhecido {level['mapId']}")
+        if not (1 <= level["waves"] <= len(data["waves"])):
+            errors.append(f"{where}: {level['waves']} ondas fora da tabela (1..{len(data['waves'])})")
+        if level["startingCash"] < 0 or level["hpScale"] <= 0:
+            errors.append(f"{where}: sucata inicial ou escala de vida inválida")
+        if len(level["objectives"]) != 2:
+            errors.append(f"{where}: são duas estrelas além da vitória, veio {len(level['objectives'])}")
+        for objective in level["objectives"]:
+            kind = objective["kind"]
+            if kind not in known_objectives:
+                errors.append(f"{where}: objetivo desconhecido {kind}")
+            if kind in ("maxDamage", "maxTowers") and "value" not in objective:
+                errors.append(f"{where}: objetivo {kind} sem value")
+            if kind == "onlyTowers":
+                for tid in objective["towers"]:
+                    if tid not in tower_ids:
+                        errors.append(f"{where}: torre desconhecida {tid}")
+        if level.get("intro"):
+            intro_levels += 1
+            if index != 1:
+                errors.append(f"{where}: o guia inicial só existe na primeira fase")
+            if level.get("introTower") not in tower_ids:
+                errors.append(f"{where}: torre do guia desconhecida")
+            level_map = next(m for m in data["maps"] if m["id"] == level["mapId"])
+            busy = set(path_cells(level_map["path"])) | {tuple(b) for b in level_map["blocked"]}
+            cell = tuple(level.get("introCell") or ())
+            if len(cell) != 2 or cell in busy:
+                errors.append(f"{where}: célula do guia {cell} não é grama livre")
+    if intro_levels != 1:
+        errors.append("a campanha precisa de exatamente uma fase com o guia inicial")
     for d in ("normal", "desafio"):
         if d not in data["difficulties"]:
             errors.append(f"dificuldade {d} ausente")
@@ -188,11 +218,12 @@ def main():
         "tickRate": data["tickRate"], "snapshotRate": data["snapshotRate"],
         "towers": towers, "enemies": data["enemies"], "bosses": data["bosses"], "waves": data["waves"],
         "difficulties": data["difficulties"], "circuits": data["circuits"], "pulse": data["pulse"],
-        "effects": data["effects"], "rewards": data["rewards"], "tutorial": data["tutorial"], "shop": data["shop"],
+        "effects": data["effects"], "rewards": data["rewards"], "campaign": data["campaign"], "shop": data["shop"],
         "partyMax": data["partyMax"], "serverMaxPlayers": data["serverMaxPlayers"], "loadoutSlots": data["loadoutSlots"],
         "playerTowerLimitsByPartySize": data["playerTowerLimitsByPartySize"],
         "coopAdditionalHPPerPlayer": data["coopAdditionalHPPerPlayer"],
         "preparationSeconds": data["preparationSeconds"], "intermissionSeconds": data["intermissionSeconds"],
+        "earlyWaveBonusPerSecond": data["earlyWaveBonusPerSecond"], "earlyWaveBonusMax": data["earlyWaveBonusMax"],
         "sellRefund": data["sellRefund"],
     }
     header = (

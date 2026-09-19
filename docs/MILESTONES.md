@@ -238,3 +238,169 @@ até as bordas sem faixa de fundo; Farol desenhado por código exatamente na pon
 carta Dardo → clique na célula constrói (650 → 408 de sucata, Torres 1/18); clique no caminho
 recusa com o motivo; onda 1 com Fiapos feridos pelo Dardo. A tela de carregamento passou a
 preencher `{difficulty}` e `{team}` (antes mostrava as chaves cruas).
+
+### Interação, ritmo das ondas e cenários novos (2026-09-19, noite)
+
+**Arrastar move a câmera; o botão direito cancela.** Mirar uma célula e apertar um botão ao mesmo
+tempo não funciona com um ponteiro só, então o gesto passou a mandar: assim que o ponteiro (ou o
+dedo) anda mais que a tolerância de toque, o movimento vira deslocamento da câmera e **não**
+constrói — mesmo com uma torre escolhida. O clique parado continua construindo. No computador, o
+botão direito parado cancela o modo de construção (arrastado com ele, só desloca).
+
+**Torres viradas no próprio eixo.** A tentativa anterior (gerar 30 sprites espelhados e publicar)
+foi descartada: um teste no Studio mostrou que `ImageRectOffset = {w, 0}` com
+`ImageRectSize = {-w, h}` **espelha a textura** de um `ImageLabel`. `TowerAnimator` agora guarda o
+quadro em pixels e troca o retângulo conforme o lado do alvo. Saíram do projeto
+`tools/mirror_tower_sprites.py`, `assets/export/mirror/`, o manifesto e o campo `mirror` do
+registro — nada disso é mais necessário.
+
+**Ritmo das ondas.** Ao terminar uma onda entra um aviso grande no meio da tela
+("Onda 2 concluída!" com "+150 sucatas"), com salto de mola e sumiço automático. Na espera da
+próxima, a contagem aparece **na entrada do caminho**, dentro do tabuleiro: uma bolha que pulsa a
+cada segundo cheio e, nos últimos três, fica vermelha e treme. Quando a onda sai, a bolha vira um
+estouro na própria entrada. A prévia "Próxima onda: …" saiu do canto superior esquerdo (onde agora
+fica a contagem) e virou o último item da coluna de contexto.
+
+**Zoom padrão mais largo.** O palco passou a ocupar 86% da janela (`BoardTransform.BASE_FIT`), o
+que tira a sensação de aperto e deixa a cena desenhada aparecer em volta da grade.
+
+**Dois cenários novos e uma ferramenta para medir.** As artes do Jardim e do segundo mapa foram
+refeitas a partir dos gabaritos (`docs/map_templates/`, gerados por `tools/make_map_template.py`).
+Como a IA de imagem não repete a rota exata, `tools/fit_map_scene.py` passou a medir tudo a partir
+da arte: descobre as cores do piso na própria imagem, mede a malha pelo gradiente, escolhe a janela
+16x10 que melhor cobre piso+corredor, e devolve `playRect`, a rota em células e os bloqueios. As
+rotas e os bloqueios dos dois mapas vieram dessa medida, e `tests/specs/01_grid_path.spec.luau`
+deixou de conferir números escritos à mão: agora cobre invariantes (soma dos trechos, células =
+comprimento + 1, célula guiada do tutorial fora do caminho), que sobrevivem à próxima arte.
+
+**Todos os mapas abertos (temporário).** `src/shared/Config/DevFlags.luau` traz
+`unlockAllMaps = true`; cliente e servidor leem o mesmo arquivo. A regra de campanha continua
+inteira em `ProfileSchema.campaignUnlocked` e continua testada. Desligar antes de publicar
+(está anotado em `docs/MANUAL_ACTIONS.md`).
+
+**Verificado no Studio (Play real):** os três mapas aparecem destravados; a cena de neve e a do
+jardim entram com a grade batendo nos ladrilhos desenhados; arrastar com o botão esquerdo (com
+Dardo escolhido) deslocou a câmera sem construir; o botão direito fechou a construção; as ondas 1
+e 2 terminaram com o aviso grande e a recompensa; a contagem apareceu na entrada; e as duas torres
+em campo aparecem **viradas para a esquerda** enquanto atiram nos Fiapos que vêm daquele lado.
+
+### Tela de entrada sobre a ilustração de marca (2026-09-19, noite)
+
+O logotipo e o fundo desenhados entraram no jogo. Os dois arquivos ficam em `assets/generated/`,
+os ids em `assets/export/brand_assets.json`, e `tools/import_brand_assets.py` gera
+`src/shared/Config/Brand.luau` — o mesmo contrato dos outros assets: **sem entrada no JSON, a
+chave sai `nil`** e a tela desenha o título em texto, sem erro e sem buraco.
+
+A ilustração é desenhada pela camada de cenário (sem área segura), então sangra até as bordas, com
+um véu escuro só do lado esquerdo — é onde mora o texto. Ela aparece nas rotas `boot` e `menu`; nas
+outras telas o cenário claro procedural volta, porque os painéis de Mapas, Coleção e Loja são tinta
+escura e perdiam contraste sobre a arte.
+
+O menu seguiu a maquete: logotipo e subtítulo à esquerda, "Jogar · Escolher mapa" grande em
+dourado, "Rever tutorial · Aprenda o básico" e "Coleção · Veja seus itens" lado a lado, e
+"Treino/Loja/Configurações" na linha escura de baixo. O saldo de botões fica no canto superior
+direito e a equipe salva no inferior direito, agora com os retratos das três torres equipadas.
+Os subtítulos entraram em `Config/Localization` (pt-br e inglês).
+
+**Verificado no Studio:** entrada com a arte e o logotipo reais; ao entrar em "Escolher mapa" o
+fundo volta ao cenário claro e o título da tela continua legível.
+
+### Marca da entrada: menor, centrada e clicável (2026-09-19, noite)
+
+A ficha "Preparação · Xs" saiu da faixa de fichas: quem conta o tempo agora é só a marca desenhada
+na entrada do caminho. Ela ficou menor (0,95 célula), parada e com o número centrado — o
+`Skin.label` alinha à esquerda por padrão, e era por isso que o número aparecia encostado no lado.
+Nos **últimos 5 segundos** ela cresce para 1,2 célula, fica vermelha, pulsa a cada segundo e treme;
+acima disso, nada se mexe.
+
+**Clicar na marca chama a onda na hora e paga bônus.** A regra é do servidor, não da interface:
+`Simulation.startWave` confere quanto tempo sobrava no cronômetro e, se sobrava, credita
+`min(segundos × earlyWaveBonusPerSecond, earlyWaveBonusMax)` (5 por segundo, teto de 80, no
+`balanceamento_v1.json`) para todos os participantes e emite o evento `earlyBonus`. Deixar o
+cronômetro acabar não paga nada, e treino e tutorial ficam de fora. O botão "Iniciar Onda" usa o
+mesmo caminho, então também paga — é bônus por adiantar, não por onde se clicou.
+
+No cliente, o toque na marca é tratado em `BoardPresenter.onTap` **antes** da leitura de célula (se
+fosse um botão de interface, o mesmo toque ainda tentaria construir no caminho). O começo da onda
+com bônus troca o aviso de perigo por "Onda adiantada! +X sucatas", com estouro dourado e o número
+subindo na entrada. Duas regressões cobertas em `tests/specs/03_simulation.spec.luau`: chamar cedo
+paga o previsto, deixar o cronômetro acabar não paga.
+
+Dois defeitos corrigidos no caminho: o `Computed` da ilustração de marca criava o `Bridge.use`
+dentro dele (o Fusion avisava `possiblyOutlives` a cada montagem), e `BoardPresenter.attach`
+estourava "Parent property of BoardViewport is locked" quando a interface era remontada (troca de
+idioma) — agora ele tenta remanejar o quadro e, se ele já foi destruído junto com a montagem
+antiga, refaz o tabuleiro do zero e reaplica a partida em andamento.
+
+### Campanha por fases no lugar do tutorial (2026-09-19, noite)
+
+O tutorial saiu do jogo — modo, comandos (`TutorialAdvance`/`TutorialSkip`), passos, cartão,
+checkpoint de repetição, recompensa de 180 botões e o botão na tela inicial. No lugar entrou uma
+**campanha declarada em dados**.
+
+**Fases.** `balanceamento_v1.json` ganhou o bloco `campaign` com 12 fases: cada uma aponta um mapa,
+quantas ondas da tabela global usa, escala de vida, sucata inicial e **dois objetivos**. O
+importador valida tudo (mapa existe, ondas cabem na tabela, objetivo é conhecido, a fase do guia é
+a primeira e a célula que ela indica é grama livre), então fase malformada não chega no jogo.
+
+**Estrelas.** A primeira é sempre vencer; as outras duas são os objetivos, avaliados no servidor
+por `Rules/Stars` (regra pura, 8 testes) sobre estatísticas que a simulação passou a medir: dano
+levado, torres construídas, quais torres entraram em campo e quantas ondas foram adiantadas.
+Objetivos de hoje: sem levar dano, dano máximo, teto de torres, só com certas torres e adiantar
+todas as hordas. O perfil guarda o **melhor** resultado por fase (`campaign[levelId]`) e paga
+botões só pela diferença de estrelas; a fase seguinte abre com pelo menos uma estrela na anterior.
+Perfil migrou para v3: quem já tinha concluído o tutorial começa com a fase 1 vencida.
+
+**Fase 1 é o tutorial.** Ela é a única com `manualWaveStart` (nenhum cronômetro: cada horda espera
+o jogador chamar) e com `intro`. Na primeira vez que o perfil a joga, um guia de três passos
+aparece: escolher o Dardo, posicionar na célula marcada, chamar a horda. Cada passo avança pela
+ação do jogador, o guia some quando a primeira horda sai, e o perfil marca `campaignIntroSeen` no
+servidor — não volta mais.
+
+**Telas.** "Jogar Campanha" no menu (o botão de tutorial saiu), a tela de mapas virou a lista de
+fases com estrelas, cadeado e os objetivos escritos, o HUD ganhou um painel de objetivos com o
+estado ao vivo e o resultado mostra as três estrelas da partida. Party, salas e revanche passaram
+a falar em fase (`levelId`) no lugar de mapa; o treino continua indo por mapa solto.
+
+177 testes passando (novos: `13_stars.spec.luau` e os de fase em `03_simulation`), selene,
+stylua e luau-lsp limpos.
+
+### Juice da campanha e do level up (2026-09-19, madrugada)
+
+**A lista de fases rolava?** Não: `Kit.screen` só monta um `ScrollingFrame` quando a tela pede
+`scroll`, e a grade estava dentro de um quadro de altura automática — o canvas não enxergava o
+conteúdo. Agora a grade é o layout do próprio corpo rolável, e a lista rola até a fase 12.
+
+**Estrelas com peso.** O cartão de resultado entra com mola (`Kit.panel` ganhou `scale`) e as três
+estrelas aparecem **uma de cada vez**, com salto: conquistada entra cheia e dourada, não
+conquistada entra menor e apagada. A sequência é disparada por resultado novo, então revanche e
+volta ao mesmo resultado não repetem a animação à toa.
+
+**Level up deixou de ser sem graça.** Melhorar uma torre agora dispara, na célula: dois anéis
+dourados em sequência, 16 faíscas, o novo estado subindo em texto grande, um clarão que cresce e
+some por cima do sprite e um tremor curto do tabuleiro — mais o aviso "Dardo → L1!" no meio da
+tela e uma chave de som própria (`ui_upgrade`, ainda sem arquivo).
+
+**Interruptor novo:** `DevFlags.alwaysShowIntro` mostra o guia da primeira fase toda vez, sem
+apagar o perfil. Fica **false** em produção; serviu para conferir o guia nesta sessão.
+
+**Verificado no Studio (Play real):** menu com "Jogar Campanha" e sem tutorial; lista das 12 fases
+com estrelas, objetivos escritos e rolagem até o fim; fase 1 com 3 ondas, sucata 650, objetivos no
+HUD e **sem cronômetro**; o guia percorreu os três passos (escolher o Dardo → posicionar na célula
+marcada → chamar a horda) e sumiu quando a onda saiu; melhoria do Dardo mostrou o efeito de level
+up e o aviso. Não vi ao vivo a entrada das estrelas no resultado — para isso é preciso terminar as
+três ondas da fase.
+
+### Tela de campanha na direção da maquete (2026-09-19, madrugada)
+
+A lista de fases foi refeita seguindo a referência: cartões largos em três colunas, com a arte do
+mapa no topo (cantos arredondados e **etiqueta do cenário** no canto — folha, floco ou lua conforme
+o mapa), o nome da fase, três estrelas grandes com contorno e um bloco claro com os dois objetivos,
+cada um com a sua estrelinha acesa quando já foi cumprido. O cartão fica com contorno dourado
+quando a fase tem as três estrelas **ou** quando é a próxima a jogar.
+
+No cabeçalho entrou o painel de coleção: estrela grande, "X/36" e a frase que explica para que as
+estrelas servem — o mesmo papel do painel da maquete.
+
+**Verificado no Studio (Play real):** a tela abre com as 12 fases em três colunas, rola até o fim,
+mostra 3/36 estrelas e destaca a fase 1 concluída.

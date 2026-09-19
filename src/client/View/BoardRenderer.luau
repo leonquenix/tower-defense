@@ -112,6 +112,11 @@ export type Renderer = typeof(setmetatable(
 	BoardRenderer
 ))
 
+-- Marca da entrada: discreta enquanto sobra tempo, maior e inquieta nos últimos segundos.
+local SPAWN_CALM = 0.95
+local SPAWN_URGENT = 1.2
+local SPAWN_URGENT_AT = 5
+
 local function cellsToScale(cells: number): UDim2
 	return UDim2.fromScale(cells / Grid.COLUMNS, cells / Grid.ROWS)
 end
@@ -481,7 +486,7 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	local markerOffset = if spawn[2] <= 0 then 0.5 else -0.45
 	self.spawnOffset = markerOffset
 	local marker = Skin.frame(self.layers.effects, "SpawnMarker", {
-		Size = cellsToScale(1.35),
+		Size = cellsToScale(SPAWN_CALM),
 		Position = self.transform:logicalToScale(spawn[1], spawn[2] + markerOffset),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		BackgroundTransparency = 1,
@@ -496,10 +501,13 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	Skin.corner(bubble, 999)
 	Skin.stroke(bubble, Theme.colors.ink, 3)
 	local count = Skin.label(bubble, "Count", "!", {
-		-- menor que a bolha: com TextScaled em 100% o número encosta no contorno
-		Size = UDim2.fromScale(0.68, 0.68),
+		-- menor que a bolha (com TextScaled em 100% o número encosta no contorno) e centrado
+		-- nos dois eixos: o padrão do Skin.label é alinhado à esquerda
+		Size = UDim2.fromScale(0.62, 0.62),
 		Position = UDim2.fromScale(0.5, 0.5),
 		AnchorPoint = Vector2.new(0.5, 0.5),
+		TextXAlignment = Enum.TextXAlignment.Center,
+		TextYAlignment = Enum.TextYAlignment.Center,
 		BackgroundTransparency = 1,
 		Font = Theme.fonts.numbers,
 		TextColor3 = Theme.colors.ink,
@@ -636,6 +644,7 @@ function BoardRenderer.syncTowers(self: Renderer, towers: { [number]: Types.Towe
 					visual.fallback.Text = Theme.towerGlyphs[data.d] .. " " .. data.st
 					visual.fallback.Visible = true
 				end
+				BoardRenderer.playLevelUp(self, data.x, data.y, data.st)
 			end
 			visual.data = data
 		end
@@ -1242,12 +1251,13 @@ function BoardRenderer.updateSpawnCountdown(self: Renderer, secondsLeft: number?
 	end
 	marker.Visible = true
 	local whole = math.max(0, math.ceil(secondsLeft))
+	local urgent = whole <= SPAWN_URGENT_AT
 	if whole ~= self.spawnLastSecond then
 		self.spawnLastSecond = whole
-		self.spawnPulse = 1 -- salto a cada segundo cheio
+		-- o salto a cada segundo só existe na reta final; antes disso a marca fica quieta
+		self.spawnPulse = if urgent then 1 else 0
 	end
 	count.Text = if whole > 0 then tostring(whole) else "!"
-	local urgent = whole <= 3
 	local bubble = marker:FindFirstChild("Bubble")
 	if bubble and bubble:IsA("Frame") then
 		bubble.BackgroundColor3 = if urgent then Theme.colors.dangerSoft else Theme.colors.cream
@@ -1257,33 +1267,94 @@ function BoardRenderer.updateSpawnCountdown(self: Renderer, secondsLeft: number?
 		end
 	end
 	count.TextColor3 = if urgent then Theme.colors.danger else Theme.colors.ink
-	if self.reducedMotion then
-		marker.Size = cellsToScale(1.35)
+	local base = if urgent then SPAWN_URGENT else SPAWN_CALM
+	local spawn = self.spawnCell
+	if self.reducedMotion or not urgent then
+		marker.Size = cellsToScale(base)
 		marker.Rotation = 0
+		if spawn then
+			marker.Position = self.transform:logicalToScale(spawn[1], spawn[2] + self.spawnOffset)
+		end
 		return
 	end
 	self.spawnPulse = math.max(self.spawnPulse - dt * 3.2, 0)
-	local pop = 1 + 0.45 * self.spawnPulse * self.spawnPulse
-	marker.Size = cellsToScale(1.35 * pop)
-	-- nos últimos segundos o aviso treme, para o olho ir parar na entrada
-	local spawn = self.spawnCell
+	local pop = 1 + 0.3 * self.spawnPulse * self.spawnPulse
+	marker.Size = cellsToScale(base * pop)
 	if spawn then
-		local shake = if urgent then math.sin(os.clock() * 26) * 0.07 else 0
+		local shake = math.sin(os.clock() * 26) * 0.05
 		marker.Position = self.transform:logicalToScale(spawn[1] + shake, spawn[2] + self.spawnOffset)
-		marker.Rotation = if urgent then math.sin(os.clock() * 22) * 7 else 0
+		marker.Rotation = math.sin(os.clock() * 22) * 5
 	end
 end
 
--- Onda começou: a marca vira um estouro na entrada.
-function BoardRenderer.flashSpawn(self: Renderer)
+-- Verdadeiro quando o ponto da tela caiu na marca da entrada (ela é alvo de clique: chamar a
+-- onda mais cedo). Teste por retângulo porque a marca é desenhada no mundo, não no HUD.
+function BoardRenderer.spawnMarkerHit(self: Renderer, screen: Vector2): boolean
+	local marker = self.spawnMarker
+	if not marker or not marker.Visible then
+		return false
+	end
+	local pos = marker.AbsolutePosition
+	local size = marker.AbsoluteSize
+	return screen.X >= pos.X and screen.Y >= pos.Y and screen.X <= pos.X + size.X and screen.Y <= pos.Y + size.Y
+end
+
+-- Onda começou: a marca vira um estouro na entrada. Com bônus por adiantar, o estouro é
+-- dourado e sobe o número da sucata ganha.
+function BoardRenderer.flashSpawn(self: Renderer, earlyBonus: number?)
 	local spawn = self.spawnCell
 	if not spawn then
 		return
 	end
 	BoardRenderer.updateSpawnCountdown(self, nil, 0)
 	local at = self.transform:logicalToScale(spawn[1], spawn[2])
-	Juice.ring(self.layers.effects, at, 0.04, 0.22, Theme.colors.danger)
-	Juice.burst(self.layers.effects, at, { count = 10, color = Theme.colors.coral, spread = 0.06 })
+	local color = if earlyBonus then Theme.colors.gold else Theme.colors.danger
+	Juice.ring(self.layers.effects, at, 0.04, 0.22, color)
+	Juice.burst(self.layers.effects, at, {
+		count = if earlyBonus then 14 else 10,
+		color = if earlyBonus then Theme.colors.gold else Theme.colors.coral,
+		spread = 0.06,
+	})
+	if earlyBonus then
+		Juice.floatText(self.layers.effects, at, "+" .. tostring(earlyBonus), Theme.colors.goldText)
+	end
+end
+
+-- Melhoria de torre: a torre sobe de nível e isso precisa aparecer. Dois anéis dourados saindo
+-- da célula, faíscas, o novo estado subindo em texto e um clarão curto por cima do sprite.
+function BoardRenderer.playLevelUp(self: Renderer, x: number, y: number, state: string)
+	local at = self.transform:logicalToScale(x, y)
+	local gold = Theme.colors.gold
+	Juice.ring(self.layers.effects, at, 0.02, 0.16, gold)
+	task.delay(0.09, function()
+		if self.layers.effects.Parent then
+			Juice.ring(self.layers.effects, at, 0.02, 0.24, Theme.colors.glowWarm)
+		end
+	end)
+	Juice.burst(self.layers.effects, at, { count = 16, color = gold, spread = 0.07, rise = 0.05 })
+	Juice.floatText(self.layers.effects, at, state, Theme.colors.goldText, true)
+	-- clarão: um disco claro que cresce e some em cima da célula
+	local flash = Skin.frame(self.layers.effects, "LevelUpFlash", {
+		Size = cellsToScale(1.2),
+		Position = at,
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundColor3 = Theme.colors.white,
+		BackgroundTransparency = 0.25,
+		ZIndex = Z.effects + 8,
+	})
+	Skin.corner(flash, 9999)
+	local grow = TweenService:Create(
+		flash,
+		TweenInfo.new(0.34, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+		{ Size = cellsToScale(2.6), BackgroundTransparency = 1 }
+	)
+	grow:Play()
+	grow.Completed:Once(function()
+		flash:Destroy()
+	end)
+	if not self.reducedMotion then
+		Juice.shakeBoard(0.25)
+	end
 end
 
 -- Onda limpa: comemoração curta no Farol.

@@ -48,14 +48,15 @@ local ACTIONS: { [string]: { [string]: FieldSpec } } = {
 	LeaveMatch = { matchId = { kind = "string" } },
 	TrainingSpawn = { matchId = { kind = "string" }, enemyId = { kind = "string" }, count = { kind = "int" } },
 	TrainingClear = { matchId = { kind = "string" } },
-	TutorialAdvance = { matchId = { kind = "string" }, step = { kind = "int" } },
-	TutorialSkip = { matchId = { kind = "string" } },
 	SetLoadout = { towerIds = { kind = "stringList", max = 4 } },
 	BuyTower = { towerId = { kind = "string" } },
+	-- Campanha manda levelId; treino manda mapId. O servidor confere qual dos dois faz sentido
+	-- para o matchMode pedido.
 	StartMatch = {
 		partyId = { kind = "string", optional = true },
-		mapId = { kind = "string" },
-		mode = { kind = "string" },
+		levelId = { kind = "string", optional = true },
+		mapId = { kind = "string", optional = true },
+		mode = { kind = "string", optional = true },
 		matchMode = { kind = "string", optional = true },
 	},
 	CreateParty = {},
@@ -67,7 +68,7 @@ local ACTIONS: { [string]: { [string]: FieldSpec } } = {
 	RespondInvite = { inviteId = { kind = "string" }, accept = { kind = "boolean" } },
 	KickFromParty = { userId = { kind = "int" } },
 	PartyReady = { ready = { kind = "boolean" } },
-	PartySetup = { mapId = { kind = "string" }, mode = { kind = "string" } },
+	PartySetup = { levelId = { kind = "string" }, mode = { kind = "string" } },
 	Rematch = { matchId = { kind = "string" }, ready = { kind = "boolean" } },
 	SaveSettings = {
 		musicVolume = { kind = "number" },
@@ -102,8 +103,6 @@ local COMBAT_ACTIONS: { [string]: boolean } = {
 	VoteSpeed = true,
 	TrainingSpawn = true,
 	TrainingClear = true,
-	TutorialAdvance = true,
-	TutorialSkip = true,
 	Rematch = true,
 	LeaveMatch = true,
 	Telemetry = true,

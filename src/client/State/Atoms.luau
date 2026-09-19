@@ -33,7 +33,7 @@ export type SentInvite = { at: number, state: string }
 export type Route =
 	"boot"
 	| "menu"
-	| "maps"
+	| "campaign"
 	| "collection"
 	| "shop"
 	| "party"
@@ -102,12 +102,10 @@ Atoms.snapshot = Charm.atom(nil :: Types.MatchSnapshot?)
 Atoms.towers = Charm.atom({} :: { [number]: Types.TowerSnapshot })
 Atoms.matchResult = Charm.atom(nil :: { [string]: any }?)
 Atoms.rematch = Charm.atom(nil :: { ready: number, total: number }?)
-Atoms.tutorialStep = Charm.atom(nil :: number?)
-Atoms.tutorialRetry = Charm.atom(false :: boolean)
--- O cartão de explicação é fechado no "Entendi"; a etapa em si só muda por evento do servidor
--- (colocar a torre certa, terminar a onda, melhorar). Separar as duas coisas é o que faz o
--- botão responder na hora sem inventar progresso.
-Atoms.tutorialOpen = Charm.atom(false :: boolean)
+-- Guia da primeira fase (passo 1 escolher o Dardo, 2 posicionar, 3 chamar a onda). É só
+-- apresentação: nada aqui muda regra, e some assim que a primeira onda começa.
+Atoms.introStep = Charm.atom(nil :: number?)
+
 Atoms.bossBanner = Charm.atom(nil :: string?)
 
 -- Aviso grande e curto no meio da tela ("Onda 3 concluída!"). Só apresentação: quem decide
@@ -165,7 +163,7 @@ function Atoms.clear()
 	Atoms.lastFrameAt(os.clock())
 	Atoms.snapshot(nil)
 	Atoms.matchResult(nil)
-	Atoms.tutorialStep(nil)
+	Atoms.introStep(nil)
 	Atoms.bossBanner(nil)
 	Atoms.announce(nil)
 	Atoms.selectedTowerId(nil)

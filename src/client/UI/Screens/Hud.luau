@@ -1,6 +1,6 @@
 --!strict
 -- HUD de combate. Faixa superior com fichas, área do tabuleiro, doca de torres e os painéis
--- contextuais (construção, tutorial, chefe, conexão).
+-- contextuais (construção, objetivos, guia da primeira fase, chefe, conexão).
 --
 -- Tudo é leitura dos átomos: o HUD não guarda estado de partida nem decide preço, dano ou
 -- resultado. Quando um botão é apertado, quem fala com o servidor é Controllers/GameFlow.
@@ -11,6 +11,7 @@ local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Types = require(ReplicatedStorage.Shared.Types)
+local Stars = require(ReplicatedStorage.Shared.Rules.Stars)
 local Fusion = require(ReplicatedStorage.Shared.Lib.Fusion)
 local Actions = require(script.Parent.Parent.Parent.State.Actions)
 local Atoms = require(script.Parent.Parent.Parent.State.Atoms)
@@ -52,21 +53,24 @@ local function formatNumber(value: number): string
 	return formatted
 end
 
-local function phaseLabel(snapshot: Types.MatchSnapshot?): string
-	if not snapshot then
-		return ""
-	end
-	local remaining = snapshot.phaseEndsAt - snapshot.simTime
-	if snapshot.phase == "Preparation" then
-		if snapshot.phaseEndsAt == math.huge then
-			return L("hud.ready") .. " →"
+-- Mesmo texto da tela de campanha: objetivo em linguagem do jogador.
+local function objectiveText(objective: Types.ObjectiveDef): string
+	local kind = objective.kind
+	if kind == "noLeak" then
+		return L("objective.noLeak")
+	elseif kind == "maxDamage" then
+		return L("objective.maxDamage", { value = objective.value or 0 })
+	elseif kind == "maxTowers" then
+		return L("objective.maxTowers", { value = objective.value or 0 })
+	elseif kind == "onlyTowers" then
+		local names: { string } = {}
+		for _, towerId in ipairs(objective.towers or {}) do
+			local def = Catalog.getTower(towerId)
+			table.insert(names, if def then def.name else towerId)
 		end
-		return L("hud.preparation", { seconds = math.max(0, math.ceil(remaining)) })
-	elseif snapshot.phase == "Intermission" then
-		if snapshot.phaseEndsAt == math.huge then
-			return L("hud.ready") .. " →"
-		end
-		return L("hud.intermission", { seconds = math.max(0, math.ceil(remaining)) })
+		return L("objective.onlyTowers", { towers = table.concat(names, " · ") })
+	elseif kind == "rushAll" then
+		return L("objective.rushAll")
 	end
 	return ""
 end
@@ -133,8 +137,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 	local buildTowerId = Bridge.use(scope, Atoms.buildTowerId)
 	local buildCell = Bridge.use(scope, Atoms.buildCell)
 	local buildReason = Bridge.use(scope, Atoms.buildBlockedReason)
-	local tutorialStep = Bridge.use(scope, Atoms.tutorialStep)
-	local tutorialOpen = Bridge.use(scope, Atoms.tutorialOpen)
+	local introStep = Bridge.use(scope, Atoms.introStep)
 	local bossBanner = Bridge.use(scope, Atoms.bossBanner)
 	local announce = Bridge.use(scope, Atoms.announce)
 	local connection = Bridge.use(scope, Atoms.connection)
@@ -218,18 +221,6 @@ return function(scope: Kit.Scope, props: Props): Frame
 				layoutOrder = 3,
 			}),
 			pill(scope, {
-				name = "Phase",
-				text = scope:Computed(function(use)
-					return phaseLabel(use(snapshot))
-				end),
-				textColor = Theme.colors.cyan,
-				visible = scope:Computed(function(use)
-					return phaseLabel(Kit.read(use, snapshot)) ~= ""
-				end),
-				layoutOrder = 4,
-				zIndex = 10,
-			}),
-			pill(scope, {
 				name = "Limit",
 				text = scope:Computed(function(use)
 					local current = use(snapshot)
@@ -244,7 +235,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 				visible = scope:Computed(function(use)
 					return Kit.read(use, snapshot) ~= nil
 				end),
-				layoutOrder = 5,
+				layoutOrder = 4,
 				zIndex = 10,
 			})
 		),
@@ -599,7 +590,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 	})
 
 	-- ------------------------------------------------------------------
-	-- Barra de construção, prévia de onda, chefe, conexão e tutorial
+	-- Barra de construção, prévia de onda, chefe, conexão e guia
 	-- ------------------------------------------------------------------
 
 	local buildBar = Kit.panel(scope, {
@@ -684,7 +675,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		name = "WavePreview",
 		blocking = true,
 		visible = scope:Computed(function(use)
-			return wavePreviewText(Kit.read(use, snapshot)) ~= "" and not Kit.read(use, tutorialOpen)
+			return wavePreviewText(Kit.read(use, snapshot)) ~= "" and Kit.read(use, introStep) == nil
 		end),
 		size = UDim2.new(0, 0, 0, 34),
 		automaticSize = Enum.AutomaticSize.X,
@@ -739,7 +730,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		})),
 	})
 
-	-- Aviso grande de uma linha: fim de onda, recompensa, marco do tutorial. Entra com um salto
+	-- Aviso grande de uma linha: fim de onda, recompensa, estrela. Entra com um salto
 	-- (mola) e some sozinho pelo relógio da interface.
 	local announcePanel = Kit.panel(scope, {
 		name = "Announce",
@@ -847,76 +838,113 @@ return function(scope: Kit.Scope, props: Props): Frame
 		})),
 	})
 
-	local tutorialCard = Kit.panel(scope, {
-		name = "Tutorial",
+	-- Guia da primeira fase: uma linha por passo, sem botão nenhum. Ele avança quando o jogador
+	-- faz a ação (escolher a torre, posicionar, chamar a onda) e some com a primeira horda.
+	local introCard = Kit.panel(scope, {
+		name = "Intro",
+		blocking = false,
+		visible = scope:Computed(function(use)
+			return Kit.read(use, introStep) ~= nil
+		end),
+		-- largura fixa e centrado: com largura automática o quadro ancorado no meio encostava
+		-- na esquerda em vez de ficar no centro do rodapé
+		size = UDim2.new(0, 520, 0, 56),
+		position = UDim2.new(0.5, 0, 1, -104),
+		anchorPoint = Vector2.new(0.5, 1),
+		color = Theme.colors.cream,
+		strokeColor = Theme.colors.gold,
+		radius = Kit.radius.pill,
+		padding = 22,
+		paddingVertical = 10,
+		zIndex = 26,
+		children = Kit.children(Kit.text(scope, {
+			Name = "Text",
+			Text = scope:Computed(function(use)
+				local step = Kit.read(use, introStep)
+				if step == 1 then
+					return "👉 " .. L("intro.pickTower")
+				elseif step == 2 then
+					return "👉 " .. L("intro.placeTower")
+				elseif step == 3 then
+					return "👇 " .. L("intro.startWave")
+				end
+				return ""
+			end),
+			Font = Theme.fonts.bodyBold,
+			TextSize = 20,
+			TextWrapped = false,
+			TextXAlignment = Enum.TextXAlignment.Center,
+			Size = UDim2.fromScale(1, 1),
+			ZIndex = 27,
+		})),
+	})
+
+	-- Objetivos da fase: as três estrelas com o estado atual, lidas do snapshot.
+	local objectivesPanel = Kit.panel(scope, {
+		name = "Objectives",
 		blocking = true,
 		visible = scope:Computed(function(use)
-			return Kit.read(use, tutorialStep) ~= nil and Kit.read(use, tutorialOpen)
+			local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
+			return current ~= nil and current.levelId ~= nil
 		end),
 		size = UDim2.new(1, 0, 0, 0),
 		automaticSize = Enum.AutomaticSize.Y,
-		layoutOrder = 1,
-		color = Theme.colors.cream,
-		padding = 16,
-		zIndex = 24,
-		layout = Kit.list(scope, { Padding = UDim.new(0, 10) }),
+		layoutOrder = 2,
+		color = Theme.colors.ink,
+		strokeColor = Theme.colors.inkDeep,
+		radius = 16,
+		padding = 12,
+		paddingVertical = 10,
+		gloss = false,
+		zIndex = 18,
+		layout = Kit.list(scope, { Padding = UDim.new(0, 4) }),
 		children = Kit.children(
+			Kit.caption(scope, {
+				Name = "Title",
+				Text = L("campaign.objectives"),
+				TextColor3 = Theme.colors.cyan,
+				Font = Theme.fonts.bodyBold,
+				TextSize = 11,
+				Size = UDim2.new(1, 0, 0, 13),
+				LayoutOrder = 1,
+				ZIndex = 19,
+			}),
 			Kit.text(scope, {
-				Name = "Text",
+				Name = "Lines",
 				Text = scope:Computed(function(use)
-					local step = use(tutorialStep)
-					return if step then L("tutorial.step" .. tostring(step)) else ""
+					local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
+					if not current or not current.levelId then
+						return ""
+					end
+					local level = Catalog.getLevel(current.levelId)
+					if not level then
+						return ""
+					end
+					local lines: { string } = { "★ " .. L("objective.clear") }
+					local stats: Types.CampaignStats = {
+						damageTaken = current.damageTaken,
+						towersBuilt = current.towersBuilt,
+						towerIds = {},
+						wavesRushed = current.wavesRushed,
+						wavesTotal = current.totalWaves,
+					}
+					for _, objective in ipairs(level.objectives) do
+						-- "só estas torres" não dá para conferir ao vivo (o fio não manda a lista),
+						-- então ela aparece sem marca até o fim da partida
+						local live = objective.kind ~= "onlyTowers" and Stars.objectiveMet(objective, stats)
+						local mark = if live then "★" else "☆"
+						table.insert(lines, mark .. " " .. objectiveText(objective))
+					end
+					return table.concat(lines, "\n")
 				end),
-				Font = Theme.fonts.bodyMedium,
-				TextSize = 15,
+				TextColor3 = Theme.colors.cream,
+				TextSize = 13,
+				TextWrapped = true,
 				TextYAlignment = Enum.TextYAlignment.Top,
 				Size = UDim2.new(1, 0, 0, 0),
 				AutomaticSize = Enum.AutomaticSize.Y,
-				LayoutOrder = 1,
-				ZIndex = 25,
-			}),
-			scope:New("Frame")({
-				Name = "Actions",
-				BackgroundTransparency = 1,
-				Size = UDim2.new(1, 0, 0, 48),
 				LayoutOrder = 2,
-				ZIndex = 25,
-				[Children] = Kit.children(
-					Kit.list(scope, {
-						FillDirection = Enum.FillDirection.Horizontal,
-						Padding = UDim.new(0, 8),
-						VerticalAlignment = Enum.VerticalAlignment.Center,
-					}),
-					Kit.button(scope, {
-						name = "Next",
-						text = scope:Computed(function(use)
-							local step = use(tutorialStep)
-							return if step and step >= 6 then L("tutorial.done") else L("tutorial.next")
-						end),
-						kind = "primary",
-						size = UDim2.fromOffset(150, 44),
-						layoutOrder = 1,
-						zIndex = 26,
-						onActivate = function()
-							local step = peek(tutorialStep)
-							-- na última etapa o botão encerra o tutorial; nas outras só fecha o cartão
-							if step and step >= 6 then
-								GameFlow.leaveMatch()
-							else
-								Actions.dismissTutorial()
-							end
-						end,
-					}),
-					Kit.button(scope, {
-						name = "Skip",
-						text = L("tutorial.skip"),
-						kind = "ghost",
-						size = UDim2.fromOffset(140, 44),
-						layoutOrder = 2,
-						zIndex = 26,
-						onActivate = GameFlow.tutorialSkip,
-					})
-				),
+				ZIndex = 19,
 			})
 		),
 	})
@@ -973,11 +1001,11 @@ return function(scope: Kit.Scope, props: Props): Frame
 		),
 	})
 
-	-- Coluna de contexto no canto inferior esquerdo: tutorial, detalhe da torre e treino nunca
+	-- Coluna de contexto no canto inferior esquerdo: objetivos, detalhe da torre e treino nunca
 	-- se cobrem, porque são itens de uma fila vertical em vez de três painéis no mesmo canto.
 	local contextColumn = Kit.scroller(scope, {
 		Name = "SidePanels",
-		-- rola quando tutorial + detalhe passam da altura livre, em vez de subir até as fichas
+		-- rola quando objetivos + detalhe passam da altura livre, em vez de subir até as fichas
 		Size = UDim2.new(0, CONTEXT_W, 1, -(TOP_HEIGHT + 120)),
 		Position = UDim2.new(0, 16, 1, -16),
 		AnchorPoint = Vector2.new(0, 1),
@@ -988,7 +1016,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 				Padding = UDim.new(0, 10),
 				VerticalAlignment = Enum.VerticalAlignment.Bottom,
 			}),
-			tutorialCard,
+			introCard,
+			objectivesPanel,
 			HudDetail(scope, { localUserId = props.localUserId }),
 			trainingPanel,
 			wavePreview

@@ -303,8 +303,9 @@ function PlayerDataService.clientView(player: Player): { [string]: any }
 		cosmeticLoadout = table.clone(profile.cosmeticLoadout),
 		masteryByTower = TableUtil.deepClone(profile.masteryByTower),
 		mapUnlocks = table.clone(profile.mapUnlocks),
-		tutorialCompleted = profile.tutorialCompleted,
-		tutorialRewardClaimed = profile.tutorialRewardClaimed,
+		-- campanha: estrelas por fase e se o guia da primeira fase já foi visto
+		campaign = table.clone(profile.campaign),
+		campaignIntroSeen = profile.campaignIntroSeen,
 		settings = table.clone(profile.settings),
 		lifetimeStats = table.clone(profile.lifetimeStats),
 		pendingResults = #profile.pendingResults,

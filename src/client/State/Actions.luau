@@ -292,16 +292,9 @@ function Actions.setBuildCell(cell: Types.Cell?, blockedReason: string?)
 	Atoms.buildBlockedReason(blockedReason)
 end
 
-function Actions.setTutorial(step: number?, retry: boolean?)
-	Atoms.tutorialStep(step)
-	Atoms.tutorialRetry(retry == true)
-	-- etapa nova (ou repetição) reabre a explicação
-	Atoms.tutorialOpen(step ~= nil)
-end
-
--- "Entendi": fecha a explicação sem mexer na etapa (quem avança é o servidor, por evento).
-function Actions.dismissTutorial()
-	Atoms.tutorialOpen(false)
+-- Guia da primeira fase: avança por ação do jogador, nunca por tempo.
+function Actions.setIntroStep(step: number?)
+	Atoms.introStep(step)
 end
 
 function Actions.setBossBanner(text: string?)

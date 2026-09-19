@@ -5,7 +5,6 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Grid = require(ReplicatedStorage.Shared.Math.Grid)
@@ -186,18 +185,20 @@ local function refreshBuildPreview()
 	end
 end
 
--- No tutorial, a torre guiada fica travada na célula marcada.
+-- Guia da primeira fase: enquanto ele está no passo de posicionar, a torre indicada fica
+-- travada na célula marcada — o primeiro toque no tabuleiro já constrói ali.
 local function guidedCellFor(towerId: string): Types.Cell?
 	local snapshot = Atoms.snapshot()
-	local step = Atoms.tutorialStep()
-	if not snapshot or snapshot.mode ~= "tutorial" or not step then
+	local step = Atoms.introStep()
+	if not snapshot or not step or step ~= 2 or not snapshot.levelId then
 		return nil
 	end
-	if (step == 1 and towerId == "dardo") or (step == 3 and towerId == "goma") then
-		local guided = Balance.tutorial.guidedCells[towerId]
-		return if guided then { guided[1], guided[2] } else nil
+	local level = Catalog.getLevel(snapshot.levelId)
+	if not level or not level.introCell or level.introTower ~= towerId then
+		return nil
 	end
-	return nil
+	local cell = level.introCell :: Types.Cell
+	return { cell[1], cell[2] }
 end
 
 -- ---------------------------------------------------------------------------
@@ -237,6 +238,13 @@ local function onTap(screen: Vector2)
 		return
 	end
 	if isOverChrome(screen) then
+		return
+	end
+	-- A marca da entrada é alvo de clique: chama a onda mais cedo. Fica antes da leitura da
+	-- célula para o mesmo toque não tentar construir no caminho.
+	if currentRenderer:spawnMarkerHit(screen) then
+		GameFlow.setReady(true)
+		AudioController.play("ui_confirm")
 		return
 	end
 	local x, y = currentTransform:screenToCell(screen)
@@ -324,20 +332,33 @@ local lastBossBannerAt = 0
 local function handleEvents(events: { Types.NetEvent })
 	local currentRenderer = renderer
 	-- a recompensa da onda chega num evento e o fim da onda em outro, na mesma leva: o aviso
-	-- junta os dois em uma linha só
+	-- junta os dois em uma linha só. O bônus por adiantar vem junto do começo da onda.
 	local income: number? = nil
+	local earlyBonus: number? = nil
 	for _, event in ipairs(events) do
 		if event.kind == "waveIncome" then
 			income = event.amount
+		elseif event.kind == "earlyBonus" then
+			earlyBonus = event.amount
 		end
 	end
 	for _, event in ipairs(events) do
 		if event.kind == "waveStart" then
 			AudioController.play("wave_start")
+			-- guia da primeira fase acaba quando a primeira onda sai
+			if Atoms.introStep() ~= nil then
+				Actions.setIntroStep(nil)
+			end
 			Actions.setBossBanner(nil)
-			Actions.announce(L("hud.waveIncoming", { wave = event.wave or 0 }), nil, "warn")
+			if earlyBonus then
+				-- quem chamou a onda cedo vê o prêmio, não o aviso de perigo
+				Actions.announce(L("hud.waveRushed"), L("hud.earlyBonus", { amount = earlyBonus }), "good")
+				AudioController.play("ui_confirm")
+			else
+				Actions.announce(L("hud.waveIncoming", { wave = event.wave or 0 }), nil, "warn")
+			end
 			if currentRenderer then
-				currentRenderer:flashSpawn()
+				currentRenderer:flashSpawn(earlyBonus)
 			end
 		elseif event.kind == "waveEnd" then
 			AudioController.play("wave_end")
@@ -372,8 +393,24 @@ local function handleEvents(events: { Types.NetEvent })
 		elseif event.kind == "pulse" then
 			AudioController.play("base_pulse", true)
 			Juice.shakeBoard(0.5)
+		elseif event.kind == "towerUpgraded" then
+			-- a melhoria é o momento mais gostoso do jogo: som e aviso curto junto do efeito
+			AudioController.play("ui_upgrade")
+			local tower = if event.towerId then Atoms.towers()[event.towerId :: number] else nil
+			if tower and tower.o == localUserId then
+				local def = Catalog.getTower(tower.d)
+				Actions.announce(
+					L("hud.levelUp", { tower = if def then def.name else tower.d, state = tower.st }),
+					nil,
+					"good"
+				)
+			end
 		elseif event.kind == "towerPlaced" and event.userId == localUserId then
 			AudioController.play("ui_confirm")
+			-- guia: torre em campo, falta chamar a onda
+			if Atoms.introStep() == 2 then
+				Actions.setIntroStep(3)
+			end
 		elseif event.kind == "speedChanged" and event.reason == "overload" then
 			Actions.toast(L("hud.speedOverload"), "error")
 		elseif event.kind == "circuitChanged" and event.circuitId and event.towerId then
@@ -408,8 +445,19 @@ function BoardPresenter.attach(area: Frame)
 	boardArea = area
 	local existing = transform
 	if existing then
-		existing.viewport.Parent = area
-		return
+		-- A montagem anterior pode ter sido destruída junto com a interface (troca de idioma,
+		-- remontagem do App). Nesse caso o quadro antigo não aceita mais um pai — "Parent
+		-- property is locked" — e o tabuleiro é refeito do zero em vez de estourar.
+		local moved = pcall(function()
+			existing.viewport.Parent = area
+		end)
+		if moved and existing.viewport.Parent == area then
+			return
+		end
+		InputController.destroy()
+		inputReady = false
+		transform = nil
+		renderer = nil
 	end
 	local currentTransform = BoardTransform.new(area)
 	transform = currentTransform
@@ -510,23 +558,21 @@ function BoardPresenter.init()
 
 	SettingsController.onChanged(applySettings)
 
-	-- Tutorial: as etapas de ação já abrem o posicionamento na torre certa, com a célula marcada.
-	Bridge.watchAtom(Atoms.tutorialStep, function(step: number?)
+	-- Guia da primeira fase: ao chegar no passo de posicionar, a célula indicada já fica armada.
+	Bridge.watchAtom(Atoms.introStep, function(step: number?)
 		local snapshot = Atoms.snapshot()
-		if not snapshot or snapshot.mode ~= "tutorial" or not step then
+		if not snapshot or step ~= 2 or not snapshot.levelId then
 			return
 		end
-		local guidedTower = if step == 1 then "dardo" elseif step == 3 then "goma" else nil
-		if not guidedTower then
+		local level = Catalog.getLevel(snapshot.levelId)
+		local cell = if level then level.introCell else nil
+		if not level or not cell or not level.introTower then
 			return
 		end
-		if Atoms.buildTowerId() ~= guidedTower then
-			Actions.enterBuild(guidedTower)
+		if Atoms.buildTowerId() ~= level.introTower then
+			Actions.enterBuild(level.introTower :: string)
 		end
-		local guided = Balance.tutorial.guidedCells[guidedTower]
-		if guided then
-			Actions.setBuildCell({ guided[1], guided[2] }, nil)
-		end
+		Actions.setBuildCell({ cell[1], cell[2] }, nil)
 		refreshBuildPreview()
 	end)
 
@@ -537,8 +583,16 @@ function BoardPresenter.init()
 			currentRenderer:setSelected(id)
 		end
 	end)
-	Bridge.watchAtom(Atoms.buildTowerId, function()
+	Bridge.watchAtom(Atoms.buildTowerId, function(towerId: string?)
 		refreshBuildPreview()
+		-- guia: escolher a torre indicada leva ao passo de posicionar
+		local snapshot = Atoms.snapshot()
+		if Atoms.introStep() == 1 and towerId and snapshot and snapshot.levelId then
+			local level = Catalog.getLevel(snapshot.levelId)
+			if level and level.introTower == towerId then
+				Actions.setIntroStep(2)
+			end
+		end
 	end)
 
 	RunService.RenderStepped:Connect(function(deltaTime: number)

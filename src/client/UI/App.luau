@@ -14,6 +14,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
+local Brand = require(ReplicatedStorage.Shared.Config.Brand)
 local UiTokens = require(ReplicatedStorage.Shared.Config.UiTokens)
 local Fusion = require(ReplicatedStorage.Shared.Lib.Fusion)
 local Actions = require(script.Parent.Parent.State.Actions)
@@ -22,6 +23,7 @@ local Bridge = require(script.Parent.Parent.State.Bridge)
 local InputController = require(script.Parent.Parent.Controllers.InputController)
 local Responsive = require(script.Parent.Parent.View.Responsive)
 local Skin = require(script.Parent.Skin)
+local Theme = require(script.Parent.Parent.View.Theme)
 local Kit = require(script.Parent.Kit)
 local Accessibility = require(script.Parent.Accessibility)
 local InviteCards = require(script.Parent.Overlays.InviteCards)
@@ -35,7 +37,7 @@ local Hud = require(script.Parent.Screens.Hud)
 local Invites = require(script.Parent.Screens.Invites)
 local Loading = require(script.Parent.Screens.Loading)
 local MainMenu = require(script.Parent.Screens.MainMenu)
-local Maps = require(script.Parent.Screens.Maps)
+local Campaign = require(script.Parent.Screens.Campaign)
 local Party = require(script.Parent.Screens.Party)
 local Result = require(script.Parent.Screens.Result)
 local Rooms = require(script.Parent.Screens.Rooms)
@@ -113,7 +115,8 @@ function App.mount()
 	local modalGui = makeGui(opts.playerGui, "QuintalModal", order.modal, true)
 	local toastGui = makeGui(opts.playerGui, "QuintalToast", order.toast, true)
 
-	-- cenário ilustrado: desenho imperativo (não tem estado nem interação)
+	-- cenário das telas de menu: a ilustração de marca cobre a tela inteira; sem ela publicada,
+	-- o desenho procedural antigo entra no lugar (nenhuma tela depende do upload ter acontecido)
 	local world = currentScope:New("Frame")({
 		Name = "World",
 		BackgroundColor3 = Color3.fromRGB(15, 42, 30),
@@ -122,7 +125,63 @@ function App.mount()
 		Active = false,
 	})
 	world.Parent = worldGui
-	Skin.scenery(world)
+	-- A ilustração de marca é o fundo da tela de entrada. Nas outras telas ela volta a ser o
+	-- cenário claro desenhado por código: os painéis e títulos dessas telas são tinta escura, e
+	-- sobre a arte (escura nas bordas) o texto perdia contraste.
+	-- o átomo é ligado uma vez, fora do Computed: criar o Value dentro dele deixa os dois no
+	-- mesmo escopo com tempos de vida trocados (o Fusion avisa "possiblyOutlives")
+	local routeState = Bridge.use(currentScope, Atoms.route)
+	local brandRoute = currentScope:Computed(function(use)
+		local route = use(routeState)
+		return route == "menu" or route == "boot"
+	end)
+	local backdrop = Brand.menuBackground
+	if backdrop and backdrop.image then
+		local art = currentScope:New("ImageLabel")({
+			Name = "Backdrop",
+			BackgroundTransparency = 1,
+			Image = backdrop.image :: string,
+			ScaleType = Enum.ScaleType.Crop,
+			Size = UDim2.fromScale(1, 1),
+			Active = false,
+			Visible = brandRoute,
+			ZIndex = 1,
+			[Children] = {
+				-- véu do lado esquerdo: é onde mora o texto da tela de entrada
+				currentScope:New("Frame")({
+					Name = "Veil",
+					BackgroundColor3 = Theme.colors.inkDeep,
+					BorderSizePixel = 0,
+					Size = UDim2.fromScale(1, 1),
+					Active = false,
+					ZIndex = 2,
+					[Children] = {
+						currentScope:New("UIGradient")({
+							Rotation = 0,
+							Transparency = NumberSequence.new({
+								NumberSequenceKeypoint.new(0, 0.45),
+								NumberSequenceKeypoint.new(0.5, 0.78),
+								NumberSequenceKeypoint.new(1, 1),
+							}),
+						}),
+					},
+				}),
+			},
+		})
+		art.Parent = world
+	end
+	local scenery = currentScope:New("Frame")({
+		Name = "Scenery",
+		BackgroundTransparency = 1,
+		Size = UDim2.fromScale(1, 1),
+		Active = false,
+		Visible = currentScope:Computed(function(use)
+			return not use(brandRoute) or backdrop == nil or backdrop.image == nil
+		end),
+		ZIndex = 0,
+	})
+	scenery.Parent = world
+	Skin.scenery(scenery)
 
 	-- O tabuleiro mora na camada do cenário (sem área segura): assim a arte do mapa sangra por
 	-- baixo da barra do Roblox e o HUD, que respeita a área segura, flutua por cima dela.
@@ -151,7 +210,7 @@ function App.mount()
 	scaledContent(currentScope, menuGui, {
 		Boot(currentScope, { visible = routeIs(currentScope, "boot"), elapsed = elapsed }),
 		MainMenu(currentScope, { visible = routeIs(currentScope, "menu") }),
-		Maps(currentScope, { visible = routeIs(currentScope, "maps") }),
+		Campaign(currentScope, { visible = routeIs(currentScope, "campaign") }),
 		Rooms(currentScope, { visible = routeIs(currentScope, "rooms") }),
 		Party(currentScope, { visible = routeIs(currentScope, "party") }),
 		Invites(currentScope, { visible = routeIs(currentScope, "invites") }),

@@ -34,23 +34,23 @@
         "loja oculta"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Play 2026-09-19: menu com saldo, equipe salva e os seis botões (captura de tela)."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: menu com Jogar Campanha (o botão de tutorial saiu); aguarda nova sessão de Play."
     },
     "03_mapas": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/Maps.luau"
+        "src/client/UI/Screens/Campaign.luau"
       ],
       "states": [
-        "seleção",
-        "mapa bloqueado",
-        "desafio bloqueado",
-        "integrante sem desbloqueio"
+        "fase aberta",
+        "fase bloqueada",
+        "estrelas conquistadas",
+        "objetivos da fase"
       ],
       "implemented": true,
-      "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "studio": true,
+      "evidence": "Play 2026-09-19: lista de fases em três colunas com arte do mapa, etiqueta do cenário, estrelas, bloco de objetivos, painel de coleção (3/36) e rolagem até a fase 12."
     },
     "04_salas": {
       "kind": "screen",
@@ -194,7 +194,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: HUD da maquete — fichas Farol 100/100, Onda 00/20 e 650 de sucata no canto superior esquerdo, 'Preparação · 12s' e 'Iniciar Onda' verde no rodapé."
+      "evidence": "Play 2026-09-19: fichas no canto superior esquerdo, contagem da próxima onda desenhada na entrada do caminho (bolha que pulsa e fica vermelha nos últimos segundos) e botão verde Iniciar Onda no rodapé."
     },
     "13_combate": {
       "kind": "screen",
@@ -210,7 +210,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: mapa sangrado até as bordas com a grade coincidindo com os ladrilhos desenhados, coluna TORRES à direita, Pulso de Luz no rodapé; onda 1 com Fiapos feridos pelo Dardo."
+      "evidence": "Play 2026-09-19: cenas novas do Jardim e da neve com a grade batendo nos ladrilhos desenhados; ondas 1 e 2 encerradas com o aviso grande ('Onda 2 concluída! +150 sucatas'); torres espelhadas mirando os Fiapos que vêm da esquerda."
     },
     "14_posicionar": {
       "kind": "screen",
@@ -227,7 +227,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: carta Dardo -> clique na célula constrói (sucata 650 → 408, Torres 1/18); clique no caminho recusa com 'Não dá para construir no caminho'."
+      "evidence": "Play 2026-09-19: clique parado constrói; arrastar com o botão esquerdo (com Dardo escolhido) desloca a câmera sem construir; botão direito fecha a construção."
     },
     "15_posicao_invalida": {
       "kind": "screen",
@@ -329,16 +329,17 @@
       "kind": "screen",
       "modules": [
         "src/client/UI/Screens/Hud.luau",
-        "src/client/Controllers/GameFlow.luau"
+        "src/client/Controllers/BoardPresenter.luau"
       ],
       "states": [
-        "cinco passos",
-        "repetição",
-        "pular"
+        "escolher a torre",
+        "posicionar",
+        "chamar a primeira horda",
+        "some ao fim"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Play 2026-09-19: etapas 1→5 no fluxo real (Dardo guiado, onda, Goma guiada, melhoria) e encerramento com vitória."
+      "studio": false,
+      "evidence": "Revamp 2026-09-19: o tutorial de seis etapas saiu; a fase 1 traz um guia de três passos, mostrado uma vez por perfil (campaignIntroSeen)."
     },
     "22_treino": {
       "kind": "screen",
@@ -741,7 +742,7 @@
     "48_mobile_mapas": {
       "kind": "screen",
       "modules": [
-        "src/client/UI/Screens/Maps.luau"
+        "src/client/UI/Screens/Campaign.luau"
       ],
       "states": [
         "um cartão por vez",
@@ -749,7 +750,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Revamp 2026-09-19: a tela de mapas virou a lista de fases da campanha (Campaign.luau); aguarda sessão de Play."
     },
     "49_icones": {
       "kind": "library",

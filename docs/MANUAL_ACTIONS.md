@@ -16,22 +16,15 @@ C. **Verificação visual das telas** continua pendente: a sessão de Play desta
    janela sem renderizar (viewport 1×1), então a conferência foi por árvore de Gui e console, sem
    captura de tela. Repetir com a janela visível e preencher `docs/ui_coverage.json`.
 
-## Sprites espelhados das torres (pendente de upload)
+## Interruptor de desenvolvimento ligado (desligar antes de publicar)
 
-D. **Subir os 30 PNGs de `assets/export/mirror/`** e registrar os IDs em
-   `assets/export/upload_log.json` (mesma chave/fluxo dos ícones), depois rodar
-   `python3 tools/update_asset_registry.py`. Só então a torre passa a olhar para o lado do alvo.
-
-   Por que precisa de upload: o Roblox não tem "virar imagem" em `ImageLabel` — testado em
-   19/09/2026 no Studio desta máquina: `Size` com X negativo e `UIScale = -1` não desenham nada, e
-   `Rotation = 180` deixa a torre de ponta-cabeça. A saída moderna seria
-   `AssetService:CreateEditableImageAsync`, que aqui recusa **todos** os assets, inclusive um
-   público ("no permission to load asset"). Então a arte espelhada é gerada localmente
-   (`python3 tools/mirror_tower_sprites.py`, espelhamento exato conferido pixel a pixel) e precisa
-   ser publicada como qualquer outro asset.
-
-   Enquanto os IDs não existirem, `Config/Assets.luau` traz `mirror = nil` e a torre continua
-   sempre virada para a direita — nenhum erro, nenhum id inventado.
+D. **`src/shared/Config/DevFlags.luau` está com `unlockAllMaps = true`** (e `alwaysShowIntro`
+   disponível para reconferir o guia da primeira fase sem apagar o perfil — hoje em `false`) desde 19/09/2026, a
+   pedido do responsável, para jogar livremente entre os cenários enquanto a arte é refeita. Com
+   ele ligado, `ProfileSchema.isMapUnlocked` devolve verdadeiro para qualquer mapa e dificuldade —
+   cliente e servidor leem o mesmo arquivo, então não existe divergência. A regra de campanha
+   continua inteira em `ProfileSchema.campaignUnlocked` e continua testada.
+   **Antes de publicar a experiência, volte a chave para `false`.**
 
 ## Publicação e conta
 
@@ -56,20 +49,36 @@ D. **Subir os 30 PNGs de `assets/export/mirror/`** e registrar os IDs em
 12. Revisar os **apoios sugeridos dos 11 inimigos e chefes**: o manifesto marca `anchorRequiresReview` e o export usou a âncora sugerida pelo autor (Corrisco 0,66 por causa do rastro desenhado; Névoa com apoio virtual sob o corpo flutuante). Conferir em `assets/export/review_enemies_light.png`, `review_enemies_dark.png` e no tabuleiro; se algum personagem parecer flutuar ou afundar, ajustar `sourceAnchorSuggested` no manifesto e rodar `tools/export_enemy_assets.py` de novo.
 13. Verificar **movimento reduzido nos inimigos** pela tela de Configurações (a verificação desta sessão usou o remote `SaveSettings` e não mediu o que pretendia — ver TEST_REPORT 7.3). Esperado: ciclos decorativos param; posição lógica, barras e avisos continuam.
 
-## Cena do Jardim de Papel — **enviada em 2026-09-19**
+## Arte de marca — **enviada em 2026-09-19**
 
-A arte do primeiro mapa (`Assets_Mapas_v2/jardim_praia_sem_farol.png`, 1672×941) foi enviada pelo
-MCP do Studio e está em `rbxassetid://85414482526997`. Origem, sha256, `playRect` e as chaves
-`includesPath`/`includesBase` ficam em `assets/export/map_scene_overrides.json`; `Config/Assets.luau`
-é gerado a partir dele por `tools/update_asset_registry.py`. Pendências do responsável:
+O logotipo (`assets/generated/logo.png`) e o fundo da tela de entrada
+(`assets/generated/background.png`) estão publicados em `rbxassetid://132723613362335` e
+`rbxassetid://131384553190382`, registrados em `assets/export/brand_assets.json`.
+`tools/import_brand_assets.py` gera `src/shared/Config/Brand.luau` a partir dele e nunca inventa
+id: sem entrada no JSON, a tela volta a desenhar o título em texto e o cenário procedural.
+Pendente: conferir a **moderação** dos dois uploads.
 
-- Conferir a **moderação** do upload (a imagem entra na conta como qualquer decalque).
-- Ao trocar a arte por outra versão, medir o novo `playRect` antes de publicar: os corredores
-  desenhados dão a medida (linha 2 → `y0 + 2·célula`, linha 8 → `y0 + 8·célula`, trecho de cima →
-  `x0 + 5·célula`) e a proporção da área jogável tem de fechar em 1,600. Uma cena com o farol
-  desenhado precisa de `includesBase = true`, senão o farol aparece duas vezes.
-- Oficina de Lata e Sótão das Estrelas continuam com o chão antigo desenhado por código; quando
-  houver arte equivalente, acrescentar as cenas no mesmo arquivo.
+## Cenas de mapa — **enviadas em 2026-09-19**
+
+Duas artes estão publicadas e em uso:
+
+| Mapa | Arte | Asset |
+| --- | --- | --- |
+| Jardim de Papel | `Assets_Mapas_v2/jardim_praia_v4.png` | `rbxassetid://116022215556691` |
+| Oficina de Lata (cena de neve, provisória) | `Assets_Mapas_v2/neve_v2.png` | `rbxassetid://111075982166008` |
+
+Origem, sha256, `playRect` e as chaves `includesPath`/`includesBase` ficam em
+`assets/export/map_scene_overrides.json`; `Config/Assets.luau` é gerado dele por
+`tools/update_asset_registry.py`. Pendências do responsável:
+
+- Conferir a **moderação** dos uploads (entram na conta como qualquer decalque).
+- O nome do segundo mapa continua "Oficina de Lata" com o chefe Rei Ferrugem, mas a arte é de
+  neve. Se a troca for para valer, renomear o mapa e o chefe no `balanceamento_v1.json`.
+- Sótão das Estrelas continua com o chão antigo desenhado por código.
+- Ao trocar qualquer arte: rode `python3 tools/fit_map_scene.py <arte.png> --overlay /tmp/g.png`,
+  confira a grade desenhada na imagem de conferência e leve `playRect`, `path` e `blocked` para
+  os JSONs. Uma cena que já desenhe o Farol precisa de `includesBase = true`, senão ele aparece
+  duas vezes. O guia de encomenda da arte está em `docs/GUIA_ARTE_DE_MAPA.md`.
 
 ## Ícones da interface (24 arquivos) — **enviados em 2026-09-18**
 

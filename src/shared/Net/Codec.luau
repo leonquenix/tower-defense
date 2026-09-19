@@ -10,7 +10,14 @@
 --  * campos ausentes viajam como `nil` (optional do ByteNet: 1 byte), não como zero;
 --  * decodificar um id desconhecido devolve nil em vez de erro — servidor novo, cliente antigo.
 local Types = require(script.Parent.Parent.Types)
+local Catalog = require(script.Parent.Parent.Config.Catalog)
 local Enums = require(script.Parent.Enums)
+
+-- A fase viaja como índice (1 byte) em vez de texto a cada quadro.
+local function levelIdByIndex(index: number): string?
+	local level = Catalog.levels()[index]
+	return if level then level.id else nil
+end
 
 local Codec = {}
 
@@ -80,7 +87,10 @@ export type WireSnapshot = {
 	placed: number,
 	full: boolean,
 	unlockAll: boolean,
-	tutorial: number,
+	level: number, -- índice da fase na campanha (0 = fora da campanha)
+	dmg: number,
+	built: number,
+	rushed: number,
 	enemies: { WireEnemy },
 	towers: { WireTower },
 	parts: { WireParticipant },
@@ -210,7 +220,10 @@ function Codec.encodeSnapshot(snapshot: Types.MatchSnapshot): WireSnapshot
 		placed = snapshot.limits.placedByMe,
 		full = snapshot.full,
 		unlockAll = snapshot.trainingUnlockAll,
-		tutorial = snapshot.tutorialStep or 0,
+		level = if snapshot.levelId then (Catalog.levelIndex(snapshot.levelId) or 0) else 0,
+		dmg = snapshot.damageTaken,
+		built = snapshot.towersBuilt,
+		rushed = snapshot.wavesRushed,
 		enemies = enemies,
 		towers = towers,
 		parts = parts,
@@ -293,7 +306,10 @@ function Codec.decodeSnapshot(wire: WireSnapshot): Types.MatchSnapshot
 		full = wire.full,
 		nextWavePreview = if #preview > 0 then preview else nil,
 		trainingUnlockAll = wire.unlockAll,
-		tutorialStep = if wire.tutorial > 0 then wire.tutorial else nil,
+		levelId = if wire.level > 0 then levelIdByIndex(wire.level) else nil,
+		damageTaken = wire.dmg,
+		towersBuilt = wire.built,
+		wavesRushed = wire.rushed,
 	}
 end
 

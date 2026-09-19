@@ -1,6 +1,6 @@
 --!strict
 -- ARQUIVO GERADO por tools/import_balance.py a partir de Pacote_Claude_Code/dados/balanceamento_v1.json
--- Não edite à mão. sha256 da origem: 200ce1c3b4c225318e79d6f1515b3a5dadd3f90029745648fb44b62856224226
+-- Não edite à mão. sha256 da origem: 8bb86d8f9d806739e8e95a867a8837826751b087917d0bc267d94315b1be67f1
 local Types = require(script.Parent.Parent.Types)
 
 local Balance: Types.BalanceData = {
@@ -50,7 +50,208 @@ local Balance: Types.BalanceData = {
 			telegraph = 2,
 		},
 	},
-	checksum = "200ce1c3b4c225318e79d6f1515b3a5dadd3f90029745648fb44b62856224226",
+	campaign = {
+		buttonsPerStar = 25,
+		levels = {
+			{
+				hpScale = 1,
+				id = "1",
+				intro = true,
+				introCell = { 4, 3 },
+				introTower = "dardo",
+				manualWaveStart = true,
+				mapId = "jardim",
+				objectives = {
+					{
+						kind = "noLeak",
+					},
+					{
+						kind = "maxTowers",
+						value = 3,
+					},
+				},
+				startingCash = 650,
+				waves = 3,
+			},
+			{
+				hpScale = 1,
+				id = "2",
+				mapId = "jardim",
+				objectives = {
+					{
+						kind = "noLeak",
+					},
+					{
+						kind = "onlyTowers",
+						towers = { "dardo", "pipoca" },
+					},
+				},
+				startingCash = 650,
+				waves = 5,
+			},
+			{
+				hpScale = 1,
+				id = "3",
+				mapId = "jardim",
+				objectives = {
+					{
+						kind = "noLeak",
+					},
+					{
+						kind = "rushAll",
+					},
+				},
+				startingCash = 700,
+				waves = 7,
+			},
+			{
+				hpScale = 1,
+				id = "4",
+				mapId = "jardim",
+				objectives = {
+					{
+						kind = "maxDamage",
+						value = 20,
+					},
+					{
+						kind = "maxTowers",
+						value = 6,
+					},
+				},
+				startingCash = 700,
+				waves = 9,
+			},
+			{
+				hpScale = 1.1,
+				id = "5",
+				mapId = "jardim",
+				objectives = {
+					{
+						kind = "noLeak",
+					},
+					{
+						kind = "rushAll",
+					},
+				},
+				startingCash = 750,
+				waves = 12,
+			},
+			{
+				hpScale = 1,
+				id = "6",
+				mapId = "oficina",
+				objectives = {
+					{
+						kind = "noLeak",
+					},
+					{
+						kind = "maxTowers",
+						value = 5,
+					},
+				},
+				startingCash = 700,
+				waves = 8,
+			},
+			{
+				hpScale = 1.1,
+				id = "7",
+				mapId = "oficina",
+				objectives = {
+					{
+						kind = "maxDamage",
+						value = 15,
+					},
+					{
+						kind = "rushAll",
+					},
+				},
+				startingCash = 750,
+				waves = 10,
+			},
+			{
+				hpScale = 1.15,
+				id = "8",
+				mapId = "oficina",
+				objectives = {
+					{
+						kind = "noLeak",
+					},
+					{
+						kind = "onlyTowers",
+						towers = { "dardo", "pipoca", "goma" },
+					},
+				},
+				startingCash = 800,
+				waves = 14,
+			},
+			{
+				hpScale = 1.2,
+				id = "9",
+				mapId = "oficina",
+				objectives = {
+					{
+						kind = "maxDamage",
+						value = 25,
+					},
+					{
+						kind = "maxTowers",
+						value = 9,
+					},
+				},
+				startingCash = 850,
+				waves = 16,
+			},
+			{
+				hpScale = 1.2,
+				id = "10",
+				mapId = "sotao",
+				objectives = {
+					{
+						kind = "noLeak",
+					},
+					{
+						kind = "maxTowers",
+						value = 7,
+					},
+				},
+				startingCash = 800,
+				waves = 12,
+			},
+			{
+				hpScale = 1.3,
+				id = "11",
+				mapId = "sotao",
+				objectives = {
+					{
+						kind = "maxDamage",
+						value = 20,
+					},
+					{
+						kind = "rushAll",
+					},
+				},
+				startingCash = 850,
+				waves = 16,
+			},
+			{
+				hpScale = 1.4,
+				id = "12",
+				mapId = "sotao",
+				objectives = {
+					{
+						kind = "noLeak",
+					},
+					{
+						kind = "rushAll",
+					},
+				},
+				startingCash = 900,
+				waves = 20,
+			},
+		},
+		note = "Fases da campanha. A primeira estrela é sempre vencer; as outras duas saem de objectives, avaliados pelo servidor com as estatisticas da partida (Rules/Stars). waves = quantas ondas da tabela global a fase usa.",
+	},
+	checksum = "8bb86d8f9d806739e8e95a867a8837826751b087917d0bc267d94315b1be67f1",
 	circuits = {
 		{
 			effect = "damage_vs_slowed",
@@ -85,6 +286,8 @@ local Balance: Types.BalanceData = {
 			winButtons = 120,
 		},
 	},
+	earlyWaveBonusMax = 80,
+	earlyWaveBonusPerSecond = 5,
 	effects = {
 		bossSlowStrength = 0.35,
 		hasteStacking = "maximum",
@@ -201,7 +404,6 @@ local Balance: Types.BalanceData = {
 		masteryMilestones = { 30, 100, 250 },
 		masteryMinPlacedSeconds = 30,
 		masteryWin = 10,
-		tutorialButtons = 180,
 	},
 	sellRefund = 0.7,
 	serverMaxPlayers = 12,
@@ -519,41 +721,6 @@ local Balance: Types.BalanceData = {
 			},
 			target = "none",
 			unlock = 450,
-		},
-	},
-	tutorial = {
-		guidedCells = {
-			dardo = { 4, 3 },
-			goma = { 4, 4 },
-		},
-		startingCash = 1200,
-		waves = {
-			{
-				{
-					count = 1,
-					enemy = "fiapo",
-				},
-			},
-			{
-				{
-					count = 4,
-					enemy = "fiapo",
-				},
-				{
-					count = 2,
-					enemy = "corrisco",
-				},
-			},
-			{
-				{
-					count = 6,
-					enemy = "fiapo",
-				},
-				{
-					count = 1,
-					enemy = "bolota",
-				},
-			},
 		},
 	},
 	version = "1.0.0",

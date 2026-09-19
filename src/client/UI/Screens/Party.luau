@@ -43,12 +43,12 @@ return function(scope: Kit.Scope, props: Props): Frame
 		if not current then
 			return L("party.none")
 		end
-		local map = Catalog.getMap(current.mapId)
+		local level = Catalog.getLevel(tostring(current.levelId))
+		local index = Catalog.levelIndex(tostring(current.levelId)) or 1
+		local map = if level then Catalog.getMap(level.mapId) else nil
 		return L("party.setup")
 			.. ": "
-			.. (if map then map.name else tostring(current.mapId))
-			.. " · "
-			.. L("menu.difficulty." .. tostring(current.difficulty))
+			.. L("campaign.levelName", { index = index, map = if map then map.name else "" })
 	end)
 	local myReady = scope:Computed(function(use)
 		for _, member in ipairs(use(members)) do
@@ -65,7 +65,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		subtitle = L("party.subtitle"),
 		visible = props.visible,
 		onBack = function()
-			Actions.navigate("maps")
+			Actions.navigate("campaign")
 		end,
 		header = Kit.children(Kit.button(scope, {
 			name = "Leave",
@@ -75,7 +75,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 			onActivate = function()
 				Commands.send("party:leave", "LeaveParty", {}, {
 					onSuccess = function()
-						Actions.navigate("maps")
+						Actions.navigate("campaign")
 					end,
 				})
 			end,
@@ -227,7 +227,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 						onActivate = function()
 							local current = Fusion.peek(party)
 							if current then
-								GameFlow.startMatch(tostring(current.mapId), tostring(current.difficulty), "normal")
+								GameFlow.startLevel(tostring(current.levelId), tostring(current.difficulty))
 							end
 						end,
 					})
