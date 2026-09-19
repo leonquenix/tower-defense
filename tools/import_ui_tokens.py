@@ -53,6 +53,9 @@ DERIVED = {
     "skyHigh": "#1B3A52",  # topo do gradiente atrás do tabuleiro
     "glowWarm": "#FFE9A8",  # brilho quente (halo, lustro, faísca)
     "inkDeep": "#0D1626",  # sombra projetada e fundo de vinheta
+    # Revamp 2026-09-19 — botão de iniciar onda (verde de doce) da maquete do HUD.
+    "grass": "#7CC85C",  # fundo de botão: 7,25:1 com ink
+    "grassDeep": "#4E8A36",  # só espessura do botão (preenchimento), nunca texto
 }
 
 # Pares texto/fundo que precisam passar em contraste. "large" segue o mínimo 3:1 do guia;
@@ -75,6 +78,7 @@ CONTRAST_PAIRS = [
     ("goldText", "paper", 4.5),
     ("goldText", "cream", 4.5),
     ("tealDark", "sage", 4.5),
+    ("ink", "grass", 4.5),
 ]
 
 

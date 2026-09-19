@@ -308,4 +308,21 @@ function Actions.setBossBanner(text: string?)
 	Atoms.bossBanner(text)
 end
 
+-- Aviso grande de uma linha. Ele mesmo não some: quem limpa é o relógio curto do App.
+function Actions.announce(text: string, sub: string?, tone: ("good" | "warn")?)
+	Atoms.announce({ text = text, sub = sub, tone = tone or "good", at = os.clock() })
+end
+
+Actions.ANNOUNCE_SECONDS = 2.8
+
+-- Chamado pelo relógio da interface: devolve true quando apagou o aviso.
+function Actions.expireAnnounce(now: number): boolean
+	local current = Atoms.announce()
+	if current and now - current.at >= Actions.ANNOUNCE_SECONDS then
+		Atoms.announce(nil)
+		return true
+	end
+	return false
+end
+
 return Actions

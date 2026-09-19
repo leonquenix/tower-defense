@@ -143,6 +143,15 @@
         67,
         167,
         135
+      ],
+      "sceneSource": "Assets_Mapas_v2/jardim_praia_v4.png",
+      "sceneSha256": "0fb0dc4fb272f5f5728dc46028d9a0c079d4f4c1715ea7d5807de75bf3655776",
+      "sceneImage": "rbxassetid://116022215556691",
+      "scenePlayRect": [
+        0.0904,
+        0.1644,
+        0.6833,
+        0.8274
       ]
     },
     {
@@ -166,6 +175,15 @@
         98,
         123,
         147
+      ],
+      "sceneSource": "Assets_Mapas_v2/neve_v2.png",
+      "sceneSha256": "a5d3754c8732ac73c0ca4af7582879f23611377e7291a26723eb8891c8e7b400",
+      "sceneImage": "rbxassetid://111075982166008",
+      "scenePlayRect": [
+        0.0521,
+        0.1341,
+        0.6716,
+        0.8269
       ]
     },
     {

@@ -16,6 +16,23 @@ C. **Verificação visual das telas** continua pendente: a sessão de Play desta
    janela sem renderizar (viewport 1×1), então a conferência foi por árvore de Gui e console, sem
    captura de tela. Repetir com a janela visível e preencher `docs/ui_coverage.json`.
 
+## Sprites espelhados das torres (pendente de upload)
+
+D. **Subir os 30 PNGs de `assets/export/mirror/`** e registrar os IDs em
+   `assets/export/upload_log.json` (mesma chave/fluxo dos ícones), depois rodar
+   `python3 tools/update_asset_registry.py`. Só então a torre passa a olhar para o lado do alvo.
+
+   Por que precisa de upload: o Roblox não tem "virar imagem" em `ImageLabel` — testado em
+   19/09/2026 no Studio desta máquina: `Size` com X negativo e `UIScale = -1` não desenham nada, e
+   `Rotation = 180` deixa a torre de ponta-cabeça. A saída moderna seria
+   `AssetService:CreateEditableImageAsync`, que aqui recusa **todos** os assets, inclusive um
+   público ("no permission to load asset"). Então a arte espelhada é gerada localmente
+   (`python3 tools/mirror_tower_sprites.py`, espelhamento exato conferido pixel a pixel) e precisa
+   ser publicada como qualquer outro asset.
+
+   Enquanto os IDs não existirem, `Config/Assets.luau` traz `mirror = nil` e a torre continua
+   sempre virada para a direita — nenhum erro, nenhum id inventado.
+
 ## Publicação e conta
 
 0. **Salvar o place** depois de sincronizar pelo Rojo: File → Save to Roblox. *Atualizado em 2026-09-18*: o place aberto é `Tower Defense`, PlaceId `85307223725202`, universo `10766698519`, pertencente a um **grupo** (CreatorId 926034474). Ele nasceu como cópia do place do Board Games Club; o conteúdo do outro jogo foi removido nesta sessão e a limpeza precisa ser salva.
@@ -38,6 +55,21 @@ C. **Verificação visual das telas** continua pendente: a sessão de Play desta
 11. Revisar os **apoios (pés)** dos sprites em aparelhos reais: a normalização usa escala uniforme por família e apoio em (0,5; 0,82); `assets/export/review_towers.png` mostra os 30 estados alinhados. Maestro L3A ficou visivelmente menor que os demais estados (o original tem conteúdo menor); avaliar redesenho ou escala específica.
 12. Revisar os **apoios sugeridos dos 11 inimigos e chefes**: o manifesto marca `anchorRequiresReview` e o export usou a âncora sugerida pelo autor (Corrisco 0,66 por causa do rastro desenhado; Névoa com apoio virtual sob o corpo flutuante). Conferir em `assets/export/review_enemies_light.png`, `review_enemies_dark.png` e no tabuleiro; se algum personagem parecer flutuar ou afundar, ajustar `sourceAnchorSuggested` no manifesto e rodar `tools/export_enemy_assets.py` de novo.
 13. Verificar **movimento reduzido nos inimigos** pela tela de Configurações (a verificação desta sessão usou o remote `SaveSettings` e não mediu o que pretendia — ver TEST_REPORT 7.3). Esperado: ciclos decorativos param; posição lógica, barras e avisos continuam.
+
+## Cena do Jardim de Papel — **enviada em 2026-09-19**
+
+A arte do primeiro mapa (`Assets_Mapas_v2/jardim_praia_sem_farol.png`, 1672×941) foi enviada pelo
+MCP do Studio e está em `rbxassetid://85414482526997`. Origem, sha256, `playRect` e as chaves
+`includesPath`/`includesBase` ficam em `assets/export/map_scene_overrides.json`; `Config/Assets.luau`
+é gerado a partir dele por `tools/update_asset_registry.py`. Pendências do responsável:
+
+- Conferir a **moderação** do upload (a imagem entra na conta como qualquer decalque).
+- Ao trocar a arte por outra versão, medir o novo `playRect` antes de publicar: os corredores
+  desenhados dão a medida (linha 2 → `y0 + 2·célula`, linha 8 → `y0 + 8·célula`, trecho de cima →
+  `x0 + 5·célula`) e a proporção da área jogável tem de fechar em 1,600. Uma cena com o farol
+  desenhado precisa de `includesBase = true`, senão o farol aparece duas vezes.
+- Oficina de Lata e Sótão das Estrelas continuam com o chão antigo desenhado por código; quando
+  houver arte equivalente, acrescentar as cenas no mesmo arquivo.
 
 ## Ícones da interface (24 arquivos) — **enviados em 2026-09-18**
 

@@ -179,7 +179,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: rota 'loading' enquanto o servidor não confirmava a partida."
+      "evidence": "Play 2026-09-19: cartão do Jardim de Papel com dificuldade e equipe preenchidas (as chaves {difficulty}/{team} apareciam cruas antes desta sessão)."
     },
     "12_preparacao": {
       "kind": "screen",
@@ -194,7 +194,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: Farol 100/100, Onda 00/03, 'Pronto →' e 1.200 de sucata."
+      "evidence": "Play 2026-09-19: HUD da maquete — fichas Farol 100/100, Onda 00/20 e 650 de sucata no canto superior esquerdo, 'Preparação · 12s' e 'Iniciar Onda' verde no rodapé."
     },
     "13_combate": {
       "kind": "screen",
@@ -210,7 +210,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: doca com Dardo/Pipoca/Goma, onda 1 com projéteis, números de dano, anéis de impacto e partículas de morte (amostragem da camada de efeitos)."
+      "evidence": "Play 2026-09-19: mapa sangrado até as bordas com a grade coincidindo com os ladrilhos desenhados, coluna TORRES à direita, Pulso de Luz no rodapé; onda 1 com Fiapos feridos pelo Dardo."
     },
     "14_posicionar": {
       "kind": "screen",
@@ -227,7 +227,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: carta -> célula -> 'Construir por 250'; sucata 1.200 → 950 e Torres 1/18."
+      "evidence": "Play 2026-09-19: carta Dardo -> clique na célula constrói (sucata 650 → 408, Torres 1/18); clique no caminho recusa com 'Não dá para construir no caminho'."
     },
     "15_posicao_invalida": {
       "kind": "screen",

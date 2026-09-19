@@ -16,6 +16,7 @@ from luau_emit import emit  # noqa: E402
 REGISTRY = os.path.join(ROOT, "runtime_asset_registry.json")
 EXPORT_MANIFEST = os.path.join(ROOT, "assets", "export", "export_manifest.json")
 UPLOAD_LOG = os.path.join(ROOT, "assets", "export", "upload_log.json")
+SCENE_OVERRIDES = os.path.join(ROOT, "assets", "export", "map_scene_overrides.json")
 INDEX = os.path.join(ROOT, "asset_index.json")
 OUT = os.path.join(ROOT, "src", "shared", "Config", "Assets.luau")
 
@@ -25,6 +26,8 @@ def main():
     registry = json.load(open(REGISTRY))
     manifest = json.load(open(EXPORT_MANIFEST))["assets"]
     uploads = json.load(open(UPLOAD_LOG))["uploads"] if os.path.exists(UPLOAD_LOG) else {}
+    # cenas de mapa desenhadas por inteiro: substituem o chão e trazem caminho/base na própria arte
+    scenes = json.load(open(SCENE_OVERRIDES))["scenes"] if os.path.exists(SCENE_OVERRIDES) else {}
     index = json.load(open(INDEX))
     index_keys = {a["assetKey"] for a in index["assets"]}
     reg_keys = {a["assetKey"] for a in registry["assets"]}
@@ -102,6 +105,20 @@ def main():
                 "backingColor": m["backingColor"],
             }
         entry["checkedInStudio"] = bool(entry.get("robloxAssetId")) and checked
+        # cena inteira do mapa (arte com grama, caminho, cenário e base juntos)
+        if key.startswith("map_") and key.endswith("_ground"):
+            map_id = key[len("map_") : -len("_ground")]
+            scene = scenes.get(map_id)
+            if scene:
+                entry["sceneSource"] = scene["source"]
+                entry["sceneSha256"] = scene["sourceSha256"]
+                entry["sceneImage"] = scene["image"]
+                entry["scenePlayRect"] = scene["playRect"]
+                entry["status"] = "uploaded"
+                luau_assets[key]["image"] = scene["image"]
+                luau_assets[key]["playRect"] = scene["playRect"]
+                luau_assets[key]["includesPath"] = bool(scene.get("includesPath"))
+                luau_assets[key]["includesBase"] = bool(scene.get("includesBase"))
     # arte real de inimigos e chefes (Assets_Inimigos_Bosses_v1), por entityId do catálogo
     enemy_manifest = os.path.join(ROOT, "assets", "export", "enemy_export_manifest.json")
     real_enemy_keys = set()
@@ -131,7 +148,8 @@ def main():
                 reg["checkedInStudio"] = bool(aid) and checked
 
     registry["schemaNotes"] = (
-        "Campos adicionais: exportSha256, portraitExportFile, portraitRobloxAssetId, uploadFile, backingColor, "
+        "Campos adicionais: exportSha256, portraitExportFile, portraitRobloxAssetId, "
+        "uploadFile, backingColor, "
         "visibleWidthCells/frameWidthCells (inimigos e chefes). "
         "Status: pending_upload | exported_pending_upload | uploaded. checkedInStudio só após carregamento verificado."
     )
@@ -159,11 +177,17 @@ def main():
         "--!strict\n"
         "-- ARQUIVO GERADO por tools/update_asset_registry.py a partir de runtime_asset_registry.json.\n"
         "-- IDs presentes aqui vieram de uploads reais registrados em assets/export/upload_log.json.\n"
-        "-- image == nil significa asset ainda não publicado: o cliente usa um visual provisório identificado.\n\n"
+        "-- image == nil significa asset ainda não publicado: o cliente usa um visual provisório identificado.\n"
         "export type AssetEntry = {\n"
-        "\timage: string?,\n\tportrait: string?,\n\twidth: number,\n\theight: number,\n\tanchorX: number,\n\tanchorY: number,\n"
+        "\timage: string?,\n\tportrait: string?,\n"
+        "\t-- sprite espelhado: a torre olha para o lado do alvo (nil enquanto não for publicado)\n"
+        "\twidth: number,\n\theight: number,\n\tanchorX: number,\n\tanchorY: number,\n"
         "\tcontentHeight: number?,\n\tkind: string,\n\ttowerId: string?,\n\tstate: string?,\n\tbackingColor: { number }?,\n\tplaceholder: boolean?,\n"
-        "\tentityId: string?,\n\tframeWidthCells: number?,\n\tvisibleWidthCells: number?,\n}\n\n"
+        "\tentityId: string?,\n\tframeWidthCells: number?,\n\tvisibleWidthCells: number?,\n"
+        "\t-- cena de mapa: fração da imagem ocupada pela grade 16x10 {x0, y0, x1, y1}\n"
+        "\tplayRect: { number }?,\n"
+        "\t-- a arte já desenha a trilha e o Farol: o renderizador não repete nenhum dos dois\n"
+        "\tincludesPath: boolean?,\n\tincludesBase: boolean?,\n}\n\n"
     )
     body = "local entries: { [string]: AssetEntry } = " + emit(luau_assets) + "\n\n"
     body += (

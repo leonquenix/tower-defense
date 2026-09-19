@@ -56,6 +56,12 @@ TowerAnimator.UPGRADE_DURATION = 0.35
 export type Animator = typeof(setmetatable(
 	{} :: {
 		image: ImageLabel,
+		-- Quadro do sprite em pixels. É o que permite virar a torre para o outro lado sem
+		-- segundo arquivo: um ImageRect de largura negativa espelha a textura no próprio eixo
+		-- (ImageRectOffset = {w, 0}, ImageRectSize = {-w, h}). Girar não serve: deixaria a
+		-- torre de ponta-cabeça.
+		frameWidth: number,
+		frameHeight: number,
 		defId: string,
 		plan: { idle: IdleSpec, action: ActionSpec },
 		time: number,
@@ -76,10 +82,18 @@ export type Animator = typeof(setmetatable(
 	TowerAnimator
 ))
 
-function TowerAnimator.new(image: ImageLabel, defId: string, anchorY: number): Animator
+function TowerAnimator.new(
+	image: ImageLabel,
+	defId: string,
+	anchorY: number,
+	frameWidth: number?,
+	frameHeight: number?
+): Animator
 	local plan = PLAN[defId] or PLAN.dardo
 	local self = setmetatable({
 		image = image,
+		frameWidth = frameWidth or 128,
+		frameHeight = frameHeight or 128,
 		defId = defId,
 		plan = plan,
 		time = 0,
@@ -91,6 +105,32 @@ function TowerAnimator.new(image: ImageLabel, defId: string, anchorY: number): A
 		anchorY = anchorY,
 	}, TowerAnimator)
 	return self
+end
+
+-- Vira a torre para o lado do alvo espelhando a textura no próprio eixo: com largura negativa
+-- no ImageRect o Roblox desenha a imagem invertida na horizontal, sem sprite extra e sem girar.
+local function applyFacing(self: Animator)
+	if self.facing < 0 then
+		self.image.ImageRectOffset = Vector2.new(self.frameWidth, 0)
+		self.image.ImageRectSize = Vector2.new(-self.frameWidth, self.frameHeight)
+	else
+		self.image.ImageRectOffset = Vector2.zero
+		self.image.ImageRectSize = Vector2.zero -- imagem inteira
+	end
+end
+
+-- Troca a textura do estado (ao criar a torre e a cada melhoria), mantendo o lado atual.
+function TowerAnimator.setImage(self: Animator, image: string, frameWidth: number?, frameHeight: number?)
+	if frameWidth then
+		self.frameWidth = frameWidth
+	end
+	if frameHeight then
+		self.frameHeight = frameHeight
+	end
+	if image ~= "" and self.image.Image ~= image then
+		self.image.Image = image
+	end
+	applyFacing(self)
 end
 
 local function applyTransform(self: Animator, sx: number, sy: number, offsetPx: number, rotation: number)
@@ -115,7 +155,11 @@ function TowerAnimator.playAction(self: Animator, seq: number, targetDirectionX:
 	end
 	self.lastPulseAt = self.time
 	if targetDirectionX then
-		self.facing = if targetDirectionX >= 0 then 1 else -1
+		local facing = if targetDirectionX >= 0 then 1 else -1
+		if facing ~= self.facing then
+			self.facing = facing
+			applyFacing(self)
+		end
 	end
 	if self.action and (self.action.kind == "upgrade" or self.action.kind == "build") then
 		return -- ação de maior prioridade em andamento
@@ -142,8 +186,14 @@ function TowerAnimator.playBuild(self: Animator)
 end
 
 -- Melhoria: cancela ação atual, troca a textura uma vez no meio da transição e preserva o apoio.
-function TowerAnimator.playUpgrade(self: Animator, newImage: string)
+function TowerAnimator.playUpgrade(self: Animator, newImage: string, frameWidth: number?, frameHeight: number?)
 	TowerAnimator.restore(self)
+	if frameWidth then
+		self.frameWidth = frameWidth
+	end
+	if frameHeight then
+		self.frameHeight = frameHeight
+	end
 	self.action = {
 		kind = "upgrade",
 		startedAt = self.time,

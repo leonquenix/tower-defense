@@ -33,6 +33,7 @@ local function heroImage(): string?
 end
 
 return function(scope: Kit.Scope, props: Props): Frame
+	local profile_ = Bridge.use(scope, Atoms.profile)
 	local buttons = Bridge.map(scope, Atoms.profile, function()
 		return Selectors.buttons()
 	end)
@@ -54,6 +55,11 @@ return function(scope: Kit.Scope, props: Props): Frame
 	local profileBroken = scope:Computed(function(use)
 		local status = use(profileStatus)
 		return status ~= "ready" and status ~= "volatile"
+	end)
+	-- Quem já concluiu (ou pulou) o tutorial não precisa vê-lo como chamada principal.
+	local tutorialDone = scope:Computed(function(use)
+		local profile = use(profile_)
+		return profile ~= nil and profile.tutorialCompleted == true
 	end)
 
 	local left = scope:New("Frame")({
@@ -128,16 +134,27 @@ return function(scope: Kit.Scope, props: Props): Frame
 					})
 				),
 			}),
+			-- Botão principal: tutorial para quem está começando, "Jogar" para quem já passou.
 			Kit.button(scope, {
-				name = "Tutorial",
-				text = L("menu.tutorial"),
-				sub = L("menu.startTutorialHint"),
+				name = "Primary",
+				text = scope:Computed(function(use)
+					return if use(tutorialDone) then L("menu.play") else L("menu.tutorial")
+				end),
+				sub = scope:Computed(function(use)
+					return if use(tutorialDone) then L("menu.playHint") else L("menu.startTutorialHint")
+				end),
 				kind = "primary",
 				icon = "ui_play",
 				size = UDim2.new(1, -20, 0, 76),
 				layoutOrder = 5,
 				zIndex = 3,
-				onActivate = GameFlow.startTutorial,
+				onActivate = function()
+					if Fusion.peek(tutorialDone) then
+						Actions.navigate("maps")
+					else
+						GameFlow.startTutorial()
+					end
+				end,
 			}),
 			scope:New("Frame")({
 				Name = "Row",
@@ -153,14 +170,22 @@ return function(scope: Kit.Scope, props: Props): Frame
 					}),
 					Kit.button(scope, {
 						name = "Play",
-						text = L("menu.play"),
-						sub = L("menu.playHint"),
+						text = scope:Computed(function(use)
+							return if use(tutorialDone) then L("menu.replayTutorial") else L("menu.play")
+						end),
+						sub = scope:Computed(function(use)
+							return if use(tutorialDone) then "" else L("menu.playHint")
+						end),
 						kind = "cyan",
 						size = UDim2.new(0.5, -6, 1, 0),
 						layoutOrder = 1,
 						zIndex = 4,
 						onActivate = function()
-							Actions.navigate("maps")
+							if Fusion.peek(tutorialDone) then
+								GameFlow.startTutorial()
+							else
+								Actions.navigate("maps")
+							end
 						end,
 					}),
 					Kit.button(scope, {

@@ -319,7 +319,7 @@ describe("Guia / Aspirador", function()
 	it("aviso aos 14 s, poeira aos 16 s por 4 s e intervalo 1 s vira 1,333 s", function()
 		local s = newMatch()
 		local boss = spawn(s, "aspirador", 1)
-		local place = Simulation.placeTower(s, 100, "dardo", 3, 3)
+		local place = Simulation.placeTower(s, 100, "dardo", 4, 3)
 		local tower = s.towers[place.entityId]
 		boss.bossNextTelegraphAt = boss.spawnedAt + 14
 		local telegraph, ability
@@ -352,19 +352,19 @@ describe("Guia / Aspirador", function()
 		local s = newMatch()
 		s.wallets[100] = 100000
 		local boss = spawn(s, "aspirador", 1)
-		local a = Simulation.placeTower(s, 100, "dardo", 3, 3)
+		local a = Simulation.placeTower(s, 100, "dardo", 4, 3)
 		Simulation.upgradeTower(s, 100, a.entityId, "L1") -- maior sucata investida
 		Simulation.placeTower(s, 100, "dardo", 12, 8)
 		boss.bossNextTelegraphAt = s.simTime
 		Simulation.step(s)
 		expect(boss.bossTelegraphing).toBe(true)
-		expect(boss.bossTargetCell[1]).toBe(3)
+		expect(boss.bossTargetCell[1]).toBe(4)
 		expect(boss.bossTargetCell[2]).toBe(3)
 		Simulation.sellTower(s, 100, a.entityId)
 		for _ = 1, 45 do
 			Simulation.step(s)
 		end
-		expect(boss.bossTargetCell[1]).toBe(3)
+		expect(boss.bossTargetCell[1]).toBe(4)
 		expect(boss.bossTargetCell[2]).toBe(3)
 	end)
 
@@ -384,7 +384,7 @@ describe("Guia / Aspirador", function()
 	it("morte durante o aviso cancela a resolução e avisa o cliente", function()
 		local s = newMatch()
 		local boss = spawn(s, "aspirador", 1)
-		Simulation.placeTower(s, 100, "dardo", 3, 3)
+		Simulation.placeTower(s, 100, "dardo", 4, 3)
 		boss.bossNextTelegraphAt = s.simTime
 		Simulation.step(s)
 		expect(boss.bossTelegraphing).toBe(true)

@@ -70,22 +70,52 @@ function GameFlow.confirmLeave()
 		confirmText = L("hud.leave"),
 		danger = true,
 		onConfirm = function()
-			Actions.setModalPending(true)
-			Commands.send("match:leave", "LeaveMatch", {}, {
-				onSuccess = function()
-					Actions.closeModal()
-				end,
-				onError = function(code)
-					Actions.closeModal()
-					Actions.toast(L("error." .. code), "error")
-				end,
-			})
+			Actions.closeModal()
+			GameFlow.leaveMatch()
 		end,
 	})
 end
 
+-- Sair da partida sem depender da resposta do servidor.
+--
+-- O caminho normal é: pede LeaveMatch, o servidor manda o quadro "left" e MatchController limpa
+-- tudo. Mas no fim do tutorial a partida já foi encerrada no servidor, então o pedido volta com
+-- erro e o "left" nunca chega — o jogador ficava preso na tela de combate com o resultado fechado
+-- (trava relatada em 19/09). Agora, se o quadro não vier, o cliente volta sozinho para o menu.
+local LEAVE_TIMEOUT = 2
+
 function GameFlow.leaveMatch()
-	Commands.send("match:leave", "LeaveMatch", {}, nil)
+	local snapshot = Atoms.snapshot()
+	local matchId = if snapshot then snapshot.matchId else nil
+	Commands.send("match:leave", "LeaveMatch", {}, {
+		onError = function()
+			GameFlow.forceReturnToMenu(matchId)
+		end,
+	})
+	task.delay(LEAVE_TIMEOUT, function()
+		GameFlow.forceReturnToMenu(matchId)
+	end)
+end
+
+-- Encerra a partida do lado do cliente. Só age se ainda estivermos na mesma partida: um "left"
+-- que chegou primeiro, ou uma revanche que já começou outra partida, não são desfeitos aqui.
+function GameFlow.forceReturnToMenu(matchId: string?)
+	if not Atoms.inMatch() then
+		return
+	end
+	local snapshot = Atoms.snapshot()
+	if matchId and snapshot and snapshot.matchId ~= matchId then
+		return
+	end
+	Atoms.inMatch(false)
+	Atoms.matchResult(nil)
+	Atoms.towers({})
+	Actions.setSnapshot(nil)
+	Actions.setTutorial(nil, false)
+	Actions.exitBuild()
+	Actions.selectTower(nil)
+	Actions.selectEnemy(nil)
+	Actions.navigate("menu")
 end
 
 function GameFlow.rematch(ready: boolean)

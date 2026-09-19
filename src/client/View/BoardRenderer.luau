@@ -99,6 +99,14 @@ export type Renderer = typeof(setmetatable(
 		telegraphRings: { [number]: Frame },
 		damageAgg: { [string]: { label: TextLabel, amount: number, at: number } },
 		baseCell: Types.Cell?,
+		-- Contagem da próxima onda desenhada na entrada do caminho: o jogador olha para onde o
+		-- inimigo vai nascer, não para o canto da tela.
+		spawnCell: Types.Cell?,
+		spawnMarker: Frame?,
+		spawnCount: TextLabel?,
+		spawnLastSecond: number?,
+		spawnPulse: number,
+		spawnOffset: number,
 		lastSim: number,
 	},
 	BoardRenderer
@@ -153,6 +161,12 @@ function BoardRenderer.new(transform: BoardTransform.BoardTransform): Renderer
 		telegraphRings = {},
 		damageAgg = {},
 		baseCell = nil,
+		spawnCell = nil,
+		spawnMarker = nil,
+		spawnCount = nil,
+		spawnLastSecond = nil,
+		spawnPulse = 0,
+		spawnOffset = -0.85,
 		lastSim = 0,
 	}, BoardRenderer)
 
@@ -246,6 +260,15 @@ local function makeImage(parent: Frame, key: string, _cells: number, z: number):
 	return image, fallback
 end
 
+-- Textura e quadro do estado. O quadro é o que o animador usa para espelhar a torre.
+local function towerImageFrame(defId: string, state: string): (string, number, number)
+	local entry = Assets.get(Assets.towerKey(defId, state))
+	if not entry then
+		return "", 128, 128
+	end
+	return (entry.image or "") :: string, entry.width, entry.height
+end
+
 function BoardRenderer.setMap(self: Renderer, mapId: string)
 	self.mapId = mapId
 	self.path = Simulation.getPath(mapId)
@@ -274,15 +297,49 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	else
 		backing.BackgroundColor3 = Theme.colors.tealDark
 	end
+	-- Cena inteira: a arte traz grama, caminho, cenário e base juntos. playRect diz que fração
+	-- da imagem é a grade 16x10, então a imagem é posicionada para encaixar célula com célula.
+	local scene = if groundEntry then groundEntry.playRect else nil
 	local ground = Instance.new("ImageLabel")
 	ground.Name = "Ground"
 	ground.BackgroundTransparency = 1
-	ground.Size = UDim2.fromScale(1, 1)
 	ground.ScaleType = Enum.ScaleType.Stretch
 	ground.Image = if groundEntry and groundEntry.image then groundEntry.image :: string else ""
 	ground.ZIndex = Z.ground + 1
+	if scene then
+		local rect = scene :: { number }
+		local fractionX = math.max(rect[3] - rect[1], 0.01)
+		local fractionY = math.max(rect[4] - rect[2], 0.01)
+		ground.Size = UDim2.fromScale(1 / fractionX, 1 / fractionY)
+		ground.Position = UDim2.fromScale(-rect[1] / fractionX, -rect[2] / fractionY)
+	else
+		ground.Size = UDim2.fromScale(1, 1)
+	end
 	ground.Parent = self.layers.ground
 	self.transform.window.BackgroundColor3 = backing.BackgroundColor3
+
+	-- Numa janela bem mais larga que 16:10 a arte alinhada não alcança as bordas. Em vez de
+	-- deixar aparecer a cor de fundo, a mesma imagem entra atrás, recortada para cobrir: as
+	-- bordas continuam sendo o quintal, e a arte alinhada por cima é que manda na grade.
+	local previousBackdrop = self.transform.window:FindFirstChild("SceneBackdrop")
+	if previousBackdrop then
+		previousBackdrop:Destroy()
+	end
+	if scene and groundEntry and groundEntry.image then
+		local backdrop = Instance.new("ImageLabel")
+		backdrop.Name = "SceneBackdrop"
+		backdrop.BackgroundTransparency = 1
+		backdrop.BorderSizePixel = 0
+		backdrop.Image = groundEntry.image :: string
+		backdrop.ScaleType = Enum.ScaleType.Crop
+		backdrop.ImageColor3 = Color3.fromRGB(150, 155, 145) -- um tom abaixo: a borda não disputa com a grade
+		backdrop.Size = UDim2.fromScale(1, 1)
+		backdrop.Active = false
+		backdrop.ZIndex = 0
+		backdrop.Parent = self.transform.window
+	end
+	local artHasPath = groundEntry ~= nil and groundEntry.includesPath == true
+	local artHasBase = groundEntry ~= nil and groundEntry.includesBase == true
 
 	-- Luz do alto: clareia o topo do terreno e escurece a base, como na direção de arte.
 	local sun = Instance.new("UIGradient")
@@ -295,6 +352,7 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	sun.Parent = ground
 
 	-- Xadrez discreto: ajuda a contar células sem desenhar uma grade dura por cima da arte.
+	-- A cena desenhada já tem os quadrados pintados, então ele só entra no chão antigo.
 	local tiles = Skin.frame(self.layers.ground, "Tiles", {
 		Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1,
@@ -302,7 +360,7 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	})
 	for x = 0, Grid.COLUMNS - 1 do
 		for y = 0, Grid.ROWS - 1 do
-			if (x + y) % 2 == 0 then
+			if (x + y) % 2 == 0 and not artHasPath then
 				local tile = Skin.frame(tiles, "T", {
 					Size = cellsToScale(1),
 					Position = self.transform:logicalToScale(x, y),
@@ -316,12 +374,14 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 		end
 	end
 
-	-- Vinheta interna: as bordas do tabuleiro escurecem e o olho vai para o centro.
-	Skin.vignette(self.layers.ground, 0.32).ZIndex = Z.ground + 3
+	-- Vinheta interna só no chão antigo: a cena desenhada já traz folhagem nas bordas.
+	if not scene then
+		Skin.vignette(self.layers.ground, 0.32).ZIndex = Z.ground + 3
+	end
 
-	-- caminho a partir dos dados canônicos
+	-- caminho a partir dos dados canônicos (a cena desenhada já traz o seu)
 	local colors = Theme.pathColors[mapId] or Theme.pathColors.jardim
-	for _, cell in ipairs(map.pathCells) do
+	for _, cell in ipairs(if artHasPath then {} else map.pathCells) do
 		-- sombra curta sob a trilha: a terra batida fica "afundada" no gramado
 		local shade = Skin.frame(self.layers.path, "PathShade", {
 			Size = cellsToScale(1.22),
@@ -350,7 +410,7 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 		Skin.corner(fill, 8)
 	end
 	-- setas nas curvas e na entrada
-	for i = 1, #map.path - 1 do
+	for i = 1, (if artHasPath then 0 else #map.path - 1) do
 		local a, b = map.path[i], map.path[i + 1]
 		local dx, dy = math.sign(b[1] - a[1]), math.sign(b[2] - a[2])
 		local angle = if dx == 1 then 0 elseif dx == -1 then 180 elseif dy == 1 then 90 else -90
@@ -367,7 +427,7 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 		arrow.Font = Theme.fonts.bodyBold
 	end
 	local entry = map.path[1]
-	Skin.label(self.layers.path, "Entrada", Localization.get("common.unknown") == "" and "" or "▶", {
+	Skin.label(self.layers.path, "Entrada", if artHasPath then "" else "▶", {
 		Size = cellsToScale(0.5),
 		Position = self.transform:logicalToScale(entry[1] - 0.55, entry[2]),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -386,7 +446,7 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 		end
 	end
 	table.sort(propKeys)
-	for i, cell in ipairs(map.blocked) do
+	for i, cell in ipairs(if artHasPath then {} else map.blocked) do
 		local key = propKeys[((i - 1) % math.max(#propKeys, 1)) + 1]
 		if key then
 			local holder = Skin.frame(self.layers.shadows, "Prop", {
@@ -402,6 +462,7 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	-- Farol de Pilha na saída
 	local last = map.path[#map.path]
 	self.baseCell = last
+	local baseCells: { Types.Cell } = if artHasBase then {} else { last }
 	local glow = Skin.frame(self.layers.shadows, "BaseGlow", {
 		Size = cellsToScale(3.4),
 		Position = self.transform:logicalToScale(last[1], last[2]),
@@ -411,14 +472,54 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 		ZIndex = Z.shadows + 1,
 	})
 	Skin.corner(glow, 9999)
-	local baseHolder = Skin.frame(self.layers.entities, "Base", {
-		Size = cellsToScale(BASE_CELLS),
-		Position = self.transform:logicalToScale(last[1], last[2] + 0.15),
-		AnchorPoint = Vector2.new(0.5, 0.82),
+	glow.Visible = not artHasBase
+	-- Marca da entrada: um "!" com a contagem, na célula onde a onda nasce.
+	local spawn = map.path[1]
+	self.spawnCell = spawn
+	-- a bolha fica quase em cima da célula de entrada: mais alta que isso ela esbarra nas
+	-- fichas do HUD quando a entrada está nas primeiras linhas
+	local markerOffset = if spawn[2] <= 0 then 0.5 else -0.45
+	self.spawnOffset = markerOffset
+	local marker = Skin.frame(self.layers.effects, "SpawnMarker", {
+		Size = cellsToScale(1.35),
+		Position = self.transform:logicalToScale(spawn[1], spawn[2] + markerOffset),
+		AnchorPoint = Vector2.new(0.5, 0.5),
 		BackgroundTransparency = 1,
-		ZIndex = Z.entities + math.floor((last[2] + 0.15) * 100) + 5,
+		ZIndex = Z.effects + 6,
 	})
-	makeImage(baseHolder, "base_farol_pilha", BASE_CELLS, baseHolder.ZIndex)
+	marker.Visible = false
+	local bubble = Skin.frame(marker, "Bubble", {
+		Size = UDim2.fromScale(1, 1),
+		BackgroundColor3 = Theme.colors.cream,
+		ZIndex = Z.effects + 6,
+	})
+	Skin.corner(bubble, 999)
+	Skin.stroke(bubble, Theme.colors.ink, 3)
+	local count = Skin.label(bubble, "Count", "!", {
+		-- menor que a bolha: com TextScaled em 100% o número encosta no contorno
+		Size = UDim2.fromScale(0.68, 0.68),
+		Position = UDim2.fromScale(0.5, 0.5),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundTransparency = 1,
+		Font = Theme.fonts.numbers,
+		TextColor3 = Theme.colors.ink,
+		TextScaled = true,
+		ZIndex = Z.effects + 7,
+	})
+	self.spawnMarker = marker
+	self.spawnCount = count
+	self.spawnLastSecond = nil
+
+	for _, baseCell in ipairs(baseCells) do
+		local baseHolder = Skin.frame(self.layers.entities, "Base", {
+			Size = cellsToScale(BASE_CELLS),
+			Position = self.transform:logicalToScale(baseCell[1], baseCell[2] + 0.15),
+			AnchorPoint = Vector2.new(0.5, 0.82),
+			BackgroundTransparency = 1,
+			ZIndex = Z.entities + math.floor((baseCell[2] + 0.15) * 100) + 5,
+		})
+		makeImage(baseHolder, "base_farol_pilha", BASE_CELLS, baseHolder.ZIndex)
+	end
 end
 
 -- ---------------------------------------------------------------------------
@@ -481,7 +582,14 @@ function BoardRenderer.createTowerVisual(self: Renderer, data: Types.TowerSnapsh
 		ZIndex = depth + 1,
 	})
 	local entryAsset = Assets.get(key)
-	local animator = TowerAnimator.new(image, data.d, if entryAsset then entryAsset.anchorY else 0.82)
+	local animator = TowerAnimator.new(
+		image,
+		data.d,
+		if entryAsset then entryAsset.anchorY else 0.82,
+		if entryAsset then entryAsset.width else nil,
+		if entryAsset then entryAsset.height else nil
+	)
+	animator:setImage(towerImageFrame(data.d, data.st))
 	-- a torre nasce com um salto curto e um anel de poeira na célula
 	Juice.pop(container, 0.82)
 	Juice.ring(
@@ -520,9 +628,9 @@ function BoardRenderer.syncTowers(self: Renderer, towers: { [number]: Types.Towe
 			visual = created
 		else
 			if visual.data.st ~= data.st then
-				local img = towerImageFor(data.d, data.st)
+				local img, frameWidth, frameHeight = towerImageFrame(data.d, data.st)
 				if img ~= "" then
-					visual.animator:playUpgrade(img)
+					visual.animator:playUpgrade(img, frameWidth, frameHeight)
 					visual.fallback.Visible = false
 				else
 					visual.fallback.Text = Theme.towerGlyphs[data.d] .. " " .. data.st
@@ -1118,6 +1226,77 @@ function BoardRenderer.showDamage(self: Renderer, towerId: number, enemyId: numb
 	end)
 end
 
+-- Contagem para a próxima onda, desenhada na entrada do caminho. Chamada todo quadro.
+function BoardRenderer.updateSpawnCountdown(self: Renderer, secondsLeft: number?, dt: number)
+	local marker = self.spawnMarker
+	local count = self.spawnCount
+	if not marker or not count then
+		return
+	end
+	if secondsLeft == nil then
+		if marker.Visible then
+			marker.Visible = false
+			self.spawnLastSecond = nil
+		end
+		return
+	end
+	marker.Visible = true
+	local whole = math.max(0, math.ceil(secondsLeft))
+	if whole ~= self.spawnLastSecond then
+		self.spawnLastSecond = whole
+		self.spawnPulse = 1 -- salto a cada segundo cheio
+	end
+	count.Text = if whole > 0 then tostring(whole) else "!"
+	local urgent = whole <= 3
+	local bubble = marker:FindFirstChild("Bubble")
+	if bubble and bubble:IsA("Frame") then
+		bubble.BackgroundColor3 = if urgent then Theme.colors.dangerSoft else Theme.colors.cream
+		local stroke = bubble:FindFirstChildOfClass("UIStroke")
+		if stroke then
+			stroke.Color = if urgent then Theme.colors.danger else Theme.colors.ink
+		end
+	end
+	count.TextColor3 = if urgent then Theme.colors.danger else Theme.colors.ink
+	if self.reducedMotion then
+		marker.Size = cellsToScale(1.35)
+		marker.Rotation = 0
+		return
+	end
+	self.spawnPulse = math.max(self.spawnPulse - dt * 3.2, 0)
+	local pop = 1 + 0.45 * self.spawnPulse * self.spawnPulse
+	marker.Size = cellsToScale(1.35 * pop)
+	-- nos últimos segundos o aviso treme, para o olho ir parar na entrada
+	local spawn = self.spawnCell
+	if spawn then
+		local shake = if urgent then math.sin(os.clock() * 26) * 0.07 else 0
+		marker.Position = self.transform:logicalToScale(spawn[1] + shake, spawn[2] + self.spawnOffset)
+		marker.Rotation = if urgent then math.sin(os.clock() * 22) * 7 else 0
+	end
+end
+
+-- Onda começou: a marca vira um estouro na entrada.
+function BoardRenderer.flashSpawn(self: Renderer)
+	local spawn = self.spawnCell
+	if not spawn then
+		return
+	end
+	BoardRenderer.updateSpawnCountdown(self, nil, 0)
+	local at = self.transform:logicalToScale(spawn[1], spawn[2])
+	Juice.ring(self.layers.effects, at, 0.04, 0.22, Theme.colors.danger)
+	Juice.burst(self.layers.effects, at, { count = 10, color = Theme.colors.coral, spread = 0.06 })
+end
+
+-- Onda limpa: comemoração curta no Farol.
+function BoardRenderer.celebrateWaveEnd(self: Renderer)
+	local base = self.baseCell
+	if not base then
+		return
+	end
+	local at = self.transform:logicalToScale(base[1], base[2])
+	Juice.ring(self.layers.effects, at, 0.04, 0.26, Theme.colors.gold)
+	Juice.burst(self.layers.effects, at, { count = 14, color = Theme.colors.gold, spread = 0.07, rise = 0.05 })
+end
+
 function BoardRenderer.playPulse(self: Renderer)
 	local base = self.baseCell
 	if not base then
@@ -1359,16 +1538,23 @@ function BoardRenderer.setBuildPreview(self: Renderer, preview: BuildPreview?)
 		return
 	end
 	if preview.validCells then
+		-- Marca de célula livre: um contorno leve, não um véu. Com a arte nova, preencher todas
+		-- as células deixava o mapa inteiro lavado (visto no Studio em 19/09).
 		for _, cell in ipairs(preview.validCells) do
 			local f = Skin.frame(self.layers.cells, "ValidCell", {
-				Size = cellsToScale(0.86),
+				Size = cellsToScale(0.9),
 				Position = self.transform:logicalToScale(cell[1], cell[2]),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				BackgroundColor3 = Theme.colors.cream,
-				BackgroundTransparency = 0.82,
+				BackgroundTransparency = 0.94,
 				ZIndex = Z.cells,
 			})
-			Skin.corner(f, 6)
+			Skin.corner(f, 8)
+			local outline = Instance.new("UIStroke")
+			outline.Color = Theme.colors.white
+			outline.Thickness = 1
+			outline.Transparency = 0.6
+			outline.Parent = f
 			table.insert(self.buildCells, f)
 		end
 	end
@@ -1579,6 +1765,15 @@ function BoardRenderer.update(self: Renderer, dt: number)
 		visual.animator:update(simDt, self.reducedMotion, cellPx * TOWER_CELLS)
 	end
 	local simNow = MatchController.estimateSimTime()
+	-- contagem da próxima onda: só nas fases de espera e quando existe prazo de verdade
+	local snapshot = view.snapshot
+	local waiting = snapshot.phase == "Preparation" or snapshot.phase == "Intermission"
+	local deadline = snapshot.phaseEndsAt
+	local left: number? = nil
+	if waiting and deadline ~= math.huge then
+		left = math.max(deadline - simNow, 0)
+	end
+	BoardRenderer.updateSpawnCountdown(self, left, dt)
 	for id, visual in pairs(self.enemies) do
 		local ev = view.enemies[id]
 		if ev then

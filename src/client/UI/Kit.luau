@@ -269,6 +269,11 @@ function Kit.panel(scope: Scope, props: PanelProps): Frame
 	local radius = props.radius or RADIUS.panel
 	local color = props.color or Theme.colors.paper
 	local growsY = props.automaticSize == Enum.AutomaticSize.Y or props.automaticSize == Enum.AutomaticSize.XY
+	local growsX = props.automaticSize == Enum.AutomaticSize.X or props.automaticSize == Enum.AutomaticSize.XY
+	-- Num eixo que cresce com o conteúdo, a superfície não pode medir em escala do suporte: o
+	-- suporte mede a superfície e a superfície mede o suporte, e o painel engorda a cada quadro
+	-- (foi assim que a pílula "Próxima onda" atravessou a tela inteira).
+	local surfaceSize = UDim2.new(if growsX then 0 else 1, 0, if growsY then 0 else 1, 0)
 	local surfaceChildren: { any } = {
 		Kit.corner(scope, radius),
 		Kit.stroke(scope, props.strokeColor or Theme.colors.ink),
@@ -319,7 +324,7 @@ function Kit.panel(scope: Scope, props: PanelProps): Frame
 				BackgroundTransparency = 1,
 				-- num painel que cresce com o conteúdo, o quadro interno é quem tem altura
 				-- automática: deixá-lo em 100% da superfície (que também cresce) inflava tudo
-				Size = if growsY then UDim2.new(1, 0, 0, 0) else UDim2.fromScale(1, 1),
+				Size = surfaceSize,
 				AutomaticSize = props.automaticSize,
 				ZIndex = (props.zIndex or 1) + 1,
 				[Children] = contentChildren,
@@ -338,7 +343,7 @@ function Kit.panel(scope: Scope, props: PanelProps): Frame
 	-- Num painel que cresce com o conteúdo a sombra não pode ser filha do suporte: ela fica 8 px
 	-- maior que ele, e AutomaticSize mede os filhos — o painel crescia sozinho a cada quadro
 	-- (era o "cartão de tutorial com um vão enorme" da primeira sessão de Play).
-	if props.shadow ~= false and not growsY then
+	if props.shadow ~= false and not growsY and not growsX then
 		table.insert(
 			holderChildren,
 			scope:New("Frame")({
@@ -358,7 +363,7 @@ function Kit.panel(scope: Scope, props: PanelProps): Frame
 		holderChildren,
 		scope:New("Frame")({
 			Name = "Surface",
-			Size = if growsY then UDim2.new(1, 0, 0, 0) else UDim2.fromScale(1, 1),
+			Size = surfaceSize,
 			BackgroundColor3 = color,
 			BorderSizePixel = 0,
 			Active = props.blocking == true,
@@ -387,7 +392,7 @@ end
 -- Botão
 -- ---------------------------------------------------------------------------
 
-export type ButtonKind = "primary" | "secondary" | "danger" | "ghost" | "dark" | "cyan" | "quiet"
+export type ButtonKind = "primary" | "secondary" | "danger" | "ghost" | "dark" | "cyan" | "quiet" | "grass"
 
 type KindStyle = { bg: Color3, fg: Color3, stroke: Color3, bevel: Color3 }
 
@@ -418,6 +423,13 @@ local KINDS: { [string]: KindStyle } = {
 	},
 	dark = { bg = Theme.colors.ink, fg = Theme.colors.cream, stroke = Theme.colors.ink, bevel = Theme.colors.inkDeep },
 	cyan = { bg = Theme.colors.cyan, fg = Theme.colors.ink, stroke = Theme.colors.ink, bevel = Theme.colors.tealDark },
+	-- verde de "iniciar onda": é o único botão que dispara a onda, então destoa do dourado
+	grass = {
+		bg = Theme.colors.grass,
+		fg = Theme.colors.ink,
+		stroke = Theme.colors.ink,
+		bevel = Theme.colors.grassDeep,
+	},
 	quiet = {
 		bg = Theme.colors.sage,
 		fg = Theme.colors.ink,

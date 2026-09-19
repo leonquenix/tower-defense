@@ -46,6 +46,8 @@ Theme.colors = {
 	leafLight = UiTokens.color("leafLight"),
 	skyHigh = UiTokens.color("skyHigh"),
 	glowWarm = UiTokens.color("glowWarm"),
+	grass = UiTokens.color("grass"), -- botão de iniciar onda
+	grassDeep = UiTokens.color("grassDeep"), -- espessura do botão verde (preenchimento)
 	inkDeep = UiTokens.color("inkDeep"),
 }
 

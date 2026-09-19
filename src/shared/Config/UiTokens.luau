@@ -20,6 +20,8 @@ local UiTokens = {
 		gold = { 255, 200, 87 },
 		goldDark = { 217, 165, 62 },
 		goldText = { 138, 94, 18 },
+		grass = { 124, 200, 92 },
+		grassDeep = { 78, 138, 54 },
 		ink = { 25, 40, 63 },
 		inkDeep = { 13, 22, 38 },
 		leaf = { 47, 122, 79 },
@@ -141,6 +143,12 @@ local UiTokens = {
 			minimum = 4.5,
 			ratio = 4.7,
 			text = "tealDark",
+		},
+		{
+			background = "grass",
+			minimum = 4.5,
+			ratio = 7.25,
+			text = "ink",
 		},
 	},
 	displayOrder = {

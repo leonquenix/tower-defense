@@ -68,3 +68,24 @@ seção "Revamp" acima. A tabela prancha → módulo vive em `docs/ui_coverage.j
 `Config/UiTokens.luau`, `Config/UiMotion.luau` e `Config/UiIcons.luau` são **gerados** por `tools/import_ui_tokens.py` e `tools/export_ui_icons.py`; altere o JSON do pacote e rode as ferramentas. O gerador de tokens falha quando um par texto/fundo cai abaixo do contraste mínimo. `tools/check_ui_coverage.py` valida `docs/ui_coverage.json` contra as 49 pranchas e gera `docs/UI_COVERAGE.md`: ao mexer numa tela, atualize a linha dela.
 
 Os 24 ícones foram enviados em 2026-09-18 e `UiIcons` traz os IDs reais; a moderação ainda não foi conferida. O código continua tolerando `image = nil` (glifo de reserva), e a ferramenta nunca inventa `rbxassetid`: sem `assets/export/ui_upload_log.json`, ela volta a emitir `nil`. Tabela e procedimento em `docs/MANUAL_ACTIONS.md`.
+
+## Mapa desenhado e HUD sangrado (2026-09-19)
+
+O primeiro mapa é uma **cena única** (`Assets_Mapas_v2/jardim_praia_sem_farol.png`): grama, caminho
+e cenário na mesma imagem. `assets/export/map_scene_overrides.json` guarda origem, sha256, id
+publicado, `playRect` (a fração da imagem ocupada pela grade 16×10) e as chaves `includesPath` /
+`includesBase`; `tools/update_asset_registry.py` leva isso para `Config/Assets.luau`. Esta arte
+**não** traz o farol: ele continua desenhado por código na última célula do caminho. Ao trocar a
+arte, meça o `playRect` pelos corredores desenhados (a proporção da área jogável tem de fechar em
+1,600) em vez de estimar.
+
+`BoardTransform` tem três quadros: `window` (a tela inteira, que recorta), `stage` (a grade 16:10
+centrada — é ele que manda em célula, zoom e deslocamento) e `world` (o zoom). O tabuleiro é
+montado na camada do cenário (`QuintalWorld`, sem área segura) pelo `App`, não pelo HUD: a arte
+passa por baixo da barra do Roblox e o HUD flutua por cima. Painel que engole toque precisa de
+`Active` (`blocking = true` no `Kit.panel`), porque a decisão "toque no painel ou no tabuleiro?" é
+por ordem de desenho.
+
+O HUD de combate (`UI/Screens/Hud.luau`) segue a maquete: fichas no canto superior esquerdo,
+velocidade/opções/sair no superior direito, coluna TORRES à direita, contexto no inferior esquerdo
+e, no rodapé, Pulso de Luz e o botão verde Iniciar Onda. Não há mais faixa superior nem doca.

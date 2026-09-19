@@ -160,3 +160,81 @@ vitória com "Farol protegido!", 3/3 ondas e "Recompensa 180 botões · Recompen
 onda, a camada de efeitos mostrou projéteis, números de dano, anéis de impacto e partículas de morte
 em quase todos os quadros amostrados.
 
+### Construir no próprio clique (2026-09-19)
+
+Mirar a célula e apertar um botão na tela ao mesmo tempo não funciona com um único ponteiro. O
+fluxo de construção mudou:
+
+- **Computador**: o clique na célula constrói. O fantasma já segue o cursor, então o alvo é o que
+  está desenhado no tabuleiro.
+- **Toque**: o primeiro toque posiciona (o dedo cobre a célula) e o segundo, na mesma célula,
+  constrói. O botão "Construir por X" continua existindo **só no celular**, como alternativa.
+- **Tutorial**: a célula é a marcada, então o primeiro toque constrói em qualquer aparelho.
+- **Célula inválida**: nunca constrói e nunca gasta; o motivo vira aviso curto ("Não dá para
+  construir no caminho", "Faltam N sucatas"…), com o fantasma parado na célula para o jogador ver.
+
+A regra virou um módulo puro (`src/client/Controllers/BuildIntent.luau`) com teste próprio
+(`tests/specs/12_build_intent.spec.luau`): é a interação mais sensível do jogo e agora está
+coberta fora do Studio. A barra de construção deixou de ser confirmação e virou instrução.
+
+### Ajustes de jogo pedidos em 19/09 (tarde)
+
+1. **Trava ao sair do tutorial.** "Voltar ao menu" mandava `LeaveMatch` e esperava o quadro "left";
+   no fim do tutorial a partida já estava encerrada no servidor, o pedido voltava com erro e o
+   quadro nunca chegava — o jogador ficava preso na tela de combate. `GameFlow.leaveMatch` agora
+   garante a volta ao menu (no erro e por prazo de 2 s), sem desfazer uma revanche que já começou.
+2. **Menu depois do tutorial.** Com `tutorialCompleted`, o botão principal vira "Jogar" (leva aos
+   mapas) e "Rever tutorial" fica como opção secundária.
+3. **Torre olhando para o alvo.** `TowerAnimator` passou a guardar o par normal/espelhado e trocar
+   a textura conforme o lado do disparo. Como o Roblox não espelha `ImageLabel` (ver
+   `docs/MANUAL_ACTIONS.md`), os 30 sprites espelhados são gerados por
+   `tools/mirror_tower_sprites.py` e esperam upload; sem eles a torre continua virada para a
+   direita, sem erro.
+4. **Ritmo das hordas.** Tutorial: onda 1 com **um** inimigo, onda 2 com 4 Fiapos + 2 Corriscos,
+   onda 3 com 6 Fiapos + 1 Bolota (era 6 / 10 / 10). Mapa: as quatro primeiras ondas ficaram mais
+   espaçadas (onda 1: 8 Fiapos a cada 1,9 s, contra 12 a cada 1,1 s) e voltam ao ritmo original a
+   partir da onda 5. Alterado no JSON canônico + `tools/import_balance.py`.
+
+
+### Mapa desenhado e HUD da maquete (2026-09-19, fim da tarde)
+
+**Mapa.** A arte do Jardim de Papel virou uma cena única (grama, caminho, praia e folhagem na
+mesma imagem), agora na versão **sem o farol** — ele continua desenhado por código na última
+célula do caminho, com brilho e resposta a dano.
+
+O encaixe da grade foi medido duas vezes. A primeira usou só as bordas dos corredores de areia e
+errou o eixo X em cerca de 20% de uma célula (a areia tem borda macia, e o fim do corredor não é
+o fim da célula): no Studio dava para ver a grade deslocada para a direita. A medida boa usa os
+**ladrilhos desenhados na grama**, que são periódicos: o gradiente horizontal e vertical da arte
+tem passo 35,6 px (metade da imagem) com fase 9,0 em x e 18,4 em y, e a origem da grade é um
+desses limites. Daí sai `playRect` `[0.0533, 0.1149, 0.7347, 0.8723]` — proporção 1,600,
+exatamente 16:10 — com as 28 células de caminho na areia e nenhuma de grama nela. Conferido no
+Studio: as células do modo de construção coincidem com os ladrilhos desenhados nos dois lados do
+tabuleiro. `assets/export/map_scene_overrides.json` guarda origem, sha256, id publicado
+(`rbxassetid://85414482526997`), `playRect`, `includesPath = true` e `includesBase = false`.
+
+**Sangria.** `BoardTransform` ganhou um **palco**: a janela passou a ocupar a área inteira (e
+recortar), e a grade 16:10 fica centrada dentro dela. Toda a matemática de célula, zoom e
+deslocamento usa o palco; a janela é só o recorte. O tabuleiro também saiu do HUD e foi para a
+camada do cenário (`ScreenInsets.None`), então a arte passa por baixo da barra do Roblox. Onde a
+janela é bem mais larga que 16:10, a mesma imagem entra atrás recortada (`SceneBackdrop`), em vez
+de aparecer a cor de fundo. Com o tabuleiro fora do HUD, o teste "o toque foi no painel ou no
+tabuleiro?" passou a ser por ordem de desenho, sem depender de parentesco.
+
+**HUD.** Sumiram a faixa superior e a doca inferior. Agora: fichas no canto superior esquerdo
+(Farol, Onda, Sucata, fase, limite), velocidade/opções/sair no canto superior direito, coluna
+**TORRES** à direita, contexto (tutorial, detalhe da torre, treino) no canto inferior esquerdo e,
+no rodapé, **Pulso de Luz** e o botão verde **Iniciar Onda** — centrados, e não no canto direito
+da maquete, porque neste mapa o Farol fica justamente ali. O verde entrou como token
+(`grass`/`grassDeep`, 7,25:1 com o texto) pelo gerador, não à mão.
+
+**Correção no Kit.** `Kit.panel` com `AutomaticSize.X` inflava a cada quadro: a superfície media
+1 de escala do suporte enquanto o suporte media a superfície, e a sombra somava 8 px por volta.
+A pílula "Próxima onda" atravessava a tela. Agora o eixo que cresce não mede em escala e não
+ganha sombra — o mesmo cuidado que já existia no eixo Y.
+
+**Verificado no Studio (Play real, 2026-09-19):** menu → Jogar → Jardim de Papel → partida; arte
+até as bordas sem faixa de fundo; Farol desenhado por código exatamente na ponta do caminho;
+carta Dardo → clique na célula constrói (650 → 408 de sucata, Torres 1/18); clique no caminho
+recusa com o motivo; onda 1 com Fiapos feridos pelo Dardo. A tela de carregamento passou a
+preencher `{difficulty}` e `{team}` (antes mostrava as chaves cruas).

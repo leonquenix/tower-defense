@@ -1,5 +1,10 @@
 --!strict
--- Entrada do tabuleiro: toque/clique em célula, seleção, teclas 1-4/Esc/U, arrastar com dois dedos e zoom.
+-- Entrada do tabuleiro: toque/clique em célula, seleção, teclas 1-4/Esc/U, arrastar e zoom.
+--
+-- Arrastar move a câmera, com o botão esquerdo ou com um dedo só: assim que o ponteiro passa da
+-- tolerância de toque, o gesto vira deslocamento e **não** constrói nada, mesmo com uma torre
+-- escolhida (mirar e apertar um botão ao mesmo tempo não dá com um ponteiro só). O botão direito
+-- cancela o modo de construção; segurado e arrastado, ele também desloca.
 local UserInputService = game:GetService("UserInputService")
 local GuiService = game:GetService("GuiService")
 
@@ -26,6 +31,13 @@ local pinchStartZoom = 1
 local lastPanCenter: Vector2? = nil
 local mousePanning = false
 local lastMousePos: Vector2? = nil
+-- arrastar com o botão esquerdo: começa como candidato a toque e vira deslocamento na tolerância
+local leftStart: Vector2? = nil
+local leftLast: Vector2? = nil
+local leftDragging = false
+-- arrastar com um dedo só (a pinça de dois dedos continua com o caminho dela)
+local touchDragging = false
+local rightStart: Vector2? = nil
 local connections: { RBXScriptConnection } = {}
 local TAP_MOVE_TOLERANCE = 12
 local TAP_TIME = 0.5
@@ -79,12 +91,16 @@ local function onInputBegan(input: InputObject, processed: boolean)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
 		local pos = screenPosition(input)
 		touchStart[input] = { pos = pos, at = os.clock() }
+		leftStart = pos
+		leftLast = pos
+		leftDragging = false
 	elseif
 		input.UserInputType == Enum.UserInputType.MouseButton2
 		or input.UserInputType == Enum.UserInputType.MouseButton3
 	then
 		mousePanning = true
 		lastMousePos = screenPosition(input)
+		rightStart = screenPosition(input)
 	elseif input.UserInputType == Enum.UserInputType.Keyboard then
 		local key = input.KeyCode
 		if key == Enum.KeyCode.One then
@@ -109,7 +125,19 @@ local function onInputChanged(input: InputObject, processed: boolean)
 	end
 	if input.UserInputType == Enum.UserInputType.Touch then
 		if touches[input] then
+			local previous = touches[input]
 			touches[input] = screenPosition(input)
+			if touchCount() == 1 then
+				-- um dedo só: passou da tolerância, o gesto vira deslocamento da câmera
+				local start = touchStart[input]
+				local pos = screenPosition(input)
+				if start and not touchDragging and (pos - start.pos).Magnitude > TAP_MOVE_TOLERANCE then
+					touchDragging = true
+				end
+				if touchDragging then
+					transform:pan(pos - previous)
+				end
+			end
 			if touchCount() == 2 then
 				local a, b = twoTouches()
 				if a and b and pinchStartDistance and pinchStartDistance > 0 then
@@ -130,6 +158,14 @@ local function onInputChanged(input: InputObject, processed: boolean)
 		if mousePanning and lastMousePos then
 			transform:pan(pos - lastMousePos)
 			lastMousePos = pos
+		elseif leftStart and leftLast then
+			if not leftDragging and (pos - leftStart).Magnitude > TAP_MOVE_TOLERANCE then
+				leftDragging = true
+			end
+			if leftDragging then
+				transform:pan(pos - leftLast)
+			end
+			leftLast = pos
 		elseif not processed then
 			callbacks.onHover(pos)
 		end
@@ -146,13 +182,17 @@ local function onInputEnded(input: InputObject, processed: boolean)
 	if input.UserInputType == Enum.UserInputType.Touch then
 		local start = touchStart[input]
 		local wasSingle = touchCount() == 1
+		local wasDragging = touchDragging
 		touches[input] = nil
 		touchStart[input] = nil
 		if touchCount() < 2 then
 			pinchStartDistance = nil
 			lastPanCenter = nil
 		end
-		if enabled and start and wasSingle and not processed then
+		if touchCount() == 0 then
+			touchDragging = false
+		end
+		if enabled and start and wasSingle and not wasDragging and not processed then
 			local pos = screenPosition(input)
 			if (pos - start.pos).Magnitude <= TAP_MOVE_TOLERANCE and os.clock() - start.at <= TAP_TIME then
 				callbacks.onTap(pos)
@@ -162,8 +202,12 @@ local function onInputEnded(input: InputObject, processed: boolean)
 	end
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
 		local start = touchStart[input]
+		local wasDragging = leftDragging
 		touchStart[input] = nil
-		if enabled and start and not processed then
+		leftStart = nil
+		leftLast = nil
+		leftDragging = false
+		if enabled and start and not wasDragging and not processed then
 			local pos = screenPosition(input)
 			if (pos - start.pos).Magnitude <= TAP_MOVE_TOLERANCE then
 				callbacks.onTap(pos)
@@ -173,8 +217,14 @@ local function onInputEnded(input: InputObject, processed: boolean)
 		input.UserInputType == Enum.UserInputType.MouseButton2
 		or input.UserInputType == Enum.UserInputType.MouseButton3
 	then
+		local start = rightStart
 		mousePanning = false
 		lastMousePos = nil
+		rightStart = nil
+		-- clique direito parado cancela a construção; arrastado, só deslocou a câmera
+		if enabled and start and (screenPosition(input) - start).Magnitude <= TAP_MOVE_TOLERANCE then
+			callbacks.onCancel()
+		end
 	end
 end
 
@@ -200,6 +250,11 @@ function InputController.setEnabled(value: boolean)
 		touches = {}
 		touchStart = {}
 		mousePanning = false
+		leftStart = nil
+		leftLast = nil
+		leftDragging = false
+		touchDragging = false
+		rightStart = nil
 	end
 end
 

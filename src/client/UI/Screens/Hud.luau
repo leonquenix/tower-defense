@@ -17,6 +17,7 @@ local Atoms = require(script.Parent.Parent.Parent.State.Atoms)
 local Bridge = require(script.Parent.Parent.Parent.State.Bridge)
 local Selectors = require(script.Parent.Parent.Parent.State.Selectors)
 local BoardPresenter = require(script.Parent.Parent.Parent.Controllers.BoardPresenter)
+local InputController = require(script.Parent.Parent.Parent.Controllers.InputController)
 local GameFlow = require(script.Parent.Parent.Parent.Controllers.GameFlow)
 local Theme = require(script.Parent.Parent.Parent.View.Theme)
 local Kit = require(script.Parent.Parent.Kit)
@@ -32,12 +33,14 @@ export type Props = {
 	-- troca a rota, e o HUD (com o tabuleiro dentro) precisa continuar existindo por baixo.
 	visible: Fusion.UsedAs<boolean>,
 	localUserId: number,
-	-- Preenchido pelo App: é aqui que o tabuleiro (renderizador imperativo) é montado.
-	onBoardArea: (Frame) -> (),
 }
 
-local TOP_HEIGHT = 64
-local DOCK_HEIGHT = 116
+-- Maquete 2026-09-19: o mapa ocupa a tela inteira e o HUD flutua por cima, em quatro cantos.
+-- Nada de faixa preta em cima nem doca embaixo: só fichas, a coluna de torres e as ações.
+local TOP_HEIGHT = 56 -- altura das fichas do canto superior esquerdo
+local TOWER_PANEL_W = 152 -- coluna "Torres" à direita
+local TOWER_CARD_H = 84
+local CONTEXT_W = 330 -- coluna de contexto no canto inferior esquerdo
 
 local function formatNumber(value: number): string
 	local rounded = math.floor(value + 0.5)
@@ -79,6 +82,51 @@ local function wavePreviewText(snapshot: Types.MatchSnapshot?): string
 	return L("hud.nextWave") .. ": " .. table.concat(parts, ", ")
 end
 
+-- Pílula de texto do HUD: usada para fase, limite de torres e prévia da onda.
+local function pill(
+	scope: Kit.Scope,
+	props: {
+		name: string,
+		text: Kit.Used<string>,
+		color: Color3?,
+		textColor: Color3?,
+		visible: Kit.Used<boolean>?,
+		position: UDim2?,
+		anchorPoint: Vector2?,
+		layoutOrder: number?,
+		zIndex: number?,
+	}
+): Frame
+	local zIndex = props.zIndex or 10
+	return Kit.panel(scope, {
+		name = props.name,
+		blocking = true,
+		visible = props.visible,
+		size = UDim2.new(0, 0, 0, 30),
+		automaticSize = Enum.AutomaticSize.X,
+		position = props.position,
+		anchorPoint = props.anchorPoint,
+		layoutOrder = props.layoutOrder,
+		color = props.color or Theme.colors.ink,
+		strokeColor = Theme.colors.inkDeep,
+		radius = Kit.radius.pill,
+		padding = 12,
+		paddingVertical = 4,
+		gloss = false,
+		zIndex = zIndex,
+		children = Kit.children(Kit.text(scope, {
+			Text = props.text,
+			TextColor3 = props.textColor or Theme.colors.cream,
+			Font = Theme.fonts.bodyBold,
+			TextSize = 14,
+			TextWrapped = false,
+			AutomaticSize = Enum.AutomaticSize.X,
+			Size = UDim2.new(0, 0, 1, 0),
+			ZIndex = zIndex + 1,
+		})),
+	})
+end
+
 return function(scope: Kit.Scope, props: Props): Frame
 	local snapshot = Bridge.use(scope, Atoms.snapshot)
 	local loadout = Bridge.use(scope, Atoms.loadout)
@@ -88,8 +136,12 @@ return function(scope: Kit.Scope, props: Props): Frame
 	local tutorialStep = Bridge.use(scope, Atoms.tutorialStep)
 	local tutorialOpen = Bridge.use(scope, Atoms.tutorialOpen)
 	local bossBanner = Bridge.use(scope, Atoms.bossBanner)
+	local announce = Bridge.use(scope, Atoms.announce)
 	local connection = Bridge.use(scope, Atoms.connection)
 	local zoomed = Bridge.use(scope, Atoms.zoomed)
+
+	-- Aparelho de toque decide o fluxo de construção (um toque posiciona, outro constrói).
+	local touchInput = InputController.isTouchDevice()
 
 	local wallet = scope:Computed(function(use)
 		local current = use(snapshot)
@@ -101,27 +153,23 @@ return function(scope: Kit.Scope, props: Props): Frame
 	end)
 
 	-- ------------------------------------------------------------------
-	-- Faixa superior
+	-- Canto superior esquerdo: fichas de estado
 	-- ------------------------------------------------------------------
-
-	local topBar = Kit.panel(scope, {
-		name = "TopBar",
-		blocking = true,
-		size = UDim2.new(1, -32, 0, TOP_HEIGHT),
-		position = UDim2.fromOffset(16, 12),
-		color = Theme.colors.ink,
-		strokeColor = Theme.colors.inkDeep,
-		radius = 18,
-		padding = 12,
-		paddingVertical = 6,
-		gloss = false,
-		zIndex = 10,
-		layout = Kit.list(scope, {
-			FillDirection = Enum.FillDirection.Horizontal,
-			Padding = UDim.new(0, 10),
-			VerticalAlignment = Enum.VerticalAlignment.Center,
-		}),
-		children = Kit.children(
+	-- Active engole o toque: sem isso, tocar numa ficha construiria a torre na célula atrás.
+	local statusCluster = scope:New("Frame")({
+		Name = "Status",
+		Active = true,
+		BackgroundTransparency = 1,
+		Size = UDim2.new(0, 0, 0, TOP_HEIGHT),
+		AutomaticSize = Enum.AutomaticSize.X,
+		Position = UDim2.fromOffset(16, 14),
+		ZIndex = 10,
+		[Children] = Kit.children(
+			Kit.list(scope, {
+				FillDirection = Enum.FillDirection.Horizontal,
+				Padding = UDim.new(0, 8),
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+			}),
 			Kit.chip(scope, {
 				name = "Base",
 				icon = "ui_base",
@@ -156,19 +204,6 @@ return function(scope: Kit.Scope, props: Props): Frame
 				accent = Theme.colors.cream,
 				layoutOrder = 2,
 			}),
-			Kit.text(scope, {
-				Name = "Phase",
-				Text = scope:Computed(function(use)
-					return phaseLabel(use(snapshot))
-				end),
-				TextColor3 = Theme.colors.cream,
-				Font = Theme.fonts.bodyMedium,
-				TextSize = 16,
-				Size = UDim2.new(0, 190, 1, 0),
-				TextXAlignment = Enum.TextXAlignment.Center,
-				LayoutOrder = 3,
-				ZIndex = 12,
-			}),
 			Kit.chip(scope, {
 				name = "Scrap",
 				icon = "ui_scrap",
@@ -180,11 +215,23 @@ return function(scope: Kit.Scope, props: Props): Frame
 					return formatNumber(Kit.read(use, wallet))
 				end),
 				accent = Theme.colors.gold,
-				layoutOrder = 4,
+				layoutOrder = 3,
 			}),
-			Kit.text(scope, {
-				Name = "Limit",
-				Text = scope:Computed(function(use)
+			pill(scope, {
+				name = "Phase",
+				text = scope:Computed(function(use)
+					return phaseLabel(use(snapshot))
+				end),
+				textColor = Theme.colors.cyan,
+				visible = scope:Computed(function(use)
+					return phaseLabel(Kit.read(use, snapshot)) ~= ""
+				end),
+				layoutOrder = 4,
+				zIndex = 10,
+			}),
+			pill(scope, {
+				name = "Limit",
+				text = scope:Computed(function(use)
 					local current = use(snapshot)
 					if not current then
 						return ""
@@ -194,20 +241,64 @@ return function(scope: Kit.Scope, props: Props): Frame
 						limit = current.limits.perPlayer,
 					})
 				end),
-				TextColor3 = Theme.colors.cream,
-				TextSize = 14,
-				Size = UDim2.new(0, 150, 1, 0),
-				LayoutOrder = 5,
-				ZIndex = 12,
+				visible = scope:Computed(function(use)
+					return Kit.read(use, snapshot) ~= nil
+				end),
+				layoutOrder = 5,
+				zIndex = 10,
+			})
+		),
+	})
+
+	-- ------------------------------------------------------------------
+	-- Canto superior direito: velocidade, opções e sair
+	-- ------------------------------------------------------------------
+	local systemCluster = scope:New("Frame")({
+		Name = "System",
+		Active = true,
+		BackgroundTransparency = 1,
+		Size = UDim2.new(0, 0, 0, 48),
+		AutomaticSize = Enum.AutomaticSize.X,
+		Position = UDim2.new(1, -16, 0, 18),
+		AnchorPoint = Vector2.new(1, 0),
+		ZIndex = 10,
+		[Children] = Kit.children(
+			Kit.list(scope, {
+				FillDirection = Enum.FillDirection.Horizontal,
+				HorizontalAlignment = Enum.HorizontalAlignment.Right,
+				Padding = UDim.new(0, 8),
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+			}),
+			Kit.button(scope, {
+				name = "Speed",
+				text = scope:Computed(function(use)
+					local current = use(snapshot)
+					return L("hud.speed", { value = if current then current.speedMultiplier else 1 })
+				end),
+				icon = "ui_speed",
+				kind = scope:Computed(function(use)
+					local current = use(snapshot)
+					return if current and current.speedMultiplier == 2 then "primary" else "dark"
+				end),
+				size = UDim2.fromOffset(150, 44),
+				layoutOrder = 1,
+				zIndex = 11,
+				onActivate = function()
+					local current = peek(snapshot)
+					if not current then
+						return
+					end
+					GameFlow.voteSpeed(if current.speedMultiplier == 2 then 1 else 2)
+				end,
 			}),
 			Kit.button(scope, {
 				name = "Options",
 				text = L("hud.options"),
 				kind = "secondary",
 				icon = "ui_settings",
-				size = UDim2.fromOffset(160, 48),
-				layoutOrder = 6,
-				zIndex = 12,
+				size = UDim2.fromOffset(140, 44),
+				layoutOrder = 2,
+				zIndex = 11,
 				onActivate = function()
 					-- a partida continua rodando atrás: Configurações é uma tela por cima do HUD
 					Actions.push("settings")
@@ -217,34 +308,16 @@ return function(scope: Kit.Scope, props: Props): Frame
 				name = "Leave",
 				text = L("hud.leave"),
 				kind = "danger",
-				size = UDim2.fromOffset(120, 48),
-				layoutOrder = 7,
-				zIndex = 12,
+				size = UDim2.fromOffset(110, 44),
+				layoutOrder = 3,
+				zIndex = 11,
 				onActivate = GameFlow.confirmLeave,
 			})
 		),
 	})
-	-- a ficha de opções encosta na direita: o espaço livre fica no meio da faixa
-	local topLayout = topBar:FindFirstChild("Surface")
-	if topLayout then
-		local limitLabel = (topLayout :: Frame):FindFirstChild("Limit")
-		if limitLabel and limitLabel:IsA("TextLabel") then
-			limitLabel.Size = UDim2.new(1, -1040, 1, 0)
-		end
-	end
 
-	-- ------------------------------------------------------------------
-	-- Área do tabuleiro (o renderizador imperativo é montado aqui pelo App)
-	-- ------------------------------------------------------------------
-
-	local boardArea = scope:New("Frame")({
-		Name = "BoardArea",
-		BackgroundTransparency = 1,
-		Size = UDim2.new(1, -332, 1, -(TOP_HEIGHT + DOCK_HEIGHT + 44)),
-		Position = UDim2.fromOffset(16, TOP_HEIGHT + 24),
-		ZIndex = 5,
-	})
-	props.onBoardArea(boardArea)
+	-- O tabuleiro não é filho do HUD: ele mora na camada do cenário, sem área segura, para a
+	-- arte do mapa sangrar até as bordas da tela. Aqui só ficam as peças que flutuam por cima.
 
 	-- ------------------------------------------------------------------
 	-- Doca de torres e ações
@@ -270,7 +343,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end)
 		return Kit.pressable(innerScope, {
 			name = "Card_" .. towerId,
-			size = UDim2.fromOffset(112, DOCK_HEIGHT - 12),
+			size = UDim2.new(1, 0, 0, TOWER_CARD_H),
 			layoutOrder = index,
 			zIndex = 11,
 			onActivate = function()
@@ -293,11 +366,11 @@ return function(scope: Kit.Scope, props: Props): Frame
 					return if use(selected) then Theme.colors.goldDark else Theme.colors.ink
 				end),
 				radius = 16,
-				padding = 8,
+				padding = 6,
 				paddingVertical = 6,
 				zIndex = 11,
 				layout = Kit.list(innerScope, {
-					Padding = UDim.new(0, 2),
+					Padding = UDim.new(0, 1),
 					HorizontalAlignment = Enum.HorizontalAlignment.Center,
 				}),
 				children = Kit.children(
@@ -309,11 +382,11 @@ return function(scope: Kit.Scope, props: Props): Frame
 							return if use(affordable) then 0 else 0.5
 						end),
 						ScaleType = Enum.ScaleType.Fit,
-						Size = UDim2.new(1, 0, 0, 46),
+						Size = UDim2.new(1, 0, 0, 40),
 						LayoutOrder = 1,
 						ZIndex = 12,
 					}),
-					Kit.text(scope, {
+					Kit.text(innerScope, {
 						Name = "Name",
 						Text = def.name,
 						Font = Theme.fonts.bodyBold,
@@ -321,7 +394,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 						TextXAlignment = Enum.TextXAlignment.Center,
 						TextWrapped = false,
 						TextTruncate = Enum.TextTruncate.AtEnd,
-						Size = UDim2.new(1, 0, 0, 18),
+						Size = UDim2.new(1, 0, 0, 17),
 						LayoutOrder = 2,
 						ZIndex = 12,
 					}),
@@ -332,7 +405,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 						TextColor3 = innerScope:Computed(function(use)
 							return if use(affordable) then Theme.colors.goldText else Theme.colors.danger
 						end),
-						Size = UDim2.new(1, 0, 0, 14),
+						Size = UDim2.new(1, 0, 0, 13),
 						LayoutOrder = 3,
 						ZIndex = 12,
 					})
@@ -343,8 +416,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 						Name = "Hotkey",
 						BackgroundColor3 = Theme.colors.ink,
 						BorderSizePixel = 0,
-						Size = UDim2.fromOffset(22, 22),
-						Position = UDim2.new(1, -6, 0, 4),
+						Size = UDim2.fromOffset(20, 20),
+						Position = UDim2.new(1, -4, 0, 3),
 						AnchorPoint = Vector2.new(1, 0),
 						ZIndex = 14,
 						[Children] = Kit.children(
@@ -365,45 +438,79 @@ return function(scope: Kit.Scope, props: Props): Frame
 		})
 	end)
 
-	local dock = Kit.panel(scope, {
-		name = "Dock",
+	-- ------------------------------------------------------------------
+	-- Coluna "Torres" à direita
+	-- ------------------------------------------------------------------
+	local towerPanel = Kit.panel(scope, {
+		name = "Towers",
 		blocking = true,
-		size = UDim2.new(1, -32, 0, DOCK_HEIGHT),
-		position = UDim2.new(0, 16, 1, -(DOCK_HEIGHT + 12)),
+		size = UDim2.new(0, TOWER_PANEL_W, 0, 0),
+		automaticSize = Enum.AutomaticSize.Y,
+		position = UDim2.new(1, -16, 0, TOP_HEIGHT + 28),
+		anchorPoint = Vector2.new(1, 0),
 		color = Theme.colors.ink,
 		strokeColor = Theme.colors.inkDeep,
 		radius = 20,
 		padding = 10,
-		paddingVertical = 6,
+		paddingVertical = 10,
 		gloss = false,
 		zIndex = 10,
-		layout = Kit.list(scope, {
-			FillDirection = Enum.FillDirection.Horizontal,
-			Padding = UDim.new(0, 10),
-			VerticalAlignment = Enum.VerticalAlignment.Center,
-		}),
+		layout = Kit.list(scope, { Padding = UDim.new(0, 8) }),
 		children = Kit.children(
-			scope:New("Frame")({
-				Name = "Cards",
-				BackgroundTransparency = 1,
-				Size = UDim2.new(1, -640, 1, 0),
-				LayoutOrder = 1,
+			Kit.caption(scope, {
+				Name = "Title",
+				Text = L("hud.towers"),
+				TextColor3 = Theme.colors.cyan,
+				Font = Theme.fonts.bodyBold,
+				TextSize = 12,
+				TextXAlignment = Enum.TextXAlignment.Center,
+				Size = UDim2.new(1, 0, 0, 14),
+				LayoutOrder = 0,
 				ZIndex = 11,
-				[Children] = Kit.children(
-					Kit.list(scope, {
-						FillDirection = Enum.FillDirection.Horizontal,
-						Padding = UDim.new(0, 10),
-						VerticalAlignment = Enum.VerticalAlignment.Center,
-					}),
-					cards
-				),
+			}),
+			cards
+		),
+	})
+
+	-- ------------------------------------------------------------------
+	-- Rodapé: pulso e o botão de iniciar a onda
+	-- ------------------------------------------------------------------
+	-- Fica no centro, e não no canto direito da maquete, porque neste mapa o Farol está
+	-- justamente no canto inferior direito — o botão cobriria o que o jogador defende.
+	local actionStack = scope:New("Frame")({
+		Name = "Actions",
+		Active = true,
+		BackgroundTransparency = 1,
+		Size = UDim2.new(0, 0, 0, 72),
+		AutomaticSize = Enum.AutomaticSize.X,
+		Position = UDim2.new(0.5, 0, 1, -16),
+		AnchorPoint = Vector2.new(0.5, 1),
+		ZIndex = 10,
+		[Children] = Kit.children(
+			Kit.list(scope, {
+				FillDirection = Enum.FillDirection.Horizontal,
+				Padding = UDim.new(0, 10),
+				HorizontalAlignment = Enum.HorizontalAlignment.Center,
+				VerticalAlignment = Enum.VerticalAlignment.Bottom,
+			}),
+			Kit.button(scope, {
+				name = "ZoomReset",
+				text = L("hud.zoomReset"),
+				kind = "secondary",
+				visible = zoomed,
+				size = UDim2.fromOffset(150, 40),
+				layoutOrder = 1,
+				zIndex = 11,
+				onActivate = function()
+					BoardPresenter.resetZoom()
+				end,
 			}),
 			Kit.button(scope, {
 				name = "Pulse",
 				text = L("hud.pulse"),
 				icon = "ui_pulse",
 				kind = "cyan",
-				size = UDim2.fromOffset(200, DOCK_HEIGHT - 24),
+				size = UDim2.fromOffset(200, 56),
 				layoutOrder = 2,
 				zIndex = 11,
 				visible = scope:Computed(function(use)
@@ -430,42 +537,20 @@ return function(scope: Kit.Scope, props: Props): Frame
 				end),
 				onActivate = GameFlow.pulse,
 			}),
+			-- Único botão verde do jogo: é o que solta a onda.
 			Kit.button(scope, {
-				name = "Speed",
-				text = scope:Computed(function(use)
-					local current = use(snapshot)
-					return L("hud.speed", { value = if current then current.speedMultiplier else 1 })
-				end),
-				sub = L("hud.speedHint"),
-				icon = "ui_speed",
-				kind = scope:Computed(function(use)
-					local current = use(snapshot)
-					return if current and current.speedMultiplier == 2 then "primary" else "dark"
-				end),
-				size = UDim2.fromOffset(190, DOCK_HEIGHT - 24),
-				layoutOrder = 3,
-				zIndex = 11,
-				onActivate = function()
-					local current = peek(snapshot)
-					if not current then
-						return
-					end
-					GameFlow.voteSpeed(if current.speedMultiplier == 2 then 1 else 2)
-				end,
-			}),
-			Kit.button(scope, {
-				name = "Ready",
+				name = "StartWave",
 				text = scope:Computed(function(use)
 					local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
 					if not current then
-						return L("hud.ready")
+						return L("hud.startWave")
 					end
 					for _, participant in ipairs(current.participants) do
 						if participant.userId == props.localUserId and participant.ready then
-							return "✓ " .. L("hud.ready")
+							return "✓ " .. L("hud.waitingWave")
 						end
 					end
-					return L("hud.ready")
+					return L("hud.startWave")
 				end),
 				sub = scope:Computed(function(use)
 					local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
@@ -484,9 +569,10 @@ return function(scope: Kit.Scope, props: Props): Frame
 					return L("hud.readyCount", { ready = ready, total = total })
 				end),
 				icon = "ui_play",
-				kind = "primary",
-				size = UDim2.fromOffset(200, DOCK_HEIGHT - 24),
-				layoutOrder = 4,
+				kind = "grass",
+				textSize = 20,
+				size = UDim2.fromOffset(240, 68),
+				layoutOrder = 3,
 				zIndex = 11,
 				visible = scope:Computed(function(use)
 					local current = use(snapshot)
@@ -522,8 +608,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 		visible = scope:Computed(function(use)
 			return use(buildTowerId) ~= nil
 		end),
-		size = UDim2.new(0, 560, 0, 64),
-		position = UDim2.new(0.5, 0, 1, -(DOCK_HEIGHT + 28)),
+		size = UDim2.new(0, if touchInput then 560 else 460, 0, 64),
+		position = UDim2.new(0.5, 0, 1, -100),
 		anchorPoint = Vector2.new(0.5, 1),
 		padding = 12,
 		paddingVertical = 8,
@@ -536,19 +622,24 @@ return function(scope: Kit.Scope, props: Props): Frame
 		children = Kit.children(
 			Kit.text(scope, {
 				Name = "Text",
+				-- A barra é instrução, não confirmação: no computador o clique na célula já
+				-- constrói; no toque, o segundo toque na mesma célula constrói.
 				Text = scope:Computed(function(use)
 					local reason = Kit.read(use, buildReason)
 					if reason then
 						return L(reason)
 					end
-					if Kit.read(use, buildCell) == nil then
-						return L("build.pickCell")
+					local towerId = Kit.read(use, buildTowerId)
+					local def = if towerId then Catalog.getTower(towerId) else nil
+					if not def then
+						return ""
 					end
-					return L("build.noCircuit")
+					local params = { tower = def.name, cost = def.states.L0.cost }
+					return if touchInput then L("build.tapTwice", params) else L("build.clickToBuild", params)
 				end),
 				Font = Theme.fonts.bodyMedium,
 				TextSize = 15,
-				Size = UDim2.new(1, -300, 1, 0),
+				Size = UDim2.new(1, if touchInput then -320 else -140, 1, 0),
 				LayoutOrder = 1,
 				ZIndex = 21,
 			}),
@@ -561,6 +652,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 				zIndex = 21,
 				onActivate = Actions.exitBuild,
 			}),
+			-- O botão de confirmar só existe no toque, como alternativa ao segundo toque.
 			Kit.button(scope, {
 				name = "Confirm",
 				text = scope:Computed(function(use)
@@ -570,6 +662,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 					return L("build.confirm", { cost = cost })
 				end),
 				kind = "primary",
+				visible = touchInput,
 				disabled = scope:Computed(function(use)
 					return Kit.read(use, buildCell) == nil or Kit.read(use, buildReason) ~= nil
 				end),
@@ -595,7 +688,9 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end),
 		size = UDim2.new(0, 0, 0, 34),
 		automaticSize = Enum.AutomaticSize.X,
-		position = UDim2.fromOffset(24, TOP_HEIGHT + 28),
+		-- item da coluna de contexto (canto inferior esquerdo): em cima do tabuleiro ela brigava
+		-- com as fichas e com a contagem desenhada na entrada do caminho
+		layoutOrder = 4,
 		color = Theme.colors.cream,
 		radius = Kit.radius.pill,
 		padding = 14,
@@ -622,7 +717,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end),
 		size = UDim2.new(0, 0, 0, 44),
 		automaticSize = Enum.AutomaticSize.X,
-		position = UDim2.new(0.5, 0, 0, TOP_HEIGHT + 28),
+		position = UDim2.new(0.5, 0, 0, TOP_HEIGHT + 12),
 		anchorPoint = Vector2.new(0.5, 0),
 		color = Theme.colors.dangerSoft,
 		strokeColor = Theme.colors.danger,
@@ -644,6 +739,82 @@ return function(scope: Kit.Scope, props: Props): Frame
 		})),
 	})
 
+	-- Aviso grande de uma linha: fim de onda, recompensa, marco do tutorial. Entra com um salto
+	-- (mola) e some sozinho pelo relógio da interface.
+	local announcePanel = Kit.panel(scope, {
+		name = "Announce",
+		blocking = false,
+		visible = scope:Computed(function(use)
+			return Kit.read(use, announce) ~= nil
+		end),
+		size = UDim2.new(0, 0, 0, 0),
+		automaticSize = Enum.AutomaticSize.XY,
+		position = UDim2.new(0.5, 0, 0, TOP_HEIGHT + 34),
+		anchorPoint = Vector2.new(0.5, 0),
+		color = scope:Computed(function(use)
+			local current: Atoms.Announce? = Kit.read(use, announce)
+			return if current and current.tone == "warn" then Theme.colors.dangerSoft else Theme.colors.cream
+		end),
+		strokeColor = scope:Computed(function(use)
+			local current: Atoms.Announce? = Kit.read(use, announce)
+			return if current and current.tone == "warn" then Theme.colors.danger else Theme.colors.goldDark
+		end),
+		radius = Kit.radius.pill,
+		padding = 26,
+		paddingVertical = 10,
+		zIndex = 26,
+		layout = Kit.list(scope, {
+			Padding = UDim.new(0, 2),
+			HorizontalAlignment = Enum.HorizontalAlignment.Center,
+		}),
+		children = Kit.children(
+			Kit.text(scope, {
+				Name = "Text",
+				Text = scope:Computed(function(use)
+					local current: Atoms.Announce? = Kit.read(use, announce)
+					return if current then current.text else ""
+				end),
+				TextColor3 = scope:Computed(function(use)
+					local current: Atoms.Announce? = Kit.read(use, announce)
+					return if current and current.tone == "warn" then Theme.colors.danger else Theme.colors.ink
+				end),
+				Font = Theme.fonts.title,
+				TextSize = 30,
+				TextWrapped = false,
+				TextXAlignment = Enum.TextXAlignment.Center,
+				AutomaticSize = Enum.AutomaticSize.XY,
+				Size = UDim2.fromOffset(0, 0),
+				LayoutOrder = 1,
+				ZIndex = 27,
+			}),
+			Kit.caption(scope, {
+				Name = "Sub",
+				Text = scope:Computed(function(use)
+					local current: Atoms.Announce? = Kit.read(use, announce)
+					return if current and current.sub then current.sub else ""
+				end),
+				Visible = scope:Computed(function(use)
+					local current: Atoms.Announce? = Kit.read(use, announce)
+					return current ~= nil and current.sub ~= nil
+				end),
+				TextXAlignment = Enum.TextXAlignment.Center,
+				AutomaticSize = Enum.AutomaticSize.XY,
+				Size = UDim2.fromOffset(0, 0),
+				LayoutOrder = 2,
+				ZIndex = 27,
+			})
+		),
+	})
+	-- salto de entrada: a escala acompanha o "at" do aviso
+	do
+		local target = scope:Computed(function(use)
+			return if Kit.read(use, announce) ~= nil then 1 else 0.6
+		end)
+		local spring = scope:Spring(target, 18, 0.6)
+		local scale = scope:New("UIScale")({ Scale = spring })
+		scale.Parent = announcePanel
+	end
+
 	local connectionBanner = Kit.panel(scope, {
 		name = "Connection",
 		blocking = true,
@@ -652,7 +823,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end),
 		size = UDim2.new(0, 0, 0, 38),
 		automaticSize = Enum.AutomaticSize.X,
-		position = UDim2.new(0.5, 0, 0, TOP_HEIGHT + 80),
+		position = UDim2.new(0.5, 0, 0, TOP_HEIGHT + 62),
 		anchorPoint = Vector2.new(0.5, 0),
 		color = Theme.colors.ink,
 		strokeColor = Theme.colors.cyan,
@@ -802,35 +973,25 @@ return function(scope: Kit.Scope, props: Props): Frame
 		),
 	})
 
-	local zoomReset = Kit.button(scope, {
-		name = "ZoomReset",
-		text = L("hud.zoomReset"),
-		kind = "secondary",
-		visible = zoomed,
-		size = UDim2.fromOffset(150, 44),
-		position = UDim2.new(0, 24, 1, -(DOCK_HEIGHT + 28)),
-		anchorPoint = Vector2.new(0, 1),
-		zIndex = 19,
-		onActivate = function()
-			BoardPresenter.resetZoom()
-		end,
-	})
-
-	-- Coluna de contexto: tutorial, detalhe da torre e treino nunca se cobrem, porque são itens
-	-- de uma fila vertical em vez de três painéis ancorados no mesmo canto.
-	local sideColumn = Kit.scroller(scope, {
+	-- Coluna de contexto no canto inferior esquerdo: tutorial, detalhe da torre e treino nunca
+	-- se cobrem, porque são itens de uma fila vertical em vez de três painéis no mesmo canto.
+	local contextColumn = Kit.scroller(scope, {
 		Name = "SidePanels",
-		-- rola quando tutorial + detalhe passam da altura livre, em vez de invadir a doca
-		Size = UDim2.new(0, 312, 1, -(TOP_HEIGHT + DOCK_HEIGHT + 44)),
-		Position = UDim2.new(1, -16, 0, TOP_HEIGHT + 28),
-		AnchorPoint = Vector2.new(1, 0),
+		-- rola quando tutorial + detalhe passam da altura livre, em vez de subir até as fichas
+		Size = UDim2.new(0, CONTEXT_W, 1, -(TOP_HEIGHT + 120)),
+		Position = UDim2.new(0, 16, 1, -16),
+		AnchorPoint = Vector2.new(0, 1),
 		ScrollBarThickness = 4,
 		ZIndex = 18,
 		[Children] = Kit.children(
-			Kit.list(scope, { Padding = UDim.new(0, 10) }),
+			Kit.list(scope, {
+				Padding = UDim.new(0, 10),
+				VerticalAlignment = Enum.VerticalAlignment.Bottom,
+			}),
 			tutorialCard,
 			HudDetail(scope, { localUserId = props.localUserId }),
-			trainingPanel
+			trainingPanel,
+			wavePreview
 		),
 	})
 
@@ -840,15 +1001,15 @@ return function(scope: Kit.Scope, props: Props): Frame
 		Size = UDim2.fromScale(1, 1),
 		Visible = props.visible,
 		[Children] = Kit.children(
-			boardArea,
-			zoomReset,
-			topBar,
-			dock,
+			statusCluster,
+			systemCluster,
+			towerPanel,
+			actionStack,
 			buildBar,
-			wavePreview,
+			announcePanel,
 			bossPanel,
 			connectionBanner,
-			sideColumn
+			contextColumn
 		),
 	})
 end

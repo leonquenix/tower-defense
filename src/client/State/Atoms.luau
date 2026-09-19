@@ -110,6 +110,16 @@ Atoms.tutorialRetry = Charm.atom(false :: boolean)
 Atoms.tutorialOpen = Charm.atom(false :: boolean)
 Atoms.bossBanner = Charm.atom(nil :: string?)
 
+-- Aviso grande e curto no meio da tela ("Onda 3 concluída!"). Só apresentação: quem decide
+-- onda, recompensa e fase continua sendo o servidor. `at` é relógio local, para o aviso sumir.
+export type Announce = {
+	text: string,
+	sub: string?,
+	tone: "good" | "warn",
+	at: number,
+}
+Atoms.announce = Charm.atom(nil :: Announce?)
+
 -- Interação de combate (só cliente: o servidor confirma tudo de novo)
 Atoms.selectedTowerId = Charm.atom(nil :: number?)
 Atoms.selectedEnemyId = Charm.atom(nil :: number?)
@@ -157,6 +167,7 @@ function Atoms.clear()
 	Atoms.matchResult(nil)
 	Atoms.tutorialStep(nil)
 	Atoms.bossBanner(nil)
+	Atoms.announce(nil)
 	Atoms.selectedTowerId(nil)
 	Atoms.selectedEnemyId(nil)
 	Atoms.buildTowerId(nil)

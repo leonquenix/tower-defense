@@ -2,10 +2,10 @@
 -- ARQUIVO GERADO por tools/update_asset_registry.py a partir de runtime_asset_registry.json.
 -- IDs presentes aqui vieram de uploads reais registrados em assets/export/upload_log.json.
 -- image == nil significa asset ainda não publicado: o cliente usa um visual provisório identificado.
-
 export type AssetEntry = {
 	image: string?,
 	portrait: string?,
+	-- sprite espelhado: a torre olha para o lado do alvo (nil enquanto não for publicado)
 	width: number,
 	height: number,
 	anchorX: number,
@@ -19,6 +19,11 @@ export type AssetEntry = {
 	entityId: string?,
 	frameWidthCells: number?,
 	visibleWidthCells: number?,
+	-- cena de mapa: fração da imagem ocupada pela grade 16x10 {x0, y0, x1, y1}
+	playRect: { number }?,
+	-- a arte já desenha a trilha e o Farol: o renderizador não repete nenhum dos dois
+	includesPath: boolean?,
+	includesBase: boolean?,
 }
 
 local entries: { [string]: AssetEntry } = {
@@ -156,8 +161,11 @@ local entries: { [string]: AssetEntry } = {
 		anchorY = 0.5,
 		backingColor = { 67, 167, 135 },
 		height = 640,
-		image = "rbxassetid://85989711027737",
+		image = "rbxassetid://116022215556691",
+		includesBase = false,
+		includesPath = true,
 		kind = "ground",
+		playRect = { 0.0904, 0.1644, 0.6833, 0.8274 },
 		width = 1024,
 	},
 	map_oficina_ground = {
@@ -165,8 +173,11 @@ local entries: { [string]: AssetEntry } = {
 		anchorY = 0.5,
 		backingColor = { 98, 123, 147 },
 		height = 640,
-		image = "rbxassetid://122169788486851",
+		image = "rbxassetid://111075982166008",
+		includesBase = false,
+		includesPath = true,
 		kind = "ground",
+		playRect = { 0.0521, 0.1341, 0.6716, 0.8269 },
 		width = 1024,
 	},
 	map_sotao_ground = {

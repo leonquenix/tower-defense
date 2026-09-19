@@ -1,0 +1,33 @@
+{
+  "note": "Cenas de mapa desenhadas por inteiro (piso, caminho e cenário na mesma imagem). playRect é a fração da imagem ocupada pela grade 16x10; rota e bloqueios de cada mapa saem da mesma medida. Tudo isso é medido por tools/fit_map_scene.py: a malha de ladrilhos desenhada é periódica, e o passo/fase que maximizam o gradiente nas bordas dão célula e origem. Com includesPath o renderizador para de desenhar trilha, setas e props; com includesBase pararia também o Farol — as artes atuais não trazem o Farol, que continua desenhado por código na última célula do caminho.",
+  "scenes": {
+    "jardim": {
+      "source": "Assets_Mapas_v2/jardim_praia_v4.png",
+      "sourceSha256": "0fb0dc4fb272f5f5728dc46028d9a0c079d4f4c1715ea7d5807de75bf3655776",
+      "image": "rbxassetid://116022215556691",
+      "uploadedAt": "2026-09-19",
+      "playRect": [
+        0.0904,
+        0.1644,
+        0.6833,
+        0.8274
+      ],
+      "includesPath": true,
+      "includesBase": false
+    },
+    "oficina": {
+      "source": "Assets_Mapas_v2/neve_v2.png",
+      "sourceSha256": "a5d3754c8732ac73c0ca4af7582879f23611377e7291a26723eb8891c8e7b400",
+      "image": "rbxassetid://111075982166008",
+      "uploadedAt": "2026-09-19",
+      "playRect": [
+        0.0521,
+        0.1341,
+        0.6716,
+        0.8269
+      ],
+      "includesPath": true,
+      "includesBase": false
+    }
+  }
+}

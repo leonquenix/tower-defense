@@ -33,6 +33,21 @@ return function(scope: Kit.Scope, props: Props): Frame
 	local difficultyText = scope:Computed(function(use)
 		return L("menu.difficulty." .. tostring(use(params).difficulty or "normal"))
 	end)
+	-- "{difficulty} · Equipe: {team}" precisa dos dois parâmetros: sem eles o cartão mostrava
+	-- as chaves cruas na tela de carregamento.
+	local loadout = Bridge.use(scope, Atoms.loadout)
+	local setupText = scope:Computed(function(use)
+		local names: { string } = {}
+		local ids: { string } = Kit.read(use, loadout)
+		for _, towerId in ipairs(ids) do
+			local def = Catalog.getTower(towerId)
+			table.insert(names, if def then def.name else towerId)
+		end
+		return L("loading.setup", {
+			difficulty = Kit.read(use, difficultyText),
+			team = if #names > 0 then table.concat(names, " · ") else L("menu.teamEmpty"),
+		})
+	end)
 	local slow = scope:Computed(function(use)
 		return Kit.read(use, props.elapsed) >= SLOW_AFTER
 	end)
@@ -70,9 +85,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 					ZIndex = 3,
 				}),
 				Kit.caption(scope, {
-					Text = scope:Computed(function(use)
-						return L("loading.setup") .. " · " .. use(difficultyText)
-					end),
+					Text = setupText,
 					Size = UDim2.new(1, 0, 0, 18),
 					LayoutOrder = 3,
 					ZIndex = 3,

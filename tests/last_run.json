@@ -1,8 +1,8 @@
 {
-  "elapsedSeconds": 0.01821424998342991,
+  "elapsedSeconds": 0.019980666635092348,
   "failed": 0,
   "failures": {},
-  "passed": 161,
+  "passed": 166,
   "suites": [
     {
       "name": "Grid",
@@ -415,6 +415,10 @@
         },
         {
           "name": "desbloqueio de mapas segue a campanha",
+          "ok": true
+        },
+        {
+          "name": "interruptor de desenvolvimento abre tudo",
           "ok": true
         },
         {
@@ -852,7 +856,28 @@
           "ok": true
         }
       ]
+    },
+    {
+      "name": "BuildIntent / o que o toque significa",
+      "tests": [
+        {
+          "name": "no computador, um clique em célula boa já constrói",
+          "ok": true
+        },
+        {
+          "name": "no toque, o primeiro toque posiciona e o segundo constrói",
+          "ok": true
+        },
+        {
+          "name": "célula inválida nunca constrói, em nenhum aparelho",
+          "ok": true
+        },
+        {
+          "name": "no tutorial a célula é uma só: o primeiro toque constrói mesmo no celular",
+          "ok": true
+        }
+      ]
     }
   ],
-  "timestamp": "2026-09-19T05:26:09Z"
+  "timestamp": "2026-09-19T13:27:30Z"
 }

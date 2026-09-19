@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Assets = require(ReplicatedStorage.Shared.Config.Assets)
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
+local DevFlags = require(ReplicatedStorage.Shared.Config.DevFlags)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Fusion = require(ReplicatedStorage.Shared.Lib.Fusion)
 local Actions = require(script.Parent.Parent.Parent.State.Actions)
@@ -34,6 +35,9 @@ local function unlockKey(mapId: string, difficulty: string): string
 end
 
 local function isUnlocked(profile: { [string]: any }?, mapId: string, difficulty: string): boolean
+	if DevFlags.unlockAllMaps then
+		return true -- o servidor usa o mesmo interruptor (Config/DevFlags)
+	end
 	if not profile then
 		return false
 	end

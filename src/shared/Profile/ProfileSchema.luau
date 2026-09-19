@@ -4,6 +4,7 @@ local Types = require(script.Parent.Parent.Types)
 local Balance = require(script.Parent.Parent.Config.Balance)
 local Catalog = require(script.Parent.Parent.Config.Catalog)
 local Products = require(script.Parent.Parent.Config.Products)
+local DevFlags = require(script.Parent.Parent.Config.DevFlags)
 
 local ProfileSchema = {}
 
@@ -195,11 +196,20 @@ function ProfileSchema.unlockKey(mapId: string, difficulty: string): string
 	return mapId .. ":" .. difficulty
 end
 
-function ProfileSchema.isMapUnlocked(profile: Types.Profile, mapId: string, difficulty: string): boolean
+-- Regra da campanha, sem atalho: é ela que o jogo de verdade usa e o teste cobre.
+function ProfileSchema.campaignUnlocked(profile: Types.Profile, mapId: string, difficulty: string): boolean
 	if mapId == "jardim" and difficulty == "normal" then
 		return profile.tutorialCompleted or profile.mapUnlocks["jardim:normal"] == true
 	end
 	return profile.mapUnlocks[ProfileSchema.unlockKey(mapId, difficulty)] == true
+end
+
+-- O que o jogo pergunta. Com o interruptor de desenvolvimento ligado, tudo abre.
+function ProfileSchema.isMapUnlocked(profile: Types.Profile, mapId: string, difficulty: string): boolean
+	if DevFlags.unlockAllMaps then
+		return true
+	end
+	return ProfileSchema.campaignUnlocked(profile, mapId, difficulty)
 end
 
 -- Aplica desbloqueios após vitória normal/desafio. Retorna chaves novas.

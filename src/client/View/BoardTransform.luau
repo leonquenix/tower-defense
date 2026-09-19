@@ -12,9 +12,10 @@ BoardTransform.__index = BoardTransform
 
 export type BoardTransform = typeof(setmetatable(
 	{} :: {
-		viewport: Frame, -- área disponível (entre as faixas do HUD)
-		window: Frame, -- 16:10, recorta o mundo
-		world: Frame, -- escala com zoom
+		viewport: Frame, -- área disponível (a tela inteira: o HUD flutua por cima)
+		window: Frame, -- recorta a cena; ocupa toda a área para a arte sangrar até as bordas
+		stage: Frame, -- 16:10 centrado na janela: é a grade de verdade
+		world: Frame, -- escala com zoom dentro do palco
 		zoom: number,
 		offset: Vector2, -- deslocamento em fração do tamanho da janela (0..zoom-1)
 		minZoom: number,
@@ -25,6 +26,10 @@ export type BoardTransform = typeof(setmetatable(
 ))
 
 BoardTransform.MIN_CELL_PIXELS = 36
+-- O tabuleiro não ocupa a janela inteira: sobra um respiro em volta para a cena desenhada
+-- aparecer e o jogo não dar sensação de aperto. É o "zoom padrão" — o zoom de pinça/roda
+-- continua por cima disso.
+BoardTransform.BASE_FIT = 0.86
 
 function BoardTransform.new(parent: GuiObject): BoardTransform
 	local viewport = Instance.new("Frame")
@@ -33,6 +38,8 @@ function BoardTransform.new(parent: GuiObject): BoardTransform
 	viewport.Size = UDim2.fromScale(1, 1)
 	viewport.Parent = parent
 
+	-- Janela: ocupa a área inteira e recorta. Como a arte do mapa é maior que a grade 16:10
+	-- (playRect), ela transborda o palco e preenche a tela — o HUD flutua por cima dela.
 	local window = Instance.new("Frame")
 	window.Name = "BoardWindow"
 	window.BackgroundColor3 = Theme.colors.tealDark
@@ -42,51 +49,33 @@ function BoardTransform.new(parent: GuiObject): BoardTransform
 	window.Position = UDim2.fromScale(0.5, 0.5)
 	window.Size = UDim2.fromScale(1, 1)
 	window.Parent = viewport
+
+	-- Palco: a grade de verdade, sempre 16:10 e centrada. Todo cálculo de célula, zoom e
+	-- deslocamento usa o palco, nunca a janela.
+	local stage = Instance.new("Frame")
+	stage.Name = "BoardStage"
+	stage.BackgroundTransparency = 1
+	stage.AnchorPoint = Vector2.new(0.5, 0.5)
+	stage.Position = UDim2.fromScale(0.5, 0.5)
+	stage.Size = UDim2.fromScale(BoardTransform.BASE_FIT, BoardTransform.BASE_FIT)
+	stage.Parent = window
 	local aspect = Instance.new("UIAspectRatioConstraint")
 	aspect.AspectRatio = Grid.COLUMNS / Grid.ROWS
 	aspect.AspectType = Enum.AspectType.FitWithinMaxSize
 	aspect.DominantAxis = Enum.DominantAxis.Width
-	aspect.Parent = window
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0, 18)
-	corner.Parent = window
-	local stroke = Instance.new("UIStroke")
-	stroke.Color = Theme.colors.ink
-	stroke.Thickness = 3
-	stroke.Parent = window
-
-	-- Sombra projetada do tabuleiro: dá a sensação de "prancha apoiada no quintal".
-	-- Fica atrás da janela (irmã), porque um filho nunca desenha atrás do pai.
-	local shadow = Instance.new("Frame")
-	shadow.Name = "BoardShadow"
-	shadow.BackgroundColor3 = Theme.colors.inkDeep
-	shadow.BackgroundTransparency = 0.72
-	shadow.BorderSizePixel = 0
-	shadow.AnchorPoint = Vector2.new(0.5, 0.5)
-	shadow.Position = UDim2.new(0.5, 0, 0.5, 8)
-	shadow.Size = UDim2.fromScale(1, 1)
-	shadow.ZIndex = -1
-	shadow.Active = false
-	local shadowCorner = Instance.new("UICorner")
-	shadowCorner.CornerRadius = UDim.new(0, 24)
-	shadowCorner.Parent = shadow
-	local shadowAspect = Instance.new("UIAspectRatioConstraint")
-	shadowAspect.AspectRatio = Grid.COLUMNS / Grid.ROWS
-	shadowAspect.AspectType = Enum.AspectType.FitWithinMaxSize
-	shadowAspect.DominantAxis = Enum.DominantAxis.Width
-	shadowAspect.Parent = shadow
-	shadow.Parent = viewport
+	aspect.Parent = stage
 
 	local world = Instance.new("Frame")
 	world.Name = "World"
 	world.BackgroundTransparency = 1
 	world.Size = UDim2.fromScale(1, 1)
 	world.Position = UDim2.fromScale(0, 0)
-	world.Parent = window
+	world.Parent = stage
 
 	local self = setmetatable({
 		viewport = viewport,
 		window = window,
+		stage = stage,
 		world = world,
 		zoom = 1,
 		offset = Vector2.zero,
@@ -122,9 +111,9 @@ function BoardTransform.screenToCell(self: BoardTransform, screen: Vector2): (nu
 	end
 	local vx = (screen.X - abs.X) / size.X * Grid.VIRTUAL_WIDTH
 	local vy = (screen.Y - abs.Y) / size.Y * Grid.VIRTUAL_HEIGHT
-	-- também rejeita pontos fora da janela visível (recorte)
-	local wabs = self.window.AbsolutePosition
-	local wsize = self.window.AbsoluteSize
+	-- também rejeita pontos fora do palco (a área da grade dentro da janela)
+	local wabs = self.stage.AbsolutePosition
+	local wsize = self.stage.AbsoluteSize
 	if screen.X < wabs.X or screen.Y < wabs.Y or screen.X >= wabs.X + wsize.X or screen.Y >= wabs.Y + wsize.Y then
 		return nil, nil
 	end
@@ -140,6 +129,7 @@ function BoardTransform.screenToLogical(self: BoardTransform, screen: Vector2): 
 	return fx * Grid.COLUMNS - 0.5, fy * Grid.ROWS - 0.5
 end
 
+-- Dentro da área visível da cena (a janela inteira, incluindo a arte que sangra além da grade).
 function BoardTransform.isInsideWindow(self: BoardTransform, screen: Vector2): boolean
 	local wabs = self.window.AbsolutePosition
 	local wsize = self.window.AbsoluteSize
@@ -171,8 +161,8 @@ function BoardTransform.setZoom(self: BoardTransform, zoom: number, focusScreen:
 	local newZoom = math.clamp(zoom, self.minZoom, self.maxZoom)
 	if focusScreen then
 		-- mantém o ponto sob o foco no mesmo lugar da tela
-		local wabs = self.window.AbsolutePosition
-		local wsize = self.window.AbsoluteSize
+		local wabs = self.stage.AbsolutePosition
+		local wsize = self.stage.AbsoluteSize
 		local fx = (focusScreen.X - wabs.X) / math.max(wsize.X, 1)
 		local fy = (focusScreen.Y - wabs.Y) / math.max(wsize.Y, 1)
 		local worldX = (fx + self.offset.X) / self.zoom
@@ -188,7 +178,7 @@ function BoardTransform.setZoom(self: BoardTransform, zoom: number, focusScreen:
 end
 
 function BoardTransform.pan(self: BoardTransform, deltaScreen: Vector2)
-	local wsize = self.window.AbsoluteSize
+	local wsize = self.stage.AbsoluteSize
 	self.offset = self.offset - Vector2.new(deltaScreen.X / math.max(wsize.X, 1), deltaScreen.Y / math.max(wsize.Y, 1))
 	applyTransform(self, false)
 end

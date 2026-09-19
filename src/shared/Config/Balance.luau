@@ -1,6 +1,6 @@
 --!strict
 -- ARQUIVO GERADO por tools/import_balance.py a partir de Pacote_Claude_Code/dados/balanceamento_v1.json
--- Não edite à mão. sha256 da origem: 7f8e175ba96578d95f9340704a278be34a72b8a7484497a199322dab884966cb
+-- Não edite à mão. sha256 da origem: 200ce1c3b4c225318e79d6f1515b3a5dadd3f90029745648fb44b62856224226
 local Types = require(script.Parent.Parent.Types)
 
 local Balance: Types.BalanceData = {
@@ -50,7 +50,7 @@ local Balance: Types.BalanceData = {
 			telegraph = 2,
 		},
 	},
-	checksum = "7f8e175ba96578d95f9340704a278be34a72b8a7484497a199322dab884966cb",
+	checksum = "200ce1c3b4c225318e79d6f1515b3a5dadd3f90029745648fb44b62856224226",
 	circuits = {
 		{
 			effect = "damage_vs_slowed",
@@ -523,35 +523,35 @@ local Balance: Types.BalanceData = {
 	},
 	tutorial = {
 		guidedCells = {
-			dardo = { 3, 3 },
-			goma = { 3, 4 },
+			dardo = { 4, 3 },
+			goma = { 4, 4 },
 		},
 		startingCash = 1200,
 		waves = {
 			{
 				{
-					count = 6,
+					count = 1,
 					enemy = "fiapo",
 				},
 			},
 			{
 				{
-					count = 6,
+					count = 4,
 					enemy = "fiapo",
 				},
 				{
-					count = 4,
+					count = 2,
 					enemy = "corrisco",
 				},
 			},
 			{
 				{
-					count = 2,
-					enemy = "bolota",
+					count = 6,
+					enemy = "fiapo",
 				},
 				{
-					count = 8,
-					enemy = "fiapo",
+					count = 1,
+					enemy = "bolota",
 				},
 			},
 		},
@@ -560,53 +560,53 @@ local Balance: Types.BalanceData = {
 	waves = {
 		{
 			bossAfterGroups = false,
-			groupGap = 2,
+			groupGap = 2.5,
 			groups = {
 				{
-					count = 12,
+					count = 8,
 					enemy = "fiapo",
 				},
 			},
 			income = 135,
-			spawnInterval = 1.1,
+			spawnInterval = 1.9,
 			wave = 1,
 		},
 		{
 			bossAfterGroups = false,
-			groupGap = 2,
+			groupGap = 2.5,
 			groups = {
 				{
-					count = 16,
+					count = 11,
 					enemy = "fiapo",
 				},
 			},
 			income = 150,
-			spawnInterval = 1.1,
+			spawnInterval = 1.7,
 			wave = 2,
 		},
 		{
 			bossAfterGroups = false,
-			groupGap = 2,
+			groupGap = 2.5,
 			groups = {
 				{
-					count = 12,
+					count = 10,
 					enemy = "fiapo",
 				},
 				{
-					count = 6,
+					count = 5,
 					enemy = "corrisco",
 				},
 			},
 			income = 165,
-			spawnInterval = 1.1,
+			spawnInterval = 1.5,
 			wave = 3,
 		},
 		{
 			bossAfterGroups = false,
-			groupGap = 2,
+			groupGap = 2.2,
 			groups = {
 				{
-					count = 20,
+					count = 16,
 					enemy = "fiapo",
 				},
 				{
@@ -615,7 +615,7 @@ local Balance: Types.BalanceData = {
 				},
 			},
 			income = 180,
-			spawnInterval = 1.1,
+			spawnInterval = 1.3,
 			wave = 4,
 		},
 		{

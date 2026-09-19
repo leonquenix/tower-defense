@@ -19,6 +19,8 @@ local BoardRenderer = require(script.Parent.Parent.View.BoardRenderer)
 local BoardTransform = require(script.Parent.Parent.View.BoardTransform)
 local Juice = require(script.Parent.Parent.View.Juice)
 local AudioController = require(script.Parent.AudioController)
+local BuildIntent = require(script.Parent.BuildIntent)
+local GameFlow = require(script.Parent.GameFlow)
 local InputController = require(script.Parent.InputController)
 local MatchController = require(script.Parent.MatchController)
 local SettingsController = require(script.Parent.SettingsController)
@@ -30,7 +32,6 @@ local L = Localization.get
 local transform: BoardTransform.BoardTransform? = nil
 local renderer: BoardRenderer.Renderer? = nil
 local boardArea: Frame? = nil
-local hudRoot: GuiObject? = nil
 local inputReady = false
 local localUserId = Players.LocalPlayer.UserId
 
@@ -203,13 +204,13 @@ end
 -- Entrada
 -- ---------------------------------------------------------------------------
 
--- Verdadeiro quando o ponto está sobre um painel do HUD (e não sobre o tabuleiro).
+-- Verdadeiro quando o ponto está sobre um painel da interface (e não sobre o tabuleiro).
+-- O tabuleiro vive na camada do cenário e o HUD numa camada acima, então a checagem é por
+-- ordem de desenho: o primeiro objeto que engole toque (Active) ganha, a menos que seja o
+-- próprio tabuleiro.
 local function isOverChrome(point: Vector2): boolean
 	local area = boardArea
-	-- o Fusion cria os filhos antes de pendurá-los, então a raiz do HUD só aparece depois
-	local root = hudRoot or (if area then area.Parent :: GuiObject? else nil)
-	hudRoot = root
-	if not root or not area then
+	if not area then
 		return false
 	end
 	local player = Players.LocalPlayer
@@ -222,7 +223,7 @@ local function isOverChrome(point: Vector2): boolean
 		if object:IsDescendantOf(area) then
 			return false
 		end
-		if object:IsDescendantOf(root) and object.Active then
+		if object.Active then
 			return true
 		end
 	end
@@ -241,16 +242,31 @@ local function onTap(screen: Vector2)
 	local x, y = currentTransform:screenToCell(screen)
 	local towerId = Atoms.buildTowerId()
 	if towerId then
+		-- No tutorial a célula é a marcada, doa onde o jogador tocar.
 		local guided = guidedCellFor(towerId)
-		if guided then
-			Actions.setBuildCell({ guided[1], guided[2] }, nil)
-			refreshBuildPreview()
+		local targetX: number? = if guided then guided[1] else x
+		local targetY: number? = if guided then guided[2] else y
+		if targetX == nil or targetY == nil then
 			return
 		end
-		if x ~= nil and y ~= nil then
-			Actions.setBuildCell({ x, y }, nil)
-			refreshBuildPreview()
-			currentTransform:zoomToCellIfSmall(x, y)
+		local previous = Atoms.buildCell()
+		local sameCell = previous ~= nil and previous[1] == targetX and previous[2] == targetY
+		Actions.setBuildCell({ targetX, targetY }, nil)
+		refreshBuildPreview()
+		local valid, reason = evaluateCell(towerId, targetX, targetY)
+		local decision = BuildIntent.decide({
+			touch = InputController.isTouchDevice(),
+			guided = guided ~= nil,
+			sameCell = sameCell,
+			valid = valid,
+		})
+		if decision == "blocked" then
+			-- explica e não gasta nada; o fantasma fica na célula para o jogador ver o porquê
+			Actions.toast(L(reason or "build.invalidCell"), "error")
+		elseif decision == "place" then
+			GameFlow.placeTower(towerId, targetX, targetY)
+		else
+			currentTransform:zoomToCellIfSmall(targetX, targetY)
 		end
 		return
 	end
@@ -307,10 +323,32 @@ local lastBossBannerAt = 0
 
 local function handleEvents(events: { Types.NetEvent })
 	local currentRenderer = renderer
+	-- a recompensa da onda chega num evento e o fim da onda em outro, na mesma leva: o aviso
+	-- junta os dois em uma linha só
+	local income: number? = nil
+	for _, event in ipairs(events) do
+		if event.kind == "waveIncome" then
+			income = event.amount
+		end
+	end
 	for _, event in ipairs(events) do
 		if event.kind == "waveStart" then
 			AudioController.play("wave_start")
 			Actions.setBossBanner(nil)
+			Actions.announce(L("hud.waveIncoming", { wave = event.wave or 0 }), nil, "warn")
+			if currentRenderer then
+				currentRenderer:flashSpawn()
+			end
+		elseif event.kind == "waveEnd" then
+			AudioController.play("wave_end")
+			Actions.announce(
+				L("hud.waveCleared", { wave = event.wave or 0 }),
+				if income then L("hud.waveIncome", { amount = income }) else nil,
+				"good"
+			)
+			if currentRenderer then
+				currentRenderer:celebrateWaveEnd()
+			end
 		elseif event.kind == "bossSpawn" and event.enemyDefId then
 			Actions.setBossBanner(L("hud.bossIncoming", { name = L("enemy." .. event.enemyDefId) }))
 			AudioController.play("boss_spawn", true)
@@ -368,7 +406,6 @@ end
 -- Chamado pelo App a cada montagem da interface: o tabuleiro muda de lugar, não de estado.
 function BoardPresenter.attach(area: Frame)
 	boardArea = area
-	hudRoot = area.Parent :: GuiObject?
 	local existing = transform
 	if existing then
 		existing.viewport.Parent = area
@@ -378,7 +415,8 @@ function BoardPresenter.attach(area: Frame)
 	transform = currentTransform
 	local currentRenderer = BoardRenderer.new(currentTransform)
 	renderer = currentRenderer
-	Juice.setBoard(currentTransform.window)
+	-- o tremor sacode o palco (a grade), não a janela: a janela é o recorte da tela inteira
+	Juice.setBoard(currentTransform.stage)
 	applySettings(SettingsController.get())
 
 	InputController.init(currentTransform, {
@@ -413,7 +451,7 @@ function BoardPresenter.attach(area: Frame)
 			if tower and tower.o == localUserId then
 				local nexts = Catalog.TRANSITIONS[tower.st] or {}
 				if #nexts == 1 then
-					require(script.Parent.GameFlow).upgradeTower(tower.id, nexts[1])
+					GameFlow.upgradeTower(tower.id, nexts[1])
 				end
 			end
 		end,

@@ -124,6 +124,19 @@ function App.mount()
 	world.Parent = worldGui
 	Skin.scenery(world)
 
+	-- O tabuleiro mora na camada do cenário (sem área segura): assim a arte do mapa sangra por
+	-- baixo da barra do Roblox e o HUD, que respeita a área segura, flutua por cima dela.
+	local boardHost = currentScope:New("Frame")({
+		Name = "BoardHost",
+		BackgroundTransparency = 1,
+		Size = UDim2.fromScale(1, 1),
+		Active = false,
+		Visible = Bridge.use(currentScope, Atoms.inMatch),
+		ZIndex = 2,
+	})
+	boardHost.Parent = worldGui
+	opts.onBoardArea(boardHost)
+
 	-- elapsed alimenta as telas que precisam falar sobre demora (entrada e carregamento)
 	local elapsed = currentScope:Value(0)
 
@@ -132,7 +145,6 @@ function App.mount()
 		Hud(currentScope, {
 			visible = inMatch,
 			localUserId = opts.localUserId,
-			onBoardArea = opts.onBoardArea,
 		}),
 	})
 
@@ -192,6 +204,7 @@ function App.mount()
 			-- aviso de orientação: celular em retrato (o combate continua rodando no servidor)
 			Atoms.orientationWarning(InputController.isPortrait() and InputController.isTouchDevice())
 			Actions.expireToasts(now)
+			Actions.expireAnnounce(now)
 			if Atoms.inMatch() then
 				Actions.updateConnection(now)
 			end

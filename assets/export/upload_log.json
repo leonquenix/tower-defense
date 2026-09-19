@@ -82,7 +82,8 @@
     "enemies/enemy_brutamontes_base_128.png": 133198055129249,
     "bosses/boss_aspirador_base_256.png": 81465921210268,
     "bosses/boss_rei_ferrugem_base_256.png": 84414479944054,
-    "bosses/boss_breu_base_256.png": 134870836730815
+    "bosses/boss_breu_base_256.png": 134870836730815,
+    "Assets_Mapas_v2/jardim_praia.png": 134195560280836
   },
   "placeholderNote": "Entradas 'placeholders/' são visuais provisórios procedurais (não são a arte final de inimigos/chefes).",
   "batches": [
