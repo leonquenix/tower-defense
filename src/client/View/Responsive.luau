@@ -53,6 +53,15 @@ function Responsive.computeScale(viewport: Vector2, mode: Mode): number
 	return math.clamp(math.min(viewport.X / ref.X, viewport.Y / ref.Y), 1, 1.35)
 end
 
+-- Escala das telas de menu (menu, campanha, loja, resultado…). Elas são escritas na régua de
+-- 1280x720 e não têm layout compacto próprio: numa tela pequena é melhor encolher a tela inteira,
+-- para caber, do que deixar metade dos botões fora da borda. O HUD **não** usa esta escala — ele
+-- tem métricas compactas próprias, para o alvo de toque continuar do tamanho de um dedo.
+function Responsive.menuScale(viewport: Vector2): number
+	local ref = Responsive.REFERENCE_DESKTOP
+	return math.clamp(math.min(viewport.X / ref.X, viewport.Y / ref.Y), 0.5, 1.8)
+end
+
 function Responsive.get(): State
 	return current
 end

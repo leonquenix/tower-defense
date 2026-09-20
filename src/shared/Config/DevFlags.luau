@@ -12,6 +12,10 @@ local DevFlags = {
 	-- Mostra o guia da primeira fase toda vez, ignorando o `campaignIntroSeen` do perfil.
 	-- Serve para conferir o guia sem apagar o perfil; em produção fica false.
 	alwaysShowIntro = false,
+
+	-- Publica o console de teste (Cmdr, tecla F2) com os comandos de `src/server/Console`.
+	-- Quem pode usá-lo ainda é decidido por `MatchService.isDevAllowed` (Studio ou lista).
+	testConsole = true,
 }
 
 return DevFlags

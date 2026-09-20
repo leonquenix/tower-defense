@@ -5,7 +5,6 @@
 -- resultado: tudo é pedido ao servidor e confirmado pela resposta ou pelo próximo quadro.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Actions = require(script.Parent.Parent.State.Actions)
@@ -62,6 +61,14 @@ function GameFlow.startLevel(levelId: string, difficulty: string?)
 			end,
 		}
 	)
+end
+
+-- Sair da tela de resultado direto para outra fase. A partida anterior já acabou: o servidor
+-- solta o jogador dela ao receber o StartMatch, e o "left" atrasado não derruba a nova.
+function GameFlow.goToLevel(levelId: string)
+	Atoms.matchResult(nil)
+	Commands.send("match:leave", "LeaveMatch", {}, nil)
+	GameFlow.startLevel(levelId)
 end
 
 function GameFlow.startTraining(mapId: string?)
@@ -208,28 +215,15 @@ function GameFlow.trainingClear()
 	combat("training:clear", "TrainingClear", {})
 end
 
--- O Pulso é compartilhado pelo grupo: sempre confirma antes de gastar a recarga de todo mundo.
+-- O Pulso é compartilhado pelo grupo, então gastar a recarga precisa ser um ato deliberado.
+-- A confirmação agora é o próprio gesto: segurar 1,5 s no Farol, com a barra enchendo à vista
+-- (BoardPresenter). Por isso aqui não abre mais modal — quando esta função é chamada, o jogador
+-- já segurou o tempo inteiro.
 function GameFlow.pulse()
-	local snapshot = Atoms.snapshot()
-	if not snapshot then
+	if not Atoms.snapshot() then
 		return
 	end
-	local players = #snapshot.participants
-	local damage = math.floor(Balance.pulse.damage * (1 + Balance.coopAdditionalHPPerPlayer * (players - 1)) + 0.5)
-	Actions.openModal({
-		title = L("hud.pulse"),
-		body = L("hud.pulseSummary", {
-			damage = damage,
-			slow = math.floor(Balance.pulse.slow * 100 + 0.5),
-			duration = string.format("%.1f", Balance.pulse.slowDuration):gsub("%.", ","),
-			cooldown = Balance.pulse.cooldown,
-		}),
-		confirmText = L("hud.pulseUse"),
-		onConfirm = function()
-			Actions.closeModal()
-			combat("match:pulse", "CastPulse", {})
-		end,
-	})
+	combat("match:pulse", "CastPulse", {})
 end
 
 function GameFlow.retryProfile()

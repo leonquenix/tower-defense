@@ -20,6 +20,7 @@ local Selectors = require(script.Parent.Parent.Parent.State.Selectors)
 local BoardPresenter = require(script.Parent.Parent.Parent.Controllers.BoardPresenter)
 local InputController = require(script.Parent.Parent.Parent.Controllers.InputController)
 local GameFlow = require(script.Parent.Parent.Parent.Controllers.GameFlow)
+local Responsive = require(script.Parent.Parent.Parent.View.Responsive)
 local Theme = require(script.Parent.Parent.Parent.View.Theme)
 local Kit = require(script.Parent.Parent.Kit)
 local HudDetail = require(script.Parent.HudDetail)
@@ -38,10 +39,87 @@ export type Props = {
 
 -- Maquete 2026-09-19: o mapa ocupa a tela inteira e o HUD flutua por cima, em quatro cantos.
 -- Nada de faixa preta em cima nem doca embaixo: só fichas, a coluna de torres e as ações.
-local TOP_HEIGHT = 56 -- altura das fichas do canto superior esquerdo
-local TOWER_PANEL_W = 152 -- coluna "Torres" à direita
-local TOWER_CARD_H = 84
-local CONTEXT_W = 330 -- coluna de contexto no canto inferior esquerdo
+--
+-- Tudo é medido em pixels da tela de referência (1280x720 no computador, 760x340 no compacto):
+-- o App desenha nessa régua e escala com um UIScale, então a área útil nunca é menor que a
+-- referência do modo. As medidas abaixo são escolhidas para caber na referência **exata** — é
+-- nela que os cantos quase se encostam.
+type Metrics = {
+	margin: number,
+	topHeight: number, -- faixa de botões do canto superior direito
+	systemHeight: number,
+	systemButton: Vector2,
+	leaveWidth: number,
+	towerPanelW: number,
+	towerCardH: number,
+	towerColumns: number, -- 1 = coluna; 2 = grade (compacto, para a doca não subir demais)
+	towerPortrait: number,
+	towerTitle: boolean,
+	towerCost: boolean, -- o preço cabe no cartão? no compacto ele vive na barra de construção
+	shortLabels: boolean, -- botões do topo só com ícone e número
+	contextW: number,
+	contextReserve: number,
+	statusAtBottom: boolean, -- rodapé à direita (computador) ou topo à esquerda (compacto)
+	statusColumns: number,
+	statusRowH: number,
+	statusCaption: boolean,
+	showTowerLimit: boolean,
+	action: Vector2,
+	buildBarW: number,
+	introW: number,
+}
+
+local DESKTOP: Metrics = {
+	margin = 16,
+	topHeight = 56,
+	systemHeight = 48,
+	systemButton = Vector2.new(150, 44),
+	leaveWidth = 110,
+	towerPanelW = 152,
+	towerCardH = 84,
+	towerColumns = 1,
+	towerPortrait = 40,
+	towerTitle = true,
+	towerCost = true,
+	shortLabels = false,
+	contextW = 330,
+	contextReserve = 150,
+	statusAtBottom = true,
+	statusColumns = 2,
+	statusRowH = 44,
+	statusCaption = true,
+	showTowerLimit = true,
+	action = Vector2.new(240, 68),
+	buildBarW = 460,
+	introW = 520,
+}
+
+-- No compacto a coluna de torres já ocupa toda a altura da direita, então as fichas sobem para
+-- o canto de cima à esquerda (o único que sobra) e perdem a legenda: o ícone já diz o que é.
+local COMPACT: Metrics = {
+	margin = 8,
+	topHeight = 42,
+	systemHeight = 34,
+	systemButton = Vector2.new(66, 34),
+	leaveWidth = 66,
+	towerPanelW = 216,
+	towerCardH = 62,
+	towerColumns = 2,
+	towerPortrait = 24,
+	towerTitle = false,
+	towerCost = false,
+	shortLabels = true,
+	contextW = 230,
+	contextReserve = 74,
+	statusAtBottom = false,
+	statusColumns = 4,
+	statusRowH = 34,
+	statusCaption = false,
+	showTowerLimit = false,
+	action = Vector2.new(170, 46),
+	buildBarW = 400,
+	introW = 360,
+}
 
 local function formatNumber(value: number): string
 	local rounded = math.floor(value + 0.5)
@@ -145,6 +223,9 @@ return function(scope: Kit.Scope, props: Props): Frame
 
 	-- Aparelho de toque decide o fluxo de construção (um toque posiciona, outro constrói).
 	local touchInput = InputController.isTouchDevice()
+	-- Modo lido na montagem: o App remonta a árvore inteira quando ele muda, e só a escala
+	-- (que não mexe no layout) é aplicada sem remontar.
+	local M: Metrics = if Responsive.isCompact() then COMPACT else DESKTOP
 
 	local wallet = scope:Computed(function(use)
 		local current = use(snapshot)
@@ -156,70 +237,65 @@ return function(scope: Kit.Scope, props: Props): Frame
 	end)
 
 	-- ------------------------------------------------------------------
-	-- Canto superior esquerdo: fichas de estado
+	-- Fichas de estado
 	-- ------------------------------------------------------------------
-	-- Active engole o toque: sem isso, tocar numa ficha construiria a torre na célula atrás.
-	local statusCluster = scope:New("Frame")({
-		Name = "Status",
-		Active = true,
-		BackgroundTransparency = 1,
-		Size = UDim2.new(0, 0, 0, TOP_HEIGHT),
-		AutomaticSize = Enum.AutomaticSize.X,
-		Position = UDim2.fromOffset(16, 14),
-		ZIndex = 10,
-		[Children] = Kit.children(
-			Kit.list(scope, {
-				FillDirection = Enum.FillDirection.Horizontal,
-				Padding = UDim.new(0, 8),
-				VerticalAlignment = Enum.VerticalAlignment.Center,
-			}),
-			Kit.chip(scope, {
-				name = "Base",
-				icon = "ui_base",
-				caption = L("hud.base"),
-				value = scope:Computed(function(use)
-					local current = use(snapshot)
-					local hp = if current then math.max(0, math.floor(current.baseHP)) else Balance.baseHP
-					return tostring(hp) .. " / " .. tostring(Balance.baseHP)
-				end),
-				accent = scope:Computed(function(use)
-					local current = use(snapshot)
-					local hp = if current then current.baseHP else Balance.baseHP
-					return if hp <= 30 then Theme.colors.danger else Theme.colors.gold
-				end),
-				progress = scope:Computed(function(use)
-					local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
-					return if current then current.baseHP / Balance.baseHP else 1
-				end),
-				layoutOrder = 1,
-			}),
-			Kit.chip(scope, {
-				name = "Wave",
-				icon = "ui_wave",
-				caption = L("hud.wave"),
-				value = scope:Computed(function(use)
-					local current = use(snapshot)
-					if not current or current.mode == "training" then
-						return "—"
-					end
-					return string.format("%02d / %02d", math.max(current.waveIndex, 0), current.totalWaves)
-				end),
-				accent = Theme.colors.cream,
-				layoutOrder = 2,
-			}),
-			Kit.chip(scope, {
-				name = "Scrap",
-				icon = "ui_scrap",
-				caption = L("hud.scrap"),
-				value = scope:Computed(function(use)
-					if Kit.read(use, training) then
-						return "∞"
-					end
-					return formatNumber(Kit.read(use, wallet))
-				end),
-				accent = Theme.colors.gold,
-				layoutOrder = 3,
-			}),
+	-- Saíram do canto superior esquerdo, onde cobriam a entrada do caminho, e vão para o canto
+	-- inferior direito em bloco de duas linhas. Em duas linhas de propósito: em uma só, numa tela
+	-- de 1280 de referência, a fileira encostava no botão de onda, que fica no centro do rodapé.
+	-- No compacto o rodapé é estreito demais para as duas coisas, e as fichas sobem para o topo
+	-- à esquerda (ver `Metrics`).
+	local statusChips: { any } = {
+		Kit.chip(scope, {
+			name = "Base",
+			compact = true,
+			icon = "ui_base",
+			caption = if M.statusCaption then L("hud.base") else nil,
+			value = scope:Computed(function(use)
+				local current = use(snapshot)
+				local hp = if current then math.max(0, math.floor(current.baseHP)) else Balance.baseHP
+				return tostring(hp) .. " / " .. tostring(Balance.baseHP)
+			end),
+			accent = scope:Computed(function(use)
+				local current = use(snapshot)
+				local hp = if current then current.baseHP else Balance.baseHP
+				return if hp <= 30 then Theme.colors.danger else Theme.colors.gold
+			end),
+			progress = scope:Computed(function(use)
+				local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
+				return if current then current.baseHP / Balance.baseHP else 1
+			end),
+		}),
+		Kit.chip(scope, {
+			name = "Wave",
+			compact = true,
+			icon = "ui_wave",
+			caption = if M.statusCaption then L("hud.wave") else nil,
+			value = scope:Computed(function(use)
+				local current = use(snapshot)
+				if not current or current.mode == "training" then
+					return "—"
+				end
+				return string.format("%02d / %02d", math.max(current.waveIndex, 0), current.totalWaves)
+			end),
+			accent = Theme.colors.cream,
+		}),
+		Kit.chip(scope, {
+			name = "Scrap",
+			compact = true,
+			icon = "ui_scrap",
+			caption = if M.statusCaption then L("hud.scrap") else nil,
+			value = scope:Computed(function(use)
+				if Kit.read(use, training) then
+					return "∞"
+				end
+				return formatNumber(Kit.read(use, wallet))
+			end),
+			accent = Theme.colors.gold,
+		}),
+	}
+	if M.showTowerLimit then
+		table.insert(
+			statusChips,
 			pill(scope, {
 				name = "Limit",
 				text = scope:Computed(function(use)
@@ -235,9 +311,72 @@ return function(scope: Kit.Scope, props: Props): Frame
 				visible = scope:Computed(function(use)
 					return Kit.read(use, snapshot) ~= nil
 				end),
-				layoutOrder = 4,
 				zIndex = 10,
 			})
+		)
+	end
+
+	-- Quebra as fichas em linhas de `statusColumns`.
+	local statusRows: { any } = {}
+	local pending: { any } = {}
+	local function closeRow()
+		if #pending == 0 then
+			return
+		end
+		local items = pending
+		pending = {}
+		table.insert(
+			statusRows,
+			scope:New("Frame")({
+				Name = "StatusRow" .. tostring(#statusRows + 1),
+				BackgroundTransparency = 1,
+				Size = UDim2.new(0, 0, 0, M.statusRowH),
+				AutomaticSize = Enum.AutomaticSize.X,
+				LayoutOrder = #statusRows + 1,
+				ZIndex = 10,
+				[Children] = Kit.children(
+					Kit.list(scope, {
+						FillDirection = Enum.FillDirection.Horizontal,
+						Padding = UDim.new(0, 8),
+						HorizontalAlignment = if M.statusAtBottom
+							then Enum.HorizontalAlignment.Right
+							else Enum.HorizontalAlignment.Left,
+						VerticalAlignment = Enum.VerticalAlignment.Center,
+					}),
+					table.unpack(items)
+				),
+			})
+		)
+	end
+	for index, chip in ipairs(statusChips) do
+		chip.LayoutOrder = ((index - 1) % M.statusColumns) + 1
+		table.insert(pending, chip)
+		if #pending >= M.statusColumns then
+			closeRow()
+		end
+	end
+	closeRow()
+
+	-- Active engole o toque: sem isso, tocar numa ficha construiria a torre na célula atrás.
+	local statusCluster = scope:New("Frame")({
+		Name = "Status",
+		Active = true,
+		BackgroundTransparency = 1,
+		Size = UDim2.fromOffset(0, 0),
+		AutomaticSize = Enum.AutomaticSize.XY,
+		Position = if M.statusAtBottom
+			then UDim2.new(1, -M.margin, 1, -M.margin)
+			else UDim2.fromOffset(M.margin, M.margin),
+		AnchorPoint = if M.statusAtBottom then Vector2.new(1, 1) else Vector2.zero,
+		ZIndex = 10,
+		[Children] = Kit.children(
+			Kit.list(scope, {
+				Padding = UDim.new(0, 6),
+				HorizontalAlignment = if M.statusAtBottom
+					then Enum.HorizontalAlignment.Right
+					else Enum.HorizontalAlignment.Left,
+			}),
+			table.unpack(statusRows)
 		),
 	})
 
@@ -248,9 +387,9 @@ return function(scope: Kit.Scope, props: Props): Frame
 		Name = "System",
 		Active = true,
 		BackgroundTransparency = 1,
-		Size = UDim2.new(0, 0, 0, 48),
+		Size = UDim2.new(0, 0, 0, M.systemHeight),
 		AutomaticSize = Enum.AutomaticSize.X,
-		Position = UDim2.new(1, -16, 0, 18),
+		Position = UDim2.new(1, -M.margin, 0, M.margin + 2),
 		AnchorPoint = Vector2.new(1, 0),
 		ZIndex = 10,
 		[Children] = Kit.children(
@@ -264,14 +403,15 @@ return function(scope: Kit.Scope, props: Props): Frame
 				name = "Speed",
 				text = scope:Computed(function(use)
 					local current = use(snapshot)
-					return L("hud.speed", { value = if current then current.speedMultiplier else 1 })
+					local value = if current then current.speedMultiplier else 1
+					return if M.shortLabels then tostring(value) .. "x" else L("hud.speed", { value = value })
 				end),
 				icon = "ui_speed",
 				kind = scope:Computed(function(use)
 					local current = use(snapshot)
 					return if current and current.speedMultiplier == 2 then "primary" else "dark"
 				end),
-				size = UDim2.fromOffset(150, 44),
+				size = UDim2.fromOffset(M.systemButton.X, M.systemButton.Y),
 				layoutOrder = 1,
 				zIndex = 11,
 				onActivate = function()
@@ -284,10 +424,10 @@ return function(scope: Kit.Scope, props: Props): Frame
 			}),
 			Kit.button(scope, {
 				name = "Options",
-				text = L("hud.options"),
+				text = if M.shortLabels then "" else L("hud.options"),
 				kind = "secondary",
 				icon = "ui_settings",
-				size = UDim2.fromOffset(140, 44),
+				size = UDim2.fromOffset(if M.shortLabels then 48 else M.systemButton.X - 10, M.systemButton.Y),
 				layoutOrder = 2,
 				zIndex = 11,
 				onActivate = function()
@@ -299,7 +439,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 				name = "Leave",
 				text = L("hud.leave"),
 				kind = "danger",
-				size = UDim2.fromOffset(110, 44),
+				size = UDim2.fromOffset(M.leaveWidth, M.systemButton.Y),
 				layoutOrder = 3,
 				zIndex = 11,
 				onActivate = GameFlow.confirmLeave,
@@ -334,7 +474,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end)
 		return Kit.pressable(innerScope, {
 			name = "Card_" .. towerId,
-			size = UDim2.new(1, 0, 0, TOWER_CARD_H),
+			size = UDim2.new(1, 0, 0, M.towerCardH),
 			layoutOrder = index,
 			zIndex = 11,
 			onActivate = function()
@@ -373,7 +513,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 							return if use(affordable) then 0 else 0.5
 						end),
 						ScaleType = Enum.ScaleType.Fit,
-						Size = UDim2.new(1, 0, 0, 40),
+						Size = UDim2.new(1, 0, 0, M.towerPortrait),
 						LayoutOrder = 1,
 						ZIndex = 12,
 					}),
@@ -381,7 +521,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 						Name = "Name",
 						Text = def.name,
 						Font = Theme.fonts.bodyBold,
-						TextSize = 15,
+						TextSize = if M.towerCardH >= 80 then 15 else 13,
 						TextXAlignment = Enum.TextXAlignment.Center,
 						TextWrapped = false,
 						TextTruncate = Enum.TextTruncate.AtEnd,
@@ -391,12 +531,13 @@ return function(scope: Kit.Scope, props: Props): Frame
 					}),
 					Kit.caption(innerScope, {
 						Name = "Cost",
+						Visible = M.towerCost,
 						Text = tostring(cost) .. " " .. L("common.scraps"),
 						TextXAlignment = Enum.TextXAlignment.Center,
 						TextColor3 = innerScope:Computed(function(use)
 							return if use(affordable) then Theme.colors.goldText else Theme.colors.danger
 						end),
-						Size = UDim2.new(1, 0, 0, 13),
+						Size = UDim2.new(1, 0, 0, if M.towerCost then 13 else 0),
 						LayoutOrder = 3,
 						ZIndex = 12,
 					})
@@ -435,10 +576,15 @@ return function(scope: Kit.Scope, props: Props): Frame
 	local towerPanel = Kit.panel(scope, {
 		name = "Towers",
 		blocking = true,
-		size = UDim2.new(0, TOWER_PANEL_W, 0, 0),
+		size = UDim2.new(0, M.towerPanelW, 0, 0),
 		automaticSize = Enum.AutomaticSize.Y,
-		position = UDim2.new(1, -16, 0, TOP_HEIGHT + 28),
-		anchorPoint = Vector2.new(1, 0),
+		-- No computador a coluna desce a partir da faixa de cima. No compacto ela sobe a partir
+		-- do rodapé: a área segura do celular come altura por cima, e ancorada embaixo a última
+		-- torre nunca fica fora da tela.
+		position = if M.statusAtBottom
+			then UDim2.new(1, -M.margin, 0, M.topHeight + M.margin)
+			else UDim2.new(1, -M.margin, 1, -M.margin),
+		anchorPoint = if M.statusAtBottom then Vector2.new(1, 0) else Vector2.new(1, 1),
 		color = Theme.colors.ink,
 		strokeColor = Theme.colors.inkDeep,
 		radius = 20,
@@ -446,16 +592,21 @@ return function(scope: Kit.Scope, props: Props): Frame
 		paddingVertical = 10,
 		gloss = false,
 		zIndex = 10,
-		layout = Kit.list(scope, { Padding = UDim.new(0, 8) }),
+		-- Uma coluna no computador; no compacto uma grade de duas, porque a área útil do celular
+		-- é baixa e quatro cartões empilhados subiam até os botões do topo.
+		layout = if M.towerColumns > 1
+			then Kit.grid(scope, UDim2.fromOffset((M.towerPanelW - 20 - 6) / 2, M.towerCardH), 6)
+			else Kit.list(scope, { Padding = UDim.new(0, 8) }),
 		children = Kit.children(
 			Kit.caption(scope, {
 				Name = "Title",
+				Visible = M.towerTitle,
 				Text = L("hud.towers"),
 				TextColor3 = Theme.colors.cyan,
 				Font = Theme.fonts.bodyBold,
 				TextSize = 12,
 				TextXAlignment = Enum.TextXAlignment.Center,
-				Size = UDim2.new(1, 0, 0, 14),
+				Size = UDim2.new(1, 0, 0, if M.towerTitle then 14 else 0),
 				LayoutOrder = 0,
 				ZIndex = 11,
 			}),
@@ -464,17 +615,21 @@ return function(scope: Kit.Scope, props: Props): Frame
 	})
 
 	-- ------------------------------------------------------------------
-	-- Rodapé: pulso e o botão de iniciar a onda
+	-- Rodapé: o botão de iniciar a onda
 	-- ------------------------------------------------------------------
 	-- Fica no centro, e não no canto direito da maquete, porque neste mapa o Farol está
 	-- justamente no canto inferior direito — o botão cobriria o que o jogador defende.
+	--
+	-- O botão do Pulso de Luz saiu daqui: agora o gesto é segurar no próprio Farol, que acende
+	-- quando a recarga termina (BoardRenderer/BoardPresenter). O rodapé ficou com um botão só,
+	-- que é o que deixa as fichas caberem à direita numa tela de 1280.
 	local actionStack = scope:New("Frame")({
 		Name = "Actions",
 		Active = true,
 		BackgroundTransparency = 1,
-		Size = UDim2.new(0, 0, 0, 72),
+		Size = UDim2.new(0, 0, 0, M.action.Y + 4),
 		AutomaticSize = Enum.AutomaticSize.X,
-		Position = UDim2.new(0.5, 0, 1, -16),
+		Position = UDim2.new(0.5, 0, 1, -M.margin),
 		AnchorPoint = Vector2.new(0.5, 1),
 		ZIndex = 10,
 		[Children] = Kit.children(
@@ -489,44 +644,12 @@ return function(scope: Kit.Scope, props: Props): Frame
 				text = L("hud.zoomReset"),
 				kind = "secondary",
 				visible = zoomed,
-				size = UDim2.fromOffset(150, 40),
+				size = UDim2.fromOffset(if M.statusAtBottom then 150 else 120, 40),
 				layoutOrder = 1,
 				zIndex = 11,
 				onActivate = function()
 					BoardPresenter.resetZoom()
 				end,
-			}),
-			Kit.button(scope, {
-				name = "Pulse",
-				text = L("hud.pulse"),
-				icon = "ui_pulse",
-				kind = "cyan",
-				size = UDim2.fromOffset(200, 56),
-				layoutOrder = 2,
-				zIndex = 11,
-				visible = scope:Computed(function(use)
-					return not use(training)
-				end),
-				disabled = scope:Computed(function(use)
-					local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
-					if not current then
-						return true
-					end
-					return current.phase ~= "Wave" or current.simTime < current.pulseReadyAt
-				end),
-				sub = scope:Computed(function(use)
-					local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
-					if not current then
-						return ""
-					end
-					if current.simTime < current.pulseReadyAt then
-						return L("hud.pulseCooldown", {
-							seconds = math.max(0, math.ceil(current.pulseReadyAt - current.simTime)),
-						})
-					end
-					return L("hud.pulseReady")
-				end),
-				onActivate = GameFlow.pulse,
 			}),
 			-- Único botão verde do jogo: é o que solta a onda.
 			Kit.button(scope, {
@@ -562,7 +685,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 				icon = "ui_play",
 				kind = "grass",
 				textSize = 20,
-				size = UDim2.fromOffset(240, 68),
+				size = UDim2.fromOffset(M.action.X, M.action.Y),
 				layoutOrder = 3,
 				zIndex = 11,
 				visible = scope:Computed(function(use)
@@ -599,8 +722,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 		visible = scope:Computed(function(use)
 			return use(buildTowerId) ~= nil
 		end),
-		size = UDim2.new(0, if touchInput then 560 else 460, 0, 64),
-		position = UDim2.new(0.5, 0, 1, -100),
+		size = UDim2.new(0, M.buildBarW + (if touchInput then 100 else 0), 0, 64),
+		position = UDim2.new(0.5, 0, 1, -(M.margin + M.action.Y + 16)),
 		anchorPoint = Vector2.new(0.5, 1),
 		padding = 12,
 		paddingVertical = 8,
@@ -708,7 +831,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end),
 		size = UDim2.new(0, 0, 0, 44),
 		automaticSize = Enum.AutomaticSize.X,
-		position = UDim2.new(0.5, 0, 0, TOP_HEIGHT + 12),
+		position = UDim2.new(0.5, 0, 0, M.topHeight + 12),
 		anchorPoint = Vector2.new(0.5, 0),
 		color = Theme.colors.dangerSoft,
 		strokeColor = Theme.colors.danger,
@@ -740,7 +863,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end),
 		size = UDim2.new(0, 0, 0, 0),
 		automaticSize = Enum.AutomaticSize.XY,
-		position = UDim2.new(0.5, 0, 0, TOP_HEIGHT + 34),
+		position = UDim2.new(0.5, 0, 0, M.topHeight + 34),
 		anchorPoint = Vector2.new(0.5, 0),
 		color = scope:Computed(function(use)
 			local current: Atoms.Announce? = Kit.read(use, announce)
@@ -814,7 +937,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end),
 		size = UDim2.new(0, 0, 0, 38),
 		automaticSize = Enum.AutomaticSize.X,
-		position = UDim2.new(0.5, 0, 0, TOP_HEIGHT + 62),
+		position = UDim2.new(0.5, 0, 0, M.topHeight + 62),
 		anchorPoint = Vector2.new(0.5, 0),
 		color = Theme.colors.ink,
 		strokeColor = Theme.colors.cyan,
@@ -848,8 +971,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end),
 		-- largura fixa e centrado: com largura automática o quadro ancorado no meio encostava
 		-- na esquerda em vez de ficar no centro do rodapé
-		size = UDim2.new(0, 520, 0, 56),
-		position = UDim2.new(0.5, 0, 1, -104),
+		size = UDim2.new(0, M.introW, 0, 56),
+		position = UDim2.new(0.5, 0, 1, -(M.margin + M.action.Y + 20)),
 		anchorPoint = Vector2.new(0.5, 1),
 		color = Theme.colors.cream,
 		strokeColor = Theme.colors.gold,
@@ -1006,8 +1129,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 	local contextColumn = Kit.scroller(scope, {
 		Name = "SidePanels",
 		-- rola quando objetivos + detalhe passam da altura livre, em vez de subir até as fichas
-		Size = UDim2.new(0, CONTEXT_W, 1, -(TOP_HEIGHT + 120)),
-		Position = UDim2.new(0, 16, 1, -16),
+		Size = UDim2.new(0, M.contextW, 1, -(M.topHeight + M.contextReserve)),
+		Position = UDim2.new(0, M.margin, 1, -M.margin),
 		AnchorPoint = Vector2.new(0, 1),
 		ScrollBarThickness = 4,
 		ZIndex = 18,

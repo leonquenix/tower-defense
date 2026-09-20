@@ -78,16 +78,26 @@ end
 
 -- O conteúdo é desenhado na resolução de referência e escalado por um UIScale, então o layout
 -- continua sendo escrito em pixels de 1280x720.
-local function scaledContent(currentScope: Kit.Scope, gui: ScreenGui, children: { any }): Frame
-	local state = Responsive.get()
+local function scaledContent(currentScope: Kit.Scope, gui: ScreenGui, children: { any }, scale: number?): Frame
+	local applied = scale or Responsive.get().scale
 	local content = currentScope:New("Frame")({
 		Name = "Content",
 		BackgroundTransparency = 1,
-		Size = UDim2.fromScale(1 / state.scale, 1 / state.scale),
-		[Children] = Kit.children(currentScope:New("UIScale")({ Scale = state.scale }), table.unpack(children)),
+		Size = UDim2.fromScale(1 / applied, 1 / applied),
+		[Children] = Kit.children(currentScope:New("UIScale")({ Scale = applied }), table.unpack(children)),
 	})
 	content.Parent = gui
 	return content
+end
+
+-- Cada camada tem a sua régua: o HUD segue o modo (compacto tem layout próprio), as telas de
+-- menu encolhem para caber inteiras. No computador as duas dão o mesmo número.
+local function scaleFor(guiName: string): number
+	local state = Responsive.get()
+	if guiName == "QuintalHud" then
+		return state.scale
+	end
+	return Responsive.menuScale(state.viewport)
 end
 
 local function routeIs(currentScope: Kit.Scope, route: Atoms.Route): Fusion.Computed<boolean>
@@ -207,6 +217,7 @@ function App.mount()
 		}),
 	})
 
+	local menuScale = scaleFor("QuintalMenu")
 	scaledContent(currentScope, menuGui, {
 		Boot(currentScope, { visible = routeIs(currentScope, "boot"), elapsed = elapsed }),
 		MainMenu(currentScope, { visible = routeIs(currentScope, "menu") }),
@@ -219,7 +230,7 @@ function App.mount()
 		Shop(currentScope, { visible = routeIs(currentScope, "shop") }),
 		Settings(currentScope, { visible = routeIs(currentScope, "settings") }),
 		Loading(currentScope, { visible = routeIs(currentScope, "loading"), elapsed = elapsed }),
-	})
+	}, menuScale)
 
 	local matchResult = Bridge.use(currentScope, Atoms.matchResult)
 	scaledContent(currentScope, modalGui, {
@@ -230,7 +241,7 @@ function App.mount()
 		}),
 		ModalHost(currentScope),
 		Orientation(currentScope),
-	})
+	}, menuScale)
 
 	local toastContent = currentScope:New("Frame")({
 		Name = "Content",
@@ -294,9 +305,9 @@ function App.init(opts: Options)
 					local content = gui:FindFirstChild("Content")
 					local uiScale = content and content:FindFirstChildOfClass("UIScale")
 					if content and uiScale and content:IsA("GuiObject") then
-						local state = Responsive.get()
-						uiScale.Scale = state.scale
-						content.Size = UDim2.fromScale(1 / state.scale, 1 / state.scale)
+						local applied = scaleFor(gui.Name)
+						uiScale.Scale = applied
+						content.Size = UDim2.fromScale(1 / applied, 1 / applied)
 					end
 				end
 			end

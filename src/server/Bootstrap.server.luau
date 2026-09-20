@@ -10,6 +10,7 @@ local ShopService = require(script.Parent.Services.ShopService)
 local MatchService = require(script.Parent.Services.MatchService)
 local PartyService = require(script.Parent.Services.PartyService)
 local CommandService = require(script.Parent.Services.CommandService)
+local ConsoleService = require(script.Parent.Services.ConsoleService)
 
 Players.CharacterAutoLoads = false
 
@@ -36,6 +37,7 @@ MatchService.init({
 	onRematch = PartyService.onRematch,
 })
 CommandService.init()
+ConsoleService.init()
 
 local function onPlayerAdded(player: Player)
 	PlayerDataService.onPlayerAdded(player)

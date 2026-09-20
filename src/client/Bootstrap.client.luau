@@ -37,9 +37,11 @@ local App = require(script.Parent.UI.App)
 local BoardPresenter = require(script.Parent.Controllers.BoardPresenter)
 local MatchController = require(script.Parent.Controllers.MatchController)
 local SettingsController = require(script.Parent.Controllers.SettingsController)
+local ConsoleController = require(script.Parent.Controllers.ConsoleController)
 
 MatchController.init()
 BoardPresenter.init()
+ConsoleController.init()
 
 -- Lobby e convites entram direto no estado; a interface só lê.
 Client.onLobby(function(kind: string, payload: any)

@@ -1450,6 +1450,30 @@ function Simulation.devJumpToWave(
 	return success(state), events
 end
 
+-- Encerra a partida na hora, do jeito que o fim normal encerra: quem decide recompensa,
+-- persistência e tela de resultado continua sendo o laço do MatchService, que só olha para
+-- `state.result`. As estrelas podem ser forçadas porque é isso que se quer testar — sem isso,
+-- conferir a fase 12 com três estrelas exigiria jogar a fase 12 com três estrelas.
+function Simulation.devFinish(
+	state: Types.MatchState,
+	outcome: "won" | "lost",
+	stars: number?
+): (Types.CommandResult, { Types.SimEvent })
+	local events: { Types.SimEvent } = {}
+	if Simulation.isTerminal(state) then
+		return fail(state, "INVALID_STATE"), events
+	end
+	finishMatch(state, outcome, events)
+	local result = state.result
+	if result and stars ~= nil then
+		local target = math.clamp(math.floor(stars), 0, 3)
+		result.stars = target
+		result.starsEarned = { target >= 1, target >= 2, target >= 3 }
+	end
+	state.revision += 1
+	return success(state), events
+end
+
 -- ---------------------------------------------------------------------------
 -- Treino
 -- ---------------------------------------------------------------------------

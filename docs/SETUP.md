@@ -39,6 +39,7 @@ não entram no git; `wally.lock` entra, então todo mundo instala exatamente as 
 | `ffrostflame/bytenet` | 0.4.6 | pacotes binários tipados no lugar de RemoteEvents à mão |
 | `sleitnick/trove` | 1.8.0 | limpeza determinística de conexões |
 | `lm-loleris/profilestore` | 1.0.3 | perfis com trava de sessão (só servidor) |
+| `evaera/cmdr` | 1.12.0 | console de teste em jogo, tecla F2 (só servidor; a interface é publicada por ele) |
 
 As fachadas tipadas em `src/shared/Lib/` fixam o caminho do índice do Wally porque o arquivo de
 ligação gerado esconde os tipos do analisador. `python3 tools/check_package_facades.py` confere se
@@ -144,6 +145,30 @@ Os DataStores usam nomes com sufixo `_studio` quando rodando no Studio, separand
 
 ## Ferramentas de desenvolvimento
 
+### Console em jogo (Cmdr, tecla F2)
+
+Ligado por `DevFlags.testConsole` e aberto com **F2** dentro da partida. Quem pode usá-lo é a mesma
+regra do `DevCommand`: Studio ou UserId em `DEV_ALLOWLIST` (`MatchService.luau`). Fora disso o
+gancho `BeforeRun` recusa, e sem o gancho o próprio Cmdr recusaria tudo.
+
+| Comando | Argumento | O que faz |
+| --- | --- | --- |
+| `setCoins <amount>` | inteiro | define a sucata do jogador na partida (apelidos: `setScrap`, `coins`) |
+| `setHealth <health>` | inteiro | define a vida do Farol; zero derruba no passo seguinte (apelidos: `setHp`, `hp`) |
+| `forceWin [stars]` | inteiro 0–3, opcional | encerra como vitória com as estrelas pedidas (padrão 3); apelido `win` |
+| `forceLoss` | — | encerra como derrota; apelido `lose` |
+
+Os nomes dos comandos são em inglês de propósito (é a convenção do Cmdr e do que se digita num
+console); o resto do código e os recados continuam em português.
+
+As definições ficam em `src/server/Console/Commands/`: `<nome>.luau` descreve o comando e é
+replicado ao cliente pelo Cmdr, `<nome>Server.luau` executa e nunca sai do servidor. Toda ordem cai
+nas funções `cheat*` do `MatchService`, que validam estado e permissão — o console não escreve no
+estado da partida. `forceWin`/`forceLoss` passam pelo `Simulation.devFinish`, o mesmo caminho do
+fim normal: o laço do MatchService vê `state.result` pronto, paga e salva as estrelas.
+
+### DevCommand
+
 Ação `DevCommand` (aceita apenas no Studio ou para UserIds em `DEV_ALLOWLIST` de `MatchService.luau`): `grantScrap`, `startWave`, `killAll`, `setBaseHP`, `summary`. Exemplo pelo console do cliente:
 
 ```lua
@@ -161,14 +186,15 @@ src/shared               Types, Config (gerados), Math, Rules, Sim (simulação 
   Lib/                   fachadas tipadas de Fusion, Charm e Trove
   Net/                   Protocol (validação pura), Enums + Codec (puros), Packets (ByteNet)
 src/server               Bootstrap + Net/Server (fachada ByteNet) + Services
-                         (Match, Command, Party, Menu, PlayerData, Reward, Shop, Telemetry)
+                         (Match, Command, Console, Party, Menu, PlayerData, Reward, Shop, Telemetry)
+  Console/Commands/      comandos do console de teste (definição + par `*Server`)
 src/client
   State/                 Atoms (Charm), Selectors, Actions, Bridge (Charm -> Fusion)
   Net/                   Client (pedido/resposta sobre ByteNet) e Commands (uma pendência por chave)
   UI/                    Kit (componentes Fusion), Skin (profundidade e cenário), App (camadas e rotas),
                          Screens/ e Overlays/
   View/                  tabuleiro imperativo: BoardTransform, BoardRenderer, Juice, animadores, Theme
-  Controllers/           Match (rede -> átomos), BoardPresenter, GameFlow, Input, Settings, Audio
+  Controllers/           Match (rede -> átomos), BoardPresenter, GameFlow, Input, Settings, Audio, Console
 tests/                   runner Lune, loader Roblox-like (inclui Packages) e specs
 tools/                   geradores e exportadores (Python) + bootstrap da toolchain
 assets/export            exports normalizados, manifesto de export, log de uploads e placeholders

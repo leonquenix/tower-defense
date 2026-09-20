@@ -596,6 +596,92 @@ local function heartbeat(dt: number)
 	end
 end
 
+-- Solta o jogador da partida em que estiver. Chamado antes de começar outra: pedir uma fase
+-- nova é, por definição, sair da anterior. Sem isto, um "sair" que se perdeu no caminho deixava
+-- o jogador preso à partida antiga e toda fase seguinte recusava com "ação indisponível".
+function MatchService.releasePlayer(player: Player): boolean
+	local match = MatchService.getMatchOf(player)
+	if not match then
+		return false
+	end
+	leaveMatch(match, player)
+	return true
+end
+
+-- ---------------------------------------------------------------------------
+-- Atalhos de teste (console Cmdr)
+-- ---------------------------------------------------------------------------
+-- Chamados de dentro do servidor, pelo console, e não pela rede: quem digita já está autenticado
+-- como jogador do servidor. Mesmo assim passam por `isDevAllowed`, porque a regra de quem pode
+-- trapacear é uma só — o console é apenas mais uma porta para ela.
+--
+-- Todos devolvem (deu certo, recado): o recado é o que aparece escrito no console.
+
+-- Exposto para o console usar a mesma regra de permissão do DevCommand.
+function MatchService.isDevAllowed(player: Player): boolean
+	return isDevAllowed(player)
+end
+
+local function cheatMatch(player: Player): (Match?, string)
+	if not isDevAllowed(player) then
+		return nil, "Console de teste indisponível para este jogador."
+	end
+	local match = MatchService.getMatchOf(player)
+	if not match then
+		return nil, "Você não está em partida."
+	end
+	return match, ""
+end
+
+function MatchService.cheatSetScrap(player: Player, amount: number): (boolean, string)
+	local match, why = cheatMatch(player)
+	if not match then
+		return false, why
+	end
+	local state = match.state
+	if (state.mode :: string) == "training" then
+		return false, "No treino a sucata já é infinita."
+	end
+	local value = math.clamp(math.floor(amount), 0, 1000000)
+	state.wallets[player.UserId] = value
+	state.revision += 1
+	match.needFull = true
+	return true, string.format("Sucata de %s: %d.", player.Name, value)
+end
+
+function MatchService.cheatSetBaseHP(player: Player, amount: number): (boolean, string)
+	local match, why = cheatMatch(player)
+	if not match then
+		return false, why
+	end
+	local state = match.state
+	local value = math.clamp(math.floor(amount), 0, Balance.baseHP)
+	state.baseHP = value
+	state.revision += 1
+	match.needFull = true
+	-- Zerar a vida não encerra aqui: o passo seguinte da simulação é que declara a derrota,
+	-- pelo mesmo caminho de sempre.
+	return true, string.format("Vida do Farol: %d / %d.", value, Balance.baseHP)
+end
+
+function MatchService.cheatFinish(player: Player, outcome: "won" | "lost", stars: number?): (boolean, string)
+	local match, why = cheatMatch(player)
+	if not match then
+		return false, why
+	end
+	local cr, events = Simulation.devFinish(match.state, outcome, stars)
+	if not cr.ok then
+		return false, "A partida já tinha terminado."
+	end
+	pushEvents(match, events)
+	match.needFull = true
+	local result = match.state.result
+	if outcome == "won" then
+		return true, string.format("Vitória forçada com %d estrela(s).", if result then result.stars else 0)
+	end
+	return true, "Derrota forçada."
+end
+
 function MatchService.init(callbacks: { onPlayerFreed: (Player) -> (), onRematch: (Match, { Player }) -> () })
 	onPlayerFreed = callbacks.onPlayerFreed
 	onRematch = callbacks.onRematch

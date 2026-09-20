@@ -107,6 +107,13 @@ export type Renderer = typeof(setmetatable(
 		spawnLastSecond: number?,
 		spawnPulse: number,
 		spawnOffset: number,
+		-- Pulso de Luz: o Farol é o botão. Halo quando está pronto, barra enquanto se segura.
+		baseTouch: Frame?,
+		basePulseHalo: Frame?,
+		basePulseBar: Frame?,
+		basePulseFill: Frame?,
+		basePulseHint: TextLabel?,
+		basePulseCharge: number?,
 		lastSim: number,
 	},
 	BoardRenderer
@@ -172,6 +179,12 @@ function BoardRenderer.new(transform: BoardTransform.BoardTransform): Renderer
 		spawnLastSecond = nil,
 		spawnPulse = 0,
 		spawnOffset = -0.85,
+		baseTouch = nil,
+		basePulseHalo = nil,
+		basePulseBar = nil,
+		basePulseFill = nil,
+		basePulseHint = nil,
+		basePulseCharge = nil,
 		lastSim = 0,
 	}, BoardRenderer)
 
@@ -478,6 +491,64 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	})
 	Skin.corner(glow, 9999)
 	glow.Visible = not artHasBase
+	-- Pulso de Luz no próprio Farol: halo quando a recarga termina, barra enquanto o jogador
+	-- segura e um lembrete do gesto. Nada aqui decide dano — o toque só pede ao servidor.
+	local pulseHalo = Skin.frame(self.layers.shadows, "BasePulseHalo", {
+		Size = cellsToScale(3.0),
+		Position = self.transform:logicalToScale(last[1], last[2]),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundColor3 = Theme.colors.gold,
+		BackgroundTransparency = 1,
+		ZIndex = Z.shadows + 2,
+	})
+	Skin.corner(pulseHalo, 9999)
+	pulseHalo.Visible = false
+	self.basePulseHalo = pulseHalo
+	-- Área de toque do Farol: só um retângulo para a leitura do gesto. Não engole entrada
+	-- (Active fica falso), porque quem lê ponteiro e dedo é o InputController.
+	local baseTouch = Skin.frame(self.layers.effects, "BaseTouch", {
+		Size = cellsToScale(1.9),
+		Position = self.transform:logicalToScale(last[1], last[2] - 0.25),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundTransparency = 1,
+		ZIndex = Z.effects + 1,
+	})
+	self.baseTouch = baseTouch
+	local pulseBar = Skin.frame(self.layers.effects, "BasePulseBar", {
+		Size = UDim2.fromScale(2.1 / Grid.COLUMNS, 0.3 / Grid.ROWS),
+		Position = self.transform:logicalToScale(last[1], last[2] - 1.15),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundColor3 = Theme.colors.ink,
+		ZIndex = Z.effects + 6,
+	})
+	Skin.corner(pulseBar, 999)
+	Skin.stroke(pulseBar, Theme.colors.inkDeep, 2)
+	pulseBar.Visible = false
+	self.basePulseBar = pulseBar
+	local pulseFill = Skin.frame(pulseBar, "Fill", {
+		Size = UDim2.fromScale(0, 1),
+		BackgroundColor3 = Theme.colors.gold,
+		ZIndex = Z.effects + 7,
+	})
+	Skin.corner(pulseFill, 999)
+	self.basePulseFill = pulseFill
+	local pulseHint = Skin.label(self.layers.effects, "BasePulseHint", Localization.get("hud.pulseHold"), {
+		Size = UDim2.fromScale(4.2 / Grid.COLUMNS, 0.42 / Grid.ROWS),
+		Position = self.transform:logicalToScale(last[1], last[2] - 1.15),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundTransparency = 1,
+		Font = Theme.fonts.bodyBold,
+		TextColor3 = Theme.colors.cream,
+		TextStrokeTransparency = 0,
+		TextStrokeColor3 = Theme.colors.ink,
+		TextScaled = true,
+		TextXAlignment = Enum.TextXAlignment.Center,
+		TextYAlignment = Enum.TextYAlignment.Center,
+		ZIndex = Z.effects + 6,
+	})
+	pulseHint.Visible = false
+	self.basePulseHint = pulseHint
+
 	-- Marca da entrada: um "!" com a contagem, na célula onde a onda nasce.
 	local spawn = map.path[1]
 	self.spawnCell = spawn
@@ -1299,6 +1370,60 @@ function BoardRenderer.spawnMarkerHit(self: Renderer, screen: Vector2): boolean
 	return screen.X >= pos.X and screen.Y >= pos.Y and screen.X <= pos.X + size.X and screen.Y <= pos.Y + size.Y
 end
 
+-- O gesto do Pulso: a barra de carga é desenhada pelo tabuleiro, mas quem conta o tempo é o
+-- BoardPresenter (é ele que sabe se o dedo continua parado em cima do Farol).
+function BoardRenderer.setPulseCharge(self: Renderer, charge: number?)
+	self.basePulseCharge = charge
+	local fill = self.basePulseFill
+	if fill then
+		fill.Size = UDim2.fromScale(math.clamp(charge or 0, 0, 1), 1)
+	end
+end
+
+-- Verdadeiro quando o ponto da tela cai no Farol.
+function BoardRenderer.baseHit(self: Renderer, screen: Vector2): boolean
+	local touch = self.baseTouch
+	if not touch then
+		return false
+	end
+	local pos = touch.AbsolutePosition
+	local size = touch.AbsoluteSize
+	return screen.X >= pos.X and screen.Y >= pos.Y and screen.X <= pos.X + size.X and screen.Y <= pos.Y + size.Y
+end
+
+-- Desenha os três estados do Farol: apagado (recarregando), aceso (pronto) e carregando.
+function BoardRenderer.updateBasePulse(self: Renderer, ready: boolean)
+	local halo = self.basePulseHalo
+	local bar = self.basePulseBar
+	local hint = self.basePulseHint
+	if not halo or not bar or not hint then
+		return
+	end
+	local charge = self.basePulseCharge
+	bar.Visible = charge ~= nil
+	hint.Visible = ready and charge == nil
+	if not ready and charge == nil then
+		halo.Visible = false
+		return
+	end
+	halo.Visible = true
+	if charge ~= nil then
+		-- carregando: o halo fecha junto com a barra
+		halo.BackgroundTransparency = 0.78 - 0.3 * math.clamp(charge, 0, 1)
+		halo.Size = cellsToScale(3.0 + 0.5 * math.clamp(charge, 0, 1))
+		return
+	end
+	halo.Size = cellsToScale(3.0)
+	if self.reducedMotion then
+		halo.BackgroundTransparency = 0.84
+		hint.TextTransparency = 0.1
+		return
+	end
+	local breath = (math.sin(os.clock() * 3.1) + 1) / 2
+	halo.BackgroundTransparency = 0.9 - 0.12 * breath
+	hint.TextTransparency = 0.35 - 0.3 * breath
+end
+
 -- Onda começou: a marca vira um estouro na entrada. Com bônus por adiantar, o estouro é
 -- dourado e sobe o número da sucata ganha.
 function BoardRenderer.flashSpawn(self: Renderer, earlyBonus: number?)
@@ -1845,6 +1970,11 @@ function BoardRenderer.update(self: Renderer, dt: number)
 		left = math.max(deadline - simNow, 0)
 	end
 	BoardRenderer.updateSpawnCountdown(self, left, dt)
+	-- Pulso pronto: fase de onda, fora do treino e com a recarga vencida (o prazo é do servidor).
+	local pulseReady = snapshot.phase == "Wave"
+		and (snapshot.mode :: string) ~= "training"
+		and simNow >= snapshot.pulseReadyAt
+	BoardRenderer.updateBasePulse(self, pulseReady)
 	for id, visual in pairs(self.enemies) do
 		local ev = view.enemies[id]
 		if ev then

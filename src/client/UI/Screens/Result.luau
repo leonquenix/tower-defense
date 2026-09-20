@@ -39,7 +39,7 @@ local function starText(scope: Kit.Scope, result: Kit.Used<any>, index: number, 
 		Name = "Star" .. index,
 		Text = "★",
 		Font = Theme.fonts.title,
-		TextSize = 44,
+		TextSize = 86,
 		TextColor3 = scope:Computed(function(use)
 			local payload = Kit.read(use, result)
 			local earned = payload and payload.result and payload.result.starsEarned
@@ -47,22 +47,23 @@ local function starText(scope: Kit.Scope, result: Kit.Used<any>, index: number, 
 			return if got then Theme.colors.gold else Theme.colors.sageDeep
 		end),
 		TextXAlignment = Enum.TextXAlignment.Center,
-		Size = UDim2.fromOffset(48, 48),
+		Size = UDim2.fromOffset(96, 96),
 		LayoutOrder = index,
 		ZIndex = 43,
 	})
 	local holder = scope:New("UIScale")({ Scale = scale })
 	holder.Parent = label
-	local rotation = scope:New("UIStroke")({
-		Color = Theme.colors.goldDark,
-		Thickness = scope:Computed(function(use)
+	-- contorno escuro na conquistada: a estrela dourada precisa destacar do cartão claro
+	local outline = scope:New("UIStroke")({
+		Color = scope:Computed(function(use)
 			local payload = Kit.read(use, result)
 			local earned = payload and payload.result and payload.result.starsEarned
 			local got = typeof(earned) == "table" and earned[index] == true
-			return if got then 2 else 0
+			return if got then Theme.colors.goldDark else Theme.colors.sage
 		end),
+		Thickness = 3,
 	})
-	rotation.Parent = label
+	outline.Parent = label
 	return label
 end
 
@@ -190,6 +191,30 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end
 	end)
 
+	-- O que o botão principal deve fazer: próxima fase, voltar à campanha ou tentar de novo.
+	type NextStep = { kind: string, levelId: string?, label: string? }
+	local nextStep = scope:Computed(function(use): NextStep
+		local payload = Kit.read(use, result)
+		local match = payload and payload.result
+		if not match or match.outcome ~= "won" or not match.levelId then
+			return { kind = "retry" }
+		end
+		local index = Catalog.levelIndex(tostring(match.levelId))
+		local following = if index then Catalog.levels()[index + 1] else nil
+		if not following then
+			return { kind = "campaign" }
+		end
+		local map = Catalog.getMap(following.mapId)
+		return {
+			kind = "next",
+			levelId = following.id,
+			label = L("campaign.levelName", {
+				index = (index :: number) + 1,
+				map = if map then map.name else following.mapId,
+			}),
+		}
+	end)
+
 	local contributionText = scope:Computed(function(use)
 		local payload = use(result)
 		local stats = payload and payload.stats
@@ -240,7 +265,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 				scope:New("Frame")({
 					Name = "Stars",
 					BackgroundTransparency = 1,
-					Size = UDim2.new(1, 0, 0, 52),
+					Size = UDim2.new(1, 0, 0, 104),
 					Visible = scope:Computed(function(use)
 						local payload = use(result)
 						return payload ~= nil and payload.result ~= nil and payload.result.levelId ~= nil
@@ -250,7 +275,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 					[Children] = Kit.children(
 						Kit.list(scope, {
 							FillDirection = Enum.FillDirection.Horizontal,
-							Padding = UDim.new(0, 10),
+							Padding = UDim.new(0, 18),
 							HorizontalAlignment = Enum.HorizontalAlignment.Center,
 							VerticalAlignment = Enum.VerticalAlignment.Center,
 						}),
@@ -357,17 +382,40 @@ return function(scope: Kit.Scope, props: Props): Frame
 								GameFlow.leaveMatch()
 							end,
 						}),
+						-- Venceu e existe fase seguinte: o botão leva direto para ela. Sem fase
+						-- seguinte, leva para a campanha. Derrota continua oferecendo revanche.
 						Kit.button(scope, {
-							name = "Rematch",
-							text = L("result.rematch"),
+							name = "Forward",
+							text = scope:Computed(function(use)
+								local step = Kit.read(use, nextStep)
+								if step.kind == "next" then
+									return L("result.nextLevel")
+								elseif step.kind == "campaign" then
+									return L("result.backToCampaign")
+								end
+								return L("result.rematch")
+							end),
+							sub = scope:Computed(function(use)
+								local step = Kit.read(use, nextStep)
+								return if step.kind == "next" and step.label then step.label else ""
+							end),
 							kind = "primary",
 							icon = "ui_play",
-							size = UDim2.fromOffset(240, 52),
+							size = UDim2.fromOffset(260, 56),
 							layoutOrder = 2,
 							zIndex = 43,
 							onActivate = function()
-								GameFlow.rematch(true)
-								Actions.toast(L("result.rematch"), "info")
+								local step = Fusion.peek(nextStep)
+								if step.kind == "next" and step.levelId then
+									GameFlow.goToLevel(step.levelId :: string)
+								elseif step.kind == "campaign" then
+									Atoms.matchResult(nil)
+									GameFlow.leaveMatch()
+									Actions.navigate("campaign")
+								else
+									GameFlow.rematch(true)
+									Actions.toast(L("result.rematch"), "info")
+								end
 							end,
 						})
 					),

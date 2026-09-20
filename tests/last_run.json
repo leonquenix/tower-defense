@@ -1,8 +1,8 @@
 {
-  "elapsedSeconds": 0.020000458345748484,
+  "elapsedSeconds": 0.021194125001784414,
   "failed": 0,
   "failures": {},
-  "passed": 177,
+  "passed": 179,
   "suites": [
     {
       "name": "Grid",
@@ -332,6 +332,14 @@
         },
         {
           "name": "2x exige unanimidade e a fase de início manual fica em 1x",
+          "ok": true
+        },
+        {
+          "name": "fim forçado encerra com as estrelas pedidas e não aceita repetir",
+          "ok": true
+        },
+        {
+          "name": "derrota forçada guarda estrelas medidas, não as pedidas",
           "ok": true
         },
         {
@@ -928,5 +936,5 @@
       ]
     }
   ],
-  "timestamp": "2026-09-19T15:32:26Z"
+  "timestamp": "2026-09-20T20:52:49Z"
 }

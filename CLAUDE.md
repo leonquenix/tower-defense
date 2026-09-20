@@ -103,6 +103,19 @@ da janela (`BoardTransform.BASE_FIT`).
 A torre olha para o alvo espelhando a própria textura (`ImageRectOffset = {w, 0}` com
 `ImageRectSize = {-w, h}`), sem sprite espelhado e sem girar — não recrie o pipeline de espelho.
 
+O **Pulso de Luz** não tem mais botão no rodapé: o Farol acende quando a recarga termina (halo
+dourado e o aviso "Segure no Farol") e o jogador **segura 1,5 s em cima dele**, com a barra
+enchendo acima do sprite. Mover o ponteiro vira deslocamento de câmera e cancela a carga. O gesto
+é lido pelo `InputController` (`onHoldStart`/`onHoldEnd`), contado no `BoardPresenter` e desenhado
+pelo `BoardRenderer`; o disparo continua sendo um pedido ao servidor.
+
+Régua de layout: a interface é escrita em pixels de referência (1280x720 no computador, 760x340 no
+compacto) e escalada por um `UIScale`. O **HUD** tem métricas por modo (tabela `Metrics` em
+`Screens/Hud.luau`: fichas no rodapé à direita no computador, no topo à esquerda no compacto; doca
+de torres em coluna ou em grade 2x2). As **telas de menu** não têm layout compacto próprio: em tela
+pequena elas encolhem inteiras (`Responsive.menuScale`, usado pelo `App` nas camadas de menu e
+modal), porque é melhor um menu miúdo do que um botão fora da borda.
+
 O fim de onda entra como aviso grande (`Atoms.announce` + `Actions.announce`, limpo pelo relógio
 do `App`), e a contagem da próxima onda é desenhada na entrada do caminho pelo `BoardRenderer`.
 
@@ -114,6 +127,19 @@ continua valendo, porque os painéis delas são tinta escura.
 `src/shared/Config/DevFlags.luau` é escrito à mão (não é gerado) e vale para cliente e servidor.
 Hoje `unlockAllMaps = true`: a regra de campanha continua em `ProfileSchema.campaignUnlocked`, que
 é o que os testes cobrem. Desligar antes de publicar.
+
+## Console de teste (2026-09-20)
+
+`DevFlags.testConsole` publica o console **Cmdr** (tecla F2). O Cmdr é dependência de servidor
+(`ServerPackages`): só a interface (`ReplicatedStorage.CmdrClient`) e as definições dos comandos
+chegam ao cliente. Os comandos vivem em `src/server/Console/Commands/` aos pares — `<nome>.luau`
+(definição, replicada) e `<nome>Server.luau` (execução, só servidor) — e são `setCoins`,
+`setHealth`, `forceWin [stars]` e `forceLoss`. Nome de comando em inglês é a convenção do console;
+comentários e recados continuam em português.
+
+Nenhum comando escreve no estado da partida: todos chamam as funções `cheat*` do `MatchService`,
+que validam permissão (`isDevAllowed`: Studio ou `DEV_ALLOWLIST`) e estado. O fim forçado usa
+`Simulation.devFinish`, que reaproveita o `finishMatch` do fim normal e apenas troca as estrelas.
 
 ## Campanha por fases (2026-09-19)
 

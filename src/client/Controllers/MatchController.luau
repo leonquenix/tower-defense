@@ -231,9 +231,19 @@ local function onState(kind: string, payload: any, extra: any)
 			(view :: MatchView).result = payload.result;
 			(view :: MatchView).rewardOutcome = payload.outcome
 		end
+		-- O servidor manda o perfil já com a recompensa aplicada (estrelas da fase, botões).
+		-- Sem isto o menu continuava mostrando o perfil de antes da partida.
+		if payload.profile then
+			Actions.setProfile(payload.profile)
+		end
 		Atoms.matchResult(payload)
 		emit("result", payload)
 	elseif kind == "left" then
+		-- "left" atrasado da partida anterior não desfaz a que acabou de começar
+		local snapshot = Atoms.snapshot()
+		if payload.matchId and snapshot and snapshot.matchId ~= payload.matchId then
+			return
+		end
 		view = nil
 		lastRevision = -1
 		Atoms.inMatch(false)

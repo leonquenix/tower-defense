@@ -203,7 +203,12 @@ local function startMatchFor(
 		return result(false, Protocol.ERROR.INVALID_STATE)
 	end
 	for _, player in ipairs(players) do
+		-- Pedir uma fase nova é sair da anterior: o jogador é solto da partida em que estiver
+		-- antes de qualquer checagem. Sem isto, um "sair" perdido no caminho o deixava preso e
+		-- toda fase seguinte recusava com "ação indisponível".
+		MatchService.releasePlayer(player)
 		if MatchService.isInMatch(player.UserId) then
+			TelemetryService.log("start_refused", { userId = player.UserId, why = "still_in_match" })
 			return result(false, Protocol.ERROR.INVALID_STATE)
 		end
 		local profile = PlayerDataService.get(player)
@@ -212,14 +217,20 @@ local function startMatchFor(
 				return result(false, Protocol.ERROR.PROFILE_UNAVAILABLE)
 			end
 			if not levelId or not ProfileSchema.isLevelUnlocked(profile, levelId) then
+				TelemetryService.log(
+					"start_refused",
+					{ userId = player.UserId, why = "level_locked", levelId = levelId }
+				)
 				return result(false, Protocol.ERROR.INVALID_STATE, { reason = "level_locked", userId = player.UserId })
 			end
 			if #profile.loadout == 0 then
+				TelemetryService.log("start_refused", { userId = player.UserId, why = "empty_loadout" })
 				return result(false, Protocol.ERROR.INVALID_STATE, { reason = "empty_loadout", userId = player.UserId })
 			end
 		end
 	end
-	local match, err = MatchService.start({
+	local match, err
+	match, err = MatchService.start({
 		players = players,
 		levelId = levelId,
 		mapId = mapId,
@@ -228,6 +239,7 @@ local function startMatchFor(
 		partyId = partyId,
 	})
 	if not match then
+		TelemetryService.log("start_refused", { why = "match_service", code = err })
 		return result(false, err)
 	end
 	if partyId then

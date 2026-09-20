@@ -38,6 +38,9 @@ export type Pending = {
 
 local CONFIRMING_AFTER = 1
 local SLOW_AFTER = 5
+-- Pedido sem resposta por tanto tempo deixa de segurar a chave: uma resposta que se perdeu não
+-- pode travar a ação para o resto da sessão (era o que prendia o jogador na partida anterior).
+local PENDING_EXPIRES_AFTER = 12
 
 Commands.pending = Charm.atom({} :: { [string]: Pending })
 
@@ -60,7 +63,8 @@ local function newRequestId(): string
 end
 
 function Commands.isPending(key: string): boolean
-	return Commands.pending()[key] ~= nil
+	local entry = Commands.pending()[key]
+	return entry ~= nil and os.clock() - entry.startedAt < PENDING_EXPIRES_AFTER
 end
 
 function Commands.pendingOf(key: string): Pending?

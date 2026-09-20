@@ -19,6 +19,10 @@ Charm = "littensy/charm@0.10.0"
 ByteNet = "ffrostflame/bytenet@0.4.6"
 Trove = "sleitnick/trove@1.8.0"
 
-# ProfileStore roda só no servidor (sessão travada + DataStore).
+# Só no servidor: ProfileStore (sessão travada + DataStore) e Cmdr (console de teste da tecla F2,
+# que publica a própria interface em ReplicatedStorage — a biblioteca em si não é replicada).
 [server-dependencies]
 ProfileStore = "lm-loleris/profilestore@1.0.3"
+# A versão é fixada com "=" de propósito: da 1.13 em diante o Cmdr é escrito com sintaxe nova de
+# Luau (`const`, require por string), que a nossa toolchain ainda não lê.
+Cmdr = "evaera/cmdr@=1.12.0"

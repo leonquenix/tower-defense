@@ -194,7 +194,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: fichas no canto superior esquerdo, contagem da próxima onda desenhada na entrada do caminho (bolha que pulsa e fica vermelha nos últimos segundos) e botão verde Iniciar Onda no rodapé."
+      "evidence": "Play 2026-09-20: fichas em bloco de duas linhas no canto inferior direito (no compacto sobem para o topo à esquerda), contagem da próxima onda desenhada na entrada do caminho e botão verde Iniciar Onda sozinho no rodapé."
     },
     "13_combate": {
       "kind": "screen",
@@ -210,7 +210,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: cenas novas do Jardim e da neve com a grade batendo nos ladrilhos desenhados; ondas 1 e 2 encerradas com o aviso grande ('Onda 2 concluída! +150 sucatas'); torres espelhadas mirando os Fiapos que vêm da esquerda."
+      "evidence": "Play 2026-09-20: layout do combate conferido nas duas réguas — computador (1280x720) sem nenhum canto se encostando e celular emulado (780x360) com fichas no topo, doca de torres em grade 2x2 e tudo dentro da tela."
     },
     "14_posicionar": {
       "kind": "screen",
@@ -311,19 +311,20 @@
     "20_pulso": {
       "kind": "screen",
       "modules": [
-        "src/client/Controllers/GameFlow.luau",
-        "src/client/UI/Overlays/ModalHost.luau"
+        "src/client/View/BoardRenderer.luau",
+        "src/client/Controllers/BoardPresenter.luau",
+        "src/client/Controllers/GameFlow.luau"
       ],
       "states": [
-        "disponível",
-        "confirmação",
+        "disponível (Farol aceso)",
+        "carregando (barra)",
         "pendente",
         "recarga",
         "usado por aliado"
       ],
       "implemented": true,
-      "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "studio": true,
+      "evidence": "Play 2026-09-20: o botão do rodapé saiu; o Farol acende com o aviso 'Segure no Farol' quando a recarga termina, a barra acima dele enche enquanto o jogador segura e o pulso saiu com o anel azul e os números de dano nos inimigos. Toque curto não dispara."
     },
     "21_tutorial": {
       "kind": "screen",

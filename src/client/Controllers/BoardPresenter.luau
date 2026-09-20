@@ -231,7 +231,79 @@ local function isOverChrome(point: Vector2): boolean
 	return false
 end
 
+-- ---------------------------------------------------------------------------
+-- Pulso de Luz: segurar no Farol
+-- ---------------------------------------------------------------------------
+-- O botão do rodapé saiu. Agora o Farol acende quando a recarga termina e o jogador segura
+-- 1,5 s em cima dele; a barra que enche é a confirmação. Mover o dedo (ou o ponteiro) vira
+-- deslocamento da câmera e cancela a carga, como em qualquer outro arrasto.
+local PULSE_HOLD_SECONDS = 1.5
+local holdStartedAt: number? = nil
+local holdFired = false
+
+local function pulseIsReady(): boolean
+	local snapshot = Atoms.snapshot()
+	if not snapshot or snapshot.phase ~= "Wave" or (snapshot.mode :: string) == "training" then
+		return false
+	end
+	return MatchController.estimateSimTime() >= snapshot.pulseReadyAt
+end
+
+local function cancelHold()
+	if holdStartedAt == nil then
+		return
+	end
+	holdStartedAt = nil
+	local currentRenderer = renderer
+	if currentRenderer then
+		currentRenderer:setPulseCharge(nil)
+	end
+end
+
+local function onHoldStart(screen: Vector2)
+	cancelHold()
+	holdFired = false
+	local currentRenderer = renderer
+	if not currentRenderer or isOverChrome(screen) then
+		return
+	end
+	if not pulseIsReady() or not currentRenderer:baseHit(screen) then
+		return
+	end
+	holdStartedAt = os.clock()
+	currentRenderer:setPulseCharge(0)
+	AudioController.play("ui_click")
+end
+
+-- Conta a carga no quadro: chamado pelo laço de desenho enquanto o gesto continua parado.
+local function tickHold()
+	local startedAt = holdStartedAt
+	local currentRenderer = renderer
+	if startedAt == nil or not currentRenderer then
+		return
+	end
+	-- perdeu a janela (onda acabou, aliado gastou a recarga): solta sem disparar
+	if not pulseIsReady() then
+		cancelHold()
+		return
+	end
+	local charge = (os.clock() - startedAt) / PULSE_HOLD_SECONDS
+	if charge < 1 then
+		currentRenderer:setPulseCharge(charge)
+		return
+	end
+	holdStartedAt = nil
+	-- o toque que vem depois de soltar não deve construir nem selecionar
+	holdFired = true
+	currentRenderer:setPulseCharge(nil)
+	GameFlow.pulse()
+end
+
 local function onTap(screen: Vector2)
+	if holdFired then
+		holdFired = false
+		return
+	end
 	local currentTransform = transform
 	local currentRenderer = renderer
 	if not currentTransform or not currentRenderer or not Atoms.snapshot() then
@@ -470,6 +542,8 @@ function BoardPresenter.attach(area: Frame)
 	InputController.init(currentTransform, {
 		onTap = onTap,
 		onHover = onHover,
+		onHoldStart = onHoldStart,
+		onHoldEnd = cancelHold,
 		onPickSlot = function(slot)
 			local ids = Atoms.loadout()
 			local id = ids[slot]
@@ -483,6 +557,7 @@ function BoardPresenter.attach(area: Frame)
 			end
 		end,
 		onCancel = function()
+			cancelHold()
 			if Atoms.buildTowerId() then
 				Actions.exitBuild()
 			else
@@ -599,6 +674,7 @@ function BoardPresenter.init()
 		local currentRenderer = renderer
 		if currentRenderer and Atoms.snapshot() then
 			currentRenderer:update(deltaTime)
+			tickHold()
 		end
 	end)
 end

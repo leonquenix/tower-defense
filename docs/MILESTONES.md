@@ -404,3 +404,113 @@ estrelas servem — o mesmo papel do painel da maquete.
 
 **Verificado no Studio (Play real):** a tela abre com as 12 fases em três colunas, rola até o fim,
 mostra 3/36 estrelas e destaca a fase 1 concluída.
+
+### Resultado que empurra para a próxima fase (2026-09-20)
+
+**Estrelas maiores.** No cartão de resultado as três estrelas passaram de 64 para 96 px (fonte 86,
+contorno próprio) e a fileira ganhou altura e respiro. A entrada continua uma a uma, com mola.
+
+**"Próxima fase" no lugar de "Tentar novamente".** O botão da direita agora olha o resultado: com
+vitória e fase seguinte disponível ele vira **Próxima fase**, com o nome dela no subtítulo, e
+chama `GameFlow.goToLevel` — a fase seguinte já entra selecionada, sem passar pela lista. Se a
+fase vencida era a última, o botão volta para a campanha; em derrota, continua sendo a revanche.
+
+**Dois defeitos corrigidos:**
+
+- *As estrelas sumiam do menu.* O quadro de resultado traz o perfil já com a recompensa aplicada,
+  mas o cliente ignorava esse campo e seguia com o perfil antigo até o próximo login.
+  `MatchController` passou a aplicar `payload.profile` ao receber o resultado (o contador da
+  campanha foi de 3/36 para 6/36 ao vivo).
+- *"Ação indisponível agora" ao abrir outra fase.* Duas causas somadas: o servidor recusava o
+  `StartMatch` de quem ainda constava na partida anterior, e o cliente guardava o comando pendente
+  para sempre, bloqueando o envio seguinte. Agora `PartyService` solta o jogador da partida antiga
+  (`MatchService.releasePlayer`) antes de validar, e o comando pendente do cliente expira em 12 s.
+  O quadro `left` atrasado da partida anterior também deixou de derrubar a que acabou de começar.
+
+**Lição de teste:** a janela do Studio usada nos testes não estava conectada ao Rojo — toda a
+verificação anterior rodou em código velho. Antes de investigar qualquer defeito, confirmar
+**Plugins → Rojo → Connect**.
+
+**Verificado no Studio (Play real):** fase 1 vencida com 3 ondas e 3 torres — o resultado mostrou
+"Farol protegido!", as estrelas grandes entrando uma a uma (duas douradas, a de "sem levar dano"
+apagada), "Recompensa 120 botões · Recompensa salva" e o botão **Próxima fase · Fase 2 · Jardim de
+Papel**, que abriu a fase 2 direto (5 ondas, 650 sucatas, objetivo "Usar só Dardo · Pipoca").
+Sequência campanha → fase → Sair → menu → campanha → outra fase sem nenhum aviso de recusa.
+
+**Limpeza:** saíram os dois `print("[diag] …")` do `GameFlow`. A telemetria `start_refused` do
+`PartyService` fica: é registro de recusa, não depuração.
+
+### Fichas no canto inferior direito e console de teste (2026-09-20)
+
+**As fichas mudaram de canto.** Farol, onda, sucata e o limite de torres saíram do canto superior
+esquerdo — onde cobriam a entrada do caminho e o desenho do cenário — e foram para o **canto
+inferior direito**, em versão compacta (`Kit.chip` com `compact`). Compactas de propósito: o botão
+de onda continua no centro do rodapé e a fileira não pode alcançá-lo. O topo esquerdo agora está
+vazio, e é justamente ali que o console desenha a linha de comando.
+
+**Console em jogo (Cmdr 1.12.0, tecla F2).** Entrou como dependência de **servidor**
+(`ServerPackages`), então a biblioteca não é replicada: o cliente só recebe a interface que o
+próprio Cmdr publica (`ReplicatedStorage.CmdrClient`) e as definições dos comandos. Ligado por
+`DevFlags.testConsole`; quem pode usar é a mesma regra do `DevCommand` (Studio ou `DEV_ALLOWLIST`),
+aplicada no gancho `BeforeRun` — sem esse gancho o Cmdr recusaria tudo por segurança.
+
+Quatro comandos, com nome em inglês (convenção de console) e recados em português:
+
+| Comando | O que faz |
+| --- | --- |
+| `setCoins <amount>` | define a sucata do jogador na partida |
+| `setHealth <health>` | define a vida do Farol; zero derruba no passo seguinte |
+| `forceWin [stars]` | encerra como vitória com 0 a 3 estrelas (padrão 3) |
+| `forceLoss` | encerra como derrota |
+
+Nada disso escreve no estado da partida por fora: cada comando chama uma função `cheat*` do
+`MatchService`, que valida permissão e estado. O fim forçado passa pelo novo
+`Simulation.devFinish`, que chama o mesmo `finishMatch` do fim normal e só troca as estrelas — o
+laço do serviço continua sendo quem paga, salva e manda a tela de resultado. Das embutidas do
+Cmdr só o `help` foi registrado: as outras pressupõem avatar, e aqui não existe avatar.
+
+**Verificado no Studio (Play real):** as fichas aparecem no canto inferior direito sem tocar no
+botão de onda; F2 abre o console; `setCoins 9999` levou a ficha para 9.999; `setHealth 42` levou o
+Farol para 42/100; `forceWin` (sem valor) deu três estrelas e `forceWin 1` deu uma, ambas com
+"Recompensa salva" e o botão "Próxima fase"; `forceLoss` fechou com "O farol apagou" e nenhuma
+estrela. Testes: 179 aprovados (dois novos cobrem `devFinish`).
+
+### Pulso no Farol e régua de layout por modo (2026-09-20)
+
+**O Pulso de Luz virou gesto.** O botão saiu do rodapé. Quando a recarga termina, o próprio Farol
+acende — halo dourado que respira e o aviso "Segure no Farol" — e o jogador **segura 1,5 s** em
+cima dele, com uma barra enchendo acima do sprite. Soltar antes cancela; arrastar vira
+deslocamento de câmera e cancela também (a mesma regra de qualquer arrasto). O toque curto que
+vem depois de um disparo não constrói nem seleciona.
+
+A leitura do gesto entrou no `InputController` (`onHoldStart`/`onHoldEnd`, que também é cancelado
+por pinça, botão direito e ao desligar a entrada), a contagem no `BoardPresenter` e o desenho no
+`BoardRenderer` (halo, barra, preenchimento e aviso, todos respeitando `reducedMotion`). O
+`GameFlow.pulse` deixou de abrir modal: a confirmação agora é o próprio 1,5 s segurando.
+
+**Responsividade.** O rodapé não cabia: numa tela de 1280 de referência a fileira de fichas
+encostava no botão de onda — foi isso que apareceu na janela do responsável. Três mudanças:
+
+- as fichas viraram um **bloco de duas linhas** no canto inferior direito (era uma fileira só);
+- o rodapé ficou com **um botão** (o Pulso saiu), liberando o centro;
+- o HUD ganhou uma tabela de **métricas por modo** (`Metrics`, escolhida na montagem): no compacto
+  as fichas sobem para o topo à esquerda, a doca de torres vira **grade 2x2** ancorada no rodapé,
+  os botões do topo ficam com ícone e número, e o preço sai do cartão (ele já está na barra de
+  construção).
+
+As telas de menu não ganharam layout compacto: elas **encolhem para caber** (`Responsive.menuScale`
+aplicado pelo `App` nas camadas de menu e modal). Era o que faltava para o celular — antes, no
+emulador, metade do menu e da campanha ficava fora da tela.
+
+**Verificado no Studio (Play real):**
+
+- *Computador (≈1280x720 de referência):* fichas em bloco 2x2 à direita sem encostar no "Iniciar
+  Onda"; Farol aceso com o aviso durante a onda; barra desenhada acima do sprite (conferida com
+  carga fixa); pulso disparado com o anel azul e os números de dano; toque curto não dispara.
+- *Celular emulado (Samsung Galaxy A16, 780x360):* menu inteiro dentro da tela (antes o "Jogar
+  Campanha" saía pela borda), campanha com os cartões e o painel de coleção visíveis, e o combate
+  com fichas no topo, doca 2x2 e objetivos sem nada cortado.
+
+**O que não deu para testar sozinho:** o gesto de 1,5 s contínuo — as ferramentas de automação
+daqui não seguram o botão do mouse. O disparo foi verificado reduzindo o limiar e pelo caminho
+completo (servidor + efeito); falta o responsável sentir o tempo e dizer se 1,5 s é muito ou pouco.

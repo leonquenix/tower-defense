@@ -19,6 +19,10 @@ export type Callbacks = {
 	onPickSlot: (slot: number) -> (),
 	onCancel: () -> (),
 	onUpgradeKey: () -> (),
+	-- Segurar parado: é assim que o Pulso de Luz é disparado no Farol. Começa a cada aperto e
+	-- é cancelado assim que o gesto vira deslocamento, pinça ou solta.
+	onHoldStart: (screen: Vector2) -> (),
+	onHoldEnd: () -> (),
 }
 
 local transform: BoardTransform.BoardTransform
@@ -75,6 +79,11 @@ local function onInputBegan(input: InputObject, processed: boolean)
 		local pos = screenPosition(input)
 		touches[input] = pos
 		touchStart[input] = { pos = pos, at = os.clock() }
+		if touchCount() == 1 and not processed then
+			callbacks.onHoldStart(pos)
+		else
+			callbacks.onHoldEnd()
+		end
 		if touchCount() == 2 then
 			local a, b = twoTouches()
 			if a and b then
@@ -94,6 +103,7 @@ local function onInputBegan(input: InputObject, processed: boolean)
 		leftStart = pos
 		leftLast = pos
 		leftDragging = false
+		callbacks.onHoldStart(pos)
 	elseif
 		input.UserInputType == Enum.UserInputType.MouseButton2
 		or input.UserInputType == Enum.UserInputType.MouseButton3
@@ -101,6 +111,7 @@ local function onInputBegan(input: InputObject, processed: boolean)
 		mousePanning = true
 		lastMousePos = screenPosition(input)
 		rightStart = screenPosition(input)
+		callbacks.onHoldEnd()
 	elseif input.UserInputType == Enum.UserInputType.Keyboard then
 		local key = input.KeyCode
 		if key == Enum.KeyCode.One then
@@ -133,6 +144,7 @@ local function onInputChanged(input: InputObject, processed: boolean)
 				local pos = screenPosition(input)
 				if start and not touchDragging and (pos - start.pos).Magnitude > TAP_MOVE_TOLERANCE then
 					touchDragging = true
+					callbacks.onHoldEnd()
 				end
 				if touchDragging then
 					transform:pan(pos - previous)
@@ -161,6 +173,7 @@ local function onInputChanged(input: InputObject, processed: boolean)
 		elseif leftStart and leftLast then
 			if not leftDragging and (pos - leftStart).Magnitude > TAP_MOVE_TOLERANCE then
 				leftDragging = true
+				callbacks.onHoldEnd()
 			end
 			if leftDragging then
 				transform:pan(pos - leftLast)
@@ -192,6 +205,7 @@ local function onInputEnded(input: InputObject, processed: boolean)
 		if touchCount() == 0 then
 			touchDragging = false
 		end
+		callbacks.onHoldEnd()
 		if enabled and start and wasSingle and not wasDragging and not processed then
 			local pos = screenPosition(input)
 			if (pos - start.pos).Magnitude <= TAP_MOVE_TOLERANCE and os.clock() - start.at <= TAP_TIME then
@@ -207,6 +221,7 @@ local function onInputEnded(input: InputObject, processed: boolean)
 		leftStart = nil
 		leftLast = nil
 		leftDragging = false
+		callbacks.onHoldEnd()
 		if enabled and start and not wasDragging and not processed then
 			local pos = screenPosition(input)
 			if (pos - start.pos).Magnitude <= TAP_MOVE_TOLERANCE then
@@ -247,6 +262,10 @@ end
 function InputController.setEnabled(value: boolean)
 	enabled = value
 	if not value then
+		-- pode ser chamado antes do primeiro `init` (sair da partida sem tabuleiro montado)
+		if callbacks then
+			callbacks.onHoldEnd()
+		end
 		touches = {}
 		touchStart = {}
 		mousePanning = false
