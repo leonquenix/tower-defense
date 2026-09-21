@@ -126,6 +126,12 @@ Atoms.buildCell = Charm.atom(nil :: Types.Cell?)
 Atoms.buildBlockedReason = Charm.atom(nil :: string?)
 Atoms.loadout = Charm.atom({} :: { string })
 Atoms.zoomed = Charm.atom(false :: boolean)
+-- Menu de pausa aberto. É só a tela: a partida é do servidor e continua correndo (em grupo não
+-- daria para parar o relógio de todo mundo).
+Atoms.paused = Charm.atom(false :: boolean)
+-- Doca de torres expandida. Só vale no layout compacto, onde ela fica encolhida num botão para
+-- não cobrir o Farol.
+Atoms.buildDockOpen = Charm.atom(false :: boolean)
 
 -- ---------------------------------------------------------------------------
 -- Preferências (espelho local do que foi salvo no perfil)

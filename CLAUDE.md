@@ -90,9 +90,20 @@ passa por baixo da barra do Roblox e o HUD flutua por cima. Painel que engole to
 `Active` (`blocking = true` no `Kit.panel`), porque a decisão "toque no painel ou no tabuleiro?" é
 por ordem de desenho.
 
-O HUD de combate (`UI/Screens/Hud.luau`) segue a maquete: fichas no canto superior esquerdo,
-velocidade/opções/sair no superior direito, coluna TORRES à direita, contexto no inferior esquerdo
-e, no rodapé, Pulso de Luz e o botão verde Iniciar Onda. Não há mais faixa superior nem doca.
+O HUD de combate (`UI/Screens/Hud.luau`), depois das rodadas de 19–20/09: fichas de estado em
+bloco de duas linhas no canto inferior direito (no compacto sobem para o topo à esquerda),
+velocidade e **Pausa** no superior direito, doca TORRES à direita, contexto no inferior esquerdo e,
+no rodapé, só o botão verde Iniciar Onda. Não há mais faixa superior, prévia da próxima onda nem
+botão de Pulso — o Pulso é gesto no Farol.
+
+**Pausa** (`Atoms.paused`) é uma cortina sobre o HUD com os objetivos da fase, Continuar, Opções e
+Sair. Não para a simulação: o combate é do servidor e, em grupo, pausar seria pausar o jogo dos
+outros — o cartão diz isso em uma linha.
+
+No layout compacto a doca de torres vive **encolhida** num botão BUILD (`Atoms.buildDockOpen`):
+aberta, ela cobria o Farol. O X fecha, posicionar uma torre fecha sozinho. A barra de construção
+não tem botão de confirmar: no computador o clique parado constrói, no toque é o segundo toque na
+mesma célula (`Rules/BuildIntent`).
 
 ## Entrada, ritmo e interruptores (2026-09-19)
 

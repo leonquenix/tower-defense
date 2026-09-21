@@ -287,6 +287,14 @@ function Actions.exitBuild()
 	Atoms.buildBlockedReason(nil)
 end
 
+function Actions.setPaused(value: boolean)
+	Atoms.paused(value)
+end
+
+function Actions.setBuildDockOpen(value: boolean)
+	Atoms.buildDockOpen(value)
+end
+
 function Actions.setBuildCell(cell: Types.Cell?, blockedReason: string?)
 	Atoms.buildCell(cell)
 	Atoms.buildBlockedReason(blockedReason)

@@ -67,6 +67,10 @@ type Metrics = {
 	action: Vector2,
 	buildBarW: number,
 	introW: number,
+	pauseW: number,
+	pauseMaxH: number,
+	pauseButton: number,
+	dockCollapsible: boolean, -- doca encolhe num botão (no compacto ela cobria o Farol)
 }
 
 local DESKTOP: Metrics = {
@@ -92,6 +96,10 @@ local DESKTOP: Metrics = {
 	action = Vector2.new(240, 68),
 	buildBarW = 460,
 	introW = 520,
+	pauseW = 420,
+	pauseMaxH = 620,
+	pauseButton = 50,
+	dockCollapsible = false,
 }
 
 -- No compacto a coluna de torres já ocupa toda a altura da direita, então as fichas sobem para
@@ -117,8 +125,12 @@ local COMPACT: Metrics = {
 	statusCaption = false,
 	showTowerLimit = false,
 	action = Vector2.new(170, 46),
-	buildBarW = 400,
+	buildBarW = 360,
 	introW = 360,
+	pauseW = 330,
+	pauseMaxH = 268,
+	pauseButton = 42,
+	dockCollapsible = true,
 }
 
 local function formatNumber(value: number): string
@@ -151,17 +163,6 @@ local function objectiveText(objective: Types.ObjectiveDef): string
 		return L("objective.rushAll")
 	end
 	return ""
-end
-
-local function wavePreviewText(snapshot: Types.MatchSnapshot?): string
-	if not snapshot or not snapshot.nextWavePreview or #snapshot.nextWavePreview == 0 then
-		return ""
-	end
-	local parts: { string } = {}
-	for _, group in ipairs(snapshot.nextWavePreview) do
-		table.insert(parts, tostring(group.count) .. "× " .. L("enemy." .. group.enemy))
-	end
-	return L("hud.nextWave") .. ": " .. table.concat(parts, ", ")
 end
 
 -- Pílula de texto do HUD: usada para fase, limite de torres e prévia da onda.
@@ -213,13 +214,14 @@ return function(scope: Kit.Scope, props: Props): Frame
 	local snapshot = Bridge.use(scope, Atoms.snapshot)
 	local loadout = Bridge.use(scope, Atoms.loadout)
 	local buildTowerId = Bridge.use(scope, Atoms.buildTowerId)
-	local buildCell = Bridge.use(scope, Atoms.buildCell)
 	local buildReason = Bridge.use(scope, Atoms.buildBlockedReason)
 	local introStep = Bridge.use(scope, Atoms.introStep)
 	local bossBanner = Bridge.use(scope, Atoms.bossBanner)
 	local announce = Bridge.use(scope, Atoms.announce)
 	local connection = Bridge.use(scope, Atoms.connection)
 	local zoomed = Bridge.use(scope, Atoms.zoomed)
+	local paused = Bridge.use(scope, Atoms.paused)
+	local dockOpen = Bridge.use(scope, Atoms.buildDockOpen)
 
 	-- Aparelho de toque decide o fluxo de construção (um toque posiciona, outro constrói).
 	local touchInput = InputController.isTouchDevice()
@@ -422,27 +424,18 @@ return function(scope: Kit.Scope, props: Props): Frame
 					GameFlow.voteSpeed(if current.speedMultiplier == 2 then 1 else 2)
 				end,
 			}),
+			-- Opções e Sair saíram daqui: os dois moram dentro da pausa, junto com os objetivos.
 			Kit.button(scope, {
-				name = "Options",
-				text = if M.shortLabels then "" else L("hud.options"),
+				name = "Pause",
+				text = if M.shortLabels then "" else L("hud.pause"),
 				kind = "secondary",
 				icon = "ui_settings",
-				size = UDim2.fromOffset(if M.shortLabels then 48 else M.systemButton.X - 10, M.systemButton.Y),
+				size = UDim2.fromOffset(if M.shortLabels then 48 else M.systemButton.X - 20, M.systemButton.Y),
 				layoutOrder = 2,
 				zIndex = 11,
 				onActivate = function()
-					-- a partida continua rodando atrás: Configurações é uma tela por cima do HUD
-					Actions.push("settings")
+					Actions.setPaused(true)
 				end,
-			}),
-			Kit.button(scope, {
-				name = "Leave",
-				text = L("hud.leave"),
-				kind = "danger",
-				size = UDim2.fromOffset(M.leaveWidth, M.systemButton.Y),
-				layoutOrder = 3,
-				zIndex = 11,
-				onActivate = GameFlow.confirmLeave,
 			})
 		),
 	})
@@ -573,11 +566,30 @@ return function(scope: Kit.Scope, props: Props): Frame
 	-- ------------------------------------------------------------------
 	-- Coluna "Torres" à direita
 	-- ------------------------------------------------------------------
+	-- No compacto a doca vive encolhida: aberta, ela cobria justamente o Farol, no canto de
+	-- baixo à direita. O botão BUILD abre, o X fecha e posicionar uma torre fecha sozinho.
+	local dockVisible = scope:Computed(function(use)
+		if not M.dockCollapsible then
+			return true
+		end
+		return Kit.read(use, dockOpen)
+	end)
+
+	-- Em grade a altura é contada à mão: o painel nasce escondido (doca encolhida) e o
+	-- AutomaticSize do Roblox não refaz a conta do UIGridLayout ao aparecer — a segunda fileira
+	-- de torres ficava cortada.
+	local dockGridSize = scope:Computed(function(use)
+		local count = math.max(#Kit.read(use, loadout), 1)
+		local rows = math.ceil(count / M.towerColumns)
+		return UDim2.fromOffset(M.towerPanelW, 20 + rows * M.towerCardH + (rows - 1) * 6)
+	end)
+
 	local towerPanel = Kit.panel(scope, {
 		name = "Towers",
 		blocking = true,
-		size = UDim2.new(0, M.towerPanelW, 0, 0),
-		automaticSize = Enum.AutomaticSize.Y,
+		visible = dockVisible,
+		size = if M.towerColumns > 1 then dockGridSize else UDim2.new(0, M.towerPanelW, 0, 0),
+		automaticSize = if M.towerColumns > 1 then Enum.AutomaticSize.None else Enum.AutomaticSize.Y,
 		-- No computador a coluna desce a partir da faixa de cima. No compacto ela sobe a partir
 		-- do rodapé: a área segura do celular come altura por cima, e ancorada embaixo a última
 		-- torre nunca fica fora da tela.
@@ -612,6 +624,40 @@ return function(scope: Kit.Scope, props: Props): Frame
 			}),
 			cards
 		),
+		overlay = if M.dockCollapsible
+			then Kit.children(Kit.button(scope, {
+				name = "DockClose",
+				text = "",
+				icon = "ui_close",
+				kind = "secondary",
+				size = UDim2.fromOffset(30, 30),
+				position = UDim2.new(1, 4, 0, -4),
+				anchorPoint = Vector2.new(1, 1),
+				zIndex = 14,
+				onActivate = function()
+					Actions.setBuildDockOpen(false)
+					Actions.exitBuild()
+				end,
+			}))
+			else nil,
+	})
+
+	-- Botão que substitui a doca quando ela está encolhida.
+	local buildDockButton = Kit.button(scope, {
+		name = "BuildDock",
+		text = L("hud.buildDock"),
+		icon = "ui_plus",
+		kind = "primary",
+		visible = scope:Computed(function(use)
+			return M.dockCollapsible and not Kit.read(use, dockOpen)
+		end),
+		size = UDim2.fromOffset(148, 50),
+		position = UDim2.new(1, -M.margin, 1, -M.margin),
+		anchorPoint = Vector2.new(1, 1),
+		zIndex = 10,
+		onActivate = function()
+			Actions.setBuildDockOpen(true)
+		end,
 	})
 
 	-- ------------------------------------------------------------------
@@ -722,9 +768,12 @@ return function(scope: Kit.Scope, props: Props): Frame
 		visible = scope:Computed(function(use)
 			return use(buildTowerId) ~= nil
 		end),
-		size = UDim2.new(0, M.buildBarW + (if touchInput then 100 else 0), 0, 64),
-		position = UDim2.new(0.5, 0, 1, -(M.margin + M.action.Y + 16)),
-		anchorPoint = Vector2.new(0.5, 1),
+		size = UDim2.new(0, M.buildBarW, 0, 64),
+		-- No compacto ela vai para a esquerda: centrada, encostava na doca de torres.
+		position = if M.dockCollapsible
+			then UDim2.new(0, M.margin, 1, -(M.margin + M.action.Y + 16))
+			else UDim2.new(0.5, 0, 1, -(M.margin + M.action.Y + 16)),
+		anchorPoint = if M.dockCollapsible then Vector2.new(0, 1) else Vector2.new(0.5, 1),
 		padding = 12,
 		paddingVertical = 8,
 		zIndex = 20,
@@ -753,7 +802,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 				end),
 				Font = Theme.fonts.bodyMedium,
 				TextSize = 15,
-				Size = UDim2.new(1, if touchInput then -320 else -140, 1, 0),
+				Size = UDim2.new(1, -140, 1, 0),
 				LayoutOrder = 1,
 				ZIndex = 21,
 			}),
@@ -765,62 +814,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 				layoutOrder = 2,
 				zIndex = 21,
 				onActivate = Actions.exitBuild,
-			}),
-			-- O botão de confirmar só existe no toque, como alternativa ao segundo toque.
-			Kit.button(scope, {
-				name = "Confirm",
-				text = scope:Computed(function(use)
-					local towerId = Kit.read(use, buildTowerId)
-					local def = if towerId then Catalog.getTower(towerId) else nil
-					local cost = if def then def.states.L0.cost else 0
-					return L("build.confirm", { cost = cost })
-				end),
-				kind = "primary",
-				visible = touchInput,
-				disabled = scope:Computed(function(use)
-					return Kit.read(use, buildCell) == nil or Kit.read(use, buildReason) ~= nil
-				end),
-				size = UDim2.fromOffset(180, 46),
-				layoutOrder = 3,
-				zIndex = 21,
-				onActivate = function()
-					local towerId = peek(buildTowerId)
-					local cell = peek(buildCell)
-					if towerId and cell then
-						GameFlow.placeTower(towerId, cell[1], cell[2])
-					end
-				end,
 			})
 		),
-	})
-
-	local wavePreview = Kit.panel(scope, {
-		name = "WavePreview",
-		blocking = true,
-		visible = scope:Computed(function(use)
-			return wavePreviewText(Kit.read(use, snapshot)) ~= "" and Kit.read(use, introStep) == nil
-		end),
-		size = UDim2.new(0, 0, 0, 34),
-		automaticSize = Enum.AutomaticSize.X,
-		-- item da coluna de contexto (canto inferior esquerdo): em cima do tabuleiro ela brigava
-		-- com as fichas e com a contagem desenhada na entrada do caminho
-		layoutOrder = 4,
-		color = Theme.colors.cream,
-		radius = Kit.radius.pill,
-		padding = 14,
-		paddingVertical = 6,
-		zIndex = 15,
-		children = Kit.children(Kit.text(scope, {
-			Text = scope:Computed(function(use)
-				return wavePreviewText(use(snapshot))
-			end),
-			TextSize = 14,
-			Font = Theme.fonts.bodyMedium,
-			TextWrapped = false,
-			AutomaticSize = Enum.AutomaticSize.X,
-			Size = UDim2.new(0, 0, 1, 0),
-			ZIndex = 16,
-		})),
 	})
 
 	local bossPanel = Kit.panel(scope, {
@@ -1003,6 +998,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 	})
 
 	-- Objetivos da fase: as três estrelas com o estado atual, lidas do snapshot.
+	-- Os objetivos moraram no canto inferior esquerdo até 20/09. Agora são conteúdo da pausa:
+	-- é onde o jogador para para olhar, e o canto do tabuleiro fica livre.
 	local objectivesPanel = Kit.panel(scope, {
 		name = "Objectives",
 		blocking = true,
@@ -1070,6 +1067,119 @@ return function(scope: Kit.Scope, props: Props): Frame
 				ZIndex = 19,
 			})
 		),
+	})
+
+	-- ------------------------------------------------------------------
+	-- Pausa
+	-- ------------------------------------------------------------------
+	-- Cortina por cima do HUD com os objetivos, as configurações e a saída. **Não** para a
+	-- simulação: o combate é do servidor e, em grupo, parar seria parar o jogo dos outros. É a
+	-- tela do jogador que para — por isso o aviso escrito no cartão.
+	local pauseOverlay = scope:New("Frame")({
+		Name = "PauseOverlay",
+		Active = true, -- engole o toque: nada passa para o tabuleiro enquanto a pausa está aberta
+		BackgroundColor3 = Theme.colors.inkDeep,
+		BackgroundTransparency = 0.35,
+		BorderSizePixel = 0,
+		Size = UDim2.fromScale(1, 1),
+		Visible = paused,
+		ZIndex = 40,
+		-- O cartão vive dentro de um rolável: em tela de celular a lista (objetivos + três
+		-- botões) passa da altura útil, e sem isto o título e o "Sair" ficavam cortados.
+		-- O rolável cresce com o cartão até o teto do modo e só então rola: assim ele fica
+		-- centrado quando cabe (computador) e não corta título nem "Sair" quando não cabe.
+		[Children] = Kit.children(Kit.scroller(scope, {
+			Name = "PauseScroll",
+			Size = UDim2.fromOffset(M.pauseW + 16, 0),
+			AutomaticSize = Enum.AutomaticSize.Y,
+			Position = UDim2.fromScale(0.5, 0.5),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			ScrollBarThickness = 4,
+			ZIndex = 41,
+			[Children] = Kit.children(
+				scope:New("UISizeConstraint")({
+					MaxSize = Vector2.new(M.pauseW + 16, M.pauseMaxH),
+				}),
+				Kit.list(scope, {
+					Padding = UDim.new(0, 0),
+					HorizontalAlignment = Enum.HorizontalAlignment.Center,
+					VerticalAlignment = Enum.VerticalAlignment.Top,
+				}),
+				Kit.panel(scope, {
+					name = "PauseCard",
+					blocking = true,
+					size = UDim2.new(0, M.pauseW, 0, 0),
+					automaticSize = Enum.AutomaticSize.Y,
+					color = Theme.colors.ink,
+					strokeColor = Theme.colors.inkDeep,
+					radius = 22,
+					padding = 16,
+					paddingVertical = 14,
+					zIndex = 42,
+					layout = Kit.list(scope, { Padding = UDim.new(0, 8) }),
+					children = Kit.children(
+						Kit.title(scope, {
+							Text = L("hud.pause"),
+							-- cartão escuro: o título precisa da tinta clara (o padrão do Kit é tinta escura)
+							TextColor3 = Theme.colors.cream,
+							TextSize = 24,
+							TextXAlignment = Enum.TextXAlignment.Center,
+							Size = UDim2.new(1, 0, 0, 28),
+							LayoutOrder = 1,
+							ZIndex = 42,
+						}),
+						objectivesPanel,
+						Kit.caption(scope, {
+							-- no compacto a altura é curta: o aviso sai e sobra espaço para os botões
+							Visible = not M.dockCollapsible,
+							Text = L("hud.pauseNotice"),
+							TextXAlignment = Enum.TextXAlignment.Center,
+							Size = UDim2.new(1, 0, 0, 0),
+							AutomaticSize = Enum.AutomaticSize.Y,
+							LayoutOrder = 3,
+							ZIndex = 42,
+						}),
+						Kit.button(scope, {
+							name = "Resume",
+							text = L("hud.pauseResume"),
+							kind = "grass",
+							icon = "ui_play",
+							size = UDim2.new(1, 0, 0, M.pauseButton + 6),
+							layoutOrder = 4,
+							zIndex = 42,
+							onActivate = function()
+								Actions.setPaused(false)
+							end,
+						}),
+						Kit.button(scope, {
+							name = "Options",
+							text = L("hud.options"),
+							kind = "secondary",
+							icon = "ui_settings",
+							size = UDim2.new(1, 0, 0, M.pauseButton),
+							layoutOrder = 5,
+							zIndex = 42,
+							onActivate = function()
+								-- a partida continua atrás: Configurações é uma tela por cima do HUD
+								Actions.push("settings")
+							end,
+						}),
+						Kit.button(scope, {
+							name = "Leave",
+							text = L("hud.leave"),
+							kind = "danger",
+							size = UDim2.new(1, 0, 0, M.pauseButton),
+							layoutOrder = 6,
+							zIndex = 42,
+							onActivate = function()
+								Actions.setPaused(false)
+								GameFlow.confirmLeave()
+							end,
+						})
+					),
+				})
+			),
+		})),
 	})
 
 	local trainingPanel = Kit.panel(scope, {
@@ -1140,10 +1250,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 				VerticalAlignment = Enum.VerticalAlignment.Bottom,
 			}),
 			introCard,
-			objectivesPanel,
 			HudDetail(scope, { localUserId = props.localUserId }),
-			trainingPanel,
-			wavePreview
+			trainingPanel
 		),
 	})
 
@@ -1156,12 +1264,14 @@ return function(scope: Kit.Scope, props: Props): Frame
 			statusCluster,
 			systemCluster,
 			towerPanel,
+			buildDockButton,
 			actionStack,
 			buildBar,
 			announcePanel,
 			bossPanel,
 			connectionBanner,
-			contextColumn
+			contextColumn,
+			pauseOverlay
 		),
 	})
 end

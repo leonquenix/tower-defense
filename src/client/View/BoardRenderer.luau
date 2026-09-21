@@ -1146,6 +1146,59 @@ function BoardRenderer.enemyPosition(self: Renderer, id: number): (number?, numb
 	return nil, nil
 end
 
+-- Teto de quadros por tiro: um círculo de 1,2 célula pega cinco, mas a conta é de raio livre e
+-- uma torre de área muito melhorada não pode acender meio tabuleiro.
+local SPLASH_FLASH_CELLS = 9
+
+-- Acende no chão as células que a explosão cobriu. É leitura, não regra: quem decide quem levou
+-- dano é o servidor, e isto só repete no tabuleiro o raio que ele usou. As células piscam duas
+-- vezes e somem; com "menos movimento" ligado, acendem e apagam uma vez só.
+function BoardRenderer.flashSplashCells(self: Renderer, px: number, py: number, radius: number, color: Color3)
+	local minX = math.max(0, math.floor(px - radius))
+	local maxX = math.min(Grid.COLUMNS - 1, math.ceil(px + radius))
+	local minY = math.max(0, math.floor(py - radius))
+	local maxY = math.min(Grid.ROWS - 1, math.ceil(py + radius))
+	local drawn = 0
+	for cy = minY, maxY do
+		for cx = minX, maxX do
+			-- a distância é do ponto do estouro até o centro da célula, como no alvo do servidor
+			if drawn < SPLASH_FLASH_CELLS and Grid.distance(px, py, cx, cy) <= radius then
+				drawn += 1
+				local cell = Skin.frame(self.layers.cells, "SplashCell", {
+					Size = cellsToScale(0.94),
+					Position = self.transform:logicalToScale(cx, cy),
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundColor3 = color,
+					BackgroundTransparency = 0.42,
+					ZIndex = Z.cells + 2,
+				})
+				Skin.corner(cell, 8)
+				local outline = Skin.stroke(cell, color, 2)
+				outline.Transparency = 0.25
+				local function fadeOut()
+					local out = TweenService:Create(cell, TweenInfo.new(0.18), { BackgroundTransparency = 1 })
+					TweenService:Create(outline, TweenInfo.new(0.18), { Transparency = 1 }):Play()
+					out:Play()
+					out.Completed:Once(function()
+						cell:Destroy()
+					end)
+				end
+				if self.reducedMotion then
+					task.delay(0.12, fadeOut)
+				else
+					local blink = TweenService:Create(
+						cell,
+						TweenInfo.new(0.09, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 1, true),
+						{ BackgroundTransparency = 0.9 }
+					)
+					blink:Play()
+					blink.Completed:Once(fadeOut)
+				end
+			end
+		end
+	end
+end
+
 function BoardRenderer.playAttack(self: Renderer, towerId: number, seq: number, targets: { Types.AttackTarget })
 	local visual = self.towers[towerId]
 	if not visual then
@@ -1228,6 +1281,7 @@ function BoardRenderer.playAttack(self: Renderer, towerId: number, seq: number, 
 			self.dotPool:release(dot)
 			local stats = Catalog.getStateStats(visual.data.d, visual.data.st)
 			if stats and stats.splash then
+				BoardRenderer.flashSplashCells(self, ex, ey, stats.splash, color)
 				local ring = ringFrame(self, ex, ey - 0.2, 0.2, color, 3, Z.effects + 1)
 				local t = TweenService:Create(
 					ring,

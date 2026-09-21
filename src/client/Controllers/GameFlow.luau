@@ -184,6 +184,8 @@ end
 function GameFlow.placeTower(towerId: string, x: number, y: number)
 	combat("build:place", "PlaceTower", { towerId = towerId, x = x, y = y })
 	Actions.exitBuild()
+	-- posicionou: a doca encolhe sozinha para o tabuleiro voltar inteiro (layout compacto)
+	Actions.setBuildDockOpen(false)
 end
 
 function GameFlow.upgradeTower(entityId: number, nextState: string)

@@ -514,3 +514,50 @@ emulador, metade do menu e da campanha ficava fora da tela.
 **O que não deu para testar sozinho:** o gesto de 1,5 s contínuo — as ferramentas de automação
 daqui não seguram o botão do mouse. O disparo foi verificado reduzindo o limiar e pelo caminho
 completo (servidor + efeito); falta o responsável sentir o tempo e dizer se 1,5 s é muito ou pouco.
+
+### A explosão da Pipoca aparece no chão (2026-09-20)
+
+Torre de área acertava vários inimigos e o jogador só via o anel passar. Agora, no instante em que
+o projétil cai, as **células que o raio cobriu acendem no chão** — duas a três, na cor da torre,
+piscando duas vezes e sumindo em meio segundo. Vale para qualquer torre com `splash` (hoje a
+Pipoca), porque a conta é a mesma do servidor: distância do ponto de impacto até o centro da
+célula, comparada com o raio do estado atual da torre.
+
+É leitura, não regra: `BoardRenderer.flashSplashCells` desenha na camada das células (por baixo
+dos bichos e das torres), tem teto de nove quadros por tiro e, com "menos movimento" ligado,
+acende e apaga uma vez só em vez de piscar.
+
+**Verificado no Studio (Play real):** Pipoca posicionada ao lado do corredor na fase 2 — a cada
+tiro dois quadrados do caminho acenderam em amarelo sob os Fiapos e apagaram junto com o anel.
+
+### Pausa, doca BUILD e rodapé limpo (2026-09-20)
+
+Quatro pedidos do responsável, todos no HUD de combate:
+
+**A prévia da próxima onda saiu.** A pílula "Próxima onda: 8× Fiapo" ocupava o canto inferior
+esquerdo e ninguém olhava para ela; a informação continua na entrada do caminho (a contagem) e na
+tela de fases.
+
+**Os objetivos moraram para a pausa.** `Opções` e `Sair` saíram da faixa de cima e viraram um
+botão só: **Pausa**. Ele abre uma cortina com os objetivos da fase (com a marca ★/☆ ao vivo),
+Continuar, Opções e Sair. A pausa **não para a simulação** — o combate é do servidor e, em grupo,
+parar seria parar o jogo dos outros; o cartão diz isso em uma linha. O cartão vive num rolável com
+teto por modo, então título e "Sair" não ficam cortados em tela de celular.
+
+**A doca de torres encolhe no celular.** Aberta no canto inferior direito, ela cobria justamente o
+Farol. Agora, no layout compacto, ela vira um botão **BUILD**: toca e abre a grade 2×2, o **X**
+fecha e **posicionar uma torre fecha sozinho** (`GameFlow.placeTower` → `setBuildDockOpen(false)`).
+No computador nada mudou: a coluna continua sempre à vista.
+
+**O botão de confirmar saiu da barra de construção.** No computador o clique parado já construía;
+no toque, o segundo toque na mesma célula constrói (regra pura em `Rules/BuildIntent`, que os
+testes cobrem). A barra ficou com o texto de instrução e o Cancelar, e no compacto foi para a
+esquerda — centrada, encostava na doca.
+
+**Verificado no Studio (Play real), nas duas réguas:**
+
+- *Celular emulado (Galaxy A16, 780×360):* sem prévia de onda e sem objetivos no tabuleiro; BUILD
+  com o Farol à mostra; abre em grade com X; escolher Dardo, tocar duas vezes na célula constrói e
+  a doca fecha sozinha; pausa inteira na tela.
+- *Computador:* Velocidade + Pausa no topo, doca sempre visível, pausa centrada com os objetivos e
+  os três botões.

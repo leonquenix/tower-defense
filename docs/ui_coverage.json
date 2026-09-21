@@ -210,7 +210,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-20: layout do combate conferido nas duas réguas — computador (1280x720) sem nenhum canto se encostando e celular emulado (780x360) com fichas no topo, doca de torres em grade 2x2 e tudo dentro da tela."
+      "evidence": "Play 2026-09-20: explosão da Pipoca acende no chão as células que o raio pegou (duas a três, piscando e sumindo); layout do combate conferido nas duas réguas — computador (1280x720) sem nenhum canto se encostando e celular emulado (780x360) com fichas no topo, doca de torres em grade 2x2 e tudo dentro da tela."
     },
     "14_posicionar": {
       "kind": "screen",
@@ -227,7 +227,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: clique parado constrói; arrastar com o botão esquerdo (com Dardo escolhido) desloca a câmera sem construir; botão direito fecha a construção."
+      "evidence": "Play 2026-09-20: o botão de confirmar saiu da barra — no computador o clique parado constrói, no toque o segundo toque na mesma célula constrói (conferido no emulador de celular). Arrastar desloca a câmera sem construir; botão direito fecha a construção."
     },
     "15_posicao_invalida": {
       "kind": "screen",
@@ -435,13 +435,14 @@
         "src/client/UI/Screens/Hud.luau"
       ],
       "states": [
-        "colunas laterais",
-        "slots inferiores",
-        "alvos de 44 px"
+        "fichas no topo",
+        "doca encolhida (BUILD)",
+        "doca aberta",
+        "pausa"
       ],
       "implemented": true,
-      "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "studio": true,
+      "evidence": "Play 2026-09-20 no emulador (Galaxy A16, 780x360): fichas no topo à esquerda, doca encolhida no botão BUILD (o Farol volta a aparecer), abre em grade 2x2 com X, fecha sozinha ao posicionar; pausa com objetivos e Continuar/Opções/Sair inteira na tela."
     },
     "29_mobile_posicionar": {
       "kind": "screen",
