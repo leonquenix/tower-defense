@@ -8,3 +8,6 @@ __pycache__/
 Packages/
 ServerPackages/
 DevPackages/
+
+# cópias das referências para o ChatGPT (regeráveis, 55 MB)
+docs/encomenda_arte/para_chatgpt/

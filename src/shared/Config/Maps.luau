@@ -1,6 +1,6 @@
 --!strict
 -- ARQUIVO GERADO por tools/import_balance.py a partir de Pacote_Claude_Code/dados/balanceamento_v1.json
--- Não edite à mão. sha256 da origem: 8bb86d8f9d806739e8e95a867a8837826751b087917d0bc267d94315b1be67f1
+-- Não edite à mão. sha256 da origem: 66e16435344e0e499e0884976838c93271d103505e9ef4ca992fd2312c7ee6a3
 local Types = require(script.Parent.Parent.Types)
 
 export type MapEntry = Types.MapDef & { pathCells: { Types.Cell } }

@@ -37,6 +37,9 @@ local function newMatch(opts)
 		hpScale = if level then level.hpScale else nil,
 		startingCash = if level then level.startingCash else nil,
 		manualWaveStart = if level then level.manualWaveStart else nil,
+		bossHpScale = if level then level.bossHpScale else nil,
+		retryAllowed = opts.retry,
+		supportAllowed = opts.support,
 	})
 end
 
@@ -400,7 +403,10 @@ describe("Simulation / partida curta até vitória e derrota", function()
 		skipPreparation(s)
 		runSteps(s, 20 * 60 * 20)
 		expect(s.phase).toBe("Lost")
-		expect(s.result.buttonsPerPlayer).toBe(math.min(4 * s.result.wavesCompleted, 60))
+		expect(s.result.buttonsPerPlayer).toBe(
+			math.min(Balance.rewards.lossButtonsPerWave * s.result.wavesCompleted, Balance.rewards.lossButtonsCap)
+		)
+		expect(s.result.xpPerPlayer).toBe(Balance.progression.xpPerWave * s.result.wavesCompleted)
 	end)
 	it("fase 1: três ondas, sucata da fase e vitória com estrelas", function()
 		local level = Balance.campaign.levels[1]

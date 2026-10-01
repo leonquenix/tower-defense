@@ -120,6 +120,10 @@ function Snapshot.build(state: Types.MatchState, forUserId: number, full: boolea
 		damageTaken = state.campaignStats.damageTaken,
 		towersBuilt = state.campaignStats.towersBuilt,
 		wavesRushed = state.campaignStats.wavesRushed,
+		retryAvailable = Simulation.canRetry(state),
+		lostAtWave = state.lostAtWave,
+		supportAvailable = Simulation.canUseSupport(state, forUserId),
+		assisted = state.assisted,
 	}
 end
 

@@ -1,8 +1,8 @@
 {
-  "elapsedSeconds": 0.01958420837763697,
+  "elapsedSeconds": 0.021883166627958417,
   "failed": 0,
   "failures": {},
-  "passed": 179,
+  "passed": 209,
   "suites": [
     {
       "name": "Grid",
@@ -178,7 +178,7 @@
           "ok": true
         },
         {
-          "name": "botões por resultado",
+          "name": "botões por resultado: vitória proporcional às ondas jogadas",
           "ok": true
         },
         {
@@ -934,7 +934,172 @@
           "ok": true
         }
       ]
+    },
+    {
+      "name": "Retomada",
+      "tests": [
+        {
+          "name": "o Farol apagado congela a partida em decisão, sem derrota ainda",
+          "ok": true
+        },
+        {
+          "name": "repete a onda com torres e carteira do início dela e o Farol cheio",
+          "ok": true
+        },
+        {
+          "name": "uma por partida: a segunda derrota é definitiva",
+          "ok": true
+        },
+        {
+          "name": "recusar vira derrota normal com a recompensa de derrota",
+          "ok": true
+        },
+        {
+          "name": "partida sem Retomada permitida perde na hora",
+          "ok": true
+        },
+        {
+          "name": "ids e relógio não voltam no tempo",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Reforço",
+      "tests": [
+        {
+          "name": "coloca uma torre de graça só na preparação, uma vez por jogador",
+          "ok": true
+        },
+        {
+          "name": "vender a torre do Reforço devolve só o que foi pago em melhorias",
+          "ok": true
+        },
+        {
+          "name": "depois que a onda começa, não há mais Reforço",
+          "ok": true
+        },
+        {
+          "name": "partida sem Reforço permitido recusa a torre grátis",
+          "ok": true
+        },
+        {
+          "name": "vitória com ajuda abre a fase, mas não dá estrela de objetivo",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Chefe no fim do mapa",
+      "tests": [
+        {
+          "name": "a fase com bossHpScale traz o chefe depois da última onda, com a vida escalada",
+          "ok": true
+        },
+        {
+          "name": "fase sem bossHpScale termina sem chefe",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Objetivos novos",
+      "tests": [
+        {
+          "name": "noSell: nenhuma torre vendida",
+          "ok": true
+        },
+        {
+          "name": "minCircuits: circuitos ligados no fim",
+          "ok": true
+        },
+        {
+          "name": "a partida conta vendas e circuitos ligados",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Progression / XP e nível",
+      "tests": [
+        {
+          "name": "curva: 120 + 45 x (n - 1) por nível",
+          "ok": true
+        },
+        {
+          "name": "teto de nível",
+          "ok": true
+        },
+        {
+          "name": "XP da partida: ondas, vitória, dificuldade e grupo",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Progression / recompensas de nível",
+      "tests": [
+        {
+          "name": "cada nível paga botões uma vez, múltiplos de 5 pagam Retomada e torres abrem",
+          "ok": true
+        },
+        {
+          "name": "torre antecipada com botões não é entregue de novo pelo nível",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Progression / recompensa diária",
+      "tests": [
+        {
+          "name": "sequência de 7 dias, um resgate por dia",
+          "ok": true
+        },
+        {
+          "name": "pular um dia volta para o dia 1; depois do 7 volta ao 1",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Progression / presentes de sessão",
+      "tests": [
+        {
+          "name": "só depois do tempo, uma vez por dia",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Perfil v4 / fichas e compras",
+      "tests": [
+        {
+          "name": "v3 -> v4: XP nasce do histórico, torres do nível abrem, mapUnlocks sai",
+          "ok": true
+        },
+        {
+          "name": "v3 -> v4 depois do Reconcile do ProfileStore (xp = 0 do modelo) ainda usa o histórico",
+          "ok": true
+        },
+        {
+          "name": "o mesmo recibo nunca entrega duas vezes",
+          "ok": true
+        },
+        {
+          "name": "o registro de recibos tem teto e guarda os mais recentes",
+          "ok": true
+        },
+        {
+          "name": "gastar ficha exige estoque; Retomada por botões",
+          "ok": true
+        },
+        {
+          "name": "resultado soma XP, sobe nível e entrega o presente da primeira vitória uma vez",
+          "ok": true
+        }
+      ]
     }
   ],
-  "timestamp": "2026-09-20T21:43:42Z"
+  "timestamp": "2026-09-28T08:34:43Z"
 }

@@ -161,6 +161,10 @@ local function objectiveText(objective: Types.ObjectiveDef): string
 		return L("objective.onlyTowers", { towers = table.concat(names, " · ") })
 	elseif kind == "rushAll" then
 		return L("objective.rushAll")
+	elseif kind == "noSell" then
+		return L("objective.noSell")
+	elseif kind == "minCircuits" then
+		return L("objective.minCircuits", { value = objective.value or 0 })
 	end
 	return ""
 end
@@ -222,12 +226,26 @@ return function(scope: Kit.Scope, props: Props): Frame
 	local zoomed = Bridge.use(scope, Atoms.zoomed)
 	local paused = Bridge.use(scope, Atoms.paused)
 	local dockOpen = Bridge.use(scope, Atoms.buildDockOpen)
+	local supportArmed = Bridge.use(scope, Atoms.supportArmed)
+	local retryDeclined = Bridge.use(scope, Atoms.retryDeclined)
+	local shop = Bridge.use(scope, Atoms.shop)
+	local supportCount = Bridge.map(scope, Atoms.profile, function()
+		return Selectors.itemCount("support")
+	end)
+	local retryCount = Bridge.map(scope, Atoms.profile, function()
+		return Selectors.itemCount("retry")
+	end)
+	local buttonsBalance = Bridge.map(scope, Atoms.profile, function()
+		return Selectors.buttons()
+	end)
 
 	-- Aparelho de toque decide o fluxo de construção (um toque posiciona, outro constrói).
 	local touchInput = InputController.isTouchDevice()
 	-- Modo lido na montagem: o App remonta a árvore inteira quando ele muda, e só a escala
 	-- (que não mexe no layout) é aplicada sem remontar.
 	local M: Metrics = if Responsive.isCompact() then COMPACT else DESKTOP
+
+	local openItemOffer: (item: string) -> ()
 
 	local wallet = scope:Computed(function(use)
 		local current = use(snapshot)
@@ -463,6 +481,9 @@ return function(scope: Kit.Scope, props: Props): Frame
 			if not current then
 				return false
 			end
+			if Kit.read(use, supportArmed) and current.supportAvailable then
+				return true
+			end
 			return current.mode == "training" or current.wallet >= cost
 		end)
 		return Kit.pressable(innerScope, {
@@ -660,6 +681,48 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end,
 	})
 
+	-- Detalhe do item sem ficha no inventário: explica o efeito e o limite e só então oferece a
+	-- compra. O preço é o do Roblox; sem preço, o modal diz que a compra está indisponível.
+	openItemOffer = function(item: string)
+		if peek(shop) == nil then
+			GameFlow.queryShop()
+		end
+		local offer = Selectors.offerFor(item)
+		local desc = L(if item == "retry" then "item.retryDesc" else "item.supportDesc")
+		local limit = L(if item == "retry" then "item.limitRetry" else "item.limitSupport")
+		local body = desc .. "\n" .. limit .. "\n" .. L("item.assistNote")
+		if not offer then
+			Actions.openModal({
+				title = L("item." .. item),
+				body = body .. "\n\n" .. L("shop.purchaseUnavailable"),
+				confirmText = L("common.ok"),
+				onConfirm = Actions.closeModal,
+			})
+			return
+		end
+		local product = offer :: { [string]: any }
+		Actions.openModal({
+			title = L("item." .. item),
+			body = body,
+			confirmText = L("shop.buyOne", { price = product.price }),
+			onConfirm = function()
+				Actions.closeModal()
+				GameFlow.buyProduct(product.id)
+			end,
+		})
+	end
+
+	-- Reforço armado perde o sentido quando a onda começa: desarma sozinho. A tela de derrota
+	-- consulta a vitrine para mostrar o preço real da Retomada.
+	Bridge.watch(scope, Atoms.snapshot, function(current: Types.MatchSnapshot?)
+		if Atoms.supportArmed() and (current == nil or not current.supportAvailable) then
+			Actions.setSupportArmed(false)
+		end
+		if current and current.phase == "RetryDecision" and Atoms.shop() == nil then
+			GameFlow.queryShop()
+		end
+	end)
+
 	-- ------------------------------------------------------------------
 	-- Rodapé: o botão de iniciar a onda
 	-- ------------------------------------------------------------------
@@ -695,6 +758,39 @@ return function(scope: Kit.Scope, props: Props): Frame
 				zIndex = 11,
 				onActivate = function()
 					BoardPresenter.resetZoom()
+				end,
+			}),
+			-- Reforço: só na preparação, antes da primeira onda. Com ficha, arma a torre grátis;
+			-- sem ficha, abre o detalhe do item (a compra é um segundo toque, nunca automática).
+			Kit.button(scope, {
+				name = "Support",
+				text = scope:Computed(function(use)
+					return if Kit.read(use, supportArmed) then L("support.armed") else L("support.button")
+				end),
+				sub = scope:Computed(function(use)
+					if Kit.read(use, supportArmed) then
+						return L("support.cancel")
+					end
+					return L("support.count", { count = Kit.read(use, supportCount) })
+				end),
+				icon = "ui_plus",
+				kind = scope:Computed(function(use)
+					return if Kit.read(use, supportArmed) then "primary" else "cyan"
+				end),
+				textSize = if M.dockCollapsible then 15 else 18,
+				size = UDim2.fromOffset(if M.dockCollapsible then 150 else 210, M.action.Y),
+				layoutOrder = 2,
+				zIndex = 11,
+				visible = scope:Computed(function(use)
+					local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
+					return current ~= nil and current.supportAvailable and current.phase == "Preparation"
+				end),
+				onActivate = function()
+					if Selectors.itemCount("support") > 0 or peek(supportArmed) then
+						GameFlow.toggleSupport()
+					else
+						openItemOffer("support")
+					end
 				end,
 			}),
 			-- Único botão verde do jogo: é o que solta a onda.
@@ -798,6 +894,9 @@ return function(scope: Kit.Scope, props: Props): Frame
 						return ""
 					end
 					local params = { tower = def.name, cost = def.states.L0.cost }
+					if Kit.read(use, supportArmed) then
+						return L("support.buildHint", params)
+					end
 					return if touchInput then L("build.tapTwice", params) else L("build.clickToBuild", params)
 				end),
 				Font = Theme.fonts.bodyMedium,
@@ -1047,11 +1146,17 @@ return function(scope: Kit.Scope, props: Props): Frame
 						towerIds = {},
 						wavesRushed = current.wavesRushed,
 						wavesTotal = current.totalWaves,
+						towersSold = 0,
+						circuitsActive = 0,
 					}
 					for _, objective in ipairs(level.objectives) do
 						-- "só estas torres" não dá para conferir ao vivo (o fio não manda a lista),
 						-- então ela aparece sem marca até o fim da partida
-						local live = objective.kind ~= "onlyTowers" and Stars.objectiveMet(objective, stats)
+						-- (vendas e circuitos ligados também só se sabem no fim)
+						local deferred = objective.kind == "onlyTowers"
+							or objective.kind == "noSell"
+							or objective.kind == "minCircuits"
+						local live = not deferred and not current.assisted and Stars.objectiveMet(objective, stats)
 						local mark = if live then "★" else "☆"
 						table.insert(lines, mark .. " " .. objectiveText(objective))
 					end
@@ -1182,6 +1287,190 @@ return function(scope: Kit.Scope, props: Props): Frame
 		})),
 	})
 
+	-- ------------------------------------------------------------------
+	-- Retomada (o Farol apagou)
+	-- ------------------------------------------------------------------
+	-- A partida está congelada no servidor esperando a decisão. Recomeçar de graça continua a
+	-- um toque (Desistir leva ao resultado, que tem "Tentar novamente"). Nada abre compra sozinho:
+	-- comprar é um botão com o preço escrito.
+	local inDecision = scope:Computed(function(use)
+		local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
+		return current ~= nil and current.phase == "RetryDecision"
+	end)
+	local retryOffer = scope:Computed(function(use)
+		local _ = Kit.read(use, shop)
+		return Selectors.offerFor("retry")
+	end)
+	local retryButtonsPrice = Balance.shop.retry.buttonsPrice
+	local canUseRetry = scope:Computed(function(use)
+		local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
+		return current ~= nil
+			and current.retryAvailable
+			and Kit.read(use, retryCount) > 0
+			and not Kit.read(use, retryDeclined)
+	end)
+	local noToken = scope:Computed(function(use)
+		local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
+		return current ~= nil
+			and current.retryAvailable
+			and Kit.read(use, retryCount) == 0
+			and not Kit.read(use, retryDeclined)
+	end)
+	local retryOverlay = scope:New("Frame")({
+		Name = "RetryOverlay",
+		Active = true,
+		BackgroundColor3 = Theme.colors.inkDeep,
+		BackgroundTransparency = 0.3,
+		BorderSizePixel = 0,
+		Size = UDim2.fromScale(1, 1),
+		Visible = inDecision,
+		ZIndex = 44,
+		[Children] = Kit.children(Kit.scroller(scope, {
+			Name = "RetryScroll",
+			Size = UDim2.fromOffset(M.pauseW + 56, 0),
+			AutomaticSize = Enum.AutomaticSize.Y,
+			Position = UDim2.fromScale(0.5, 0.5),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			ScrollBarThickness = 4,
+			ZIndex = 45,
+			[Children] = Kit.children(
+				scope:New("UISizeConstraint")({ MaxSize = Vector2.new(M.pauseW + 56, M.pauseMaxH) }),
+				Kit.list(scope, { HorizontalAlignment = Enum.HorizontalAlignment.Center }),
+				Kit.panel(scope, {
+					name = "RetryCard",
+					blocking = true,
+					size = UDim2.new(0, M.pauseW + 40, 0, 0),
+					automaticSize = Enum.AutomaticSize.Y,
+					color = Theme.colors.cream,
+					strokeColor = Theme.colors.goldDark,
+					radius = 22,
+					padding = 18,
+					paddingVertical = 14,
+					zIndex = 46,
+					layout = Kit.list(scope, { Padding = UDim.new(0, 8) }),
+					children = Kit.children(
+						Kit.title(scope, {
+							Text = L("retry.title"),
+							TextSize = if M.dockCollapsible then 22 else 28,
+							TextXAlignment = Enum.TextXAlignment.Center,
+							Size = UDim2.new(1, 0, 0, if M.dockCollapsible then 26 else 32),
+							LayoutOrder = 1,
+							ZIndex = 47,
+						}),
+						Kit.text(scope, {
+							Text = scope:Computed(function(use)
+								local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
+								return L("retry.summary", { wave = if current then current.lostAtWave else 0 })
+							end),
+							TextSize = 15,
+							TextXAlignment = Enum.TextXAlignment.Center,
+							Size = UDim2.new(1, 0, 0, 0),
+							AutomaticSize = Enum.AutomaticSize.Y,
+							LayoutOrder = 2,
+							ZIndex = 47,
+						}),
+						Kit.caption(scope, {
+							Text = scope:Computed(function(use)
+								local current: Types.MatchSnapshot? = Kit.read(use, snapshot)
+								local group = current ~= nil and #current.participants > 1
+								return (if group then L("retry.group") .. " " else "") .. L("item.assistNote")
+							end),
+							TextXAlignment = Enum.TextXAlignment.Center,
+							Size = UDim2.new(1, 0, 0, 0),
+							AutomaticSize = Enum.AutomaticSize.Y,
+							LayoutOrder = 3,
+							ZIndex = 47,
+						}),
+						Kit.button(scope, {
+							name = "UseRetry",
+							text = L("retry.use"),
+							sub = scope:Computed(function(use)
+								return L("retry.have", { count = Kit.read(use, retryCount) })
+							end),
+							kind = "grass",
+							icon = "ui_play",
+							visible = canUseRetry,
+							size = UDim2.new(1, 0, 0, M.pauseButton + 8),
+							layoutOrder = 4,
+							zIndex = 47,
+							onActivate = GameFlow.useRetry,
+						}),
+						Kit.button(scope, {
+							name = "BuyRetry",
+							text = scope:Computed(function(use)
+								local offer = Kit.read(use, retryOffer)
+								return L("retry.buy", { price = if offer then offer.price else "?" })
+							end),
+							kind = "primary",
+							visible = scope:Computed(function(use)
+								return Kit.read(use, noToken) and Kit.read(use, retryOffer) ~= nil
+							end),
+							size = UDim2.new(1, 0, 0, M.pauseButton + 8),
+							layoutOrder = 5,
+							zIndex = 47,
+							onActivate = function()
+								local offer = peek(retryOffer)
+								if offer then
+									GameFlow.buyProduct(offer.id)
+								end
+							end,
+						}),
+						Kit.button(scope, {
+							name = "RetryButtons",
+							text = L("retry.buyButtons", { price = retryButtonsPrice }),
+							sub = scope:Computed(function(use)
+								return tostring(Kit.read(use, buttonsBalance)) .. " " .. L("common.buttons")
+							end),
+							kind = "secondary",
+							visible = scope:Computed(function(use)
+								return Kit.read(use, noToken) and Kit.read(use, buttonsBalance) >= retryButtonsPrice
+							end),
+							size = UDim2.new(1, 0, 0, M.pauseButton),
+							layoutOrder = 6,
+							zIndex = 47,
+							onActivate = function()
+								GameFlow.buyRetryWithButtons()
+							end,
+						}),
+						Kit.caption(scope, {
+							Text = L("retry.noOffer"),
+							Visible = scope:Computed(function(use)
+								return Kit.read(use, noToken)
+									and Kit.read(use, retryOffer) == nil
+									and Kit.read(use, buttonsBalance) < retryButtonsPrice
+							end),
+							TextXAlignment = Enum.TextXAlignment.Center,
+							Size = UDim2.new(1, 0, 0, 0),
+							AutomaticSize = Enum.AutomaticSize.Y,
+							LayoutOrder = 7,
+							ZIndex = 47,
+						}),
+						Kit.button(scope, {
+							name = "Decline",
+							text = L("retry.decline"),
+							kind = "danger",
+							visible = scope:Computed(function(use)
+								return not Kit.read(use, retryDeclined)
+							end),
+							size = UDim2.new(1, 0, 0, M.pauseButton),
+							layoutOrder = 8,
+							zIndex = 47,
+							onActivate = GameFlow.declineRetry,
+						}),
+						Kit.caption(scope, {
+							Text = L("retry.waiting"),
+							Visible = retryDeclined,
+							TextXAlignment = Enum.TextXAlignment.Center,
+							Size = UDim2.new(1, 0, 0, 20),
+							LayoutOrder = 9,
+							ZIndex = 47,
+						})
+					),
+				})
+			),
+		})),
+	})
+
 	local trainingPanel = Kit.panel(scope, {
 		name = "Training",
 		blocking = true,
@@ -1271,7 +1560,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 			bossPanel,
 			connectionBanner,
 			contextColumn,
-			pauseOverlay
+			pauseOverlay,
+			retryOverlay
 		),
 	})
 end

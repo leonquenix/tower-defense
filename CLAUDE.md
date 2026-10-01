@@ -145,7 +145,7 @@ Hoje `unlockAllMaps = true`: a regra de campanha continua em `ProfileSchema.camp
 (`ServerPackages`): só a interface (`ReplicatedStorage.CmdrClient`) e as definições dos comandos
 chegam ao cliente. Os comandos vivem em `src/server/Console/Commands/` aos pares — `<nome>.luau`
 (definição, replicada) e `<nome>Server.luau` (execução, só servidor) — e são `setCoins`,
-`setHealth`, `forceWin [stars]` e `forceLoss`. Nome de comando em inglês é a convenção do console;
+`setHealth`, `forceWin [stars]`, `forceLoss`, `grantItem <retry|support> [n]` e `addXp <n>`. Nome de comando em inglês é a convenção do console;
 comentários e recados continuam em português.
 
 Nenhum comando escreve no estado da partida: todos chamam as funções `cheat*` do `MatchService`,
@@ -169,3 +169,25 @@ seguinte abre com pelo menos uma estrela na anterior — `ProfileSchema.campaign
 A fase 1 é a única com `manualWaveStart` (as ondas esperam o jogador chamar) e `intro`: um guia de
 três passos mostrado uma vez por perfil (`campaignIntroSeen`, marcado pelo servidor quando a
 primeira onda sai). O guia é só apresentação — quem valida construção continua sendo a simulação.
+
+## Progressão e fichas pagas (2026-09-28)
+
+A regra "nada comprado afeta o combate" caiu por decisão do responsável; a política atual está em
+`docs/MONETIZACAO.md` (sem gacha, recomeçar grátis, compra só por toque, ajuda não dá estrela de
+objetivo). Números em `balanceamento_v1.json`: `progression`, `retention`, `shop.products`,
+`shop.retry`, `towers[].unlockLevel`, `levels[].bossHpScale` e `levels[].firstClearReward`.
+
+- **Conta**: `Rules/Progression` (pura) calcula XP, nível, recompensa de cada nível, diária de 7
+  dias e presentes de sessão. Torres abrem pelo nível; `BuyTower` com botões só antecipa. A
+  vitória paga botões proporcionais às ondas (`winButtonsReferenceWaves`).
+- **Perfil v4**: `xp`, `rewardedLevel`, `inventory {retry, support}`, `purchases` (recibos),
+  `daily`, `sessionGifts`, `grants`, `onboardingStep`; `mapUnlocks` saiu.
+- **Retomada**: a simulação tira uma foto no início de cada onda (`Checkpoint`); com o Farol a zero
+  a fase vira `RetryDecision` (tempo parado). `MatchService` dá o prazo real, consome a ficha e
+  chama `Simulation.applyRetry` (relógio, revisão e ids nunca voltam). Uma por partida.
+- **Reforço**: `PlaceTower { support = true }` na preparação; torre L0 sem custo e sem investido.
+- **Ajuda** marca `state.assisted`; `Stars.evaluate` então só dá a estrela da vitória.
+- **Compras**: `ShopService` é o único `ProcessReceipt`; entrega idempotente por `PurchaseId` e só
+  confirma depois de `PlayerDataService.saveAndConfirm`. Sem `productId` no JSON, a compra fica
+  oculta. Nunca reaproveite a chave de um produto para outra entrega.
+- Retomada e Reforço não existem na fase 1 (guia) nem no treino.

@@ -3,7 +3,7 @@
 -- devolve quantas estrelas e quais objetivos foram cumpridos.
 --
 -- A primeira estrela é sempre vencer. As outras duas são os `objectives` da fase, e só contam
--- se a partida foi vencida — não existe "perdi mas levei estrela".
+-- se a partida foi vencida — não existe "perdi mas levei estrela" — e sem ajuda paga.
 local Types = require(script.Parent.Parent.Types)
 
 local Stars = {}
@@ -34,15 +34,22 @@ function Stars.objectiveMet(objective: Types.ObjectiveDef, stats: Types.Campaign
 		return next(stats.towerIds) ~= nil
 	elseif kind == "rushAll" then
 		return stats.wavesTotal > 0 and stats.wavesRushed >= stats.wavesTotal
+	elseif kind == "noSell" then
+		return (stats.towersSold or 0) == 0
+	elseif kind == "minCircuits" then
+		return (stats.circuitsActive or 0) >= (objective.value or 0)
 	end
 	return false
 end
 
 -- Texto de apoio fica na interface (Localization); aqui só a regra.
-function Stars.evaluate(level: Types.LevelDef, won: boolean, stats: Types.CampaignStats): Outcome
+--
+-- `assisted`: a partida usou Retomada ou Reforço. A vitória continua valendo (estrela 1 e a fase
+-- seguinte abrem), mas as estrelas de objetivo pedem uma tentativa sem ajuda.
+function Stars.evaluate(level: Types.LevelDef, won: boolean, stats: Types.CampaignStats, assisted: boolean?): Outcome
 	local earned: { boolean } = { won }
 	for _, objective in ipairs(level.objectives) do
-		table.insert(earned, won and Stars.objectiveMet(objective, stats))
+		table.insert(earned, won and assisted ~= true and Stars.objectiveMet(objective, stats))
 	end
 	local total = 0
 	for _, ok in ipairs(earned) do

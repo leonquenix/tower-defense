@@ -60,6 +60,13 @@ Client.onLobby(function(kind: string, payload: any)
 				Actions.navigate("menu")
 			end
 		end
+	elseif kind == "profile" then
+		-- perfil novo empurrado pelo servidor (ficha dada pelo console, por exemplo)
+		Actions.setProfile(payload)
+	elseif kind == "purchase" then
+		-- recibo confirmado e gravado: a ficha já está no inventário. Nada é usado sozinho.
+		Actions.setProfile(payload.profile)
+		Actions.purchaseDelivered(payload.item, payload.quantity)
 	elseif kind == "invite" then
 		Actions.addInvite({
 			inviteId = tostring(payload.inviteId),

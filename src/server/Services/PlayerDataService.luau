@@ -14,6 +14,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local Shared = game:GetService("ReplicatedStorage").Shared
 local Types = require(Shared.Types)
 local ProfileSchema = require(Shared.Profile.ProfileSchema)
+local Progression = require(Shared.Rules.Progression)
 local TableUtil = require(Shared.Util.TableUtil)
 local ProfileStore = require(ServerScriptService.ServerPackages.ProfileStore)
 local TelemetryService = require(script.Parent.TelemetryService)
@@ -29,6 +30,8 @@ export type Session = {
 	status: Status,
 	lastError: string?,
 	handle: any?, -- Profile do ProfileStore (nil quando volátil/indisponível)
+	-- relógio da sessão no servidor (presentes de sessão). Recomeça quando o jogador volta.
+	joinedAt: number,
 }
 
 local STORE_NAME = "QuintalProfiles_v1"
@@ -151,6 +154,7 @@ local function ensureSession(player: Player): Session
 		status = "loading",
 		lastError = nil,
 		handle = nil,
+		joinedAt = os.clock(),
 	}
 	sessions[player.UserId] = session
 	task.spawn(startSession, session)
@@ -172,6 +176,42 @@ function PlayerDataService.retryLoad(player: Player)
 	if session and (session.status == "unavailable" or session.status == "locked") then
 		task.spawn(startSession, session)
 	end
+end
+
+-- Segundos desde que o jogador entrou neste servidor (base dos presentes de sessão).
+function PlayerDataService.sessionSeconds(player: Player): number
+	local session = sessions[player.UserId]
+	return if session then os.clock() - session.joinedAt else 0
+end
+
+-- Gravação que espera o DataStore confirmar. Usada por recibo de compra: o Roblox só pode ouvir
+-- "entregue" depois que a ficha está salva. Devolve true quando `check` vale para o último dado
+-- gravado; false se a sessão acabou antes (o recibo fica para a próxima tentativa do Roblox).
+function PlayerDataService.saveAndConfirm(player: Player, check: (any) -> boolean): boolean
+	local session = sessions[player.UserId]
+	if not session then
+		return false
+	end
+	if session.status == "volatile" then
+		return true -- Studio sem DataStore: não há o que esperar
+	end
+	local handle = session.handle
+	while handle and handle:IsActive() do
+		local saved = handle.LastSavedData
+		if saved and check(saved) then
+			return true
+		end
+		handle:Save()
+		if handle.LastSavedData == saved then
+			handle.OnAfterSave:Wait()
+		end
+		local after = handle.LastSavedData
+		if after and check(after) then
+			return true
+		end
+		handle = session.handle
+	end
+	return false
 end
 
 function PlayerDataService.getSession(player: Player): Session?
@@ -226,6 +266,18 @@ function PlayerDataService.mutate(player: Player, fn: (Types.Profile) -> ()): bo
 	(session.profile :: Types.Profile).updatedAt = os.time()
 	notify(session)
 	return true
+end
+
+-- Passo do funil de primeira sessão: registrado uma vez por conta, em ordem crescente.
+function PlayerDataService.markOnboarding(player: Player, step: number, stepName: string)
+	local profile = PlayerDataService.get(player)
+	if not profile or (profile.onboardingStep or 0) >= step then
+		return
+	end
+	PlayerDataService.mutate(player, function(p: Types.Profile)
+		p.onboardingStep = step
+	end)
+	TelemetryService.onboarding(player, step, stepName)
 end
 
 -- Gravação imediata (a periódica é do pacote). `release` encerra a sessão.
@@ -292,17 +344,30 @@ function PlayerDataService.clientView(player: Player): { [string]: any }
 	if not profile or (status ~= "ready" and status ~= "volatile") then
 		return { status = status, error = session.lastError }
 	end
+	local now = os.time()
+	local levelInfo = Progression.levelInfo(profile.xp)
+	local daily = Progression.dailyStatus(profile, now)
 	return {
 		status = status,
 		persistent = status == "ready",
 		lockLost = false, -- perfil carregado: a trava é deste servidor até OnSessionEnd
 		buttons = profile.buttons,
+		-- conta: nível e a barra dentro dele
+		xp = profile.xp,
+		level = levelInfo.level,
+		levelInto = levelInfo.into,
+		levelNeeded = levelInfo.needed,
+		levelMaxed = levelInfo.maxed,
+		inventory = table.clone(profile.inventory),
+		-- retorno: dia disponível da sequência e presentes já abertos hoje
+		daily = { available = daily.available, dayIndex = daily.dayIndex, streak = daily.streak },
+		giftsClaimed = table.clone(Progression.giftsClaimedToday(profile, now)),
+		sessionSeconds = math.floor(os.clock() - session.joinedAt),
 		ownedTowerIds = table.clone(profile.ownedTowerIds),
 		loadout = table.clone(profile.loadout),
 		cosmeticsOwned = table.clone(profile.cosmeticsOwned),
 		cosmeticLoadout = table.clone(profile.cosmeticLoadout),
 		masteryByTower = TableUtil.deepClone(profile.masteryByTower),
-		mapUnlocks = table.clone(profile.mapUnlocks),
 		-- campanha: estrelas por fase e se o guia da primeira fase já foi visto
 		campaign = table.clone(profile.campaign),
 		campaignIntroSeen = profile.campaignIntroSeen,

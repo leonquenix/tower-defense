@@ -15,6 +15,8 @@ export type Phase =
 	| "Intermission"
 	| "Won"
 	| "Lost"
+	-- o Farol apagou, mas a partida pode ser retomada do início da onda (Retomada)
+	| "RetryDecision"
 	| "RewardPending"
 	| "Closed"
 	| "Abandoned"
@@ -49,7 +51,8 @@ export type TowerDef = {
 	name: string,
 	role: string,
 	starter: boolean,
-	unlock: number,
+	unlock: number, -- botões para antecipar a torre antes do nível
+	unlockLevel: number, -- nível da conta que libera a torre de graça
 	damageType: DamageType,
 	target: string,
 	perPlayerLimit: number,
@@ -142,6 +145,8 @@ export type EffectsDef = {
 }
 
 export type RewardsDef = {
+	-- a vitória paga winButtons da dificuldade proporcional às ondas: ondas / referência
+	winButtonsReferenceWaves: number,
 	lossButtonsPerWave: number,
 	lossButtonsCap: number,
 	masteryWin: number,
@@ -154,7 +159,7 @@ export type RewardsDef = {
 -- Campanha: fases declaradas em dados. A primeira estrela é sempre vencer; as outras duas saem
 -- dos objetivos, avaliados pelo servidor a partir das estatísticas da partida (Rules/Stars).
 export type ObjectiveDef = {
-	kind: string, -- noLeak | maxDamage | maxTowers | onlyTowers | rushAll
+	kind: string, -- noLeak | maxDamage | maxTowers | onlyTowers | rushAll | noSell | minCircuits
 	value: number?,
 	towers: { string }?,
 }
@@ -166,6 +171,10 @@ export type LevelDef = {
 	hpScale: number,
 	startingCash: number,
 	objectives: { ObjectiveDef },
+	-- chefe do mapa depois da última onda da fase, com a vida escalada por este fator
+	bossHpScale: number?,
+	-- entregue uma vez por conta, na primeira vitória da fase
+	firstClearReward: RewardBundle?,
 	-- só a primeira fase: as ondas esperam o jogador chamar, e o guia inicial aparece uma vez
 	manualWaveStart: boolean?,
 	intro: boolean?,
@@ -186,12 +195,55 @@ export type CampaignStats = {
 	towerIds: { [string]: boolean },
 	wavesRushed: number,
 	wavesTotal: number,
+	towersSold: number,
+	circuitsActive: number, -- circuitos ligados no fim da partida
+}
+
+-- Pacote de recompensa: botões e fichas. É o mesmo formato para nível, dia, presente e fase.
+export type ItemId = "retry" | "support"
+export type RewardBundle = { buttons: number?, retry: number?, support: number? }
+
+export type ProductDef = {
+	id: string,
+	item: ItemId,
+	quantity: number,
+	productId: number?, -- nil até o produto existir no Creator Hub
+	proposedRobux: number,
 }
 
 export type ShopDef = {
 	enabledByDefault: boolean,
 	founderPassId: number?,
 	proposedRobuxPrice: number,
+	products: { ProductDef },
+	retry: {
+		enabled: boolean,
+		decisionSeconds: number, -- quanto a tela de derrota espera uma decisão
+		promptGraceSeconds: number, -- prazo extra enquanto a compra do Roblox está aberta
+		prepSeconds: number, -- preparação curta antes de repetir a onda
+		buttonsPrice: number, -- Retomada também sai por botões
+	},
+	support: { enabled: boolean },
+}
+
+export type ProgressionDef = {
+	xpPerWave: number,
+	xpWinBonus: number,
+	xpDifficulty: { [string]: number },
+	xpPerExtraPlayer: number,
+	xpGroupCap: number,
+	levelBase: number,
+	levelStep: number,
+	maxLevel: number,
+	levelButtons: number,
+	levelRetryEvery: number,
+}
+
+export type SessionGiftDef = { minutes: number, buttons: number?, retry: number?, support: number? }
+
+export type RetentionDef = {
+	dailyRewards: { RewardBundle },
+	sessionGifts: { SessionGiftDef },
 }
 
 export type GridDef = {
@@ -233,6 +285,8 @@ export type BalanceData = {
 	earlyWaveBonusPerSecond: number,
 	earlyWaveBonusMax: number,
 	sellRefund: number,
+	progression: ProgressionDef,
+	retention: RetentionDef,
 }
 
 -- ---------------------------------------------------------------------------
@@ -336,6 +390,10 @@ export type MatchConfig = {
 	hpScale: number?,
 	startingCash: number?,
 	manualWaveStart: boolean?,
+	bossHpScale: number?,
+	-- monetização: Retomada na derrota e Reforço na preparação (fora do guia e do treino)
+	retryAllowed: boolean?,
+	supportAllowed: boolean?,
 }
 
 export type MatchResult = {
@@ -345,7 +403,10 @@ export type MatchResult = {
 	stars: number,
 	starsEarned: { boolean }, -- vitória, objetivo 1, objetivo 2
 	campaignStats: CampaignStats?,
+	-- usou Retomada ou Reforço: vitória vale, estrelas de objetivo não
+	assisted: boolean,
 	buttonsPerPlayer: number,
+	xpPerPlayer: number,
 	eligibleUserIds: { number },
 	masteryByUser: { [number]: { [string]: number } },
 	statsByUser: { [number]: PlayerMatchStats },
@@ -393,6 +454,27 @@ export type MatchState = {
 	manualWaveStart: boolean,
 	campaignStats: CampaignStats,
 	lastSupportPulseAt: { [number]: number },
+	bossHpScale: number?,
+	-- Retomada: foto do início da onda atual. Fichas, uso e o sinal de ajuda ficam fora dela e
+	-- nunca voltam no tempo.
+	checkpoint: Checkpoint?,
+	retryAllowed: boolean,
+	retryUsed: boolean,
+	lostAtWave: number, -- onda em que o Farol apagou (0 enquanto não apagou)
+	supportAllowed: boolean,
+	supportUsedBy: { [number]: boolean },
+	assisted: boolean,
+}
+
+export type Checkpoint = {
+	waveIndex: number,
+	wallets: { [number]: number },
+	towers: { [number]: Tower },
+	towerOrder: { number },
+	cellOccupancy: { [number]: number },
+	pulseRemaining: number,
+	bountyCursor: number,
+	campaignStats: CampaignStats,
 }
 
 export type TrainingSpawn = { defId: string, at: number }
@@ -470,15 +552,31 @@ export type LifetimeStats = {
 
 export type PendingResultRef = { matchId: string, createdAt: number }
 
+export type Inventory = { retry: number, support: number }
+
 export type Profile = {
 	schemaVersion: number,
 	buttons: number,
+	-- conta: XP acumulado e o maior nível cujas recompensas já foram entregues
+	xp: number,
+	rewardedLevel: number,
+	-- fichas guardadas (compradas ou ganhas); só o servidor mexe
+	inventory: Inventory,
+	-- recibos já entregues (PurchaseId -> unix time): a compra nunca é entregue duas vezes
+	purchases: { [string]: number },
+	-- recompensa diária: último dia UTC resgatado e posição na sequência de 7
+	daily: { lastDay: number, streak: number },
+	-- presentes de sessão resgatados hoje (índices em retention.sessionGifts)
+	sessionGifts: { day: number, claimed: { number } },
+	-- concessões únicas por conta (ex.: "firstClear:2")
+	grants: { [string]: boolean },
+	-- maior passo do funil de primeira sessão já registrado
+	onboardingStep: number,
 	ownedTowerIds: { string },
 	loadout: { string },
 	cosmeticsOwned: { string },
 	cosmeticLoadout: { [string]: string },
 	masteryByTower: { [string]: MasteryRecord },
-	mapUnlocks: { [string]: boolean },
 	-- campanha: estrelas por fase (0..3). Fase sem entrada nunca foi vencida.
 	campaign: { [string]: number },
 	campaignIntroSeen: boolean,
@@ -506,6 +604,7 @@ export type MatchResultRecord = {
 	difficulty: Difficulty,
 	wavesCompleted: number,
 	buttonsPerPlayer: number,
+	xpPerPlayer: number?, -- ausente em registros anteriores à v4 do perfil
 	eligibleUserIds: { number },
 	masteryByUser: { [string]: { [string]: number } },
 	appliedUserIds: { number },
@@ -586,6 +685,11 @@ export type MatchSnapshot = {
 	damageTaken: number,
 	towersBuilt: number,
 	wavesRushed: number,
+	-- monetização: o que o HUD e a tela de derrota podem oferecer agora
+	retryAvailable: boolean, -- Farol apagou e a Retomada ainda não foi usada nesta partida
+	lostAtWave: number,
+	supportAvailable: boolean, -- o destinatário ainda pode usar o Reforço (preparação, sem uso)
+	assisted: boolean,
 }
 
 export type NetEvent = {

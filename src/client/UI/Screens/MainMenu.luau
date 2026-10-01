@@ -6,8 +6,10 @@
 -- português mora aqui — as frases saem de Config/Localization. Se o logotipo ainda não estiver
 -- publicado (Config/Brand), a tela desenha o título em texto, sem erro e sem buraco.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local Assets = require(ReplicatedStorage.Shared.Config.Assets)
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Brand = require(ReplicatedStorage.Shared.Config.Brand)
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
@@ -62,6 +64,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 		return Selectors.buttons()
 	end)
 	local profileStatus = Bridge.use(scope, Atoms.profileStatus)
+	local profileState = Bridge.use(scope, Atoms.profile)
 	local compact = Bridge.use(scope, Atoms.compact)
 	local team = Bridge.map(scope, Atoms.profile, function(): string
 		local names: { string } = {}
@@ -233,7 +236,33 @@ return function(scope: Kit.Scope, props: Props): Frame
 		),
 	})
 
-	-- Ficha de saldo no canto superior direito, como na maquete.
+	-- Fichas de canto: nível da conta (com a barra dentro do nível) e saldo de botões.
+	local levelChip = Kit.chip(scope, {
+		name = "Level",
+		icon = "ui_upgrade",
+		caption = scope:Computed(function(use)
+			local _ = use(profileState)
+			local profile = Atoms.profile()
+			if profile and profile.levelMaxed then
+				return L("level.max")
+			end
+			return L("level.xp", {
+				into = if profile then (profile.levelInto or 0) else 0,
+				needed = if profile then (profile.levelNeeded or 0) else 0,
+			})
+		end),
+		value = scope:Computed(function(use)
+			local _ = use(profileState)
+			return L("level.label", { level = Selectors.level() })
+		end),
+		accent = Theme.colors.cyan,
+		progress = scope:Computed(function(use)
+			local _ = use(profileState)
+			return Selectors.levelProgress()
+		end),
+		width = UDim2.new(0, 0, 0, 56),
+		layoutOrder = 1,
+	})
 	local balance = Kit.chip(scope, {
 		name = "Buttons",
 		icon = "ui_buttons",
@@ -243,9 +272,166 @@ return function(scope: Kit.Scope, props: Props): Frame
 		end),
 		accent = Theme.colors.gold,
 		width = UDim2.new(0, 0, 0, 56),
+		layoutOrder = 2,
 	})
-	balance.Position = UDim2.new(1, -40, 0, 32)
-	balance.AnchorPoint = Vector2.new(1, 0)
+	local corner = scope:New("Frame")({
+		Name = "Corner",
+		BackgroundTransparency = 1,
+		Size = UDim2.fromOffset(0, 56),
+		AutomaticSize = Enum.AutomaticSize.X,
+		Position = UDim2.new(1, -40, 0, 32),
+		AnchorPoint = Vector2.new(1, 0),
+		[Children] = Kit.children(
+			Kit.list(scope, {
+				FillDirection = Enum.FillDirection.Horizontal,
+				HorizontalAlignment = Enum.HorizontalAlignment.Right,
+				Padding = UDim.new(0, 10),
+			}),
+			levelChip,
+			balance
+		),
+	})
+
+	-- Painel "Hoje": recompensa diária, presentes da sessão e as fichas guardadas. É o motivo de
+	-- abrir o jogo amanhã e de ficar mais um pouco hoje; o servidor confere tudo no resgate.
+	local clock = scope:Value(os.clock())
+	local ticker = RunService.Heartbeat:Connect(function()
+		local now = os.clock()
+		if now - Fusion.peek(clock) >= 1 then
+			clock:set(now)
+		end
+	end)
+	table.insert(scope, ticker)
+	local daily = scope:Computed(function(use): { [string]: any }
+		local _ = use(profileState)
+		local profile = Atoms.profile()
+		return if profile and profile.daily then profile.daily else { available = false, dayIndex = 1 }
+	end)
+	local gift = scope:Computed(function(use): Selectors.GiftState?
+		local _ = use(profileState)
+		return Selectors.nextGift(use(clock))
+	end)
+	local function clockText(seconds: number): string
+		local total = math.max(math.ceil(seconds), 0)
+		return string.format("%d:%02d", total // 60, total % 60)
+	end
+	local rowText = function(props: { name: string, text: Kit.Used<string>, order: number }): TextLabel
+		return Kit.text(scope, {
+			Name = props.name,
+			Text = props.text,
+			Font = Theme.fonts.bodyBold,
+			TextSize = 15,
+			Size = UDim2.new(1, 0, 0, 0),
+			AutomaticSize = Enum.AutomaticSize.Y,
+			LayoutOrder = props.order,
+			ZIndex = 6,
+		})
+	end
+	local today = Kit.panel(scope, {
+		name = "Today",
+		size = UDim2.new(0, 300, 0, 0),
+		automaticSize = Enum.AutomaticSize.Y,
+		position = UDim2.new(1, -40, 0, 104),
+		anchorPoint = Vector2.new(1, 0),
+		color = Theme.colors.paper,
+		radius = Kit.radius.chip,
+		padding = 14,
+		paddingVertical = 12,
+		zIndex = 5,
+		visible = scope:Computed(function(use)
+			return not use(profileBroken)
+		end),
+		layout = Kit.list(scope, { Padding = UDim.new(0, 8) }),
+		children = Kit.children(
+			Kit.title(scope, {
+				Text = L("menu.today"),
+				TextSize = 20,
+				Size = UDim2.new(1, 0, 0, 24),
+				LayoutOrder = 1,
+				ZIndex = 6,
+			}),
+			rowText({
+				name = "DailyText",
+				order = 2,
+				text = scope:Computed(function(use)
+					local state = use(daily)
+					return L("daily.title") .. " · " .. L("daily.day", { day = state.dayIndex or 1 })
+				end),
+			}),
+			Kit.button(scope, {
+				name = "Daily",
+				text = scope:Computed(function(use)
+					return if use(daily).available then L("daily.claim") else L("daily.claimed")
+				end),
+				sub = scope:Computed(function(use)
+					local state = use(daily)
+					local bundle = Balance.retention.dailyRewards[state.dayIndex or 1]
+					return if state.available then Selectors.rewardText(bundle) else ""
+				end),
+				kind = scope:Computed(function(use)
+					return if use(daily).available then "primary" else "quiet"
+				end),
+				disabled = scope:Computed(function(use)
+					return not use(daily).available
+				end),
+				size = UDim2.new(1, 0, 0, 52),
+				layoutOrder = 3,
+				zIndex = 6,
+				onActivate = GameFlow.claimDaily,
+			}),
+			rowText({ name = "GiftText", order = 4, text = L("gifts.title") }),
+			Kit.button(scope, {
+				name = "Gift",
+				text = scope:Computed(function(use): string
+					local state = use(gift)
+					if not state then
+						return L("gifts.done")
+					end
+					return if state.ready
+						then L("gifts.open")
+						else L("gifts.next", { time = clockText(state.secondsLeft) })
+				end),
+				sub = scope:Computed(function(use)
+					local state = use(gift)
+					if not state then
+						return ""
+					end
+					local def = Balance.retention.sessionGifts[state.index]
+					return Selectors.rewardText(def)
+				end),
+				kind = scope:Computed(function(use)
+					local state = use(gift)
+					return if state and state.ready then "primary" else "quiet"
+				end),
+				disabled = scope:Computed(function(use)
+					local state = use(gift)
+					return not (state and state.ready)
+				end),
+				size = UDim2.new(1, 0, 0, 52),
+				layoutOrder = 5,
+				zIndex = 6,
+				onActivate = function()
+					local state = Fusion.peek(gift)
+					if state and state.ready then
+						GameFlow.claimGift(state.index)
+					end
+				end,
+			}),
+			Kit.caption(scope, {
+				Name = "Inventory",
+				Text = scope:Computed(function(use)
+					local _ = use(profileState)
+					return L("inventory.summary", {
+						retry = Selectors.itemCount("retry"),
+						support = Selectors.itemCount("support"),
+					})
+				end),
+				Size = UDim2.new(1, 0, 0, 18),
+				LayoutOrder = 6,
+				ZIndex = 6,
+			})
+		),
+	})
 
 	-- Equipe salva no canto inferior direito: texto e os retratos das torres equipadas.
 	local teamIcons = scope:ForValues(
@@ -318,6 +504,6 @@ return function(scope: Kit.Scope, props: Props): Frame
 		BackgroundTransparency = 1,
 		Size = UDim2.fromScale(1, 1),
 		Visible = props.visible,
-		[Children] = Kit.children(column, balance, teamPill),
+		[Children] = Kit.children(column, corner, today, teamPill),
 	})
 end

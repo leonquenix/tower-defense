@@ -100,7 +100,9 @@ local function evaluateCell(towerId: string, x: number, y: number): (boolean, st
 		return false, "build.limit", nil
 	end
 	local cost = def.states.L0.cost
-	if snapshot.mode ~= "training" and snapshot.wallet < cost then
+	-- com o Reforço armado a torre sai de graça: a carteira não conta (o servidor confere a ficha)
+	local free = Atoms.supportArmed() and snapshot.supportAvailable
+	if snapshot.mode ~= "training" and not free and snapshot.wallet < cost then
 		return false, "build.noFunds", nil
 	end
 	-- prévia de Circuito com a mesma regra determinística do servidor
@@ -492,6 +494,17 @@ local function handleEvents(events: { Types.NetEvent })
 			end
 		elseif event.kind == "towerSold" and Atoms.selectedTowerId() == event.towerId then
 			Actions.selectTower(nil)
+		elseif event.kind == "retryOffer" then
+			-- o Farol apagou: a cortina da decisão é desenhada pelo HUD a partir da fase
+			AudioController.play("base_hit")
+			Actions.setBossBanner(nil)
+			Actions.setPaused(false)
+			Actions.exitBuild()
+			Actions.selectTower(nil)
+		elseif event.kind == "retryApplied" then
+			Actions.setRetryDeclined(false)
+			AudioController.play("ui_confirm")
+			Actions.announce(L("retry.applied", { wave = event.wave or 0 }), nil, "good")
 		end
 	end
 	local _ = currentRenderer

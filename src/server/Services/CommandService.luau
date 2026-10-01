@@ -58,6 +58,8 @@ local MATCH_ACTIONS: { [string]: boolean } = {
 	TrainingClear = true,
 	Rematch = true,
 	DevCommand = true,
+	UseRetry = true,
+	DeclineRetry = true,
 }
 local PARTY_ACTIONS: { [string]: boolean } = {
 	CreateParty = true,

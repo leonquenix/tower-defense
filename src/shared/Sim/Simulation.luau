@@ -10,6 +10,7 @@ local Combat = require(script.Parent.Parent.Rules.Combat)
 local Circuits = require(script.Parent.Parent.Rules.Circuits)
 local Rewards = require(script.Parent.Parent.Rules.Rewards)
 local Stars = require(script.Parent.Parent.Rules.Stars)
+local Progression = require(script.Parent.Parent.Rules.Progression)
 local TableUtil = require(script.Parent.Parent.Util.TableUtil)
 
 local Simulation = {}
@@ -149,7 +150,7 @@ function Simulation.new(config: Types.MatchConfig): Types.MatchState
 		bountyCursor = 1,
 		stats = stats,
 		commonHpFactor = map.hpMultiplier * difficulty.hp * coop * (config.hpScale or 1),
-		bossHpFactor = difficulty.hp * coop * (config.hpScale or 1),
+		bossHpFactor = difficulty.hp * coop * (config.hpScale or 1) * (config.bossHpScale or 1),
 		coopFactor = coop,
 		pathLength = path.totalLength,
 		revision = 0,
@@ -166,8 +167,18 @@ function Simulation.new(config: Types.MatchConfig): Types.MatchState
 			towerIds = {},
 			wavesRushed = 0,
 			wavesTotal = totalWaves,
+			towersSold = 0,
+			circuitsActive = 0,
 		},
 		lastSupportPulseAt = {},
+		bossHpScale = config.bossHpScale,
+		checkpoint = nil,
+		retryAllowed = config.retryAllowed == true and config.mode == "normal",
+		retryUsed = false,
+		lostAtWave = 0,
+		supportAllowed = config.supportAllowed == true and config.mode == "normal",
+		supportUsedBy = {},
+		assisted = false,
 	}
 	return state
 end
@@ -187,6 +198,19 @@ function Simulation.getParticipant(state: Types.MatchState, userId: number): Typ
 		end
 	end
 	return nil
+end
+
+-- Retomada: pode repetir a onda perdida? Uma vez por partida, e só com foto do início da onda.
+function Simulation.canRetry(state: Types.MatchState): boolean
+	return state.phase == "RetryDecision" and state.retryAllowed and not state.retryUsed and state.checkpoint ~= nil
+end
+
+-- Reforço: uma torre de graça por jogador, só na preparação (antes da primeira onda).
+function Simulation.canUseSupport(state: Types.MatchState, userId: number): boolean
+	return state.supportAllowed
+		and state.phase == "Preparation"
+		and state.supportUsedBy[userId] ~= true
+		and Simulation.getParticipant(state, userId) ~= nil
 end
 
 function Simulation.isTerminal(state: Types.MatchState): boolean
@@ -401,6 +425,11 @@ local function grantEarlyWaveBonus(state: Types.MatchState, index: number, event
 	if state.mode == "training" or state.phaseEndsAt == math.huge then
 		return
 	end
+	-- a onda repetida pela Retomada não paga o bônus de novo
+	local checkpoint = state.checkpoint
+	if state.retryUsed and checkpoint and checkpoint.waveIndex == index then
+		return
+	end
 	local remaining = state.phaseEndsAt - state.simTime
 	if remaining <= 0 then
 		return -- o cronômetro acabou sozinho: não houve adiantamento
@@ -417,8 +446,28 @@ local function grantEarlyWaveBonus(state: Types.MatchState, index: number, event
 	table.insert(events, event(state, "earlyBonus", { wave = index, amount = bonus }))
 end
 
+-- Foto do início da onda para a Retomada. Tirada depois do bônus de adiantar e antes do primeiro
+-- inimigo, então o que o jogador comprou na preparação já faz parte dela. Nada aqui é de conta:
+-- fichas, uso da Retomada e o sinal de ajuda ficam fora e nunca voltam no tempo.
+local function takeCheckpoint(state: Types.MatchState, index: number)
+	if not state.retryAllowed or state.retryUsed then
+		return
+	end
+	state.checkpoint = {
+		waveIndex = index,
+		wallets = table.clone(state.wallets),
+		towers = TableUtil.deepClone(state.towers),
+		towerOrder = table.clone(state.towerOrder),
+		cellOccupancy = table.clone(state.cellOccupancy),
+		pulseRemaining = math.max(state.pulseReadyAt - state.simTime, 0),
+		bountyCursor = state.bountyCursor,
+		campaignStats = TableUtil.deepClone(state.campaignStats),
+	}
+end
+
 local function startWave(state: Types.MatchState, index: number, events: { Types.SimEvent })
 	grantEarlyWaveBonus(state, index, events)
+	takeCheckpoint(state, index)
 	state.waveIndex = index
 	state.phase = "Wave"
 	state.waveRuntime = {
@@ -434,10 +483,24 @@ local function startWave(state: Types.MatchState, index: number, events: { Types
 	table.insert(events, event(state, "waveStart", { wave = index, phase = "Wave" }))
 end
 
+-- Circuitos ligados agora: cada par conta uma vez (as duas torres apontam uma para a outra).
+local function countCircuits(state: Types.MatchState): number
+	local n = 0
+	for _, id in ipairs(state.towerOrder) do
+		local t = state.towers[id]
+		if t.circuitPartnerId and t.circuitPartnerId > id then
+			n += 1
+		end
+	end
+	return n
+end
+
 local function finishMatch(state: Types.MatchState, outcome: "won" | "lost", events: { Types.SimEvent })
 	local difficulty = Catalog.getDifficulty(state.difficulty) :: Types.DifficultyDef
 	local wavesCompleted = if outcome == "won" then state.totalWaves else math.max(state.waveIndex - 1, 0)
 	local buttons = Rewards.buttonsForOutcome(state.mode, outcome, wavesCompleted, difficulty, Balance.rewards)
+	local xp = Progression.matchXp(state.mode, outcome, wavesCompleted, state.difficulty, #state.participants)
+	state.campaignStats.circuitsActive = countCircuits(state)
 	local masteryByUser: { [number]: { [string]: number } } = {}
 	for _, p in ipairs(state.participants) do
 		local perTower: { [string]: number } = {}
@@ -454,12 +517,14 @@ local function finishMatch(state: Types.MatchState, outcome: "won" | "lost", eve
 	-- Estrelas da fase: vitória + os dois objetivos, medidos no que a partida realmente fez.
 	local level = if state.levelId then Catalog.getLevel(state.levelId) else nil
 	local starOutcome = if level
-		then Stars.evaluate(level, outcome == "won", state.campaignStats)
+		then Stars.evaluate(level, outcome == "won", state.campaignStats, state.assisted)
 		else { stars = 0, earned = {} }
 	state.result = {
 		outcome = outcome,
 		wavesCompleted = wavesCompleted,
 		buttonsPerPlayer = buttons,
+		xpPerPlayer = xp,
+		assisted = state.assisted,
 		eligibleUserIds = table.clone(state.participantOrder),
 		masteryByUser = masteryByUser,
 		statsByUser = state.stats,
@@ -471,6 +536,30 @@ local function finishMatch(state: Types.MatchState, outcome: "won" | "lost", eve
 	}
 	state.phase = if outcome == "won" then "Won" else "Lost"
 	table.insert(events, event(state, "matchEnd", { phase = state.phase, wave = wavesCompleted, amount = buttons }))
+end
+
+local function clearEnemies(state: Types.MatchState, events: { Types.SimEvent })
+	for _, id in ipairs(table.clone(state.enemyOrder)) do
+		local e = state.enemies[id]
+		cancelTelegraph(state, e, events)
+		removeEnemy(state, e)
+		table.insert(events, event(state, "despawn", { entityId = id }))
+	end
+	state.trainingQueue = {}
+end
+
+-- O Farol apagou. Com Retomada disponível a partida congela esperando a decisão (o relógio de
+-- decisão é do servidor, em tempo real); sem ela, é derrota na hora.
+local function onBaseDestroyed(state: Types.MatchState, events: { Types.SimEvent })
+	if state.retryAllowed and not state.retryUsed and state.checkpoint ~= nil then
+		clearEnemies(state, events)
+		state.lostAtWave = state.waveIndex
+		state.phase = "RetryDecision"
+		resetReady(state)
+		table.insert(events, event(state, "retryOffer", { wave = state.waveIndex, phase = "RetryDecision" }))
+		return
+	end
+	finishMatch(state, "lost", events)
 end
 
 local function completeWave(state: Types.MatchState, events: { Types.SimEvent })
@@ -534,7 +623,9 @@ local function updateSpawning(state: Types.MatchState, events: { Types.SimEvent 
 		if rt.spawnedInGroup >= group.count then
 			if rt.groupIndex >= #waveDef.groups then
 				rt.allGroupsSpawned = true
-				if waveDef.bossAfterGroups then
+				-- o chefe do mapa fecha a onda 20 da tabela e, quando a fase pede, a última onda dela
+				local levelBoss = state.bossHpScale ~= nil and state.waveIndex == state.totalWaves
+				if waveDef.bossAfterGroups or levelBoss then
 					rt.bossScheduledAt = state.simTime + Simulation.BOSS_DELAY_AFTER_GROUPS
 				end
 			else
@@ -978,7 +1069,8 @@ end
 
 function Simulation.step(state: Types.MatchState, dtOverride: number?): { Types.SimEvent }
 	local events: { Types.SimEvent } = {}
-	if Simulation.isTerminal(state) then
+	-- na decisão da Retomada o tempo de simulação para: nada nasce, nada anda
+	if Simulation.isTerminal(state) or state.phase == "RetryDecision" then
 		return events
 	end
 	local dt = dtOverride or Simulation.STEP
@@ -1003,7 +1095,7 @@ function Simulation.step(state: Types.MatchState, dtOverride: number?): { Types.
 	updateSpawning(state, events)
 	updateMovement(state, dt, events)
 	if state.baseHP <= 0 and state.mode ~= "training" then
-		finishMatch(state, "lost", events)
+		onBaseDestroyed(state, events)
 		return events
 	end
 	updateHealing(state, events)
@@ -1051,7 +1143,8 @@ local function bump(state: Types.MatchState, userId: number)
 	end
 end
 
-export type PlaceOptions = { unlockedTowerIds: { string }? }
+-- `free`: a torre sai de graça pelo Reforço (quem confere a ficha é o servidor, antes de chamar).
+export type PlaceOptions = { unlockedTowerIds: { string }?, free: boolean? }
 
 function Simulation.canPlaceAt(state: Types.MatchState, x: number, y: number): (boolean, string?)
 	if not Grid.inBounds(x, y) then
@@ -1108,8 +1201,13 @@ function Simulation.placeTower(
 	if Simulation.countTowersOwned(state, userId, towerId) >= def.perPlayerLimit then
 		return fail(state, "LIMIT_REACHED", userId), events
 	end
-	local cost = def.states.L0.cost
-	if state.mode ~= "training" then
+	local free = options ~= nil and options.free == true
+	if free and not Simulation.canUseSupport(state, userId) then
+		return fail(state, "INVALID_STATE", userId), events
+	end
+	-- torre do Reforço não custa nada e não entra no investido: vender devolve só as melhorias
+	local cost = if free then 0 else def.states.L0.cost
+	if state.mode ~= "training" and not free then
 		if state.wallets[userId] < cost then
 			return fail(state, "INSUFFICIENT_FUNDS", userId), events
 		end
@@ -1138,6 +1236,10 @@ function Simulation.placeTower(
 	table.insert(state.towerOrder, id)
 	state.cellOccupancy[Grid.cellKey(x, y)] = id
 	state.stats[userId].towersPlaced += 1
+	if free then
+		state.supportUsedBy[userId] = true
+		state.assisted = true
+	end
 	-- objetivos de fase olham quantas torres foram construídas e quais tipos entraram em campo
 	state.campaignStats.towersBuilt += 1
 	state.campaignStats.towerIds[towerId] = true
@@ -1217,6 +1319,7 @@ function Simulation.sellTower(
 	TableUtil.removeValue(state.towerOrder, entityId)
 	state.cellOccupancy[Grid.cellKey(tower.x, tower.y)] = nil
 	state.lastSupportPulseAt[entityId] = nil
+	state.campaignStats.towersSold += 1
 	bump(state, userId)
 	table.insert(events, event(state, "towerSold", { towerId = entityId, userId = userId, amount = refund }))
 	recomputeCircuits(state, events)
@@ -1406,6 +1509,8 @@ function Simulation.abandon(state: Types.MatchState): { Types.SimEvent }
 		outcome = "abandoned",
 		wavesCompleted = math.max(state.waveIndex - 1, 0),
 		buttonsPerPlayer = 0,
+		xpPerPlayer = 0,
+		assisted = state.assisted,
 		eligibleUserIds = {},
 		levelId = state.levelId,
 		stars = 0,
@@ -1418,6 +1523,67 @@ function Simulation.abandon(state: Types.MatchState): { Types.SimEvent }
 	state.revision += 1
 	table.insert(events, event(state, "matchEnd", { phase = "Abandoned" }))
 	return events
+end
+
+-- ---------------------------------------------------------------------------
+-- Retomada
+-- ---------------------------------------------------------------------------
+
+-- Volta a partida para o início da onda perdida: torres, carteiras, recarga do Pulso e as
+-- estatísticas de estrela voltam à foto; o Farol volta cheio e há uma preparação curta.
+-- O relógio de simulação, a revisão e os ids de entidade **não** voltam: o cliente precisa deles
+-- sempre crescendo. Quem confere e consome a ficha é o servidor, antes de chamar isto.
+function Simulation.applyRetry(state: Types.MatchState): (Types.CommandResult, { Types.SimEvent })
+	local events: { Types.SimEvent } = {}
+	if not Simulation.canRetry(state) then
+		return fail(state, "INVALID_STATE"), events
+	end
+	local checkpoint = state.checkpoint :: Types.Checkpoint
+	clearEnemies(state, events)
+	state.wallets = table.clone(checkpoint.wallets)
+	state.towers = TableUtil.deepClone(checkpoint.towers)
+	state.towerOrder = table.clone(checkpoint.towerOrder)
+	state.cellOccupancy = table.clone(checkpoint.cellOccupancy)
+	state.bountyCursor = checkpoint.bountyCursor
+	state.campaignStats = TableUtil.deepClone(checkpoint.campaignStats)
+	state.pulseReadyAt = state.simTime + checkpoint.pulseRemaining
+	state.lastSupportPulseAt = {}
+	for _, id in ipairs(state.towerOrder) do
+		local t = state.towers[id]
+		t.cooldown = 0
+		t.dustUntil = 0
+	end
+	state.baseHP = Balance.baseHP
+	state.retryUsed = true
+	state.assisted = true
+	state.lostAtWave = 0
+	state.waveIndex = checkpoint.waveIndex - 1
+	state.phase = "Intermission"
+	state.phaseEndsAt = if state.manualWaveStart then math.huge else state.simTime + Balance.shop.retry.prepSeconds
+	state.waveRuntime = {
+		groupIndex = 0,
+		spawnedInGroup = 0,
+		nextSpawnAt = state.simTime,
+		allGroupsSpawned = true,
+		bossScheduledAt = nil,
+		bossSpawned = false,
+		waveStartedAt = state.simTime,
+	}
+	resetReady(state)
+	state.revision += 1
+	table.insert(events, event(state, "retryApplied", { wave = checkpoint.waveIndex, phase = "Intermission" }))
+	return success(state), events
+end
+
+-- Ninguém quis (ou o prazo acabou): a derrota vira definitiva pelo caminho de sempre.
+function Simulation.declineRetry(state: Types.MatchState): (Types.CommandResult, { Types.SimEvent })
+	local events: { Types.SimEvent } = {}
+	if state.phase ~= "RetryDecision" then
+		return fail(state, "INVALID_STATE"), events
+	end
+	finishMatch(state, "lost", events)
+	state.revision += 1
+	return success(state), events
 end
 
 -- ---------------------------------------------------------------------------

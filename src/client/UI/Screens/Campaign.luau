@@ -52,6 +52,10 @@ local function objectiveText(objective: Types.ObjectiveDef): string
 		return L("objective.onlyTowers", { towers = table.concat(names, " · ") })
 	elseif kind == "rushAll" then
 		return L("objective.rushAll")
+	elseif kind == "noSell" then
+		return L("objective.noSell")
+	elseif kind == "minCircuits" then
+		return L("objective.minCircuits", { value = objective.value or 0 })
 	end
 	return ""
 end

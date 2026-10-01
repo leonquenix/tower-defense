@@ -12,6 +12,9 @@ local Catalog = require(Shared.Config.Catalog)
 local Simulation = require(Shared.Sim.Simulation)
 local Snapshot = require(Shared.Sim.Snapshot)
 local Protocol = require(Shared.Net.Protocol)
+local Products = require(Shared.Config.Products)
+local ProfileSchema = require(Shared.Profile.ProfileSchema)
+local Progression = require(Shared.Rules.Progression)
 local Server = require(script.Parent.Parent.Net.Server)
 local PlayerDataService = require(script.Parent.PlayerDataService)
 local RewardService = require(script.Parent.RewardService)
@@ -52,6 +55,9 @@ export type Match = {
 	createdAt: number,
 	outcomes: { [number]: RewardService.UserOutcome }?,
 	partyId: string?,
+	-- Retomada: prazo real da decisão (os.clock) e quem já disse "não"
+	retryDeadline: number?,
+	retryDeclined: { [number]: boolean },
 }
 
 local matches: { [string]: Match } = {}
@@ -115,6 +121,7 @@ function MatchService.start(request: StartRequest): (Match?, string?)
 		end
 		local profile = PlayerDataService.get(player)
 		local loadout = if profile then table.clone(profile.loadout) else Catalog.starterTowerIds()
+		PlayerDataService.markOnboarding(player, TelemetryService.ONBOARDING.firstMatch, "first_match")
 		table.insert(participants, {
 			userId = player.UserId,
 			connected = true,
@@ -127,6 +134,9 @@ function MatchService.start(request: StartRequest): (Match?, string?)
 		})
 	end
 	local matchId = HttpService:GenerateGUID(false)
+	-- Retomada e Reforço valem na campanha, fora da fase do guia (a primeira fase ensina o jogo e
+	-- não é lugar de oferta) e fora do treino.
+	local monetized = request.mode == "normal" and level ~= nil and not level.intro
 	local state = Simulation.new({
 		matchId = matchId,
 		configVersion = Balance.version .. "+" .. Balance.checksum:sub(1, 8),
@@ -140,6 +150,9 @@ function MatchService.start(request: StartRequest): (Match?, string?)
 		hpScale = if level then level.hpScale else nil,
 		startingCash = if level then level.startingCash else nil,
 		manualWaveStart = if level then level.manualWaveStart else nil,
+		bossHpScale = if level then level.bossHpScale else nil,
+		retryAllowed = monetized and Products.retryEnabled,
+		supportAllowed = monetized and Products.supportEnabled,
 	})
 	local now = os.clock()
 	local match: Match = {
@@ -163,6 +176,8 @@ function MatchService.start(request: StartRequest): (Match?, string?)
 		createdAt = now,
 		outcomes = nil,
 		partyId = request.partyId,
+		retryDeadline = nil,
+		retryDeclined = {},
 	}
 	for _, player in ipairs(request.players) do
 		match.players[player.UserId] = player
@@ -228,6 +243,23 @@ local function settle(match: Match)
 				profile = PlayerDataService.clientView(player),
 			})
 			TelemetryService.funnel(player, "match", 2, "match_end", match.id)
+			local result = state.result
+			if result and result.outcome == "won" and result.levelId then
+				local steps = TelemetryService.ONBOARDING
+				local byLevel = { ["1"] = steps.level1Won, ["2"] = steps.level2Won, ["3"] = steps.level3Won }
+				local step = byLevel[result.levelId]
+				if step then
+					PlayerDataService.markOnboarding(player, step, "level" .. result.levelId .. "_won")
+				end
+			end
+			local profile = PlayerDataService.get(player)
+			if profile and Progression.levelOf(profile.xp) >= 3 then
+				PlayerDataService.markOnboarding(player, TelemetryService.ONBOARDING.accountLevel3, "account_level_3")
+			end
+			local outcome = outcomes[userId]
+			if outcome and outcome.buttons > 0 and profile then
+				TelemetryService.economy(player, true, "buttons", outcome.buttons, profile.buttons, "Gameplay", "match")
+			end
 		end
 	end)
 end
@@ -397,13 +429,65 @@ function MatchService.handle(player: Player, action: string, payload: { [string]
 	if action == "PlaceTower" then
 		local profile = PlayerDataService.get(player)
 		local unlocked = if profile then profile.ownedTowerIds else Catalog.starterTowerIds()
-		local cr, events =
-			Simulation.placeTower(state, userId, payload.towerId, payload.x, payload.y, { unlockedTowerIds = unlocked })
+		-- Reforço: a ficha é conferida antes e só é gasta se a torre de fato entrou em campo
+		local free = payload.support == true
+		if free then
+			if not profile or profile.inventory.support < 1 then
+				return result(false, Protocol.ERROR.INSUFFICIENT_ITEMS)
+			end
+			if not Simulation.canUseSupport(state, userId) then
+				return result(false, Protocol.ERROR.INVALID_STATE)
+			end
+		end
+		local cr, events = Simulation.placeTower(
+			state,
+			userId,
+			payload.towerId,
+			payload.x,
+			payload.y,
+			{ unlockedTowerIds = unlocked, free = free }
+		)
 		pushEvents(match, events)
 		if cr.ok then
 			TelemetryService.funnel(player, "match", 3, "first_tower", match.id)
+			PlayerDataService.markOnboarding(player, TelemetryService.ONBOARDING.firstTower, "first_tower")
+			if free then
+				local consumed = false
+				PlayerDataService.mutate(player, function(p: Types.Profile)
+					consumed = ProfileSchema.consumeItem(p, "support")
+				end)
+				task.spawn(function()
+					PlayerDataService.save(player, false)
+				end)
+				local after = PlayerDataService.get(player)
+				TelemetryService.economy(
+					player,
+					false,
+					"support",
+					1,
+					if after then after.inventory.support else 0,
+					"Gameplay",
+					payload.towerId
+				)
+				TelemetryService.log(
+					"support_used",
+					{ userId = userId, matchId = match.id, tower = payload.towerId, consumed = consumed }
+				)
+				local body = fromSim(cr)
+				body.profile = PlayerDataService.clientView(player)
+				return body
+			end
 		end
 		return fromSim(cr)
+	elseif action == "UseRetry" then
+		return MatchService.useRetry(match, player)
+	elseif action == "DeclineRetry" then
+		if state.phase ~= "RetryDecision" then
+			return result(false, Protocol.ERROR.INVALID_STATE)
+		end
+		match.retryDeclined[userId] = true
+		TelemetryService.log("retry_declined", { userId = userId, matchId = match.id, wave = state.lostAtWave })
+		return result(true)
 	elseif action == "UpgradeTower" then
 		local cr, events = Simulation.upgradeTower(state, userId, payload.entityId, payload.nextState)
 		pushEvents(match, events)
@@ -488,6 +572,93 @@ end
 -- Loop
 -- ---------------------------------------------------------------------------
 
+-- ---------------------------------------------------------------------------
+-- Retomada
+-- ---------------------------------------------------------------------------
+
+-- Usa uma Retomada do próprio inventário. Uma aplicação só vence a disputa: o segundo pedido
+-- encontra a partida fora da decisão e não gasta nada.
+function MatchService.useRetry(match: Match, player: Player): { [string]: any }
+	local state = match.state
+	if not Simulation.canRetry(state) then
+		return result(false, Protocol.ERROR.INVALID_STATE)
+	end
+	if Simulation.getParticipant(state, player.UserId) == nil then
+		return result(false, Protocol.ERROR.NOT_OWNER)
+	end
+	local profile = PlayerDataService.get(player)
+	if not profile or profile.inventory.retry < 1 then
+		return result(false, Protocol.ERROR.INSUFFICIENT_ITEMS)
+	end
+	local consumed = false
+	PlayerDataService.mutate(player, function(p: Types.Profile)
+		consumed = ProfileSchema.consumeItem(p, "retry")
+	end)
+	if not consumed then
+		return result(false, Protocol.ERROR.INSUFFICIENT_ITEMS)
+	end
+	local wave = state.lostAtWave
+	local cr, events = Simulation.applyRetry(state)
+	if not cr.ok then
+		-- não deveria acontecer (conferido acima), mas ficha gasta sem efeito volta na hora
+		PlayerDataService.mutate(player, function(p: Types.Profile)
+			p.inventory.retry += 1
+		end)
+		TelemetryService.log("retry_compensated", { userId = player.UserId, matchId = match.id })
+		return result(false, Protocol.ERROR.INVALID_STATE)
+	end
+	task.spawn(function()
+		PlayerDataService.save(player, false)
+	end)
+	match.retryDeadline = nil
+	match.retryDeclined = {}
+	pushEvents(match, events)
+	match.needFull = true
+	TelemetryService.log("retry_applied", { userId = player.UserId, matchId = match.id, wave = wave })
+	local after = PlayerDataService.get(player)
+	TelemetryService.economy(player, false, "retry", 1, if after then after.inventory.retry else 0, "Gameplay", "retry")
+	local body = fromSim(cr)
+	body.profile = PlayerDataService.clientView(player)
+	return body
+end
+
+-- Alguém abriu a janela de compra durante a decisão: o prazo cresce uma vez (o tempo do Roblox
+-- confirmar não pode vencer a partida). Não aparece para o jogador como urgência.
+function MatchService.onPurchasePrompt(player: Player)
+	local match = MatchService.getMatchOf(player)
+	if not match or match.state.phase ~= "RetryDecision" then
+		return
+	end
+	local extended = os.clock() + Balance.shop.retry.promptGraceSeconds
+	if (match.retryDeadline or 0) < extended then
+		match.retryDeadline = extended
+	end
+end
+
+-- Decisão da Retomada: prazo em tempo real. Vence o prazo, todos os presentes recusaram ou não
+-- sobrou ninguém: derrota definitiva pelo caminho de sempre.
+local function updateRetryDecision(match: Match, now: number)
+	local state = match.state
+	if state.phase ~= "RetryDecision" then
+		return
+	end
+	if not match.retryDeadline then
+		match.retryDeadline = now + Balance.shop.retry.decisionSeconds
+		TelemetryService.log("retry_offered", { matchId = match.id, wave = state.lostAtWave })
+	end
+	local anyUndecided = false
+	for userId in pairs(connectedPlayers(match)) do
+		if not match.retryDeclined[userId] then
+			anyUndecided = true
+		end
+	end
+	if not anyUndecided or now >= (match.retryDeadline :: number) then
+		local _, events = Simulation.declineRetry(state)
+		pushEvents(match, events)
+		match.needFull = true
+	end
+end
+
 -- O guia da primeira fase é visto uma vez só: quando a primeira onda sai, o perfil registra.
 local function markIntroSeen(match: Match, events: { Types.SimEvent })
 	local levelId = match.state.levelId
@@ -504,6 +675,7 @@ local function markIntroSeen(match: Match, events: { Types.SimEvent })
 				PlayerDataService.mutate(player, function(profile: Types.Profile)
 					profile.campaignIntroSeen = true
 				end)
+				PlayerDataService.markOnboarding(player, TelemetryService.ONBOARDING.firstWave, "first_wave")
 			end
 			return
 		end
@@ -581,6 +753,7 @@ local function heartbeat(dt: number)
 	local now = os.clock()
 	for _, match in pairs(matches) do
 		updatePresence(match, now)
+		updateRetryDecision(match, now)
 		stepMatch(match, dt)
 		if Simulation.isTerminal(match.state) then
 			settle(match)
@@ -680,6 +853,42 @@ function MatchService.cheatFinish(player: Player, outcome: "won" | "lost", stars
 		return true, string.format("Vitória forçada com %d estrela(s).", if result then result.stars else 0)
 	end
 	return true, "Derrota forçada."
+end
+
+-- Fichas e XP de teste: vão para o perfil pelo mesmo caminho do jogo, só pulam a compra.
+function MatchService.cheatGrantItem(player: Player, item: string, amount: number): (boolean, string)
+	if not isDevAllowed(player) then
+		return false, "Console de teste indisponível para este jogador."
+	end
+	if item ~= "retry" and item ~= "support" then
+		return false, "Item desconhecido (use retry ou support)."
+	end
+	local value = math.clamp(math.floor(amount), -1000, 1000)
+	local ok = PlayerDataService.mutate(player, function(p: Types.Profile)
+		p.inventory[item :: Types.ItemId] = math.max(p.inventory[item :: Types.ItemId] + value, 0)
+	end)
+	if not ok then
+		return false, "Perfil indisponível."
+	end
+	Server.sendLobby(player, "profile", PlayerDataService.clientView(player))
+	local profile = PlayerDataService.get(player) :: Types.Profile
+	return true, string.format("%s agora tem %d de %s.", player.Name, profile.inventory[item :: Types.ItemId], item)
+end
+
+function MatchService.cheatAddXp(player: Player, amount: number): (boolean, string)
+	if not isDevAllowed(player) then
+		return false, "Console de teste indisponível para este jogador."
+	end
+	local outcome: Progression.XpOutcome? = nil
+	local ok = PlayerDataService.mutate(player, function(p: Types.Profile)
+		outcome = Progression.addXp(p, math.clamp(math.floor(amount), 0, 1000000))
+	end)
+	if not ok or not outcome then
+		return false, "Perfil indisponível."
+	end
+	Server.sendLobby(player, "profile", PlayerDataService.clientView(player))
+	local out = outcome :: Progression.XpOutcome
+	return true, string.format("+%d XP: nível %d -> %d.", out.xpGained, out.levelBefore, out.levelAfter)
 end
 
 function MatchService.init(callbacks: { onPlayerFreed: (Player) -> (), onRematch: (Match, { Player }) -> () })

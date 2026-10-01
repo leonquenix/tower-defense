@@ -70,6 +70,10 @@ Atoms.profileStatus = Charm.atom("loading" :: string)
 Atoms.invites = Charm.atom({} :: { Invite })
 Atoms.sentInvites = Charm.atom({} :: { [number]: SentInvite })
 Atoms.pendingResult = Charm.atom(nil :: { matchId: string, status: string, buttons: number? }?)
+-- relógio local em que o perfil chegou: o tempo de sessão do servidor anda a partir dele
+Atoms.profileReceivedAt = Charm.atom(os.clock() :: number)
+-- vitrine da loja (preços reais do Roblox). Consultada sob demanda; nil = ainda não consultou.
+Atoms.shop = Charm.atom(nil :: { [string]: any }?)
 
 -- ---------------------------------------------------------------------------
 -- Conexão
@@ -132,6 +136,10 @@ Atoms.paused = Charm.atom(false :: boolean)
 -- Doca de torres expandida. Só vale no layout compacto, onde ela fica encolhida num botão para
 -- não cobrir o Farol.
 Atoms.buildDockOpen = Charm.atom(false :: boolean)
+-- Reforço armado: a próxima torre posicionada sai de graça (o servidor confere a ficha)
+Atoms.supportArmed = Charm.atom(false :: boolean)
+-- este jogador já disse "desistir" na tela de derrota (em grupo, espera os outros)
+Atoms.retryDeclined = Charm.atom(false :: boolean)
 
 -- ---------------------------------------------------------------------------
 -- Preferências (espelho local do que foi salvo no perfil)
@@ -176,6 +184,9 @@ function Atoms.clear()
 	Atoms.selectedEnemyId(nil)
 	Atoms.buildTowerId(nil)
 	Atoms.buildCell(nil)
+	Atoms.supportArmed(false)
+	Atoms.retryDeclined(false)
+	Atoms.shop(nil)
 	Atoms.toasts({})
 end
 

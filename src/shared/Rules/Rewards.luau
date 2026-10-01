@@ -42,8 +42,11 @@ function Rewards.sellRefund(invested: number, refundRate: number): number
 	return math.floor(invested * refundRate)
 end
 
-function Rewards.winButtons(difficulty: Types.DifficultyDef): number
-	return difficulty.winButtons
+-- A vitória paga proporcional ao tamanho da partida: repetir a fase de 3 ondas rende pouco,
+-- uma fase de 16 ondas rende o valor cheio da dificuldade. Arredonda uma vez, para cima.
+function Rewards.winButtons(difficulty: Types.DifficultyDef, waves: number, rewards: Types.RewardsDef): number
+	local reference = math.max(rewards.winButtonsReferenceWaves, 1)
+	return math.ceil(difficulty.winButtons * math.max(waves, 0) / reference)
 end
 
 function Rewards.lossButtons(wavesCompleted: number, rewards: Types.RewardsDef): number
@@ -61,7 +64,7 @@ function Rewards.buttonsForOutcome(
 		return 0
 	end
 	if outcome == "won" then
-		return Rewards.winButtons(difficulty)
+		return Rewards.winButtons(difficulty, wavesCompleted, rewards)
 	elseif outcome == "lost" then
 		return Rewards.lossButtons(wavesCompleted, rewards)
 	end

@@ -91,6 +91,10 @@ export type WireSnapshot = {
 	dmg: number,
 	built: number,
 	rushed: number,
+	retry: boolean, -- Retomada disponível agora
+	lost: number, -- onda em que o Farol apagou
+	support: boolean, -- Reforço disponível para o destinatário
+	assisted: boolean,
 	enemies: { WireEnemy },
 	towers: { WireTower },
 	parts: { WireParticipant },
@@ -224,6 +228,10 @@ function Codec.encodeSnapshot(snapshot: Types.MatchSnapshot): WireSnapshot
 		dmg = snapshot.damageTaken,
 		built = snapshot.towersBuilt,
 		rushed = snapshot.wavesRushed,
+		retry = snapshot.retryAvailable,
+		lost = snapshot.lostAtWave,
+		support = snapshot.supportAvailable,
+		assisted = snapshot.assisted,
 		enemies = enemies,
 		towers = towers,
 		parts = parts,
@@ -310,6 +318,10 @@ function Codec.decodeSnapshot(wire: WireSnapshot): Types.MatchSnapshot
 		damageTaken = wire.dmg,
 		towersBuilt = wire.built,
 		wavesRushed = wire.rushed,
+		retryAvailable = wire.retry,
+		lostAtWave = wire.lost,
+		supportAvailable = wire.support,
+		assisted = wire.assisted,
 	}
 end
 

@@ -1,6 +1,6 @@
 --!strict
 -- ARQUIVO GERADO por tools/import_balance.py a partir de Pacote_Claude_Code/dados/balanceamento_v1.json
--- Não edite à mão. sha256 da origem: 8bb86d8f9d806739e8e95a867a8837826751b087917d0bc267d94315b1be67f1
+-- Não edite à mão. sha256 da origem: 66e16435344e0e499e0884976838c93271d103505e9ef4ca992fd2312c7ee6a3
 local Types = require(script.Parent.Parent.Types)
 
 local Balance: Types.BalanceData = {
@@ -74,6 +74,9 @@ local Balance: Types.BalanceData = {
 				waves = 3,
 			},
 			{
+				firstClearReward = {
+					retry = 1,
+				},
 				hpScale = 1,
 				id = "2",
 				mapId = "jardim",
@@ -90,6 +93,9 @@ local Balance: Types.BalanceData = {
 				waves = 5,
 			},
 			{
+				firstClearReward = {
+					support = 1,
+				},
 				hpScale = 1,
 				id = "3",
 				mapId = "jardim",
@@ -122,6 +128,7 @@ local Balance: Types.BalanceData = {
 				waves = 9,
 			},
 			{
+				bossHpScale = 0.45,
 				hpScale = 1.1,
 				id = "5",
 				mapId = "jardim",
@@ -130,7 +137,8 @@ local Balance: Types.BalanceData = {
 						kind = "noLeak",
 					},
 					{
-						kind = "rushAll",
+						kind = "minCircuits",
+						value = 1,
 					},
 				},
 				startingCash = 750,
@@ -162,7 +170,7 @@ local Balance: Types.BalanceData = {
 						value = 15,
 					},
 					{
-						kind = "rushAll",
+						kind = "noSell",
 					},
 				},
 				startingCash = 750,
@@ -185,6 +193,7 @@ local Balance: Types.BalanceData = {
 				waves = 14,
 			},
 			{
+				bossHpScale = 0.6,
 				hpScale = 1.2,
 				id = "9",
 				mapId = "oficina",
@@ -227,13 +236,15 @@ local Balance: Types.BalanceData = {
 						value = 20,
 					},
 					{
-						kind = "rushAll",
+						kind = "minCircuits",
+						value = 2,
 					},
 				},
 				startingCash = 850,
 				waves = 16,
 			},
 			{
+				bossHpScale = 1,
 				hpScale = 1.4,
 				id = "12",
 				mapId = "sotao",
@@ -242,16 +253,16 @@ local Balance: Types.BalanceData = {
 						kind = "noLeak",
 					},
 					{
-						kind = "rushAll",
+						kind = "noSell",
 					},
 				},
 				startingCash = 900,
 				waves = 20,
 			},
 		},
-		note = "Fases da campanha. A primeira estrela é sempre vencer; as outras duas saem de objectives, avaliados pelo servidor com as estatisticas da partida (Rules/Stars). waves = quantas ondas da tabela global a fase usa.",
+		note = "Fases da campanha. A primeira estrela é sempre vencer; as outras duas saem de objectives, avaliados pelo servidor com as estatisticas da partida (Rules/Stars). waves = quantas ondas da tabela global a fase usa. bossHpScale traz o chefe do mapa depois da última onda da fase, com a vida escalada. firstClearReward é entregue uma vez por conta, na primeira vitória da fase.",
 	},
-	checksum = "8bb86d8f9d806739e8e95a867a8837826751b087917d0bc267d94315b1be67f1",
+	checksum = "66e16435344e0e499e0884976838c93271d103505e9ef4ca992fd2312c7ee6a3",
 	circuits = {
 		{
 			effect = "damage_vs_slowed",
@@ -283,7 +294,7 @@ local Balance: Types.BalanceData = {
 		normal = {
 			hp = 1,
 			speed = 1,
-			winButtons = 120,
+			winButtons = 100,
 		},
 	},
 	earlyWaveBonusMax = 80,
@@ -387,6 +398,21 @@ local Balance: Types.BalanceData = {
 	partyMax = 4,
 	playerTowerLimitsByPartySize = { 18, 12, 10, 8 },
 	preparationSeconds = 15,
+	progression = {
+		levelBase = 120,
+		levelButtons = 25,
+		levelRetryEvery = 5,
+		levelStep = 45,
+		maxLevel = 40,
+		xpDifficulty = {
+			desafio = 1.4,
+			normal = 1,
+		},
+		xpGroupCap = 0.3,
+		xpPerExtraPlayer = 0.1,
+		xpPerWave = 12,
+		xpWinBonus = 60,
+	},
 	pulse = {
 		cooldown = 60,
 		damage = 180,
@@ -396,20 +422,105 @@ local Balance: Types.BalanceData = {
 		slowDuration = 3,
 		startsCharged = true,
 	},
+	retention = {
+		dailyRewards = {
+			{
+				buttons = 30,
+			},
+			{
+				buttons = 40,
+			},
+			{
+				support = 1,
+			},
+			{
+				buttons = 60,
+			},
+			{
+				buttons = 80,
+			},
+			{
+				buttons = 100,
+			},
+			{
+				buttons = 150,
+				retry = 1,
+			},
+		},
+		sessionGifts = {
+			{
+				buttons = 15,
+				minutes = 5,
+			},
+			{
+				buttons = 25,
+				minutes = 10,
+			},
+			{
+				minutes = 20,
+				support = 1,
+			},
+			{
+				buttons = 50,
+				minutes = 30,
+			},
+			{
+				minutes = 45,
+				retry = 1,
+			},
+		},
+	},
 	rewards = {
-		lossButtonsCap = 60,
-		lossButtonsPerWave = 4,
+		lossButtonsCap = 40,
+		lossButtonsPerWave = 2,
 		masteryLoss = 4,
 		masteryLossMinWaves = 5,
 		masteryMilestones = { 30, 100, 250 },
 		masteryMinPlacedSeconds = 30,
 		masteryWin = 10,
+		winButtonsReferenceWaves = 16,
 	},
 	sellRefund = 0.7,
 	serverMaxPlayers = 12,
 	shop = {
 		enabledByDefault = false,
+		products = {
+			{
+				id = "retry_1",
+				item = "retry",
+				proposedRobux = 19,
+				quantity = 1,
+			},
+			{
+				id = "retry_3",
+				item = "retry",
+				proposedRobux = 49,
+				quantity = 3,
+			},
+			{
+				id = "support_1",
+				item = "support",
+				proposedRobux = 25,
+				quantity = 1,
+			},
+			{
+				id = "support_3",
+				item = "support",
+				proposedRobux = 65,
+				quantity = 3,
+			},
+		},
 		proposedRobuxPrice = 149,
+		retry = {
+			buttonsPrice = 300,
+			decisionSeconds = 120,
+			enabled = true,
+			prepSeconds = 8,
+			promptGraceSeconds = 300,
+		},
+		support = {
+			enabled = true,
+		},
 	},
 	snapshotRate = 10,
 	startingCash = 650,
@@ -459,6 +570,7 @@ local Balance: Types.BalanceData = {
 			},
 			target = "first",
 			unlock = 0,
+			unlockLevel = 1,
 		},
 		{
 			branchNames = { "Festival", "Demolidora" },
@@ -513,6 +625,7 @@ local Balance: Types.BalanceData = {
 			},
 			target = "first",
 			unlock = 0,
+			unlockLevel = 1,
 		},
 		{
 			branchNames = { "Olho de águia", "Observadora" },
@@ -559,6 +672,7 @@ local Balance: Types.BalanceData = {
 			},
 			target = "strongest",
 			unlock = 240,
+			unlockLevel = 3,
 		},
 		{
 			branchNames = { "Poça", "Supercola" },
@@ -614,6 +728,7 @@ local Balance: Types.BalanceData = {
 			},
 			target = "first",
 			unlock = 0,
+			unlockLevel = 1,
 		},
 		{
 			branchNames = { "Tempestade", "Alta tensão" },
@@ -673,6 +788,7 @@ local Balance: Types.BalanceData = {
 			},
 			target = "first",
 			unlock = 600,
+			unlockLevel = 9,
 		},
 		{
 			branchNames = { "Orquestra", "Solo" },
@@ -721,6 +837,7 @@ local Balance: Types.BalanceData = {
 			},
 			target = "none",
 			unlock = 450,
+			unlockLevel = 6,
 		},
 	},
 	version = "1.0.0",

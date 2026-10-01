@@ -4,6 +4,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Types = require(ReplicatedStorage.Shared.Types)
+local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Atoms = require(script.Parent.Atoms)
 
 local Actions = {}
@@ -19,6 +20,7 @@ function Actions.setLobby(lobby: { [string]: any })
 	local profile = lobby.profile
 	Atoms.profileStatus(if profile then tostring(profile.status) else "loading")
 	if profile and (profile.status == "ready" or profile.status == "volatile") then
+		Atoms.profileReceivedAt(os.clock())
 		Atoms.profile(profile)
 	elseif not profile then
 		Atoms.profile(nil)
@@ -29,6 +31,7 @@ function Actions.setProfile(profile: { [string]: any }?)
 	if not profile then
 		return
 	end
+	Atoms.profileReceivedAt(os.clock())
 	Atoms.profile(profile)
 	Atoms.profileStatus(tostring(profile.status or "ready"))
 	local lobby = Atoms.lobby()
@@ -293,6 +296,24 @@ end
 
 function Actions.setBuildDockOpen(value: boolean)
 	Atoms.buildDockOpen(value)
+end
+
+function Actions.setSupportArmed(value: boolean)
+	Atoms.supportArmed(value)
+end
+
+function Actions.setRetryDeclined(value: boolean)
+	Atoms.retryDeclined(value)
+end
+
+function Actions.setShop(shop: { [string]: any }?)
+	Atoms.shop(shop)
+end
+
+-- Recibo confirmado: aviso curto. A ficha só é usada quando o jogador escolher.
+function Actions.purchaseDelivered(item: string, quantity: number)
+	local name = Localization.get(if quantity == 1 then "item." .. item else "item." .. item .. "s")
+	Actions.toast(Localization.get("purchase.delivered", { quantity = quantity, item = name }), "success")
 end
 
 function Actions.setBuildCell(cell: Types.Cell?, blockedReason: string?)

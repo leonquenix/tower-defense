@@ -25,8 +25,26 @@ DAMAGE_TYPES = {"physical", "energy", "none"}
 TARGETS = {"first", "last", "strongest", "closest", "none"}
 
 
+ITEMS = {"retry", "support"}
+
+
 class ValidationError(Exception):
     pass
+
+
+def validate_bundle(bundle, where, required=False):
+    """Pacote de recompensa: botões e fichas. Chave desconhecida ou valor não inteiro é erro."""
+    if bundle is None:
+        return [f"{where}: vazio"] if required else []
+    errors = []
+    if not bundle:
+        errors.append(f"{where}: vazio")
+    for key, value in bundle.items():
+        if key != "buttons" and key not in ITEMS:
+            errors.append(f"{where}: chave desconhecida {key}")
+        elif not isinstance(value, int) or value <= 0:
+            errors.append(f"{where}: {key} deve ser inteiro positivo")
+    return errors
 
 
 def path_cells(path):
@@ -82,6 +100,11 @@ def validate(data):
             errors.append(f"{t['id']}: perPlayerLimit inválido")
         if t["unlock"] < 0 or (t["starter"] and t["unlock"] != 0):
             errors.append(f"{t['id']}: unlock incoerente com starter")
+        level = t.get("unlockLevel")
+        if not isinstance(level, int) or level < 1 or (t["starter"] and level != 1):
+            errors.append(f"{t['id']}: unlockLevel deve ser inteiro >= 1 (1 para as iniciais)")
+        elif level > data["progression"]["maxLevel"]:
+            errors.append(f"{t['id']}: unlockLevel {level} acima do nível máximo")
     for e in data["enemies"]:
         for k in ("hp", "speed", "bounty", "leak"):
             if e[k] < 0:
@@ -147,7 +170,7 @@ def validate(data):
     # campanha: cada fase aponta para um mapa existente, cabe na tabela de ondas e tem
     # objetivos que o servidor sabe avaliar (Rules/Stars)
     map_ids = {m["id"] for m in data["maps"]}
-    known_objectives = {"noLeak", "maxDamage", "maxTowers", "onlyTowers", "rushAll"}
+    known_objectives = {"noLeak", "maxDamage", "maxTowers", "onlyTowers", "rushAll", "noSell", "minCircuits"}
     seen_levels = set()
     intro_levels = 0
     for index, level in enumerate(data["campaign"]["levels"], start=1):
@@ -167,13 +190,19 @@ def validate(data):
             kind = objective["kind"]
             if kind not in known_objectives:
                 errors.append(f"{where}: objetivo desconhecido {kind}")
-            if kind in ("maxDamage", "maxTowers") and "value" not in objective:
+            if kind in ("maxDamage", "maxTowers", "minCircuits") and "value" not in objective:
                 errors.append(f"{where}: objetivo {kind} sem value")
             if kind == "onlyTowers":
                 for tid in objective["towers"]:
                     if tid not in tower_ids:
                         errors.append(f"{where}: torre desconhecida {tid}")
+        scale = level.get("bossHpScale")
+        if scale is not None and not (0 < scale <= 2):
+            errors.append(f"{where}: bossHpScale fora de (0, 2]")
+        errors.extend(validate_bundle(level.get("firstClearReward"), f"{where}: firstClearReward"))
         if level.get("intro"):
+            if level.get("firstClearReward"):
+                errors.append(f"{where}: a fase do guia não entrega fichas")
             intro_levels += 1
             if index != 1:
                 errors.append(f"{where}: o guia inicial só existe na primeira fase")
@@ -189,6 +218,47 @@ def validate(data):
     for d in ("normal", "desafio"):
         if d not in data["difficulties"]:
             errors.append(f"dificuldade {d} ausente")
+        if d not in data["progression"]["xpDifficulty"]:
+            errors.append(f"progression.xpDifficulty sem {d}")
+    if data["rewards"].get("winButtonsReferenceWaves", 0) <= 0:
+        errors.append("rewards.winButtonsReferenceWaves deve ser positivo")
+    prog = data["progression"]
+    for key in ("xpPerWave", "xpWinBonus", "levelBase", "levelStep", "maxLevel", "levelButtons", "levelRetryEvery"):
+        if not isinstance(prog.get(key), int) or prog[key] < 0:
+            errors.append(f"progression.{key} deve ser inteiro >= 0")
+    if prog.get("maxLevel", 0) < 2 or prog.get("levelBase", 0) <= 0:
+        errors.append("progression: maxLevel >= 2 e levelBase > 0")
+    retention = data["retention"]
+    if len(retention["dailyRewards"]) != 7:
+        errors.append("retention.dailyRewards deve ter 7 dias")
+    for i, bundle in enumerate(retention["dailyRewards"], start=1):
+        errors.extend(validate_bundle(bundle, f"dia {i}", required=True))
+    last = 0
+    for i, gift in enumerate(retention["sessionGifts"], start=1):
+        minutes = gift.get("minutes")
+        if not isinstance(minutes, (int, float)) or minutes <= last:
+            errors.append(f"presente {i}: minutes deve crescer")
+        else:
+            last = minutes
+        errors.extend(validate_bundle({k: v for k, v in gift.items() if k != "minutes"}, f"presente {i}", required=True))
+    seen_products = set()
+    for product in data["shop"]["products"]:
+        if product["id"] in seen_products:
+            errors.append(f"produto {product['id']} repetido")
+        seen_products.add(product["id"])
+        if product["item"] not in ITEMS:
+            errors.append(f"produto {product['id']}: item desconhecido {product['item']}")
+        if not isinstance(product["quantity"], int) or product["quantity"] < 1:
+            errors.append(f"produto {product['id']}: quantidade inválida")
+        if product["productId"] is not None and (not isinstance(product["productId"], int) or product["productId"] <= 0):
+            errors.append(f"produto {product['id']}: productId deve ser null ou inteiro positivo")
+    ids = [p["productId"] for p in data["shop"]["products"] if p["productId"] is not None]
+    if len(ids) != len(set(ids)):
+        errors.append("productId repetido entre produtos")
+    retry = data["shop"]["retry"]
+    for key in ("decisionSeconds", "promptGraceSeconds", "prepSeconds", "buttonsPrice"):
+        if not isinstance(retry.get(key), (int, float)) or retry[key] <= 0:
+            errors.append(f"shop.retry.{key} deve ser positivo")
     if len(data["playerTowerLimitsByPartySize"]) != data["partyMax"]:
         errors.append("playerTowerLimitsByPartySize deve ter partyMax entradas")
     return errors
@@ -209,6 +279,7 @@ def main():
     for t in data["towers"]:
         towers.append({
             "id": t["id"], "name": t["name"], "role": t["role"], "starter": t["starter"], "unlock": t["unlock"],
+            "unlockLevel": t["unlockLevel"],
             "damageType": t["damageType"], "target": t["target"], "perPlayerLimit": t["perPlayerLimit"],
             "states": {k: t["states"][k] for k in STATES}, "branchNames": t["branchNames"],
         })
@@ -218,13 +289,16 @@ def main():
         "tickRate": data["tickRate"], "snapshotRate": data["snapshotRate"],
         "towers": towers, "enemies": data["enemies"], "bosses": data["bosses"], "waves": data["waves"],
         "difficulties": data["difficulties"], "circuits": data["circuits"], "pulse": data["pulse"],
-        "effects": data["effects"], "rewards": data["rewards"], "campaign": data["campaign"], "shop": data["shop"],
+        "effects": data["effects"], "rewards": data["rewards"], "campaign": data["campaign"],
+        "shop": {k: v for k, v in data["shop"].items() if k != "note"},
         "partyMax": data["partyMax"], "serverMaxPlayers": data["serverMaxPlayers"], "loadoutSlots": data["loadoutSlots"],
         "playerTowerLimitsByPartySize": data["playerTowerLimitsByPartySize"],
         "coopAdditionalHPPerPlayer": data["coopAdditionalHPPerPlayer"],
         "preparationSeconds": data["preparationSeconds"], "intermissionSeconds": data["intermissionSeconds"],
         "earlyWaveBonusPerSecond": data["earlyWaveBonusPerSecond"], "earlyWaveBonusMax": data["earlyWaveBonusMax"],
         "sellRefund": data["sellRefund"],
+        "progression": {k: v for k, v in data["progression"].items() if k != "note"},
+        "retention": {k: v for k, v in data["retention"].items() if k != "note"},
     }
     header = (
         "--!strict\n"

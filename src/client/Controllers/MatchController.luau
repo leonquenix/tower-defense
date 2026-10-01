@@ -197,9 +197,11 @@ local function onState(kind: string, payload: any, extra: any)
 		Atoms.inMatch(true)
 		Atoms.matchResult(nil)
 		Atoms.rematch(nil)
-		-- partida nova começa sem pausa aberta e com a doca encolhida
+		-- partida nova começa sem pausa aberta, com a doca encolhida e sem Reforço armado
 		Actions.setPaused(false)
 		Actions.setBuildDockOpen(false)
+		Actions.setSupportArmed(false)
+		Actions.setRetryDeclined(false)
 		-- cartas da coluna: treino libera todas; equipe vazia cai nas iniciais para nunca ficar vazia
 		local snapshot = payload :: Types.MatchSnapshot
 		if snapshot.trainingUnlockAll then

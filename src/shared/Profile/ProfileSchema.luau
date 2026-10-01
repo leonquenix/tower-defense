@@ -5,10 +5,14 @@ local Balance = require(script.Parent.Parent.Config.Balance)
 local Catalog = require(script.Parent.Parent.Config.Catalog)
 local Products = require(script.Parent.Parent.Config.Products)
 local DevFlags = require(script.Parent.Parent.Config.DevFlags)
+local Progression = require(script.Parent.Parent.Rules.Progression)
 
 local ProfileSchema = {}
 
-ProfileSchema.CURRENT_VERSION = 3
+ProfileSchema.CURRENT_VERSION = 4
+-- Recibos guardados para barrar entrega dupla. O Roblox só reenvia recibo não confirmado, então
+-- os mais recentes bastam; o limite impede o perfil de crescer para sempre.
+ProfileSchema.PURCHASE_LEDGER_LIMIT = 200
 ProfileSchema.REWARD_RETENTION_SECONDS = 30 * 24 * 3600
 ProfileSchema.REWARD_LEDGER_LIMIT = 1024
 ProfileSchema.TUTORIAL_KEY = "tutorial-v1"
@@ -29,12 +33,19 @@ function ProfileSchema.default(now: number): Types.Profile
 	return {
 		schemaVersion = ProfileSchema.CURRENT_VERSION,
 		buttons = 0,
+		xp = 0,
+		rewardedLevel = 1,
+		inventory = { retry = 0, support = 0 },
+		purchases = {},
+		daily = { lastDay = 0, streak = 0 },
+		sessionGifts = { day = 0, claimed = {} },
+		grants = {},
+		onboardingStep = 0,
 		ownedTowerIds = Catalog.starterTowerIds(),
 		loadout = Catalog.starterTowerIds(),
 		cosmeticsOwned = {},
 		cosmeticLoadout = {},
 		masteryByTower = {},
-		mapUnlocks = {},
 		campaign = {},
 		campaignIntroSeen = false,
 		tutorialRewardClaimed = false,
@@ -96,6 +107,42 @@ migrations[2] = function(data: any, now: number): any
 	return data
 end
 
+-- v3 -> v4: conta com nível e fichas. O XP nasce do que o jogador já jogou (12 por onda, 60 por
+-- vitória); as recompensas dos níveis já alcançados não são pagas de novo em bloco, mas as torres
+-- do nível são liberadas. `mapUnlocks` sai: nada o lia.
+migrations[3] = function(data: any, now: number): any
+	data.schemaVersion = 4
+	local stats = if typeof(data.lifetimeStats) == "table" then data.lifetimeStats else {}
+	-- O ProfileStore reconcilia com o modelo antes da migração, então `xp` pode já chegar como 0:
+	-- vale o maior entre o que veio e o que o histórico dá.
+	local waves = if typeof(stats.wavesCleared) == "number" then stats.wavesCleared else 0
+	local wins = if typeof(stats.wins) == "number" then stats.wins else 0
+	local derived = math.max(math.floor(12 * waves + 60 * wins), 0)
+	if typeof(data.xp) ~= "number" or data.xp < derived then
+		data.xp = derived
+	end
+	local level = Progression.levelOf(data.xp)
+	if typeof(data.rewardedLevel) ~= "number" or data.rewardedLevel < level then
+		data.rewardedLevel = level
+	end
+	if typeof(data.ownedTowerIds) == "table" then
+		for _, towerId in ipairs(Progression.towersForLevel(level)) do
+			if table.find(data.ownedTowerIds, towerId) == nil then
+				table.insert(data.ownedTowerIds, towerId)
+			end
+		end
+	end
+	if typeof(data.inventory) ~= "table" then
+		data.inventory = { retry = 0, support = 0 }
+	end
+	if typeof(data.purchases) ~= "table" then
+		data.purchases = {}
+	end
+	data.mapUnlocks = nil
+	data.updatedAt = now
+	return data
+end
+
 -- Aplica migrações em sequência. Retorna (perfil, alterado).
 function ProfileSchema.migrate(raw: any, now: number): (Types.Profile?, boolean)
 	if typeof(raw) ~= "table" then
@@ -136,6 +183,12 @@ function ProfileSchema.migrate(raw: any, now: number): (Types.Profile?, boolean)
 			changed = true
 		end
 	end
+	for key, value in pairs(defaults.inventory :: any) do
+		if data.inventory[key] == nil then
+			data.inventory[key] = value
+			changed = true
+		end
+	end
 	return data :: Types.Profile, changed
 end
 
@@ -170,8 +223,21 @@ function ProfileSchema.validate(profile: any): (boolean, string?)
 	if #profile.loadout > Balance.loadoutSlots then
 		return false, "loadout excede vagas"
 	end
-	if typeof(profile.masteryByTower) ~= "table" or typeof(profile.mapUnlocks) ~= "table" then
-		return false, "domínio ou mapas ausentes"
+	if typeof(profile.masteryByTower) ~= "table" then
+		return false, "domínio ausente"
+	end
+	if not isNonNegativeInt(profile.xp) or not isNonNegativeInt(profile.rewardedLevel) then
+		return false, "xp inválido"
+	end
+	if
+		typeof(profile.inventory) ~= "table"
+		or not isNonNegativeInt(profile.inventory.retry)
+		or not isNonNegativeInt(profile.inventory.support)
+	then
+		return false, "inventário inválido"
+	end
+	if typeof(profile.purchases) ~= "table" then
+		return false, "recibos ausentes"
 	end
 	for towerId, record in pairs(profile.masteryByTower) do
 		if not Catalog.getTower(towerId) or typeof(record) ~= "table" or not isNonNegativeInt(record.points) then
@@ -278,9 +344,72 @@ function ProfileSchema.pruneRewardLedger(profile: Types.Profile, now: number): b
 	return count >= ProfileSchema.REWARD_LEDGER_LIMIT
 end
 
+-- ---------------------------------------------------------------------------
+-- Fichas e compras
+-- ---------------------------------------------------------------------------
+
+-- Entrega de um recibo do Roblox. Idempotente por PurchaseId: o mesmo recibo nunca soma duas
+-- vezes, nem vindo de outro servidor depois de uma queda. Devolve (entregue agora, já existia).
+function ProfileSchema.applyPurchase(
+	profile: Types.Profile,
+	purchaseId: string,
+	item: Types.ItemId,
+	quantity: number,
+	now: number
+): (boolean, boolean)
+	if profile.purchases[purchaseId] then
+		return false, true
+	end
+	if item ~= "retry" and item ~= "support" then
+		return false, false
+	end
+	profile.inventory[item] += math.max(math.floor(quantity), 0)
+	profile.purchases[purchaseId] = now
+	-- corta os recibos mais antigos quando passa do limite
+	local count = 0
+	local oldestId: string? = nil
+	local oldestAt = math.huge
+	for id, at in pairs(profile.purchases) do
+		count += 1
+		if at < oldestAt then
+			oldestAt = at
+			oldestId = id
+		end
+	end
+	if count > ProfileSchema.PURCHASE_LEDGER_LIMIT and oldestId and oldestId ~= purchaseId then
+		profile.purchases[oldestId] = nil
+	end
+	profile.updatedAt = now
+	return true, false
+end
+
+-- Gasta uma ficha. Só o servidor chama, e só depois de conferir que o uso é válido na partida.
+function ProfileSchema.consumeItem(profile: Types.Profile, item: Types.ItemId): boolean
+	if (profile.inventory[item] or 0) < 1 then
+		return false
+	end
+	profile.inventory[item] -= 1
+	return true
+end
+
+-- Retomada também sai por botões (quem joga muito tem um caminho sem Robux).
+function ProfileSchema.buyItemWithButtons(profile: Types.Profile, item: Types.ItemId): (boolean, string?)
+	if item ~= "retry" then
+		return false, "INVALID_STATE"
+	end
+	local price = Balance.shop.retry.buttonsPrice
+	if profile.buttons < price then
+		return false, "INSUFFICIENT_FUNDS"
+	end
+	profile.buttons -= price
+	profile.inventory.retry += 1
+	return true, nil
+end
+
 export type ApplyResultInput = {
 	matchId: string,
 	buttons: number,
+	xp: number?,
 	masteryByTower: { [string]: number },
 	outcome: string,
 	mode: Types.MatchMode,
@@ -306,6 +435,9 @@ export type ApplyResultOutcome = {
 	unlocked: { string },
 	-- Cosméticos concedidos pelos marcos de domínio cruzados neste resultado (30/100/250).
 	grantedCosmetics: { string },
+	-- conta: XP ganho, níveis e o que eles e a primeira vitória da fase entregaram
+	xp: Progression.XpOutcome?,
+	firstClear: Types.RewardBundle?,
 }
 
 -- Aplica um resultado ao perfil de forma idempotente por matchId. Puro: não grava.
@@ -318,6 +450,8 @@ function ProfileSchema.applyMatchResult(profile: Types.Profile, input: ApplyResu
 		newMilestones = {},
 		unlocked = {},
 		grantedCosmetics = {},
+		xp = nil,
+		firstClear = nil,
 	}
 	if input.now - input.createdAt > ProfileSchema.REWARD_RETENTION_SECONDS then
 		out.reason = "expired"
@@ -389,6 +523,17 @@ function ProfileSchema.applyMatchResult(profile: Types.Profile, input: ApplyResu
 		if unlockedLevelId then
 			table.insert(out.unlocked, unlockedLevelId)
 		end
+		-- primeira vitória da fase: presente único por conta (fichas para conhecer o item)
+		local level = Catalog.getLevel(input.levelId)
+		local grantKey = "firstClear:" .. input.levelId
+		if level and level.firstClearReward and not profile.grants[grantKey] then
+			profile.grants[grantKey] = true
+			Progression.grant(profile, level.firstClearReward)
+			out.firstClear = level.firstClearReward
+		end
+	end
+	if (input.xp or 0) > 0 then
+		out.xp = Progression.addXp(profile, input.xp :: number)
 	end
 	-- remove referência pendente
 	for i = #profile.pendingResults, 1, -1 do

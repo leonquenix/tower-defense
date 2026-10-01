@@ -84,12 +84,13 @@ return function(scope: Kit.Scope, props: Props): Frame
 				Actions.toast(L("collection.notEnough", { missing = cost - balance }), "error")
 				return
 			end
+			-- a torre abre de graça no nível dela; botões só antecipam
 			Actions.openModal({
-				title = L("unlock.title"),
-				body = L("unlock.body", { tower = def.name, cost = cost }) .. "\n" .. L(
+				title = L("unlock.title", { tower = def.name }),
+				body = L("unlock.bodyLevel", { tower = def.name, level = def.unlockLevel, cost = cost }) .. "\n" .. L(
 					"unlock.balance",
-					{ balance = balance }
-				) .. "\n" .. L("unlock.projected", { balance = balance - cost }),
+					{ current = balance }
+				) .. "\n" .. L("unlock.projected", { value = balance - cost }),
 				confirmText = L("unlock.confirm"),
 				onConfirm = function()
 					Actions.setModalPending(true)
@@ -186,7 +187,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 							Text = scope:Computed(function(use)
 								local currentProfile = Kit.read(use, profile)
 								if not Kit.read(use, owned) then
-									return L("collection.unlockCost", { cost = def.unlock })
+									return L("collection.unlockLevel", { level = def.unlockLevel, cost = def.unlock })
 								end
 								return L("collection.mastery", { points = masteryOf(currentProfile, def.id) })
 							end),

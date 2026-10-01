@@ -19,6 +19,7 @@
       "role": "Ataque direto",
       "starter": true,
       "unlock": 0,
+      "unlockLevel": 1,
       "damageType": "physical",
       "target": "first",
       "perPlayerLimit": 6,
@@ -66,6 +67,7 @@
       "role": "Explosão em área",
       "starter": true,
       "unlock": 0,
+      "unlockLevel": 1,
       "damageType": "physical",
       "target": "first",
       "perPlayerLimit": 4,
@@ -123,6 +125,7 @@
       "role": "Dano contra elites",
       "starter": false,
       "unlock": 240,
+      "unlockLevel": 3,
       "damageType": "physical",
       "target": "strongest",
       "perPlayerLimit": 4,
@@ -172,6 +175,7 @@
       "role": "Lentidão",
       "starter": true,
       "unlock": 0,
+      "unlockLevel": 1,
       "damageType": "energy",
       "target": "first",
       "perPlayerLimit": 4,
@@ -230,6 +234,7 @@
       "role": "Corrente elétrica",
       "starter": false,
       "unlock": 600,
+      "unlockLevel": 9,
       "damageType": "energy",
       "target": "first",
       "perPlayerLimit": 4,
@@ -292,6 +297,7 @@
       "role": "Apoio de velocidade",
       "starter": false,
       "unlock": 450,
+      "unlockLevel": 6,
       "damageType": "none",
       "target": "none",
       "perPlayerLimit": 2,
@@ -1100,7 +1106,7 @@
     "normal": {
       "hp": 1,
       "speed": 1,
-      "winButtons": 120
+      "winButtons": 100
     },
     "desafio": {
       "hp": 1.45,
@@ -1126,8 +1132,9 @@
     "markStacking": "maximum"
   },
   "rewards": {
-    "lossButtonsPerWave": 4,
-    "lossButtonsCap": 60,
+    "winButtonsReferenceWaves": 16,
+    "lossButtonsPerWave": 2,
+    "lossButtonsCap": 40,
     "masteryWin": 10,
     "masteryLoss": 4,
     "masteryLossMinWaves": 5,
@@ -1171,13 +1178,54 @@
   "shop": {
     "enabledByDefault": false,
     "founderPassId": null,
-    "proposedRobuxPrice": 149
+    "proposedRobuxPrice": 149,
+    "note": "productId fica null até o produto existir no Creator Hub. Preço real vem do Roblox; proposedRobux é só referência.",
+    "products": [
+      {
+        "id": "retry_1",
+        "item": "retry",
+        "quantity": 1,
+        "productId": null,
+        "proposedRobux": 19
+      },
+      {
+        "id": "retry_3",
+        "item": "retry",
+        "quantity": 3,
+        "productId": null,
+        "proposedRobux": 49
+      },
+      {
+        "id": "support_1",
+        "item": "support",
+        "quantity": 1,
+        "productId": null,
+        "proposedRobux": 25
+      },
+      {
+        "id": "support_3",
+        "item": "support",
+        "quantity": 3,
+        "productId": null,
+        "proposedRobux": 65
+      }
+    ],
+    "retry": {
+      "enabled": true,
+      "decisionSeconds": 120,
+      "promptGraceSeconds": 300,
+      "prepSeconds": 8,
+      "buttonsPrice": 300
+    },
+    "support": {
+      "enabled": true
+    }
   },
   "earlyWaveBonusPerSecond": 5,
   "earlyWaveBonusMax": 80,
   "campaign": {
     "buttonsPerStar": 25,
-    "note": "Fases da campanha. A primeira estrela é sempre vencer; as outras duas saem de objectives, avaliados pelo servidor com as estatisticas da partida (Rules/Stars). waves = quantas ondas da tabela global a fase usa.",
+    "note": "Fases da campanha. A primeira estrela é sempre vencer; as outras duas saem de objectives, avaliados pelo servidor com as estatisticas da partida (Rules/Stars). waves = quantas ondas da tabela global a fase usa. bossHpScale traz o chefe do mapa depois da última onda da fase, com a vida escalada. firstClearReward é entregue uma vez por conta, na primeira vitória da fase.",
     "levels": [
       {
         "id": "1",
@@ -1219,7 +1267,10 @@
               "pipoca"
             ]
           }
-        ]
+        ],
+        "firstClearReward": {
+          "retry": 1
+        }
       },
       {
         "id": "3",
@@ -1234,7 +1285,10 @@
           {
             "kind": "rushAll"
           }
-        ]
+        ],
+        "firstClearReward": {
+          "support": 1
+        }
       },
       {
         "id": "4",
@@ -1264,9 +1318,11 @@
             "kind": "noLeak"
           },
           {
-            "kind": "rushAll"
+            "kind": "minCircuits",
+            "value": 1
           }
-        ]
+        ],
+        "bossHpScale": 0.45
       },
       {
         "id": "6",
@@ -1296,7 +1352,7 @@
             "value": 15
           },
           {
-            "kind": "rushAll"
+            "kind": "noSell"
           }
         ]
       },
@@ -1335,7 +1391,8 @@
             "kind": "maxTowers",
             "value": 9
           }
-        ]
+        ],
+        "bossHpScale": 0.6
       },
       {
         "id": "10",
@@ -1365,7 +1422,8 @@
             "value": 20
           },
           {
-            "kind": "rushAll"
+            "kind": "minCircuits",
+            "value": 2
           }
         ]
       },
@@ -1380,9 +1438,75 @@
             "kind": "noLeak"
           },
           {
-            "kind": "rushAll"
+            "kind": "noSell"
           }
-        ]
+        ],
+        "bossHpScale": 1.0
+      }
+    ]
+  },
+  "progression": {
+    "note": "XP por partida = xpPerWave x ondas concluídas x dificuldade x grupo + xpWinBonus na vitória. XP do nível n para o n+1 = levelBase + levelStep x (n-1). Cada nível paga levelButtons; múltiplos de levelRetryEvery pagam também uma Retomada.",
+    "xpPerWave": 12,
+    "xpWinBonus": 60,
+    "xpDifficulty": {
+      "normal": 1,
+      "desafio": 1.4
+    },
+    "xpPerExtraPlayer": 0.1,
+    "xpGroupCap": 0.3,
+    "levelBase": 120,
+    "levelStep": 45,
+    "maxLevel": 40,
+    "levelButtons": 25,
+    "levelRetryEvery": 5
+  },
+  "retention": {
+    "note": "Dia é o dia UTC. Perder um dia volta a sequência para o dia 1. Presentes de sessão contam o tempo desde a entrada no servidor e cada um sai uma vez por dia UTC.",
+    "dailyRewards": [
+      {
+        "buttons": 30
+      },
+      {
+        "buttons": 40
+      },
+      {
+        "support": 1
+      },
+      {
+        "buttons": 60
+      },
+      {
+        "buttons": 80
+      },
+      {
+        "buttons": 100
+      },
+      {
+        "buttons": 150,
+        "retry": 1
+      }
+    ],
+    "sessionGifts": [
+      {
+        "minutes": 5,
+        "buttons": 15
+      },
+      {
+        "minutes": 10,
+        "buttons": 25
+      },
+      {
+        "minutes": 20,
+        "support": 1
+      },
+      {
+        "minutes": 30,
+        "buttons": 50
+      },
+      {
+        "minutes": 45,
+        "retry": 1
       }
     ]
   }

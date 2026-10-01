@@ -182,7 +182,27 @@ local function combat(key: string, action: string, payload: { [string]: any })
 end
 
 function GameFlow.placeTower(towerId: string, x: number, y: number)
-	combat("build:place", "PlaceTower", { towerId = towerId, x = x, y = y })
+	local payload: { [string]: any } = { towerId = towerId, x = x, y = y }
+	local snapshot = Atoms.snapshot()
+	-- Reforço armado e ainda válido: a torre vai como grátis (o servidor confere e gasta a ficha)
+	if Atoms.supportArmed() and snapshot and snapshot.supportAvailable then
+		payload.support = true
+		Actions.setSupportArmed(false)
+		local id = matchId()
+		if id and Selectors.canMutate() then
+			payload.matchId = id
+			Commands.send("build:place", "PlaceTower", payload, {
+				onSuccess = function()
+					Actions.toast(L("support.used"), "success")
+				end,
+				onError = function(code)
+					Actions.toast(L("error." .. code), "error")
+				end,
+			})
+		end
+	else
+		combat("build:place", "PlaceTower", payload)
+	end
 	Actions.exitBuild()
 	-- posicionou: a doca encolhe sozinha para o tabuleiro voltar inteiro (layout compacto)
 	Actions.setBuildDockOpen(false)
@@ -226,6 +246,87 @@ function GameFlow.pulse()
 		return
 	end
 	combat("match:pulse", "CastPulse", {})
+end
+
+-- ---------------------------------------------------------------------------
+-- Fichas: Retomada, Reforço e loja
+-- ---------------------------------------------------------------------------
+
+-- Arma (ou desarma) o Reforço. Armado, a doca abre para o jogador escolher a torre grátis.
+function GameFlow.toggleSupport()
+	local armed = not Atoms.supportArmed()
+	Actions.setSupportArmed(armed)
+	if armed then
+		Actions.setBuildDockOpen(true)
+	end
+end
+
+function GameFlow.useRetry()
+	combat("match:retry", "UseRetry", {})
+end
+
+function GameFlow.declineRetry()
+	Actions.setRetryDeclined(true)
+	combat("match:retryDecline", "DeclineRetry", {})
+end
+
+-- Consulta a vitrine (preços reais). As telas chamam ao abrir; o resultado fica em Atoms.shop.
+function GameFlow.queryShop()
+	Commands.send("shop:query", "QueryShop", {}, {
+		onSuccess = function(response)
+			if typeof(response.shop) == "table" then
+				Actions.setShop(response.shop)
+			end
+		end,
+	})
+end
+
+-- Abre a janela oficial do Roblox. A ficha só chega pelo recibo (aviso "purchase").
+function GameFlow.buyProduct(productKey: string)
+	Commands.send("shop:prompt:" .. productKey, "PromptProduct", { productKey = productKey }, {
+		onSuccess = function()
+			Actions.toast(L("shop.promptOpened"), "info")
+		end,
+		onError = function(code)
+			Actions.toast(L("error." .. code), "error")
+		end,
+	})
+end
+
+function GameFlow.buyRetryWithButtons(onDone: (() -> ())?)
+	Commands.send("shop:buttons:retry", "BuyWithButtons", { item = "retry" }, {
+		onSuccess = function()
+			Actions.purchaseDelivered("retry", 1)
+			if onDone then
+				onDone()
+			end
+		end,
+		onError = function(code)
+			Actions.toast(L("error." .. code), "error")
+		end,
+	})
+end
+
+function GameFlow.claimDaily()
+	Commands.send("reward:daily", "ClaimDaily", {}, {
+		onSuccess = function(response)
+			Actions.toast(L("daily.got", { text = Selectors.rewardText(response.reward) }), "success")
+		end,
+		onError = function(code)
+			Actions.toast(L("error." .. code), "error")
+		end,
+	})
+end
+
+function GameFlow.claimGift(index: number)
+	Commands.send("reward:gift", "ClaimSessionGift", { index = index }, {
+		onSuccess = function(response)
+			Actions.toast(L("gifts.got", { text = Selectors.rewardText(response.reward) }), "success")
+		end,
+		onError = function(code)
+			Actions.toast(L("error." .. code), "error")
+		end,
+	})
 end
 
 function GameFlow.retryProfile()

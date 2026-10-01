@@ -7,12 +7,34 @@
 Tower defense de campanha no Roblox, com progressão por estrelas e coleção de torres: o jogador
 volta pelas fases, e **paga por identidade e por tempo — nunca por poder**.
 
-## O princípio que não se negocia
+## Política (revista em 2026-09-28)
 
-**Nada que se compra ganha partida.** Toda torre e toda melhoria são desbloqueadas jogando. O que
-se vende é aparência, atalho de tempo e acesso antecipado. Isso protege o boca a boca (o público
-do Roblox reage mal a pay-to-win) e mantém o balanceamento sob controle: uma única regra de
-economia, sem variantes pagas para testar.
+A regra "nada que se compra afeta o combate" foi **substituída** por decisão do responsável: vender
+ajuda de jogo é permitido (repetir onda, torre extra e, depois, outras vantagens). O que continua
+valendo, por política do Roblox, pelo público infantil e por coerência de dados:
+
+- **Nada aleatório pago**: sem caixa surpresa nem gacha.
+- **Recomeçar a fase é sempre grátis** e está sempre à vista na derrota.
+- **Compra só por ação do jogador**, num botão com o preço real do Roblox. Nada abre sozinho, sem
+  cronômetro falso, sem escassez inventada, sem dificuldade ajustada pelo que a pessoa já gastou.
+- **Comprar guarda; usar é outra ação.** A ficha nunca é consumida automaticamente.
+- **Ajuda não compra estrela de objetivo**: vitória com Retomada ou Reforço abre a próxima fase,
+  mas as estrelas 2 e 3 pedem uma partida sem ajuda.
+- **A campanha precisa dar para vencer de graça.** Dificuldade que "pede" compra fica no conteúdo
+  opcional.
+
+### Implementado nesta versão (Teste 1)
+
+| Produto | Entrega | Regra de uso | Fontes grátis |
+|---|---|---|---|
+| Retomada (`retry_1`, `retry_3`) | repete a onda perdida com o Farol cheio; torres e sucata voltam ao início da onda | uma por partida, cobre o grupo; fora da fase 1 e do treino | 1ª vitória da fase 2, dia 7 da diária, presente de 45 min, níveis múltiplos de 5, 300 botões |
+| Reforço (`support_1`, `support_3`) | uma torre da equipe no L0 de graça | só na preparação, um por jogador; venda devolve só as melhorias | 1ª vitória da fase 3, dia 3 da diária, presente de 20 min |
+
+Técnica: `ShopService` é o roteador único de `ProcessReceipt`; a entrega é idempotente pelo
+`PurchaseId` guardado no perfil (`ProfileSchema.applyPurchase`) e só responde "entregue" depois
+de o ProfileStore confirmar a gravação. Retomada e Reforço são validados pela simulação
+(`Simulation.applyRetry`, `placeTower { free = true }`), e a ficha só é gasta quando o efeito
+acontece. Números e produtos vivem em `balanceamento_v1.json` (`shop`, `progression`, `retention`).
 
 ## As três fontes de receita
 
@@ -25,8 +47,9 @@ economia, sem variantes pagas para testar.
 Passiva, sem produto: **Premium Payouts** do Roblox, proporcional ao tempo que assinantes passam
 no jogo. Não se vende nada — entra por retenção.
 
-**Já pronto no código:** passe fundador (desligado, à espera do ID no Creator Hub), moeda de
-botões, catálogo de cosméticos e recompensas por domínio de torre. Falta a arte dos cosméticos e
+**Já pronto no código:** passe fundador (desligado, à espera do ID no Creator Hub), fichas de
+Retomada e Reforço (à espera dos IDs dos Developer Products), moeda de botões, nível de conta,
+recompensa diária, presentes de sessão, catálogo de cosméticos e recompensas por domínio de torre. Falta a arte dos cosméticos e
 criar os produtos no Creator Hub.
 
 ## Quanto isso pode dar

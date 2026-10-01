@@ -11,6 +11,7 @@ local MatchService = require(script.Parent.Services.MatchService)
 local PartyService = require(script.Parent.Services.PartyService)
 local CommandService = require(script.Parent.Services.CommandService)
 local ConsoleService = require(script.Parent.Services.ConsoleService)
+local LeaderstatsService = require(script.Parent.Services.LeaderstatsService)
 
 Players.CharacterAutoLoads = false
 
@@ -30,7 +31,9 @@ Lighting.OutdoorAmbient = Color3.fromHex("19283F")
 
 PlayerDataService.init()
 RewardService.init()
-ShopService.init()
+-- abrir a janela de compra na tela de derrota estende o prazo da decisão da Retomada
+ShopService.init({ onPromptOpened = MatchService.onPurchasePrompt })
+LeaderstatsService.init()
 PartyService.init()
 MatchService.init({
 	onPlayerFreed = PartyService.onPlayerFreed,
@@ -44,6 +47,7 @@ local function onPlayerAdded(player: Player)
 	MatchService.onPlayerAdded(player)
 	PartyService.onPlayerAdded(player)
 	TelemetryService.funnel(player, "onboarding", 1, "joined")
+	LeaderstatsService.refresh(player)
 end
 
 Players.PlayerAdded:Connect(onPlayerAdded)

@@ -39,6 +39,30 @@ D. **`src/shared/Config/DevFlags.luau` está com `unlockAllMaps = true`** (e `al
 5. Criar o **passe Pacote Fundador** no Creator Hub (preço de teste proposto: 149 Robux). Preencher `founderPassId` em `Pacote_Claude_Code/dados/balanceamento_v1.json` (`shop.founderPassId`) e rodar `tools/import_balance.py`. Só então definir `shop.enabledByDefault = true`. Sem ID válido e preço consultado, a loja fica oculta e nada é concedido.
 6. Produzir as **seis skins Fundador, estandarte e título** (arte não produzida). Os IDs de cosmético já existem em `Config/Products.luau`; a apresentação usa a arte padrão até haver skins.
 
+## Fichas: Retomada e Reforço (Developer Products) — *2026-09-28*
+
+6b. Criar no Creator Hub → Monetization → **Developer Products** os quatro produtos abaixo e
+   preencher o `productId` de cada um em `Pacote_Claude_Code/dados/balanceamento_v1.json`
+   (`shop.products`), depois rodar `python3 tools/import_balance.py`. Sem `productId` a compra fica
+   oculta (a Retomada continua saindo por botões e pelos presentes). Preços são proposta de teste;
+   o jogo mostra sempre o preço que o Roblox devolver.
+
+   | chave | entrega | preço proposto |
+   | --- | --- | --- |
+   | `retry_1` | 1 Retomada | 19 Robux |
+   | `retry_3` | 3 Retomadas | 49 Robux |
+   | `support_1` | 1 Reforço | 25 Robux |
+   | `support_3` | 3 Reforços | 65 Robux |
+
+   **Nunca** reaproveite uma chave para outra entrega: produto novo = chave nova.
+6c. Testar a compra no Studio (a janela do Studio é de teste e não cobra) e depois num servidor
+   publicado de teste, só com autorização do responsável: ali a compra gasta Robux reais.
+   Conferir: recibo repetido não soma de novo, sair antes da confirmação entrega na próxima
+   entrada, e a ficha aparece no inventário sem ser usada sozinha.
+6d. Para testar sem comprar: console (F2) `grantItem retry 3`, `grantItem support 2`, `addXp 2700`.
+   Para ver a tela da Retomada: comece a fase 2, chame a primeira onda e rode `setHealth 0`
+   (`forceLoss` encerra direto, sem oferecer a Retomada).
+
 ## Arte e áudio pendentes
 
 7. **240 quadros de animação das torres** (4 repouso + 4 ataque/apoio × 5 estados × 6 torres) e os seis atlas 1024×1024 conforme `animation_plan.json`. Hoje o jogo usa movimentos procedurais sobre as poses estáticas (`TowerAnimator.luau`). Ao produzir os atlas, mudar `renderMode` de `single_static` para `atlas` em `runtime_asset_registry.json` e implementar o recorte (`ImageRectOffset`/`ImageRectSize`) em `BoardRenderer`.

@@ -60,6 +60,8 @@ Enums.phase = set("phase", {
 	"RewardPending",
 	"Closed",
 	"Abandoned",
+	-- acrescentados no fim: os ids anteriores continuam valendo
+	"RetryDecision",
 })
 
 -- Eventos cosméticos do combate (Simulation) — a lista é um atalho de tamanho, não um contrato:
@@ -90,11 +92,13 @@ Enums.event = set("event", {
 	"bossTelegraph",
 	"bossAbility",
 	"bossCancel",
+	"retryOffer",
+	"retryApplied",
 })
 
 -- Quadros da partida (servidor -> cliente) e avisos de lobby.
 Enums.frame = set("frame", { "frame", "match", "result", "left", "rematch" })
-Enums.lobby = set("lobby", { "lobby", "invite", "profile", "shop", "reward" })
+Enums.lobby = set("lobby", { "lobby", "invite", "profile", "shop", "reward", "purchase" })
 
 -- Converte texto -> id (0 quando nil ou fora da lista).
 function Enums.toId(enumSet: EnumSet, value: string?): number

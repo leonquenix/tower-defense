@@ -12,6 +12,7 @@ local Fusion = require(ReplicatedStorage.Shared.Lib.Fusion)
 local Actions = require(script.Parent.Parent.Parent.State.Actions)
 local Atoms = require(script.Parent.Parent.Parent.State.Atoms)
 local Bridge = require(script.Parent.Parent.Parent.State.Bridge)
+local Selectors = require(script.Parent.Parent.Parent.State.Selectors)
 local GameFlow = require(script.Parent.Parent.Parent.Controllers.GameFlow)
 local Theme = require(script.Parent.Parent.Parent.View.Theme)
 local Kit = require(script.Parent.Parent.Kit)
@@ -128,6 +129,37 @@ return function(scope: Kit.Scope, props: Props): Frame
 			return L("result.notRecordedExplain")
 		end
 		return ""
+	end)
+
+	-- Conta: XP, nível novo, torres que o nível abriu e presentes. Tudo vem do servidor.
+	local progressText = scope:Computed(function(use): string
+		local payload = use(result)
+		local outcome = payload and payload.outcome
+		local lines: { string } = {}
+		if outcome and (outcome.status == "saved" or outcome.status == "unsaved") then
+			if (outcome.xp or 0) > 0 then
+				table.insert(lines, L("result.xp", { xp = outcome.xp }))
+			end
+			if (outcome.levelAfter or 0) > (outcome.levelBefore or 0) then
+				table.insert(lines, L("result.levelUp", { level = outcome.levelAfter }))
+				local rewards = Selectors.rewardText(outcome.levelRewards)
+				if rewards ~= "" then
+					table.insert(lines, L("result.levelReward", { text = rewards }))
+				end
+			end
+			for _, towerId in ipairs(outcome.towersUnlocked or {}) do
+				local def = Catalog.getTower(towerId)
+				table.insert(lines, L("result.towerUnlocked", { tower = if def then def.name else towerId }))
+			end
+			if outcome.firstClear then
+				table.insert(lines, L("result.firstClear", { text = Selectors.rewardText(outcome.firstClear) }))
+			end
+		end
+		local match = payload and payload.result
+		if match and match.outcome == "won" and match.assisted and match.levelId then
+			table.insert(lines, L("result.assisted"))
+		end
+		return table.concat(lines, "\n")
 	end)
 
 	local masteryLines = scope:Computed(function(use): { string }
@@ -303,6 +335,20 @@ return function(scope: Kit.Scope, props: Props): Frame
 							LayoutOrder = 1,
 							ZIndex = 43,
 						}),
+						Kit.text(scope, {
+							Name = "Progress",
+							Text = progressText,
+							Visible = scope:Computed(function(use)
+								return use(progressText) ~= ""
+							end),
+							TextColor3 = Theme.colors.goldText,
+							Font = Theme.fonts.bodyBold,
+							TextSize = 15,
+							Size = UDim2.new(1, 0, 0, 0),
+							AutomaticSize = Enum.AutomaticSize.Y,
+							LayoutOrder = 2,
+							ZIndex = 43,
+						}),
 						Kit.caption(scope, {
 							Text = pendingHelp,
 							Visible = scope:Computed(function(use)
@@ -310,7 +356,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 							end),
 							Size = UDim2.new(1, 0, 0, 0),
 							AutomaticSize = Enum.AutomaticSize.Y,
-							LayoutOrder = 2,
+							LayoutOrder = 3,
 							ZIndex = 43,
 						}),
 						Kit.button(scope, {
@@ -321,7 +367,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 								return use(pendingHelp) ~= ""
 							end),
 							size = UDim2.new(0, 220, 0, 44),
-							layoutOrder = 3,
+							layoutOrder = 4,
 							zIndex = 43,
 							onActivate = GameFlow.claimPending,
 						})

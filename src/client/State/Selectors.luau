@@ -4,6 +4,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Types = require(ReplicatedStorage.Shared.Types)
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Atoms = require(script.Parent.Atoms)
 
 local Selectors = {}
@@ -17,6 +19,91 @@ end
 function Selectors.buttons(): number
 	local profile = Atoms.profile()
 	return if profile then (profile.buttons or 0) else 0
+end
+
+-- ---------------------------------------------------------------------------
+-- Conta, fichas e retorno
+-- ---------------------------------------------------------------------------
+
+function Selectors.level(): number
+	local profile = Atoms.profile()
+	return if profile then (profile.level or 1) else 1
+end
+
+-- Fração da barra de nível (0..1).
+function Selectors.levelProgress(): number
+	local profile = Atoms.profile()
+	if not profile or profile.levelMaxed or not profile.levelNeeded or profile.levelNeeded <= 0 then
+		return 1
+	end
+	return math.clamp((profile.levelInto or 0) / profile.levelNeeded, 0, 1)
+end
+
+function Selectors.itemCount(item: string): number
+	local profile = Atoms.profile()
+	local inventory = profile and profile.inventory
+	return if inventory then (inventory[item] or 0) else 0
+end
+
+-- Segundos de sessão vistos pelo servidor, andando com o relógio local desde que o perfil chegou.
+function Selectors.sessionSeconds(now: number?): number
+	local profile = Atoms.profile()
+	if not profile then
+		return 0
+	end
+	return (profile.sessionSeconds or 0) + ((now or os.clock()) - Atoms.profileReceivedAt())
+end
+
+export type GiftState = { index: number, ready: boolean, secondsLeft: number }
+
+-- Próximo presente de sessão ainda fechado hoje (nil quando todos já foram abertos).
+function Selectors.nextGift(now: number?): GiftState?
+	local profile = Atoms.profile()
+	if not profile then
+		return nil
+	end
+	local claimed = profile.giftsClaimed or {}
+	local seconds = Selectors.sessionSeconds(now)
+	for index, gift in ipairs(Balance.retention.sessionGifts) do
+		if table.find(claimed, index) == nil then
+			local left = math.max(gift.minutes * 60 - seconds, 0)
+			return { index = index, ready = left <= 0, secondsLeft = left }
+		end
+	end
+	return nil
+end
+
+-- "12 botões + 1 Retomada" a partir de um pacote de recompensa.
+function Selectors.rewardText(bundle: { [string]: any }?): string
+	if not bundle then
+		return ""
+	end
+	local parts: { string } = {}
+	if (bundle.buttons or 0) > 0 then
+		table.insert(parts, Localization.get("reward.buttons", { count = bundle.buttons }))
+	end
+	if (bundle.retry or 0) > 0 then
+		table.insert(parts, Localization.get("reward.retry", { count = bundle.retry }))
+	end
+	if (bundle.support or 0) > 0 then
+		table.insert(parts, Localization.get("reward.support", { count = bundle.support }))
+	end
+	return table.concat(parts, " + ")
+end
+
+-- Oferta da loja para um item: o menor pacote com preço real (nil = compra indisponível).
+function Selectors.offerFor(item: string): { [string]: any }?
+	local shop = Atoms.shop()
+	if not shop or typeof(shop.products) ~= "table" then
+		return nil
+	end
+	local best: { [string]: any }? = nil
+	for _, product in ipairs(shop.products) do
+		if product.item == item and product.available and (best == nil or product.quantity < best.quantity) then
+			best = product
+		end
+	end
+	return best
 end
 
 function Selectors.isPersistent(): boolean

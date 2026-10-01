@@ -4,7 +4,9 @@ local Shared = game:GetService("ReplicatedStorage").Shared
 local Types = require(Shared.Types)
 local Protocol = require(Shared.Net.Protocol)
 local Products = require(Shared.Config.Products)
+local Balance = require(Shared.Config.Balance)
 local ProfileSchema = require(Shared.Profile.ProfileSchema)
+local Progression = require(Shared.Rules.Progression)
 local PlayerDataService = require(script.Parent.PlayerDataService)
 local RewardService = require(script.Parent.RewardService)
 local ShopService = require(script.Parent.ShopService)
@@ -81,8 +83,88 @@ function MenuService.handle(player: Player, action: string, payload: { [string]:
 	elseif action == "QueryShop" then
 		return result(true, nil, { shop = ShopService.query(player), available = Products.isShopAvailable() })
 	elseif action == "PromptFounderPass" then
-		local ok, err = ShopService.prompt(player)
+		local ok, err = ShopService.promptFounder(player)
 		return result(ok, err)
+	elseif action == "PromptProduct" then
+		local ok, err = ShopService.promptProduct(player, payload.productKey)
+		return result(ok, err)
+	elseif action == "BuyWithButtons" then
+		local r = withProfile(player, function(p: Types.Profile)
+			return ProfileSchema.buyItemWithButtons(p, payload.item)
+		end)
+		if r.ok then
+			local profile = PlayerDataService.get(player)
+			TelemetryService.economy(
+				player,
+				false,
+				"buttons",
+				Balance.shop.retry.buttonsPrice,
+				if profile then profile.buttons else 0,
+				"Shop",
+				payload.item
+			)
+			task.spawn(function()
+				PlayerDataService.save(player, false)
+			end)
+		end
+		return r
+	elseif action == "ClaimDaily" then
+		local bundle: Types.RewardBundle? = nil
+		local dayIndex: number? = nil
+		local r = withProfile(player, function(p: Types.Profile)
+			local ok, granted, index = Progression.claimDaily(p, os.time())
+			bundle, dayIndex = granted, index
+			return ok, if ok then nil else Protocol.ERROR.INVALID_STATE
+		end)
+		if r.ok then
+			r.reward = bundle
+			r.dayIndex = dayIndex
+			TelemetryService.log("daily_claimed", { userId = player.UserId, day = dayIndex })
+			local profile = PlayerDataService.get(player)
+			if bundle and bundle.buttons and profile then
+				TelemetryService.economy(
+					player,
+					true,
+					"buttons",
+					bundle.buttons,
+					profile.buttons,
+					"TimedReward",
+					"daily"
+				)
+			end
+			task.spawn(function()
+				PlayerDataService.save(player, false)
+			end)
+		end
+		return r
+	elseif action == "ClaimSessionGift" then
+		local bundle: Types.RewardBundle? = nil
+		local seconds = PlayerDataService.sessionSeconds(player)
+		local r = withProfile(player, function(p: Types.Profile)
+			local ok, granted = Progression.claimGift(p, payload.index, seconds, os.time())
+			bundle = granted
+			return ok, if ok then nil else Protocol.ERROR.INVALID_STATE
+		end)
+		if r.ok then
+			r.reward = bundle
+			TelemetryService.log("gift_claimed", { userId = player.UserId, index = payload.index })
+			local profile = PlayerDataService.get(player)
+			if bundle and bundle.buttons and profile then
+				TelemetryService.economy(
+					player,
+					true,
+					"buttons",
+					bundle.buttons,
+					profile.buttons,
+					"TimedReward",
+					"gift"
+				)
+			end
+			task.spawn(function()
+				PlayerDataService.save(player, false)
+			end)
+		end
+		return r
 	elseif action == "ClaimPending" then
 		if not PlayerDataService.get(player) then
 			return result(false, Protocol.ERROR.PROFILE_UNAVAILABLE)

@@ -46,6 +46,68 @@ function TelemetryService.funnel(player: Player, funnelName: string, step: numbe
 	end)
 end
 
+-- Funil de primeira sessão do Roblox (painel pronto no Creator Hub). Os passos são fixos e
+-- crescentes; cada jogador registra cada passo uma vez (o perfil guarda o maior já enviado).
+TelemetryService.ONBOARDING = {
+	joined = 1,
+	firstMatch = 2,
+	firstTower = 3,
+	firstWave = 4,
+	level1Won = 5,
+	level2Won = 6,
+	level3Won = 7,
+	accountLevel3 = 8,
+}
+
+function TelemetryService.onboarding(player: Player, step: number, stepName: string)
+	TelemetryService.log("onboarding", { userId = player.UserId, step = step, stepName = stepName })
+	if RunService:IsStudio() then
+		return
+	end
+	task.spawn(function()
+		pcall(function()
+			AnalyticsService:LogOnboardingFunnelStepEvent(player, step, stepName)
+		end)
+	end)
+end
+
+-- Movimento de moeda ou ficha (fonte = ganhou, sumidouro = gastou). Vira o painel de economia.
+function TelemetryService.economy(
+	player: Player,
+	source: boolean,
+	currency: string,
+	amount: number,
+	balance: number,
+	transaction: string,
+	sku: string?
+)
+	TelemetryService.log("economy", {
+		userId = player.UserId,
+		flow = if source then "source" else "sink",
+		currency = currency,
+		amount = amount,
+		balance = balance,
+		transaction = transaction,
+		sku = sku,
+	})
+	if RunService:IsStudio() or amount <= 0 then
+		return
+	end
+	task.spawn(function()
+		pcall(function()
+			AnalyticsService:LogEconomyEvent(
+				player,
+				if source then Enum.AnalyticsEconomyFlowType.Source else Enum.AnalyticsEconomyFlowType.Sink,
+				currency,
+				amount,
+				balance,
+				transaction,
+				sku
+			)
+		end)
+	end)
+end
+
 function TelemetryService.recent(count: number?): { Fields }
 	local n = count or 50
 	local out = {}

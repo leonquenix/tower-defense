@@ -31,11 +31,14 @@
         "perfil pronto",
         "primeiro acesso (tutorial)",
         "perfil indisponível",
-        "loja oculta"
+        "loja oculta",
+        "painel Hoje: diária disponível / resgatada",
+        "presente pronto / contagem",
+        "nível e barra de XP"
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: menu com Jogar Campanha (o botão de tutorial saiu); aguarda nova sessão de Play."
+      "evidence": "Progressão 2026-09-28: ficha de nível com barra de XP e painel Hoje (recompensa diária, presentes da sessão, fichas guardadas); aguarda sessão de Play."
     },
     "03_mapas": {
       "kind": "screen",
@@ -144,11 +147,14 @@
         "disponível",
         "aguardando Roblox",
         "cancelado",
-        "possuído"
+        "possuído",
+        "ficha: sem produto criado (compra oculta)",
+        "ficha: preço real",
+        "Retomada por botões"
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Monetização 2026-09-28: cartões de Retomada e Reforço com preço real do Roblox, Retomada por botões e passe Fundador; aguarda produtos no Creator Hub e sessão de Play."
     },
     "10_opcoes": {
       "kind": "screen",
@@ -190,11 +196,12 @@
         "preparação",
         "intervalo",
         "pronto",
-        "contagem por simTime"
+        "contagem por simTime",
+        "Reforço armado"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Play 2026-09-20: fichas em bloco de duas linhas no canto inferior direito (no compacto sobem para o topo à esquerda), contagem da próxima onda desenhada na entrada do caminho e botão verde Iniciar Onda sozinho no rodapé."
+      "studio": false,
+      "evidence": "Monetização 2026-09-28: botão Reforço na preparação (arma torre grátis ou abre o detalhe do item); aguarda sessão de Play."
     },
     "13_combate": {
       "kind": "screen",
@@ -368,8 +375,8 @@
         "destaques"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Play 2026-09-19: 'Farol protegido!', 3/3 ondas, 'Recompensa 180 botões · Recompensa salva' (ProfileStore com API Services)."
+      "studio": false,
+      "evidence": "Progressão 2026-09-28: linhas de XP, nível novo, torre liberada, presente da primeira vitória e aviso de vitória com ajuda; aguarda sessão de Play."
     },
     "24_derrota": {
       "kind": "screen",
@@ -383,7 +390,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Progressão 2026-09-28: linhas de XP, nível novo, torre liberada, presente da primeira vitória e aviso de vitória com ajuda; aguarda sessão de Play."
     },
     "25_recompensa_pendente": {
       "kind": "screen",
@@ -398,7 +405,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Progressão 2026-09-28: linhas de XP, nível novo, torre liberada, presente da primeira vitória e aviso de vitória com ajuda; aguarda sessão de Play."
     },
     "26_conexao": {
       "kind": "screen",
@@ -661,11 +668,12 @@
         "imagem faltando",
         "recarregar",
         "perfil bloqueado",
-        "resultado não registrado"
+        "resultado não registrado",
+        "decisão da Retomada"
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Monetização 2026-09-28: cortina da Retomada na derrota (usar ficha, comprar, trocar botões, desistir); aguarda sessão de Play."
     },
     "43_colecao_estados": {
       "kind": "library",
@@ -693,8 +701,8 @@
         "revanche aguardando"
       ],
       "implemented": true,
-      "studio": true,
-      "evidence": "Play 2026-09-19: contribuição e domínio exibidos; 'Verificar novamente' oculto quando a recompensa foi salva."
+      "studio": false,
+      "evidence": "Progressão 2026-09-28: linhas de XP, nível novo, torre liberada, presente da primeira vitória e aviso de vitória com ajuda; aguarda sessão de Play."
     },
     "45_menus_contextuais": {
       "kind": "library",

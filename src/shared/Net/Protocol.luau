@@ -26,6 +26,8 @@ Protocol.ERROR = {
 	BAD_REQUEST = "BAD_REQUEST",
 	NOT_IN_MATCH = "NOT_IN_MATCH",
 	SHOP_DISABLED = "SHOP_DISABLED",
+	-- sem ficha no inventário (Retomada ou Reforço)
+	INSUFFICIENT_ITEMS = "INSUFFICIENT_ITEMS",
 }
 
 export type FieldSpec = { kind: "string" | "int" | "number" | "boolean" | "stringList", optional: boolean?, max: number? }
@@ -37,7 +39,11 @@ local ACTIONS: { [string]: { [string]: FieldSpec } } = {
 		towerId = { kind = "string" },
 		x = { kind = "int" },
 		y = { kind = "int" },
+		-- Reforço: a torre sai de graça gastando uma ficha (o servidor confere tudo)
+		support = { kind = "boolean", optional = true },
 	},
+	UseRetry = { matchId = { kind = "string" } },
+	DeclineRetry = { matchId = { kind = "string" } },
 	UpgradeTower = { matchId = { kind = "string" }, entityId = { kind = "int" }, nextState = { kind = "string" } },
 	SellTower = { matchId = { kind = "string" }, entityId = { kind = "int" } },
 	SetTarget = { matchId = { kind = "string" }, entityId = { kind = "int" }, mode = { kind = "string" } },
@@ -82,6 +88,11 @@ local ACTIONS: { [string]: { [string]: FieldSpec } } = {
 	EquipCosmetic = { slot = { kind = "string" }, cosmeticId = { kind = "string" } },
 	QueryShop = {},
 	PromptFounderPass = {},
+	-- abre a janela oficial do Roblox para um produto de ficha; a entrega é do recibo
+	PromptProduct = { productKey = { kind = "string" } },
+	BuyWithButtons = { item = { kind = "string" } },
+	ClaimDaily = {},
+	ClaimSessionGift = { index = { kind = "int" } },
 	ClaimPending = {},
 	RetryProfile = {},
 	Telemetry = { event = { kind = "string" }, value = { kind = "number", optional = true } },
@@ -106,6 +117,8 @@ local COMBAT_ACTIONS: { [string]: boolean } = {
 	Rematch = true,
 	LeaveMatch = true,
 	Telemetry = true,
+	UseRetry = true,
+	DeclineRetry = true,
 }
 -- Compras persistentes: uma por segundo, rajada de duas
 local PERSISTENT_ACTIONS: { [string]: boolean } = {
@@ -114,6 +127,10 @@ local PERSISTENT_ACTIONS: { [string]: boolean } = {
 	SaveSettings = true,
 	EquipCosmetic = true,
 	PromptFounderPass = true,
+	PromptProduct = true,
+	BuyWithButtons = true,
+	ClaimDaily = true,
+	ClaimSessionGift = true,
 	ClaimPending = true,
 	RetryProfile = true,
 	-- convites gastam o balde persistente: o cooldown de 5 s por destinatário é do PartyService

@@ -23,7 +23,31 @@ export type UserOutcome = {
 	unlocked: { string },
 	-- Cosméticos de domínio concedidos por este resultado (só marcos realmente cruzados).
 	grantedCosmetics: { string },
+	-- conta: XP ganho, níveis, o que os níveis entregaram e o presente da primeira vitória
+	xp: number,
+	levelBefore: number,
+	levelAfter: number,
+	levelRewards: Types.RewardBundle?,
+	towersUnlocked: { string },
+	firstClear: Types.RewardBundle?,
 }
+
+local function emptyOutcome(status: any): UserOutcome
+	return {
+		status = status,
+		buttons = 0,
+		mastery = {},
+		milestones = {},
+		unlocked = {},
+		grantedCosmetics = {},
+		xp = 0,
+		levelBefore = 0,
+		levelAfter = 0,
+		levelRewards = nil,
+		towersUnlocked = {},
+		firstClear = nil,
+	}
+end
 
 local function getLedger(): DataStore?
 	if ledger then
@@ -85,8 +109,7 @@ local function applyToPlayer(
 	levelId: string?,
 	stars: number?
 ): UserOutcome
-	local outcome: UserOutcome =
-		{ status = "none", buttons = 0, mastery = {}, milestones = {}, unlocked = {}, grantedCosmetics = {} }
+	local outcome: UserOutcome = emptyOutcome("none")
 	local profile = PlayerDataService.get(player)
 	local session = PlayerDataService.getSession(player)
 	if not profile or not session then
@@ -100,6 +123,7 @@ local function applyToPlayer(
 		applyResult = ProfileSchema.applyMatchResult(p, {
 			matchId = record.matchId,
 			buttons = record.buttonsPerPlayer,
+			xp = record.xpPerPlayer,
 			masteryByTower = masteryForUser,
 			outcome = record.outcome,
 			mode = record.mode,
@@ -124,6 +148,18 @@ local function applyToPlayer(
 	outcome.milestones = result.newMilestones
 	outcome.unlocked = result.unlocked
 	outcome.grantedCosmetics = result.grantedCosmetics
+	outcome.firstClear = result.firstClear
+	local xpOutcome = result.xp
+	if xpOutcome then
+		outcome.xp = xpOutcome.xpGained
+		outcome.levelBefore = xpOutcome.levelBefore
+		outcome.levelAfter = xpOutcome.levelAfter
+		outcome.levelRewards = xpOutcome.rewards
+		outcome.towersUnlocked = xpOutcome.towersUnlocked
+		if xpOutcome.levelAfter > xpOutcome.levelBefore then
+			TelemetryService.log("level_up", { userId = player.UserId, level = xpOutcome.levelAfter })
+		end
+	end
 	if not result.applied then
 		outcome.status = if result.reason == "duplicate" then "duplicate" else "pending"
 		return outcome
@@ -187,6 +223,7 @@ function RewardService.settle(
 		difficulty = state.difficulty,
 		wavesCompleted = result.wavesCompleted,
 		buttonsPerPlayer = result.buttonsPerPlayer,
+		xpPerPlayer = result.xpPerPlayer,
 		eligibleUserIds = eligible,
 		masteryByUser = masteryByUser,
 		appliedUserIds = {},
@@ -201,17 +238,9 @@ function RewardService.settle(
 	for _, participant in ipairs(state.participants) do
 		local player = connectedPlayers[participant.userId]
 		if not player then
-			outcomes[participant.userId] = {
-				status = "ineligible",
-				buttons = 0,
-				mastery = {},
-				milestones = {},
-				unlocked = {},
-				grantedCosmetics = {},
-			}
+			outcomes[participant.userId] = emptyOutcome("ineligible")
 		elseif not rewardable then
-			outcomes[participant.userId] =
-				{ status = "none", buttons = 0, mastery = {}, milestones = {}, unlocked = {}, grantedCosmetics = {} }
+			outcomes[participant.userId] = emptyOutcome("none")
 			-- remove referência pendente mesmo sem recompensa
 			PlayerDataService.mutate(player, function(p: Types.Profile)
 				for i = #p.pendingResults, 1, -1 do
