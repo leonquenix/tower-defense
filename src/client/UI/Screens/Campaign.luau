@@ -31,7 +31,15 @@ local CARD_HEIGHT = 288
 local ART_HEIGHT = 124
 
 -- Etiqueta do cenário: um glifo por mapa, para bater o olho e saber onde a fase acontece.
-local MAP_GLYPH: { [string]: string } = { jardim = "🍃", oficina = "❄", sotao = "🌙" }
+local MAP_GLYPH: { [string]: string } = {
+	jardim = "🍃",
+	oficina = "🔧",
+	inverno = "❄",
+	cozinha = "🍪",
+	quarto = "🧸",
+	sotao = "🌙",
+	porao = "🕯",
+}
 
 -- Texto do objetivo em linguagem do jogador. Objetivo novo num cliente velho vira linha vazia,
 -- nunca erro.

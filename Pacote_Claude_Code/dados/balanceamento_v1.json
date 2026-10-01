@@ -342,6 +342,349 @@
         "Orquestra",
         "Solo"
       ]
+    },
+    {
+      "id": "escova",
+      "name": "Escovinha",
+      "role": "Tira armadura",
+      "starter": false,
+      "unlock": 300,
+      "unlockLevel": 4,
+      "damageType": "physical",
+      "target": "first",
+      "perPlayerLimit": 4,
+      "states": {
+        "L0": {
+          "cost": 350,
+          "damage": 6,
+          "interval": 0.45,
+          "range": 1.6,
+          "shred": 0.1,
+          "shredDuration": 3
+        },
+        "L1": {
+          "cost": 220,
+          "damage": 9,
+          "interval": 0.42,
+          "range": 1.7,
+          "shred": 0.14,
+          "shredDuration": 3
+        },
+        "L2": {
+          "cost": 450,
+          "damage": 14,
+          "interval": 0.4,
+          "range": 1.8,
+          "shred": 0.18,
+          "shredDuration": 3.5
+        },
+        "L3A": {
+          "cost": 950,
+          "damage": 18,
+          "interval": 0.45,
+          "range": 1.9,
+          "shred": 0.2,
+          "shredDuration": 3.5,
+          "splash": 0.9,
+          "maxTargets": 6
+        },
+        "L3B": {
+          "cost": 950,
+          "damage": 24,
+          "interval": 0.4,
+          "range": 1.8,
+          "shred": 0.12,
+          "shredDuration": 4,
+          "shredStacks": 4
+        }
+      },
+      "branchNames": [
+        "Esfregão",
+        "Escova de Aço"
+      ]
+    },
+    {
+      "id": "lumi",
+      "name": "Lumi",
+      "role": "Queima e impede cura",
+      "starter": false,
+      "unlock": 350,
+      "unlockLevel": 5,
+      "damageType": "energy",
+      "target": "first",
+      "perPlayerLimit": 4,
+      "states": {
+        "L0": {
+          "cost": 400,
+          "damage": 6,
+          "interval": 1.0,
+          "range": 2.6,
+          "burn": 6,
+          "burnDuration": 3
+        },
+        "L1": {
+          "cost": 260,
+          "damage": 9,
+          "interval": 0.95,
+          "range": 2.8,
+          "burn": 9,
+          "burnDuration": 3
+        },
+        "L2": {
+          "cost": 520,
+          "damage": 14,
+          "interval": 0.9,
+          "range": 3.0,
+          "burn": 14,
+          "burnDuration": 3.5
+        },
+        "L3A": {
+          "cost": 1100,
+          "damage": 20,
+          "interval": 0.5,
+          "range": 3.4,
+          "burn": 18,
+          "burnDuration": 3,
+          "focusRamp": 0.15,
+          "focusMax": 1.0
+        },
+        "L3B": {
+          "cost": 1100,
+          "damage": 14,
+          "interval": 0.85,
+          "range": 3.0,
+          "burn": 16,
+          "burnDuration": 3.5,
+          "burnSpread": 3,
+          "burnSpreadRadius": 1.5
+        }
+      },
+      "branchNames": [
+        "Holofote",
+        "Enxame"
+      ]
+    },
+    {
+      "id": "pula",
+      "name": "Pula",
+      "role": "Empurra para trás",
+      "starter": false,
+      "unlock": 500,
+      "unlockLevel": 7,
+      "damageType": "physical",
+      "target": "first",
+      "perPlayerLimit": 3,
+      "states": {
+        "L0": {
+          "cost": 400,
+          "damage": 8,
+          "interval": 2.4,
+          "range": 2.2,
+          "push": 1.0
+        },
+        "L1": {
+          "cost": 250,
+          "damage": 12,
+          "interval": 2.3,
+          "range": 2.3,
+          "push": 1.2
+        },
+        "L2": {
+          "cost": 500,
+          "damage": 18,
+          "interval": 2.2,
+          "range": 2.4,
+          "push": 1.4
+        },
+        "L3A": {
+          "cost": 1050,
+          "damage": 26,
+          "interval": 2.4,
+          "range": 2.6,
+          "push": 1.5,
+          "splash": 1.2,
+          "maxTargets": 8
+        },
+        "L3B": {
+          "cost": 1050,
+          "damage": 30,
+          "interval": 3.2,
+          "range": 3.0,
+          "push": 3.5,
+          "grab": 1
+        }
+      },
+      "branchNames": [
+        "Salto Gigante",
+        "Língua de Sogra"
+      ]
+    },
+    {
+      "id": "piao",
+      "name": "Pião",
+      "role": "Acerta tudo em volta",
+      "starter": false,
+      "unlock": 700,
+      "unlockLevel": 11,
+      "damageType": "physical",
+      "target": "first",
+      "perPlayerLimit": 4,
+      "states": {
+        "L0": {
+          "cost": 500,
+          "damage": 12,
+          "interval": 1.1,
+          "range": 1.5,
+          "allTargets": 24
+        },
+        "L1": {
+          "cost": 300,
+          "damage": 18,
+          "interval": 1.05,
+          "range": 1.6,
+          "allTargets": 24
+        },
+        "L2": {
+          "cost": 600,
+          "damage": 28,
+          "interval": 1.0,
+          "range": 1.7,
+          "allTargets": 24
+        },
+        "L3A": {
+          "cost": 1200,
+          "damage": 34,
+          "interval": 1.0,
+          "range": 2.4,
+          "allTargets": 24
+        },
+        "L3B": {
+          "cost": 1200,
+          "damage": 48,
+          "interval": 1.15,
+          "range": 1.7,
+          "allTargets": 24,
+          "armorIgnore": 0.5
+        }
+      },
+      "branchNames": [
+        "Furacão",
+        "Pião de Ferro"
+      ]
+    },
+    {
+      "id": "picole",
+      "name": "Picolé",
+      "role": "Congela em área",
+      "starter": false,
+      "unlock": 800,
+      "unlockLevel": 13,
+      "damageType": "energy",
+      "target": "first",
+      "perPlayerLimit": 3,
+      "states": {
+        "L0": {
+          "cost": 550,
+          "damage": 4,
+          "interval": 3.2,
+          "range": 2.4,
+          "splash": 1.0,
+          "maxTargets": 6,
+          "freeze": 0.9
+        },
+        "L1": {
+          "cost": 320,
+          "damage": 6,
+          "interval": 3.0,
+          "range": 2.5,
+          "splash": 1.1,
+          "maxTargets": 7,
+          "freeze": 1.0
+        },
+        "L2": {
+          "cost": 650,
+          "damage": 9,
+          "interval": 2.8,
+          "range": 2.6,
+          "splash": 1.2,
+          "maxTargets": 8,
+          "freeze": 1.1
+        },
+        "L3A": {
+          "cost": 1250,
+          "damage": 12,
+          "interval": 2.8,
+          "range": 3.0,
+          "splash": 1.8,
+          "maxTargets": 14,
+          "freeze": 1.1
+        },
+        "L3B": {
+          "cost": 1250,
+          "damage": 20,
+          "interval": 2.6,
+          "range": 2.8,
+          "freeze": 2.2,
+          "frozenBonus": 0.25
+        }
+      },
+      "branchNames": [
+        "Nevasca",
+        "Geladeira"
+      ]
+    },
+    {
+      "id": "fofo",
+      "name": "Fofo",
+      "role": "Apoio de dano",
+      "starter": false,
+      "unlock": 900,
+      "unlockLevel": 15,
+      "damageType": "none",
+      "target": "none",
+      "perPlayerLimit": 2,
+      "states": {
+        "L0": {
+          "cost": 550,
+          "damage": 0,
+          "interval": 0,
+          "range": 2.0,
+          "damageBoost": 0.08
+        },
+        "L1": {
+          "cost": 320,
+          "damage": 0,
+          "interval": 0,
+          "range": 2.2,
+          "damageBoost": 0.11
+        },
+        "L2": {
+          "cost": 650,
+          "damage": 0,
+          "interval": 0,
+          "range": 2.4,
+          "damageBoost": 0.14
+        },
+        "L3A": {
+          "cost": 1200,
+          "damage": 0,
+          "interval": 0,
+          "range": 3.0,
+          "damageBoost": 0.22
+        },
+        "L3B": {
+          "cost": 1200,
+          "damage": 0,
+          "interval": 0,
+          "range": 2.4,
+          "damageBoost": 0.14,
+          "baseHeal": 2
+        }
+      },
+      "branchNames": [
+        "Abraço de Urso",
+        "Coração Remendado"
+      ]
     }
   ],
   "enemies": [
@@ -421,6 +764,45 @@
       "bounty": 65,
       "leak": 14,
       "armor": 0.25
+    },
+    {
+      "id": "migalha",
+      "name": "Migalha",
+      "hp": 14,
+      "speed": 2.3,
+      "bounty": 3,
+      "leak": 1,
+      "armor": 0
+    },
+    {
+      "id": "floquinho",
+      "name": "Floquinho",
+      "hp": 70,
+      "speed": 1.3,
+      "bounty": 15,
+      "leak": 4,
+      "armor": 0,
+      "energyResistance": 0.4
+    },
+    {
+      "id": "novelo",
+      "name": "Novelo",
+      "hp": 120,
+      "speed": 1.1,
+      "bounty": 20,
+      "leak": 5,
+      "armor": 0,
+      "slowImmune": true
+    },
+    {
+      "id": "traca",
+      "name": "Traça",
+      "hp": 60,
+      "speed": 1.6,
+      "bounty": 16,
+      "leak": 4,
+      "armor": 0,
+      "dodgeInterval": 3
     }
   ],
   "waves": [
@@ -888,27 +1270,19 @@
           2
         ],
         [
-          4,
+          13,
           2
         ],
         [
-          4,
-          6
-        ],
-        [
-          9,
-          6
-        ],
-        [
-          9,
-          3
-        ],
-        [
           13,
-          3
+          5
         ],
         [
-          13,
+          2,
+          5
+        ],
+        [
+          2,
           8
         ],
         [
@@ -922,7 +1296,78 @@
           0
         ],
         [
-          13,
+          14,
+          0
+        ],
+        [
+          15,
+          0
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          9,
+          4
+        ],
+        [
+          10,
+          6
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          1,
+          9
+        ]
+      ],
+      "boss": "rei_ferrugem"
+    },
+    {
+      "id": "inverno",
+      "name": "Quintal de Inverno",
+      "unlock": "win:oficina:normal",
+      "hpMultiplier": 1.15,
+      "path": [
+        [
+          0,
+          6
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          11,
+          2
+        ],
+        [
+          11,
+          7
+        ],
+        [
+          15,
+          7
+        ]
+      ],
+      "blocked": [
+        [
+          0,
           0
         ],
         [
@@ -935,47 +1380,241 @@
         ],
         [
           15,
-          1
+          9
         ],
         [
           5,
           4
         ],
         [
-          0,
+          6,
+          4
+        ],
+        [
+          7,
+          4
+        ],
+        [
+          8,
+          4
+        ],
+        [
+          9,
+          4
+        ],
+        [
+          5,
           5
         ],
         [
-          0,
-          7
+          6,
+          5
         ],
+        [
+          7,
+          5
+        ],
+        [
+          8,
+          5
+        ],
+        [
+          9,
+          5
+        ]
+      ],
+      "boss": "boneco_poeira",
+      "mapGroups": [
+        {
+          "enemy": "floquinho",
+          "fromWave": 3,
+          "count": 3,
+          "perWave": 0.5
+        }
+      ]
+    },
+    {
+      "id": "cozinha",
+      "name": "Cozinha da Madrugada",
+      "unlock": "win:inverno:normal",
+      "hpMultiplier": 1.18,
+      "path": [
         [
           0,
-          8
-        ],
-        [
-          0,
-          9
-        ],
-        [
-          1,
-          9
-        ],
-        [
-          2,
-          9
+          1
         ],
         [
           3,
+          1
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          9,
+          5
+        ],
+        [
+          9,
+          7
+        ],
+        [
+          12,
+          7
+        ],
+        [
+          12,
+          5
+        ],
+        [
+          15,
+          5
+        ]
+      ],
+      "blocked": [
+        [
+          8,
+          1
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          14,
+          2
+        ],
+        [
+          15,
+          2
+        ],
+        [
+          5,
+          8
+        ],
+        [
+          4,
+          9
+        ],
+        [
+          14,
+          8
+        ]
+      ],
+      "boss": "esponjao",
+      "mapGroups": [
+        {
+          "enemy": "migalha",
+          "fromWave": 2,
+          "count": 6,
+          "perWave": 0.3
+        }
+      ]
+    },
+    {
+      "id": "quarto",
+      "name": "Quarto de Brinquedos",
+      "unlock": "win:cozinha:normal",
+      "hpMultiplier": 1.22,
+      "path": [
+        [
+          0,
+          6
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          13,
+          1
+        ],
+        [
+          13,
+          4
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          15,
+          7
+        ]
+      ],
+      "blocked": [
+        [
+          8,
+          2
+        ],
+        [
+          9,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          15,
+          0
+        ],
+        [
+          15,
+          1
+        ],
+        [
+          10,
+          9
+        ],
+        [
+          11,
           9
         ]
       ],
-      "boss": "rei_ferrugem"
+      "boss": "meia",
+      "mapGroups": [
+        {
+          "enemy": "novelo",
+          "fromWave": 4,
+          "count": 2,
+          "perWave": 0.4
+        }
+      ]
     },
     {
       "id": "sotao",
       "name": "Sótão das Estrelas",
-      "unlock": "win:oficina:normal",
+      "unlock": "win:quarto:normal",
       "hpMultiplier": 1.25,
       "path": [
         [
@@ -1042,6 +1681,109 @@
         ]
       ],
       "boss": "breu"
+    },
+    {
+      "id": "porao",
+      "name": "Porão da Poeira",
+      "unlock": "win:sotao:normal",
+      "hpMultiplier": 1.3,
+      "path": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          8
+        ],
+        [
+          5,
+          8
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          8,
+          8
+        ],
+        [
+          11,
+          8
+        ],
+        [
+          11,
+          1
+        ],
+        [
+          14,
+          1
+        ],
+        [
+          14,
+          7
+        ],
+        [
+          15,
+          7
+        ]
+      ],
+      "blocked": [
+        [
+          0,
+          0
+        ],
+        [
+          15,
+          0
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          15,
+          9
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          12,
+          9
+        ]
+      ],
+      "boss": "traca_rainha",
+      "mapGroups": [
+        {
+          "enemy": "traca",
+          "fromWave": 3,
+          "count": 3,
+          "perWave": 0.5
+        },
+        {
+          "enemy": "novelo",
+          "fromWave": 8,
+          "count": 2,
+          "perWave": 0.3
+        },
+        {
+          "enemy": "floquinho",
+          "fromWave": 12,
+          "count": 2,
+          "perWave": 0.3
+        }
+      ]
     }
   ],
   "bosses": [
@@ -1087,6 +1829,63 @@
       "telegraph": 2,
       "summonType": "corrisco",
       "summonCount": 4
+    },
+    {
+      "id": "boneco_poeira",
+      "name": "Boneco de Poeira",
+      "hp": 9000,
+      "speed": 0.4,
+      "armor": 0.15,
+      "leak": 100,
+      "bounty": 0,
+      "mechanic": "frost_blast",
+      "period": 14,
+      "telegraph": 2,
+      "duration": 2,
+      "targetCount": 2
+    },
+    {
+      "id": "esponjao",
+      "name": "Esponjão",
+      "hp": 9500,
+      "speed": 0.4,
+      "armor": 0.1,
+      "leak": 100,
+      "bounty": 0,
+      "mechanic": "soak",
+      "period": 15,
+      "telegraph": 2,
+      "duration": 3,
+      "soakHeal": 0.3
+    },
+    {
+      "id": "meia",
+      "name": "Meia Sem Par",
+      "hp": 10000,
+      "speed": 0.42,
+      "armor": 0.1,
+      "leak": 100,
+      "bounty": 0,
+      "mechanic": "wrap",
+      "period": 13,
+      "telegraph": 2,
+      "duration": 3
+    },
+    {
+      "id": "traca_rainha",
+      "name": "Traça Rainha",
+      "hp": 14000,
+      "speed": 0.38,
+      "armor": 0.15,
+      "leak": 100,
+      "bounty": 0,
+      "mechanic": "dust_cloud",
+      "period": 16,
+      "telegraph": 2,
+      "duration": 2,
+      "cloudLength": 3,
+      "summonType": "traca",
+      "summonCount": 3
     }
   ],
   "partyMax": 4,
@@ -1129,7 +1928,16 @@
     "physicalArmorCap": 0.8,
     "hasteStacking": "maximum",
     "slowStacking": "maximum",
-    "markStacking": "maximum"
+    "markStacking": "maximum",
+    "shredCap": 0.5,
+    "pushCooldown": 1.2,
+    "maxPushPerEnemy": 8,
+    "bossPushFactor": 0.25,
+    "freezeImmunity": 1.5,
+    "frozenBossSlow": 0.6,
+    "damageBoostStacking": "maximum",
+    "burnStacking": "maximum",
+    "baseHealPerWaveCap": 4
   },
   "rewards": {
     "winButtonsReferenceWaves": 16,
@@ -1225,7 +2033,7 @@
   "earlyWaveBonusMax": 80,
   "campaign": {
     "buttonsPerStar": 25,
-    "note": "Fases da campanha. A primeira estrela é sempre vencer; as outras duas saem de objectives, avaliados pelo servidor com as estatisticas da partida (Rules/Stars). waves = quantas ondas da tabela global a fase usa. bossHpScale traz o chefe do mapa depois da última onda da fase, com a vida escalada. firstClearReward é entregue uma vez por conta, na primeira vitória da fase.",
+    "note": "Fases da campanha. A primeira estrela é sempre vencer; as outras duas saem de objectives, avaliados pelo servidor com as estatisticas da partida (Rules/Stars). waves = quantas ondas da tabela global a fase usa. bossHpScale traz o chefe do mapa depois da última onda da fase, com a vida escalada. firstClearReward é entregue uma vez por conta, na primeira vitória da fase. A ordem do vetor é a ordem da campanha (Jardim, Oficina, Inverno, Cozinha, Quarto, Sótão, Porão); os ids não precisam ser crescentes e nunca mudam de dono, porque o perfil guarda estrelas por id.",
     "levels": [
       {
         "id": "1",
@@ -1395,6 +2203,168 @@
         "bossHpScale": 0.6
       },
       {
+        "id": "13",
+        "mapId": "inverno",
+        "waves": 10,
+        "hpScale": 1.1,
+        "startingCash": 750,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "maxTowers",
+            "value": 6
+          }
+        ]
+      },
+      {
+        "id": "14",
+        "mapId": "inverno",
+        "waves": 13,
+        "hpScale": 1.15,
+        "startingCash": 800,
+        "objectives": [
+          {
+            "kind": "maxDamage",
+            "value": 20
+          },
+          {
+            "kind": "onlyTowers",
+            "towers": [
+              "dardo",
+              "pipoca",
+              "goma",
+              "escova",
+              "lumi"
+            ]
+          }
+        ],
+        "firstClearReward": {
+          "retry": 1
+        }
+      },
+      {
+        "id": "15",
+        "mapId": "inverno",
+        "waves": 16,
+        "hpScale": 1.2,
+        "startingCash": 850,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "minCircuits",
+            "value": 1
+          }
+        ],
+        "bossHpScale": 0.65
+      },
+      {
+        "id": "16",
+        "mapId": "cozinha",
+        "waves": 10,
+        "hpScale": 1.15,
+        "startingCash": 800,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "noSell"
+          }
+        ]
+      },
+      {
+        "id": "17",
+        "mapId": "cozinha",
+        "waves": 14,
+        "hpScale": 1.2,
+        "startingCash": 850,
+        "objectives": [
+          {
+            "kind": "maxDamage",
+            "value": 20
+          },
+          {
+            "kind": "maxTowers",
+            "value": 8
+          }
+        ],
+        "firstClearReward": {
+          "support": 1
+        }
+      },
+      {
+        "id": "18",
+        "mapId": "cozinha",
+        "waves": 16,
+        "hpScale": 1.25,
+        "startingCash": 900,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "rushAll"
+          }
+        ],
+        "bossHpScale": 0.75
+      },
+      {
+        "id": "19",
+        "mapId": "quarto",
+        "waves": 12,
+        "hpScale": 1.2,
+        "startingCash": 800,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "maxTowers",
+            "value": 7
+          }
+        ]
+      },
+      {
+        "id": "20",
+        "mapId": "quarto",
+        "waves": 15,
+        "hpScale": 1.25,
+        "startingCash": 850,
+        "objectives": [
+          {
+            "kind": "maxDamage",
+            "value": 20
+          },
+          {
+            "kind": "minCircuits",
+            "value": 2
+          }
+        ],
+        "firstClearReward": {
+          "retry": 1
+        }
+      },
+      {
+        "id": "21",
+        "mapId": "quarto",
+        "waves": 18,
+        "hpScale": 1.3,
+        "startingCash": 900,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "noSell"
+          }
+        ],
+        "bossHpScale": 0.85
+      },
+      {
         "id": "10",
         "mapId": "sotao",
         "waves": 12,
@@ -1442,6 +2412,66 @@
           }
         ],
         "bossHpScale": 1.0
+      },
+      {
+        "id": "22",
+        "mapId": "porao",
+        "waves": 14,
+        "hpScale": 1.35,
+        "startingCash": 900,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "maxTowers",
+            "value": 9
+          }
+        ]
+      },
+      {
+        "id": "23",
+        "mapId": "porao",
+        "waves": 17,
+        "hpScale": 1.4,
+        "startingCash": 950,
+        "objectives": [
+          {
+            "kind": "maxDamage",
+            "value": 25
+          },
+          {
+            "kind": "onlyTowers",
+            "towers": [
+              "dardo",
+              "pipoca",
+              "lupa",
+              "voltz",
+              "piao",
+              "picole"
+            ]
+          }
+        ],
+        "firstClearReward": {
+          "support": 1
+        }
+      },
+      {
+        "id": "24",
+        "mapId": "porao",
+        "waves": 20,
+        "hpScale": 1.45,
+        "startingCash": 1000,
+        "objectives": [
+          {
+            "kind": "noLeak"
+          },
+          {
+            "kind": "minCircuits",
+            "value": 2
+          }
+        ],
+        "bossHpScale": 1.2
       }
     ]
   },
@@ -1509,5 +2539,9 @@
         "retry": 1
       }
     ]
+  },
+  "expansionV2": {
+    "note": "Encomenda de arte v2 (2026-10-01): torres escova, lumi, pula, piao, picole e fofo; inimigos migalha, floquinho, novelo e traca; chefes boneco_poeira, esponjao, meia e traca_rainha; mapas inverno, cozinha, quarto e porao; Oficina com rota nova. Todos os números dessas entradas são BALANCEAMENTO PROVISÓRIO escolhido por coerência com o catálogo, sem playtest. mapGroups: grupos extras que o mapa acrescenta à onda global a partir de fromWave, com count + floor(perWave x (onda - fromWave)) inimigos, antes do chefe.",
+    "status": "provisional_not_playtested"
   }
 }

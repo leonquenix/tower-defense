@@ -178,7 +178,9 @@ return function(scope: Kit.Scope, props: Props): Frame
 							ZIndex = 4,
 						}),
 						Kit.caption(scope, {
-							Text = def.role,
+							Text = if Localization.has("tower." .. def.id .. ".role")
+								then L("tower." .. def.id .. ".role")
+								else def.role,
 							Size = UDim2.new(1, 0, 0, 16),
 							LayoutOrder = 3,
 							ZIndex = 4,
@@ -308,9 +310,9 @@ return function(scope: Kit.Scope, props: Props): Frame
 			width = UDim2.new(0, 0, 0, 52),
 		})),
 		children = Kit.children(
-			scope:New("Frame")({
+			-- doze torres não cabem numa tela: a grade rola (a equipe fica fixa ao lado)
+			Kit.scroller(scope, {
 				Name = "Cards",
-				BackgroundTransparency = 1,
 				Size = UDim2.new(1, -300, 1, 0),
 				ZIndex = 3,
 				[Children] = cards,

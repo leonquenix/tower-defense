@@ -1,5 +1,5 @@
 {
-  "note": "Cenas de mapa desenhadas por inteiro (piso, caminho e cenário na mesma imagem). playRect é a fração da imagem ocupada pela grade 16x10; rota e bloqueios de cada mapa saem da mesma medida. Tudo isso é medido por tools/fit_map_scene.py: a malha de ladrilhos desenhada é periódica, e o passo/fase que maximizam o gradiente nas bordas dão célula e origem. Com includesPath o renderizador para de desenhar trilha, setas e props; com includesBase pararia também o Farol — as artes atuais não trazem o Farol, que continua desenhado por código na última célula do caminho.",
+  "note": "Cenas de mapa desenhadas por inteiro (piso, caminho e cenário na mesma imagem). playRect é a fração da imagem ocupada pela grade 16x10; rota e bloqueios de cada mapa saem da mesma medida. Tudo isso é medido por tools/fit_map_scene.py: a malha de ladrilhos desenhada é periódica, e o passo/fase que maximizam o gradiente nas bordas dão célula e origem. Com includesPath o renderizador para de desenhar trilha, setas e props; com includesBase pararia também o Farol — as artes atuais não trazem o Farol, que continua desenhado por código na última célula do caminho. Encomenda v2: image fica null até o upload verificado; sem image o jogo continua no chão desenhado por código (com trilha), nunca com uma cena vazia. drawnStepPx e maxDriftCells registram ladrilho não quadrado (a imagem nunca é esticada).",
   "scenes": {
     "jardim": {
       "source": "Assets_Mapas_v2/jardim_praia_v4.png",
@@ -15,7 +15,147 @@
       "includesPath": true,
       "includesBase": false
     },
+    "sotao": {
+      "source": "Assets_Encomenda_v2/mapas/map_sotao_scene_v001.png",
+      "sourceSha256": "a8ac3e0df1d9778a9c6e188ddb25cee63a96f18ab9ce35701247001a051af278",
+      "image": "rbxassetid://92368775672048",
+      "uploadedAt": "2026-10-01",
+      "uploadFile": "assets/export/scenes/map_sotao_scene_1024x683.png",
+      "playRect": [
+        0.0831,
+        0.1097,
+        0.9171,
+        0.8916
+      ],
+      "includesPath": true,
+      "includesBase": false,
+      "measuredBy": "tools/fit_map_scene.py (centro do corredor)",
+      "drawnStepPx": [
+        79.95,
+        80.24
+      ],
+      "maxDriftCells": 0.011,
+      "matchesTemplate": true,
+      "review": "Rota e os 5 bloqueios iguais ao gabarito (o detector perdeu (8,0) e (7,9), conferidos no olho: livros e luminária de estrela desenhados)."
+    },
     "oficina": {
+      "source": "Assets_Encomenda_v2/mapas/map_oficina_scene_v001.png",
+      "sourceSha256": "c0cd6b5f07100902f20b7f4a817fcd43888c58c43ae390a2a3179985b89582e6",
+      "image": "rbxassetid://128395026849598",
+      "uploadedAt": "2026-10-01",
+      "uploadFile": "assets/export/scenes/map_oficina_scene_1024x683.png",
+      "playRect": [
+        0.0823,
+        0.1076,
+        0.9215,
+        0.8943
+      ],
+      "includesPath": true,
+      "includesBase": false,
+      "measuredBy": "tools/fit_map_scene.py (centro do corredor)",
+      "drawnStepPx": [
+        80.83,
+        80.12
+      ],
+      "maxDriftCells": 0.027,
+      "matchesTemplate": false,
+      "review": "Rota igual ao gabarito. A arte desenhou uma engrenagem grande em (1,4), fora do gabarito: a célula virou bloqueio para o jogador não construir em cima do desenho."
+    },
+    "inverno": {
+      "source": "Assets_Encomenda_v2/mapas/map_inverno_scene_v001.png",
+      "sourceSha256": "eb66e8de4b24d80baaf421373e0cdc246e4cfbb25c84a89c5e14da2c2c38b27c",
+      "image": "rbxassetid://97210303700148",
+      "uploadedAt": "2026-10-01",
+      "uploadFile": "assets/export/scenes/map_inverno_scene_1024x683.png",
+      "playRect": [
+        0.1289,
+        0.1161,
+        0.9207,
+        0.8585
+      ],
+      "includesPath": true,
+      "includesBase": false,
+      "measuredBy": "tools/fit_map_scene.py --field 206.9 110 74.9 77.8 (régua)",
+      "drawnStepPx": [
+        74.9,
+        77.8
+      ],
+      "maxDriftCells": 0.117,
+      "matchesTemplate": false,
+      "review": "PEDIR CORREÇÃO DE ARTE: o campo desenhado tem 17 colunas (não 16) e ladrilho 4% mais alto que largo. Usada a janela das colunas 1 a 16 da arte; a coluna 0 da arte (com pedra em (0,9)) fica na moldura, com piso visível onde não se constrói. Rota desenhada: (0,6)->(3,6)->(3,2)->(11,2)->(11,7)->(15,7) (gabarito: primeira vertical em x=4); lago 5x2 em (5..9,4..5) (gabarito: 4x2 em (6..9,4..5)). Desvio residual do encaixe quadrado: 0,12 célula nos cantos."
+    },
+    "cozinha": {
+      "source": "Assets_Encomenda_v2/mapas/map_cozinha_scene_v001.png",
+      "sourceSha256": "af9d846f2c28ce76ed404fbeb40f93a70e3432b99f3549dfac060d63496964c6",
+      "image": "rbxassetid://128412256226415",
+      "uploadedAt": "2026-10-01",
+      "uploadFile": "assets/export/scenes/map_cozinha_scene_1024x683.png",
+      "playRect": [
+        0.0849,
+        0.1114,
+        0.8993,
+        0.8749
+      ],
+      "includesPath": true,
+      "includesBase": false,
+      "measuredBy": "tools/fit_map_scene.py --field 129.5 115 78.3 78.0 (costuras do xadrez)",
+      "drawnStepPx": [
+        78.3,
+        78.0
+      ],
+      "maxDriftCells": 0.012,
+      "matchesTemplate": true,
+      "review": "Rota e os 9 bloqueios iguais ao gabarito, conferidos célula a célula na sobreposição. O detector automático não reconhece a farinha como corredor (cor fora da regra de areia)."
+    },
+    "quarto": {
+      "source": "Assets_Encomenda_v2/mapas/map_quarto_scene_v001.png",
+      "sourceSha256": "acfad7eefebacc44c6fc46fa097e522d3faca54780e2dbdca68d18239675d363",
+      "image": "rbxassetid://132981153254509",
+      "uploadedAt": "2026-10-01",
+      "uploadFile": "assets/export/scenes/map_quarto_scene_1024x683.png",
+      "playRect": [
+        0.0831,
+        0.1127,
+        0.9177,
+        0.8951
+      ],
+      "includesPath": true,
+      "includesBase": false,
+      "measuredBy": "tools/fit_map_scene.py --field 127 116 80.2 80.0 (costuras do tapete)",
+      "drawnStepPx": [
+        80.2,
+        80.0
+      ],
+      "maxDriftCells": 0.008,
+      "matchesTemplate": true,
+      "review": "Rota e os 8 bloqueios iguais ao gabarito, conferidos na sobreposição. O trilho de madeira não passa no teste de cor do detector; as curvas são peças curvas dentro de uma célula."
+    },
+    "porao": {
+      "source": "Assets_Encomenda_v2/mapas/map_porao_scene_v001.png",
+      "sourceSha256": "535124f4165e36fe17c10bc0041167c33d0caa4e1a563fe4b8f3f7faad3b7be1",
+      "image": "rbxassetid://114318887159091",
+      "uploadedAt": "2026-10-01",
+      "uploadFile": "assets/export/scenes/map_porao_scene_1024x683.png",
+      "playRect": [
+        0.0758,
+        0.103,
+        0.9255,
+        0.8996
+      ],
+      "includesPath": true,
+      "includesBase": false,
+      "measuredBy": "tools/fit_map_scene.py (centro do corredor)",
+      "drawnStepPx": [
+        80.08,
+        83.96
+      ],
+      "maxDriftCells": 0.146,
+      "matchesTemplate": true,
+      "review": "Rota e bloqueios iguais ao gabarito. PEDIR CORREÇÃO DE ARTE: ladrilho desenhado 5% mais alto que largo (razão 1,048); sem esticar a imagem, o encaixe quadrado deixa 0,15 célula de desvio nos cantos."
+    }
+  },
+  "retired": {
+    "oficina_neve_v2": {
       "source": "Assets_Mapas_v2/neve_v2.png",
       "sourceSha256": "a5d3754c8732ac73c0ca4af7582879f23611377e7291a26723eb8891c8e7b400",
       "image": "rbxassetid://111075982166008",
@@ -27,7 +167,9 @@
         0.8269
       ],
       "includesPath": true,
-      "includesBase": false
+      "includesBase": false,
+      "retiredAt": "2026-10-01",
+      "reason": "Encomenda v2: a Oficina ganhou arte própria (bancada) e rota serpentina; a neve foi refeita como mapa Inverno (map_inverno_scene_v001). O asset continua publicado, mas nada no jogo aponta para ele."
     }
   }
 }

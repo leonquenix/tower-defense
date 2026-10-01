@@ -53,7 +53,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: lista de fases em três colunas com arte do mapa, etiqueta do cenário, estrelas, bloco de objetivos, painel de coleção (3/36) e rolagem até a fase 12."
+      "evidence": "Play 2026-09-19: lista de fases em três colunas com arte do mapa, etiqueta do cenário, estrelas, bloco de objetivos, painel de coleção (3/36) e rolagem até a fase 12. | Encomenda v2 (2026-10-01): 24 fases em sete mapas (Inverno, Cozinha, Quarto e Porão novos) e ícone por mapa; sem nova sessão de Play."
     },
     "04_salas": {
       "kind": "screen",
@@ -103,7 +103,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio. | Encomenda v2 (2026-10-01): doze torres, grade rolável (Kit.scroller) e função localizada; sem nova sessão de Play."
     },
     "07_torre": {
       "kind": "screen",
@@ -119,7 +119,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio. | Encomenda v2 (2026-10-01): linhas de atributo novas (raspagem, queimadura, empurrão, congelamento, aura de dano, cura do Farol); sem nova sessão de Play."
     },
     "08_cosmeticos": {
       "kind": "screen",
@@ -217,7 +217,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-20: explosão da Pipoca acende no chão as células que o raio pegou (duas a três, piscando e sumindo); layout do combate conferido nas duas réguas — computador (1280x720) sem nenhum canto se encostando e celular emulado (780x360) com fichas no topo, doca de torres em grade 2x2 e tudo dentro da tela."
+      "evidence": "Play 2026-09-20: explosão da Pipoca acende no chão as células que o raio pegou (duas a três, piscando e sumindo); layout do combate conferido nas duas réguas — computador (1280x720) sem nenhum canto se encostando e celular emulado (780x360) com fichas no topo, doca de torres em grade 2x2 e tudo dentro da tela. | Encomenda v2 (2026-10-01): projéteis, impactos, poeira de morte, Farol danificado/crítico e quadros de ataque desenhados; sem nova sessão de Play."
     },
     "14_posicionar": {
       "kind": "screen",
@@ -266,7 +266,7 @@
       ],
       "implemented": true,
       "studio": true,
-      "evidence": "Play 2026-09-19: clique na torre abre o detalhe (Dardo · L0, dano/intervalo/alcance, Melhorar/Alvo/Vender)."
+      "evidence": "Play 2026-09-19: clique na torre abre o detalhe (Dardo · L0, dano/intervalo/alcance, Melhorar/Alvo/Vender). | Encomenda v2 (2026-10-01): atributos das torres novas e aviso de torre congelada/enrolada pelo chefe; sem nova sessão de Play."
     },
     "17_especializacao": {
       "kind": "screen",
@@ -313,7 +313,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio. | Encomenda v2 (2026-10-01): avisos dos quatro chefes novos (torres marcadas, trecho do caminho), quadro de habilidade desenhado; sem nova sessão de Play."
     },
     "20_pulso": {
       "kind": "screen",
@@ -362,7 +362,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio. | Encomenda v2 (2026-10-01): seletor de inimigo (doze inimigos e sete chefes) e doca rolável com as doze torres; sem nova sessão de Play."
     },
     "23_vitoria": {
       "kind": "screen",
@@ -544,7 +544,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio. | Encomenda v2 (2026-10-01): estados queimando, congelado, raspado, encharcado e na nuvem, e habilidade dos chefes; sem nova sessão de Play."
     },
     "35_mobile_menu": {
       "kind": "screen",
@@ -655,7 +655,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio. | Encomenda v2 (2026-10-01): rajada gelada, encharcar, enrolar e nuvem de pó com prazo do servidor; sem nova sessão de Play."
     },
     "42_recuperacao": {
       "kind": "library",
@@ -747,7 +747,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio."
+      "evidence": "Revamp 2026-09-19: tela reescrita em Fusion sobre os átomos Charm; aguarda nova sessão de Play para reivindicar verificação no Studio. | Encomenda v2 (2026-10-01): grade rolável com doze cartas; sem nova sessão de Play."
     },
     "48_mobile_mapas": {
       "kind": "screen",
@@ -760,7 +760,7 @@
       ],
       "implemented": true,
       "studio": false,
-      "evidence": "Revamp 2026-09-19: a tela de mapas virou a lista de fases da campanha (Campaign.luau); aguarda sessão de Play."
+      "evidence": "Revamp 2026-09-19: a tela de mapas virou a lista de fases da campanha (Campaign.luau); aguarda sessão de Play. | Encomenda v2 (2026-10-01): lista com 24 fases; sem nova sessão de Play."
     },
     "49_icones": {
       "kind": "library",

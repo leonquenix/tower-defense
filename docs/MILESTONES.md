@@ -561,3 +561,53 @@ esquerda — centrada, encostava na doca.
   a doca fecha sozinha; pausa inteira na tela.
 - *Computador:* Velocidade + Pausa no topo, doca sempre visível, pausa centrada com os objetivos e
   os três botões.
+
+### Encomenda de arte v2 integrada (2026-10-01)
+
+Branch `feature/conteudo-novo`. Escopo: `docs/ENCOMENDA_DE_ARTE.md` inteira (22 lotes, 215 imagens).
+
+**Fontes e exports.** As 215 imagens foram copiadas do Drive para `Assets_Encomenda_v2/` (sha256
+igual nas duas pontas; inventário 215/215; dimensões e alfa iguais à validação da entrega).
+`tools/export_order_v2.py` gera 215 exports sem nenhum recorte e o manifesto
+`assets/export/order_v2_manifest.json`. As poses publicadas das torres atuais não mudaram: cada quadro
+herda a transformação da pose do mesmo estado (o gerador manteve o enquadramento; o maior desvio
+desenhado de linha de apoio é a antecipação do Maestro, que levanta as garras). Escala corporal das
+famílias novas: 69 a 97 px de altura em 128, na faixa das atuais.
+
+**Mapas.** Seis cenas medidas e registradas em `map_scene_overrides.json`. Sótão, Cozinha, Quarto e
+Porão batem com o gabarito em rota e bloqueios; a Oficina ganhou um bloqueio extra em (1,4) (engrenagem
+desenhada); o Inverno veio com 17 colunas e usa a janela das colunas 1–16 com a rota que a arte
+desenhou. Porão e Inverno têm ladrilho não quadrado (5% e 4%): sem esticar a imagem, o encaixe deixa
+0,15 e 0,12 célula de desvio nos cantos. A neve da Oficina foi aposentada (registrada em `retired`).
+
+**Jogo.** Seis torres com L0–L3B e ramos exclusivos, quatro inimigos, quatro chefes com habilidade,
+quatro mapas e doze fases (24 no total). Balanceamento provisório, sem playtest. Mecânicas:
+
+| Torre | Regra no servidor | Limites |
+| --- | --- | --- |
+| Escovinha | raspa armadura (absoluta) por acerto; Esfregão em área; Escova de Aço acumula 4x | a maior fonte vale; teto `shredCap` 0,5; renova |
+| Lumi | queimadura de energia por segundo e bloqueio de cura; Holofote esquenta no mesmo alvo; Enxame pula para 3 vizinhos | a mais forte vale; renova pela mesma torre; crédito ao dono |
+| Pula | empurra para trás no caminho; Salto Gigante em área; Língua de Sogra puxa o comum mais forte | recarga 1,2 s por inimigo; teto 8 células na vida; chefe 25%; nunca antes do início |
+| Pião | acerta todos no alcance (teto 24) | — |
+| Picolé | congela comuns; Nevasca em área; Geladeira congela mais e dá +25% de dano | não renova enquanto congelado; imunidade de 1,5 s; chefe só fica lento |
+| Fofo | aura de dano; Coração Remendado cura o Farol no fim da onda | a maior aura vale; teto 4 por onda; nunca acima da vida máxima |
+
+Inimigos: Migalha (enxame), Floquinho (resiste a energia), Novelo (imune a lentidão, o gelo pega),
+Traça (esquiva o primeiro acerto a cada 3 s). Chefes: Boneco de Poeira desliga as duas torres mais
+caras por 2 s; Esponjão absorve energia e se cura por 3 s (físico passa, queimadura bloqueia a cura);
+Meia Sem Par desliga a torre mais próxima por 3 s; Traça Rainha esconde 3 células do caminho por 2 s e
+invoca três Traças. Morte ou fuga do chefe no aviso cancela tudo; a Retomada religa torres e apaga
+nuvens.
+
+**Apresentação.** Quadros desenhados nas torres (antecipação e disparo/pulso) e inimigos (segundo
+passo, habilidade), sincronizados com o evento confirmado e no relógio da simulação; 23 efeitos
+substituem bolinhas e cacos (com o visual antigo de reserva); gelo, queimadura, nuvem e torre desligada
+desenhados pelos estados que o servidor manda; Farol danificado abaixo de 50% e crítico abaixo de 20%.
+Doca de torres e Coleção rolam (o treino libera as doze); seletor de inimigo no treino.
+
+**Uploads.** 245 arquivos (215 exports + 30 retratos) enviados pela conta 4407810154 (a mesma das
+poses originais); `GetProductInfo` confirma 245/245 como imagem dessa conta. Carregamento no place do
+grupo **não** verificado (o Studio desta sessão tinha outro projeto aberto).
+
+**Não incluído.** Circuitos sugeridos na encomenda para as torres novas (precisam de decisão de
+design). Ícone e thumbnails de divulgação (P3, depois do jogo pronto). Atlas de 8 quadros.

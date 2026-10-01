@@ -38,12 +38,17 @@ def main():
     def rel(exp):
         return "assets/export/" + exp
 
+    v2_path = os.path.join(ROOT, "assets", "export", "order_v2_manifest.json")
+    v2 = json.load(open(v2_path))["assets"] if os.path.exists(v2_path) else {}
+
     luau_assets = {}
     pending = []
     for entry in registry["assets"]:
         key = entry["assetKey"]
         if entry.get("entityType") in ("enemy", "boss"):
             continue  # inimigos e chefes usam enemy_export_manifest.json (bloco abaixo)
+        if key in v2:
+            continue  # encomenda v2: bloco próprio, a partir de order_v2_manifest.json
         m = manifest.get(key)
         if not m:
             pending.append(key)
@@ -109,7 +114,9 @@ def main():
         if key.startswith("map_") and key.endswith("_ground"):
             map_id = key[len("map_") : -len("_ground")]
             scene = scenes.get(map_id)
-            if scene:
+            # cena sem upload verificado não substitui nada: sem imagem, o jogo precisa continuar
+            # desenhando a trilha por código (includesPath numa cena vazia apagaria o caminho)
+            if scene and scene.get("image"):
                 entry["sceneSource"] = scene["source"]
                 entry["sceneSha256"] = scene["sourceSha256"]
                 entry["sceneImage"] = scene["image"]
@@ -173,6 +180,83 @@ def main():
                 "kind": "boss" if key.startswith("boss_") else "enemy", "placeholder": True,
             }
     luau_assets.update(enemy_entries)
+
+    # encomenda v2: torres novas, quadros desenhados, efeitos, Farol por estágio e mapas novos
+    def upload_id(file):
+        return uploads.get(file.replace("assets/export/", ""))
+
+    def asset(aid):
+        return f"rbxassetid://{aid}" if aid else None
+
+    by_key = {a["assetKey"]: a for a in registry["assets"]}
+    frames = {}
+    for key, rec in v2.items():
+        exp = rec["exports"]
+        main = exp.get("game128") or exp.get("game") or exp.get("prop256") or exp.get("fx") or exp.get("upload")
+        aid = upload_id(main["file"])
+        reg = by_key.get(key)
+        if reg is not None:
+            reg["robloxAssetId"] = aid
+            reg["uploadedWidth"] = main["width"] if aid else None
+            reg["uploadedHeight"] = main["height"] if aid else None
+            reg["status"] = "uploaded" if aid else "exported_pending_upload"
+            reg["checkedInStudio"] = bool(aid) and checked
+            if "portrait256" in exp:
+                reg["portraitRobloxAssetId"] = upload_id(exp["portrait256"]["file"])
+        category, action = rec["category"], rec.get("action")
+        if category == "torres":
+            pose_key = f"tower_{rec['towerId']}_{rec['state']}"
+            if action == "pose":
+                luau_assets[pose_key] = {
+                    "image": asset(aid),
+                    "portrait": asset(upload_id(exp["portrait256"]["file"])),
+                    "width": main["width"], "height": main["height"],
+                    "anchorX": rec["anchor"][0], "anchorY": rec["anchor"][1],
+                    "contentHeight": rec["contentHeight128"], "kind": "tower",
+                    "towerId": rec["towerId"], "state": rec["state"],
+                }
+            elif aid:
+                frames.setdefault(pose_key, {})[action] = asset(aid)
+        elif category in ("inimigos", "chefes"):
+            is_boss = rec["entityType"] == "boss"
+            runtime = ("boss_" if is_boss else "enemy_") + rec["entityId"]
+            if action == "base":
+                luau_assets[runtime] = {
+                    "image": asset(aid), "width": main["width"], "height": main["height"],
+                    "anchorX": rec["anchor"][0], "anchorY": rec["anchor"][1],
+                    "kind": "boss" if is_boss else "enemy", "entityId": rec["entityId"],
+                    "frameWidthCells": rec["frameWidthCells"], "visibleWidthCells": rec["visibleWidthCells"],
+                }
+            elif aid:
+                frames.setdefault(runtime, {})[action] = asset(aid)
+        elif category == "efeitos":
+            luau_assets[key] = {
+                "image": asset(aid), "width": main["width"], "height": main["height"],
+                "anchorX": 0.5, "anchorY": 0.5, "kind": "fx", "pointsRight": rec.get("pointsRight") or None,
+            }
+        elif category == "cenario":
+            luau_assets[key] = {
+                "image": asset(aid), "width": main["width"], "height": main["height"],
+                "anchorX": rec["anchor"][0], "anchorY": rec["anchor"][1], "kind": "prop",
+            }
+        elif category == "mapas":
+            ground_key = f"map_{rec['mapId']}_ground"
+            scene = scenes.get(rec["mapId"], {})
+            if ground_key not in luau_assets:
+                # mapa sem chão antigo: até a cena ser publicada, só a cor de fundo e a trilha por código
+                luau_assets[ground_key] = {
+                    "image": None, "width": main["width"], "height": main["height"],
+                    "anchorX": 0.5, "anchorY": 0.5, "kind": "ground", "backingColor": rec["backingColor"],
+                }
+            if scene.get("image"):
+                luau_assets[ground_key].update({
+                    "image": scene["image"], "playRect": scene["playRect"],
+                    "includesPath": bool(scene.get("includesPath")), "includesBase": bool(scene.get("includesBase")),
+                    "backingColor": rec["backingColor"],
+                })
+    for runtime, actions in frames.items():
+        if runtime in luau_assets:
+            luau_assets[runtime]["frames"] = actions
     header = (
         "--!strict\n"
         "-- ARQUIVO GERADO por tools/update_asset_registry.py a partir de runtime_asset_registry.json.\n"
@@ -187,7 +271,11 @@ def main():
         "\t-- cena de mapa: fração da imagem ocupada pela grade 16x10 {x0, y0, x1, y1}\n"
         "\tplayRect: { number }?,\n"
         "\t-- a arte já desenha a trilha e o Farol: o renderizador não repete nenhum dos dois\n"
-        "\tincludesPath: boolean?,\n\tincludesBase: boolean?,\n}\n\n"
+        "\tincludesPath: boolean?,\n\tincludesBase: boolean?,\n"
+        "\t-- quadros desenhados publicados (windup, fire, pulse, walk_b, ability): nil = só a pose\n"
+        "\tframes: { [string]: string }?,\n"
+        "\t-- efeito que aponta para a direita: o jogo gira em torno do centro\n"
+        "\tpointsRight: boolean?,\n}\n\n"
     )
     body = "local entries: { [string]: AssetEntry } = " + emit(luau_assets) + "\n\n"
     body += (
@@ -197,6 +285,10 @@ def main():
         "function Assets.towerKey(towerId: string, state: string): string\n\treturn \"tower_\" .. towerId .. \"_\" .. state\nend\n\n"
         "function Assets.groundKey(mapId: string): string\n\treturn \"map_\" .. mapId .. \"_ground\"\nend\n\n"
         "function Assets.enemyKey(defId: string, isBoss: boolean): string\n\treturn (if isBoss then \"boss_\" else \"enemy_\") .. defId\nend\n\n"
+        "-- Quadro desenhado de uma pose (windup, fire, pulse, walk_b, ability). nil enquanto não publicado:\n"
+        "-- o animador continua só com a pose e o movimento procedural.\n"
+        "function Assets.frame(key: string, action: string): string?\n\tlocal e = entries[key]\n\tlocal frames = if e then e.frames else nil\n\treturn if frames then frames[action] else nil\nend\n\n"
+        "function Assets.fxKey(name: string): string\n\treturn \"fx_\" .. name\nend\n\n"
         "function Assets.uploadedCount(): (number, number)\n\tlocal uploaded, total = 0, 0\n\tfor _, e in pairs(entries) do\n\t\ttotal += 1\n\t\tif e.image then\n\t\t\tuploaded += 1\n\t\tend\n\tend\n\treturn uploaded, total\nend\n\n"
         "return Assets\n"
     )

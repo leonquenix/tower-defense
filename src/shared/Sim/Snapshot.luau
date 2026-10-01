@@ -7,6 +7,37 @@ local Simulation = require(script.Parent.Simulation)
 
 local Snapshot = {}
 
+-- Estados visíveis do inimigo num byte (o cliente desenha queimadura, gelo, raspagem, esponja
+-- encharcada e nuvem a partir disto). Só apresentação: quem decide tudo é a simulação.
+Snapshot.FX = table.freeze({
+	burning = 1,
+	frozen = 2,
+	shredded = 4,
+	soaking = 8,
+	hidden = 16,
+})
+
+function Snapshot.enemyFx(state: Types.MatchState, e: Types.Enemy): number
+	local now = state.simTime
+	local fx = 0
+	if #e.burns > 0 and Combat.activeBurn(e, now) then
+		fx += Snapshot.FX.burning
+	end
+	if Combat.isFrozen(e, now) then
+		fx += Snapshot.FX.frozen
+	end
+	if #e.shreds > 0 and Combat.activeShred(e, now, Balance.effects.shredCap) > 0 then
+		fx += Snapshot.FX.shredded
+	end
+	if e.isBoss and e.bossSoakUntil > now then
+		fx += Snapshot.FX.soaking
+	end
+	if Simulation.hiddenByCloud(state, e.s) then
+		fx += Snapshot.FX.hidden
+	end
+	return fx
+end
+
 local function participantColor(state: Types.MatchState, userId: number): number
 	for i, id in ipairs(state.participantOrder) do
 		if id == userId then
@@ -30,7 +61,7 @@ function Snapshot.enemies(state: Types.MatchState): { Types.EnemySnapshot }
 				hp = e.hp,
 				mhp = e.maxHp,
 				s = e.s,
-				v = e.baseSpeed * (1 - slow),
+				v = if Combat.isFrozen(e, state.simTime) then 0 else e.baseSpeed * (1 - slow),
 				sl = slow,
 				mk = Combat.activeMark(e, state.simTime),
 				sm = e.isSummon,
@@ -38,8 +69,9 @@ function Snapshot.enemies(state: Types.MatchState): { Types.EnemySnapshot }
 				-- prazo real do aviso: o cliente reconstrói a contagem mesmo após atraso de rede
 				tga = if e.bossTelegraphing then e.bossResolveAt else nil,
 				ab = armorBonus,
-				ar = Combat.currentArmor(e, state.simTime),
+				ar = Combat.currentArmor(e, state.simTime, Balance.effects.shredCap),
 				er = e.energyResistance,
+				fx = Snapshot.enemyFx(state, e),
 			})
 		end
 	end
@@ -62,6 +94,8 @@ function Snapshot.towers(state: Types.MatchState): { Types.TowerSnapshot }
 			cp = t.circuitPartnerId,
 			ci = t.circuitId,
 			du = t.dustUntil,
+			dis = t.disabledUntil,
+			dr = if t.disabledUntil > state.simTime then t.disabledReason else nil,
 		})
 	end
 	return list

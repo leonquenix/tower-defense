@@ -3,6 +3,12 @@
 Lista do que gerar para a próxima versão do Quintal em Guarda, com design, estados, animação e o
 prompt pronto de cada peça. Escrita em 2026-09-29 sobre o estado do jogo daquele dia.
 
+> **Situação em 2026-10-01:** os 22 lotes (215 imagens) foram entregues em `Assets_Encomenda_v2/` e
+> integrados ao jogo — ver `docs/MILESTONES.md` (Encomenda de arte v2 integrada), o que a seção 10
+> previa está feito, e as pendências reais (verificação no place do grupo, moderação, correções de
+> arte do Inverno e do Porão, balanceamento, Circuitos novos) estão em `docs/MANUAL_ACTIONS.md`,
+> itens V1 a V8.
+
 **Versão para mandar ao ChatGPT:** `docs/encomenda_arte/ENCOMENDA_PARA_CHATGPT.md`. É o mesmo
 conteúdo, dividido em 22 lotes com as referências de cada lote em
 `docs/encomenda_arte/para_chatgpt/lote_XX_…/` e mapas em 1536×1024, o formato que o ChatGPT gera.

@@ -94,6 +94,8 @@ Enums.event = set("event", {
 	"bossCancel",
 	"retryOffer",
 	"retryApplied",
+	-- encomenda v2: acrescentados no fim, os ids anteriores continuam valendo
+	"baseHeal",
 })
 
 -- Quadros da partida (servidor -> cliente) e avisos de lobby.

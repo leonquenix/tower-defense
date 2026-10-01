@@ -2,6 +2,7 @@
 """Mede uma arte de mapa e devolve playRect, rota e bloqueios em coordenadas de célula.
 
     python3 tools/fit_map_scene.py Assets_Mapas_v2/arte.png [--json]
+    python3 tools/fit_map_scene.py arte.png --cell-range 70 90 --expect oficina --overlay g.png
 
 Como mede (e por que):
   1. A malha de ladrilhos desenhada é periódica. O passo e a fase que maximizam a soma do
@@ -13,6 +14,18 @@ Como mede (e por que):
      o playRect.
   4. Dentro da janela, os ladrilhos de corredor viram a rota (andando da entrada até a saída) e
      os "outra coisa" viram bloqueios.
+  5. As costuras da janela são refinadas uma a uma (regressão linear), o que dá o passo de cada
+     eixo. Ladrilho desenhado que não é quadrado NÃO é corrigido esticando a imagem: o playRect
+     usa o ladrilho quadrado que minimiza o pior desvio nos cantos, centrado no campo desenhado,
+     e o desvio que sobra é relatado em células (maxDriftCells) para virar pedido de arte.
+
+--field X0 Y0 SX SY pula a detecção e usa o campo medido à mão (origem do ladrilho (0,0) e passo
+de cada eixo, em px da arte): é o caminho quando a arte foge do gabarito (ex.: 17 colunas) e é
+preciso escolher a janela 16x10 de propósito. O resto (classificação, rota, playRect, desvio) é igual.
+
+--cell-range fixa a faixa do passo quando o piso engana a busca (xadrez de cozinha, tapete com
+estampa: o período de cor é de dois ladrilhos ou de meio). --expect <mapa> compara a rota e os
+bloqueios medidos com os de dados/balanceamento_v1.json.
 
 Sem dependências externas: lê PNG com zlib e escreve só no stdout.
 """
@@ -196,9 +209,175 @@ def largest_road_component(cells):
     return best
 
 
-def fit(path, verbose=True):
+def refine_axis(grad, origin, step, count):
+    """Procura cada costura perto da posição prevista e ajusta uma reta: devolve (passo, origem)."""
+    found = []
+    radius = max(2, int(step * 0.18))
+    for k in range(count + 1):
+        guess = origin + k * step
+        best_i, best_v = None, -1.0
+        for i in range(int(guess) - radius, int(guess) + radius + 1):
+            if 1 <= i < len(grad) - 1:
+                v = grad[i] + 0.5 * grad[i - 1] + 0.5 * grad[i + 1]
+                if v > best_v:
+                    best_i, best_v = i, v
+        if best_i is not None and best_v > 0:
+            found.append((k, best_i + 0.5))
+    if len(found) < 3:
+        return step, origin
+    n = len(found)
+    mk = sum(k for k, _ in found) / n
+    mp = sum(p for _, p in found) / n
+    var = sum((k - mk) ** 2 for k, _ in found)
+    slope = sum((k - mk) * (p - mp) for k, p in found) / var
+    # costuras que fogem muito da reta (enfeite em cima da costura) saem e a reta é refeita
+    kept = [(k, p) for k, p in found if abs(p - (mp + slope * (k - mk))) <= step * 0.12]
+    if len(kept) >= 3 and len(kept) < n:
+        n = len(kept)
+        mk = sum(k for k, _ in kept) / n
+        mp = sum(p for _, p in kept) / n
+        var = sum((k - mk) ** 2 for k, _ in kept)
+        slope = sum((k - mk) * (p - mp) for k, p in kept) / var
+    return slope, mp - slope * mk
+
+
+def refine_from_corridor(road, road_cells, x0, y0, sx, sy):
+    """Centro desenhado do corredor em cada trecho reto -> reta por eixo (passo e origem).
+
+    O corredor tem cor própria, então o centro dele é bem mais fácil de achar que a costura de um
+    ladrilho com chanfro. Trecho vertical dá o x da coluna; horizontal, o y da linha.
+    """
+    xs, ys = [], []
+    for (cx, cy) in road_cells:
+        vertical = (cx, cy - 1) in road_cells and (cx, cy + 1) in road_cells
+        horizontal = (cx - 1, cy) in road_cells and (cx + 1, cy) in road_cells
+        gx = x0 + (cx + 0.5) * sx
+        gy = y0 + (cy + 0.5) * sy
+        if vertical and not horizontal:
+            for dy in (-0.25, 0.0, 0.25):
+                y = gy + dy * sy
+                hits = [x for x in range(int(gx - 0.9 * sx), int(gx + 0.9 * sx)) if road(x, y)]
+                if hits:
+                    xs.append((cx, (min(hits) + max(hits) + 1) / 2))
+        if horizontal and not vertical:
+            for dx in (-0.25, 0.0, 0.25):
+                x = gx + dx * sx
+                hits = [y for y in range(int(gy - 0.9 * sy), int(gy + 0.9 * sy)) if road(x, y)]
+                if hits:
+                    ys.append((cy, (min(hits) + max(hits) + 1) / 2))
+
+    def line(points, step, origin):
+        if len({k for k, _ in points}) < 2:
+            return step, origin, False
+        n = len(points)
+        mk = sum(k for k, _ in points) / n
+        mp = sum(p for _, p in points) / n
+        var = sum((k - mk) ** 2 for k, _ in points)
+        slope = sum((k - mk) * (p - mp) for k, p in points) / var
+        # centro da coluna k = origem + (k + 0.5) * passo
+        return slope, mp - slope * (mk + 0.5), True
+
+    nsx, nx0, okx = line(xs, sx, x0)
+    nsy, ny0, oky = line(ys, sy, y0)
+    return nsx, nx0, nsy, ny0, okx and oky
+
+
+def square_cell(sx, sy):
+    """Ladrilho quadrado que minimiza o pior desvio nos cantos do campo, centrado.
+
+    Com o centro alinhado, o erro no canto é COLUMNS/2*|sx-c| na horizontal e ROWS/2*|sy-c| na
+    vertical; o mínimo do maior dos dois fica onde eles se igualam.
+    """
+    hx, hy = COLUMNS / 2, ROWS / 2
+    c = (hx * sx + hy * sy) / (hx + hy)
+    return c, max(hx * abs(sx - c), hy * abs(sy - c))
+
+
+def compare_expected(map_id, result):
+    """Confere rota e bloqueios medidos contra os dados do jogo."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    data = json.load(open(os.path.join(here, "..", "Pacote_Claude_Code", "dados", "balanceamento_v1.json")))
+    entry = next((m for m in data["maps"] if m["id"] == map_id), None)
+    if entry is None:
+        print("--expect: mapa %s não existe nos dados" % map_id)
+        return False
+    ok = True
+    if result["path"] != entry["path"]:
+        ok = False
+        print("ROTA DIFERENTE\n  medida: %s\n  dados:  %s" % (json.dumps(result["path"]), json.dumps(entry["path"])))
+    measured = {tuple(c) for c in result["blocked"]}
+    expected = {tuple(c) for c in entry["blocked"]}
+    if measured != expected:
+        ok = False
+        print("BLOQUEIOS DIFERENTES\n  só na arte: %s\n  só nos dados: %s" % (sorted(measured - expected), sorted(expected - measured)))
+    print("conferência com os dados de %s: %s" % (map_id, "igual" if ok else "DIVERGE"))
+    return ok
+
+
+def classify_cell(road, floor, px, py, sx, sy):
+    hits = {"road": 0, "floor": 0, "other": 0}
+    total = 0
+    for dy in range(-6, 7, 2):
+        for dx in range(-6, 7, 2):
+            qx, qy = px + dx * sx / 18, py + dy * sy / 18
+            total += 1
+            if road(qx, qy):
+                hits["road"] += 1
+            elif floor(qx, qy):
+                hits["floor"] += 1
+            else:
+                hits["other"] += 1
+    if hits["road"] >= total * 0.45:
+        return "road"
+    if hits["floor"] + hits["road"] >= total * 0.62:
+        return "floor"
+    return "other"
+
+
+def fit_field(path, width, height, road, floor, field, verbose):
+    """Campo medido à mão: origem e passo por eixo. Classifica as 16x10 células e encaixa."""
+    x0, y0, sx, sy = field
+    grid = {}
+    for cy in range(ROWS):
+        for cx in range(COLUMNS):
+            grid[(cx, cy)] = classify_cell(road, floor, x0 + (cx + 0.5) * sx, y0 + (cy + 0.5) * sy, sx, sy)
+    corridor = largest_road_component({c for c, kind in grid.items() if kind == "road"})
+    road_cells = set(corridor)
+    blocked = [[cx, cy] for cy in range(ROWS) for cx in range(COLUMNS) if grid[(cx, cy)] == "other"]
+    square, drift_px = square_cell(sx, sy)
+    gx0 = x0 + COLUMNS * sx / 2 - COLUMNS * square / 2
+    gy0 = y0 + ROWS * sy / 2 - ROWS * square / 2
+    play_rect = [gx0 / width, gy0 / height, (gx0 + COLUMNS * square) / width, (gy0 + ROWS * square) / height]
+    route = trace_route(road_cells)
+    if verbose:
+        print("campo medido à mão: origem (%.1f, %.1f) passo x=%.2f y=%.2f px (razão y/x %.3f)" % (x0, y0, sx, sy, sy / sx))
+        print("ladrilho quadrado do encaixe: %.2f px; pior desvio nos cantos %.2f px = %.3f célula" % (square, drift_px, drift_px / square))
+        print("playRect: [%.4f, %.4f, %.4f, %.4f]" % tuple(play_rect))
+        print("proporção do campo desenhado: %.3f (esperado 1.600)" % ((COLUMNS * sx) / (ROWS * sy)))
+        print("corredor: %d células" % len(road_cells))
+        print("rota: %s" % (json.dumps(route) if route else "NÃO FOI POSSÍVEL TRAÇAR"))
+        print("bloqueios: %s" % json.dumps(blocked))
+        render(grid, 0, 0, road_cells, set(map(tuple, blocked)))
+    return {
+        "cell": square,
+        "stepX": round(sx, 3),
+        "stepY": round(sy, 3),
+        "fieldOrigin": [round(x0, 2), round(y0, 2)],
+        "maxDriftCells": round(drift_px / square, 4),
+        "playRect": [round(v, 4) for v in play_rect],
+        "path": route,
+        "blocked": blocked,
+        "roadCells": sorted(road_cells),
+        "measuredBy": "field",
+    }
+
+
+def fit(path, verbose=True, cell_range=None, field=None):
     width, height, bpp, rows = load_png(path)
     rgb, road, floor, floor_refs, lum = make_probes(width, height, bpp, rows)
+
+    if field:
+        return fit_field(path, width, height, road, floor, field, verbose)
 
     # 1. passo e fase da malha, medidos só sobre o piso (nem pista, nem folhagem, nem água)
     def floorish(x, y):
@@ -218,6 +397,8 @@ def fit(path, verbose=True):
     # escura do desenho). Sem esse limite a busca acha harmônicos e a célula sai pela metade.
     thickness = corridor_thickness(width, height, road)
     lo, hi = max(thickness * 0.95, 8.0), thickness * 1.45
+    if cell_range:
+        lo, hi = cell_range
     bx = best_period(gradx, lo, hi, width)
     by = best_period(grady, lo, hi, height)
     cell = (bx[1] + by[1]) / 2
@@ -285,9 +466,23 @@ def fit(path, verbose=True):
             if best_window is None or score > best_window[0]:
                 best_window = (score, ox, oy)
     _, ox, oy = best_window
-    x0 = phase_x + ox * cell
-    y0 = phase_y + oy * cell
-    play_rect = [x0 / width, y0 / height, (x0 + COLUMNS * cell) / width, (y0 + ROWS * cell) / height]
+    # 3b. refino por eixo: cada costura da janela é procurada perto da posição prevista e o
+    # conjunto vira uma reta (passo e origem de cada eixo, sem supor ladrilho quadrado)
+    sx, x0 = refine_axis(gradx, phase_x + ox * cell, cell, COLUMNS)
+    sy, y0 = refine_axis(grady, phase_y + oy * cell, cell, ROWS)
+    window_road = {(cx - ox, cy - oy) for (cx, cy) in corridor}
+    csx, cx0, csy, cy0, ok = refine_from_corridor(road, window_road, phase_x + ox * cell, phase_y + oy * cell, cell, cell)
+    method = "costuras"
+    if ok and abs(csx - cell) < cell * 0.15 and abs(csy - cell) < cell * 0.15:
+        sx, x0, sy, y0 = csx, cx0, csy, cy0
+        method = "centro do corredor"
+    square, drift_px = square_cell(sx, sy)
+    cx_mid = x0 + COLUMNS * sx / 2
+    cy_mid = y0 + ROWS * sy / 2
+    gx0 = cx_mid - COLUMNS * square / 2
+    gy0 = cy_mid - ROWS * square / 2
+    play_rect = [gx0 / width, gy0 / height, (gx0 + COLUMNS * square) / width, (gy0 + ROWS * square) / height]
+    drift_cells = drift_px / square
 
     # 4. rota e bloqueios dentro da janela
     road_cells = set()
@@ -303,14 +498,20 @@ def fit(path, verbose=True):
     route = trace_route(road_cells)
     if verbose:
         print("janela: origem (%.1f, %.1f) px, célula %.2f" % (x0, y0, cell))
+        print("campo desenhado (%s): origem (%.1f, %.1f) passo x=%.2f y=%.2f px (razão y/x %.3f)" % (method, x0, y0, sx, sy, sy / sx))
+        print("ladrilho quadrado do encaixe: %.2f px; pior desvio nos cantos %.2f px = %.3f célula" % (square, drift_px, drift_cells))
         print("playRect: [%.4f, %.4f, %.4f, %.4f]" % tuple(play_rect))
-        print("proporção da área jogável: %.3f" % ((COLUMNS * cell) / (ROWS * cell)))
+        print("proporção do campo desenhado: %.3f (esperado 1.600)" % ((COLUMNS * sx) / (ROWS * sy)))
         print("corredor: %d células" % len(road_cells))
         print("rota: %s" % (json.dumps(route) if route else "NÃO FOI POSSÍVEL TRAÇAR"))
         print("bloqueios: %s" % json.dumps(blocked))
         render(grid, ox, oy, road_cells, set(map(tuple, blocked)))
     return {
-        "cell": cell,
+        "cell": square,
+        "stepX": round(sx, 3),
+        "stepY": round(sy, 3),
+        "fieldOrigin": [round(x0, 2), round(y0, 2)],
+        "maxDriftCells": round(drift_cells, 4),
         "playRect": [round(v, 4) for v in play_rect],
         "path": route,
         "blocked": blocked,
@@ -408,14 +609,19 @@ def main():
     parser.add_argument("image")
     parser.add_argument("--json", action="store_true", help="imprime só o resultado em JSON")
     parser.add_argument("--overlay", help="grava a arte com a grade medida por cima")
+    parser.add_argument("--cell-range", nargs=2, type=float, metavar=("MIN", "MAX"), help="faixa do passo da malha em px")
+    parser.add_argument("--expect", metavar="MAPA", help="compara rota e bloqueios com os dados deste mapa")
+    parser.add_argument("--field", nargs=4, type=float, metavar=("X0", "Y0", "SX", "SY"), help="campo medido à mão")
     args = parser.parse_args()
     if not os.path.exists(args.image):
         raise SystemExit(f"não achei {args.image}")
-    result = fit(args.image, verbose=not args.json)
+    result = fit(args.image, verbose=not args.json, cell_range=args.cell_range, field=args.field)
     if args.overlay:
         write_overlay(args.image, args.overlay, result)
         if not args.json:
             print("grade desenhada em " + args.overlay)
+    if args.expect and not args.json:
+        compare_expected(args.expect, result)
     if args.json:
         json.dump(result, sys.stdout, ensure_ascii=False)
         print()

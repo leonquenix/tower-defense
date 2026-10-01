@@ -409,6 +409,8 @@ local function pushEvents(match: Match, events: { Types.SimEvent })
 			or e.kind == "towerSold"
 			or e.kind == "towerUpgraded"
 			or e.kind == "circuitChanged"
+			-- torre desligada por chefe (Boneco de Poeira, Meia): o cliente precisa da torre nova já
+			or (e.kind == "bossAbility" and e.towerIds ~= nil and #e.towerIds > 0)
 		then
 			match.needFull = true
 		end

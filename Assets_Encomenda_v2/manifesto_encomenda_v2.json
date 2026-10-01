@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 1,
+  "pack": "Assets_Encomenda_v2",
+  "status": "visual_configuration_not_gameplay",
+  "note": "Configuração visual da encomenda v2 (espelhada à mão em src/client/View/EnemyAnimator.luau, TowerAnimator.luau, FxSprites e BoardRenderer). Números de jogo ficam em Pacote_Claude_Code/dados/balanceamento_v1.json; exports e IDs em assets/export/order_v2_manifest.json e upload_log.json. As 215 imagens são poses e quadros soltos, não atlas.",
+  "frames": {
+    "towers": {
+      "actions": {
+        "windup": "antecipação",
+        "fire": "disparo",
+        "pulse": "disparo das torres de apoio (Maestro, Fofo)"
+      },
+      "sequence": "pose -> windup (0-25% do ataque) -> fire/pulse (25-75%) -> pose; ataque dura animation_plan.duration em segundos de simulação (1x/2x usam o mesmo relógio)",
+      "reducedMotion": "sem antecipação nem recuo; o quadro de disparo aparece sozinho no meio do ataque",
+      "upgrade": "a melhoria tem prioridade: ataque durante a troca de estado é ignorado e os quadros do estado novo passam a valer na hora",
+      "alignment": "cada quadro usa a transformação da pose do mesmo estado (o gerador manteve o enquadramento)"
+    },
+    "enemies": {
+      "walk_b": "alterna com a pose a cada meio ciclo do movimento (period do motion); parado com movimento reduzido",
+      "ability": "chefes: durante todo o aviso (telegraph) e 0,4 s na resolução; continua com movimento reduzido porque é aviso"
+    },
+    "loadFailure": "quadro só entra depois de carregar (FramePreload); sem ele a pose continua sozinha"
+  },
+  "entities": {
+    "migalha": {
+      "entityType": "enemy",
+      "visibleWidthCells": 0.55,
+      "motion": {
+        "type": "run",
+        "periodSimSeconds": 0.3,
+        "offsetPixelsAt128": 1.5,
+        "maxRotationDegrees": 1
+      }
+    },
+    "floquinho": {
+      "entityType": "enemy",
+      "visibleWidthCells": 0.72,
+      "motion": {
+        "type": "float",
+        "periodSimSeconds": 1.2,
+        "offsetPixelsAt128": 2,
+        "maxRotationDegrees": 2
+      }
+    },
+    "novelo": {
+      "entityType": "enemy",
+      "visibleWidthCells": 0.78,
+      "motion": {
+        "type": "squash",
+        "periodSimSeconds": 0.9,
+        "offsetPixelsAt128": 1,
+        "maxRotationDegrees": 0
+      }
+    },
+    "traca": {
+      "entityType": "enemy",
+      "visibleWidthCells": 0.82,
+      "motion": {
+        "type": "float",
+        "periodSimSeconds": 0.5,
+        "offsetPixelsAt128": 2,
+        "maxRotationDegrees": 1
+      }
+    },
+    "boneco_poeira": {
+      "entityType": "boss",
+      "visibleWidthCells": 1.5,
+      "motion": {
+        "type": "stomp",
+        "periodSimSeconds": 1.6,
+        "offsetPixelsAt128": 0.8,
+        "maxRotationDegrees": 0
+      },
+      "ability": "frost_blast"
+    },
+    "esponjao": {
+      "entityType": "boss",
+      "visibleWidthCells": 1.6,
+      "motion": {
+        "type": "squash",
+        "periodSimSeconds": 1.4,
+        "offsetPixelsAt128": 0.8,
+        "maxRotationDegrees": 0
+      },
+      "ability": "soak"
+    },
+    "meia": {
+      "entityType": "boss",
+      "visibleWidthCells": 1.4,
+      "motion": {
+        "type": "sway",
+        "periodSimSeconds": 1.5,
+        "offsetPixelsAt128": 1,
+        "maxRotationDegrees": 2
+      },
+      "ability": "wrap"
+    },
+    "traca_rainha": {
+      "entityType": "boss",
+      "visibleWidthCells": 2.0,
+      "motion": {
+        "type": "float",
+        "periodSimSeconds": 1.8,
+        "offsetPixelsAt128": 1.5,
+        "maxRotationDegrees": 1
+      },
+      "ability": "dust_cloud"
+    }
+  },
+  "towers": {
+    "escova": {
+      "idle": {
+        "periodSimSeconds": 1.3,
+        "scaleY": [
+          1,
+          1.02
+        ]
+      },
+      "action": {
+        "kind": "attack",
+        "durationSimSeconds": 0.2,
+        "recoilPixelsAt128": 3,
+        "scaleYMin": 0.96
+      }
+    },
+    "lumi": {
+      "idle": {
+        "periodSimSeconds": 1.7,
+        "scaleY": [
+          1,
+          1.015
+        ],
+        "rotationDegrees": [
+          -1,
+          1
+        ]
+      },
+      "action": {
+        "kind": "attack",
+        "durationSimSeconds": 0.26,
+        "recoilPixelsAt128": 1
+      }
+    },
+    "pula": {
+      "idle": {
+        "periodSimSeconds": 1.5,
+        "scaleY": [
+          0.98,
+          1.02
+        ]
+      },
+      "action": {
+        "kind": "attack",
+        "durationSimSeconds": 0.34,
+        "scaleYMin": 0.9
+      }
+    },
+    "piao": {
+      "idle": {
+        "periodSimSeconds": 0.9,
+        "rotationDegrees": [
+          -2,
+          2
+        ]
+      },
+      "action": {
+        "kind": "attack",
+        "durationSimSeconds": 0.3,
+        "scaleYMin": 0.97
+      }
+    },
+    "picole": {
+      "idle": {
+        "periodSimSeconds": 2.1,
+        "scaleY": [
+          1,
+          1.012
+        ]
+      },
+      "action": {
+        "kind": "attack",
+        "durationSimSeconds": 0.32,
+        "recoilPixelsAt128": 2
+      }
+    },
+    "fofo": {
+      "idle": {
+        "periodSimSeconds": 1.9,
+        "scaleY": [
+          1,
+          1.02
+        ],
+        "scaleX": [
+          1,
+          1.01
+        ]
+      },
+      "action": {
+        "kind": "support",
+        "durationSimSeconds": 0.4,
+        "scaleUniformMax": 1.04,
+        "minPulseIntervalSimSeconds": 1
+      }
+    }
+  },
+  "effects": {
+    "projectiles": {
+      "dardo": "fx_dardo_dart",
+      "pipoca": "fx_pipoca_kernel",
+      "goma": "fx_goma_blob",
+      "picole": "fx_frost_burst"
+    },
+    "impacts": {
+      "dardo": "fx_hit_star",
+      "pipoca": "fx_pipoca_pop",
+      "goma (área)": "fx_goma_puddle",
+      "lupa": "fx_lupa_glint + fx_hit_star",
+      "pula": "fx_boing + fx_hit_star",
+      "escova": "fx_scrub_arc + fx_rust_flakes"
+    },
+    "beams": {
+      "voltz": "linha desenhada + fx_voltz_spark",
+      "lumi": "feixe desenhado + fx_burn_spark"
+    },
+    "area": {
+      "piao": "fx_whirl"
+    },
+    "support": {
+      "maestro": "fx_maestro_note",
+      "fofo": "fx_heart"
+    },
+    "states": {
+      "congelado": "fx_ice_block por cima do inimigo / torre congelada",
+      "queimando": "fx_burn_spark no corpo",
+      "empurrado": "fx_push apontando para trás no caminho"
+    },
+    "events": {
+      "morte": "fx_dust_poof_1 -> 2 -> 3",
+      "construção": "fx_build_puff",
+      "melhoria": "fx_upgrade_stars",
+      "cura do Farol": "fx_heart",
+      "nuvem de pó": "fx_dust_poof_2 ao longo do trecho"
+    },
+    "fallback": "sem imagem publicada ou carregada: bolinha, anel e cacos procedurais de antes"
+  },
+  "lighthouse": {
+    "damagedBelowHealthFraction": 0.5,
+    "criticalBelowHealthFraction": 0.2,
+    "keys": [
+      "base_farol_pilha",
+      "base_farol_pilha_danificado",
+      "base_farol_pilha_critico"
+    ]
+  },
+  "artReview": [
+    "tower_picole_L3B_windup: o conteúdo encosta na borda direita da fonte (x=1024); a geladeira pode ter sido cortada pelo gerador",
+    "map_inverno_scene: campo de 17 colunas (não 16) e ladrilho 4% mais alto que largo",
+    "map_porao_scene: ladrilho 5% mais alto que largo",
+    "map_oficina_scene: engrenagem fora do gabarito em (1,4), tratada como bloqueio",
+    "efeitos vieram em 1024x1024 (a encomenda pedia 256x256); o export reduz para 128/256 sem perda visível"
+  ]
+}

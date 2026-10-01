@@ -58,6 +58,12 @@ end
 Simulation.getPath = getPath
 Simulation.getBlocked = getBlocked
 
+-- Torre desligada por chefe (Boneco de Poeira, Meia): não atira, não recarrega e não dá aura.
+local function isDisabled(state: Types.MatchState, tower: Types.Tower): boolean
+	return tower.disabledUntil > state.simTime
+end
+Simulation.isDisabled = isDisabled
+
 local function newStats(): Types.PlayerMatchStats
 	return { damage = 0, slowSeconds = 0, supportBonusDamage = 0, towersPlaced = 0, commandsIssued = 0 }
 end
@@ -179,6 +185,7 @@ function Simulation.new(config: Types.MatchConfig): Types.MatchState
 		supportAllowed = config.supportAllowed == true and config.mode == "normal",
 		supportUsedBy = {},
 		assisted = false,
+		pathClouds = {},
 	}
 	return state
 end
@@ -251,12 +258,55 @@ local function towerList(state: Types.MatchState): { Types.Tower }
 end
 Simulation.towerList = towerList
 
+-- Onda da tabela global com os grupos do mapa (mapGroups) acrescentados no fim: é assim que o
+-- Floquinho só aparece no Inverno e a Migalha só na Cozinha, sem uma tabela de ondas por mapa.
+local waveCache: { [string]: { [number]: Types.WaveDef } } = {}
+
+function Simulation.waveFor(mapId: string, index: number): Types.WaveDef?
+	local base = Balance.waves[index]
+	if not base then
+		return nil
+	end
+	local perMap = waveCache[mapId]
+	if not perMap then
+		perMap = {}
+		waveCache[mapId] = perMap
+	end
+	local cached = perMap[index]
+	if cached then
+		return cached
+	end
+	local def: Types.WaveDef = base
+	local map = Catalog.getMap(mapId)
+	if map and #map.mapGroups > 0 then
+		local groups = table.clone(base.groups)
+		for _, g in ipairs(map.mapGroups) do
+			if index >= g.fromWave then
+				local count = g.count + math.floor(g.perWave * (index - g.fromWave) + 1e-9)
+				table.insert(groups, { enemy = g.enemy, count = count })
+			end
+		end
+		if #groups > #base.groups then
+			def = {
+				wave = base.wave,
+				groups = groups,
+				spawnInterval = base.spawnInterval,
+				groupGap = base.groupGap,
+				bossAfterGroups = base.bossAfterGroups,
+				income = base.income,
+			}
+		end
+	end
+	perMap[index] = def
+	return def
+end
+
 -- A fase usa as N primeiras ondas da tabela global; passar do fim da fase é fim de partida.
 function Simulation.getWaveDef(state: Types.MatchState, index: number): Types.WaveDef?
 	if index > state.totalWaves then
 		return nil
 	end
-	return Balance.waves[index]
+	return Simulation.waveFor(state.mapId, index)
 end
 
 -- ---------------------------------------------------------------------------
@@ -339,6 +389,17 @@ local function spawnEnemy(
 			bossTelegraphing = false,
 			bossResolveAt = 0,
 			bossTargetCell = nil,
+			bossTargetTowerIds = nil,
+			bossSoakUntil = 0,
+			shreds = {},
+			burns = {},
+			freezeUntil = 0,
+			freezeBonus = 0,
+			freezeImmuneUntil = 0,
+			pushReadyAt = 0,
+			pushedTotal = 0,
+			-- a Traça nasce com a esquiva pronta: o primeiro acerto sempre erra
+			dodgeReadyAt = state.simTime,
 		}
 	elseif bossDef then
 		local hp = math.ceil(bossDef.hp * state.bossHpFactor)
@@ -366,6 +427,16 @@ local function spawnEnemy(
 			bossTelegraphing = false,
 			bossResolveAt = 0,
 			bossTargetCell = nil,
+			bossTargetTowerIds = nil,
+			bossSoakUntil = 0,
+			shreds = {},
+			burns = {},
+			freezeUntil = 0,
+			freezeBonus = 0,
+			freezeImmuneUntil = 0,
+			pushReadyAt = 0,
+			pushedTotal = 0,
+			dodgeReadyAt = math.huge,
 		}
 	else
 		return nil
@@ -390,6 +461,7 @@ local function cancelTelegraph(state: Types.MatchState, enemy: Types.Enemy, even
 	end
 	enemy.bossTelegraphing = false
 	enemy.bossNextTelegraphAt = math.huge
+	enemy.bossTargetTowerIds = nil
 	table.insert(
 		events,
 		event(state, "bossCancel", { entityId = enemy.id, enemyDefId = enemy.defId, reason = "removed" })
@@ -562,7 +634,29 @@ local function onBaseDestroyed(state: Types.MatchState, events: { Types.SimEvent
 	finishMatch(state, "lost", events)
 end
 
+-- Coração Remendado: cada Fofo L3B ligado devolve um pouco do Farol ao fim da onda vencida, com
+-- teto por onda e nunca acima da vida máxima. Não mexe em "dano levado" (a estrela continua honesta).
+local function healBase(state: Types.MatchState, events: { Types.SimEvent })
+	if state.mode == "training" or state.baseHP >= Balance.baseHP then
+		return
+	end
+	local heal = 0
+	for _, id in ipairs(state.towerOrder) do
+		local t = state.towers[id]
+		local stats = Catalog.getStateStats(t.defId, t.state)
+		if stats and stats.baseHeal and not isDisabled(state, t) then
+			heal += stats.baseHeal
+		end
+	end
+	heal = math.min(heal, Balance.effects.baseHealPerWaveCap, Balance.baseHP - state.baseHP)
+	if heal > 0 then
+		state.baseHP += heal
+		table.insert(events, event(state, "baseHeal", { wave = state.waveIndex, amount = heal }))
+	end
+end
+
 local function completeWave(state: Types.MatchState, events: { Types.SimEvent })
+	healBase(state, events)
 	local waveDef = Simulation.getWaveDef(state, state.waveIndex)
 	if waveDef then
 		local income = Rewards.waveIncome(waveDef)
@@ -671,7 +765,9 @@ local function updateMovement(state: Types.MatchState, dt: number, events: { Typ
 					end
 				end
 			end
-			e.s += e.baseSpeed * (1 - slow) * dt
+			-- congelado (Picolé) fica parado; o chefe nunca congela, só fica lento
+			local frozen = Combat.isFrozen(e, state.simTime)
+			e.s += e.baseSpeed * (if frozen then 0 else 1 - slow) * dt
 			if e.s >= state.pathLength then
 				-- vazamento: sem divisão, sem recompensa
 				cancelTelegraph(state, e, events)
@@ -709,6 +805,7 @@ local function updateHealing(state: Types.MatchState, events: { Types.SimEvent }
 						and other.defId ~= healer.defId
 						and not healedThisStep[other.id]
 						and other.hp < other.maxHp
+						and not Combat.isHealBlocked(other, state.simTime)
 					then
 						local ox, oy = Path.positionAt(path, other.s)
 						if Grid.distance(hx, hy, ox, oy) <= def.healRadius + 1e-9 then
@@ -740,6 +837,62 @@ local function pickAspiradorTarget(state: Types.MatchState): Types.Tower?
 	return best
 end
 
+-- Rajada gelada: as torres que mais valem (investido), empate pelo menor id.
+local function pickTopInvested(state: Types.MatchState, count: number): { number }
+	local list: { Types.Tower } = {}
+	for _, id in ipairs(state.towerOrder) do
+		table.insert(list, state.towers[id])
+	end
+	table.sort(list, function(a, b)
+		if a.invested ~= b.invested then
+			return a.invested > b.invested
+		end
+		return a.id < b.id
+	end)
+	local out: { number } = {}
+	for i = 1, math.min(count, #list) do
+		table.insert(out, list[i].id)
+	end
+	return out
+end
+
+-- Enrolar: a torre mais perto do chefe no momento do aviso, empate pelo menor id.
+local function pickNearestTower(state: Types.MatchState, boss: Types.Enemy): number?
+	local bx, by = Path.positionAt(getPath(state.mapId), boss.s)
+	local best: Types.Tower? = nil
+	local bestD = math.huge
+	for _, id in ipairs(state.towerOrder) do
+		local t = state.towers[id]
+		local d = Grid.distance(bx, by, t.x, t.y)
+		if d < bestD - 1e-9 or (math.abs(d - bestD) <= 1e-9 and best ~= nil and t.id < best.id) then
+			best = t
+			bestD = d
+		end
+	end
+	return if best then best.id else nil
+end
+
+local function summonAround(
+	state: Types.MatchState,
+	boss: Types.Enemy,
+	def: Types.BossDef,
+	events: { Types.SimEvent }
+): { number }
+	local count = def.summonCount or 0
+	local summonType = def.summonType or "corrisco"
+	local s = math.min(boss.s + 0.5, state.pathLength - 0.1)
+	local summoned: { number } = {}
+	for _ = 1, count do
+		if #state.enemyOrder < Simulation.MAX_ENEMIES then
+			local child = spawnEnemy(state, summonType, s, events, { isSummon = true, bounty = 0 })
+			if child then
+				table.insert(summoned, child.id)
+			end
+		end
+	end
+	return summoned
+end
+
 local function updateBosses(state: Types.MatchState, events: { Types.SimEvent })
 	for _, id in ipairs(table.clone(state.enemyOrder)) do
 		local boss = state.enemies[id]
@@ -749,11 +902,17 @@ local function updateBosses(state: Types.MatchState, events: { Types.SimEvent })
 				boss.bossTelegraphing = true
 				boss.bossResolveAt = boss.bossNextTelegraphAt + def.telegraph
 				boss.bossTargetCell = nil
+				boss.bossTargetTowerIds = nil
 				if def.mechanic == "dust_pulse" then
 					local target = pickAspiradorTarget(state)
 					if target then
 						boss.bossTargetCell = { target.x, target.y }
 					end
+				elseif def.mechanic == "frost_blast" then
+					boss.bossTargetTowerIds = pickTopInvested(state, def.targetCount or 1)
+				elseif def.mechanic == "wrap" then
+					local target = pickNearestTower(state, boss)
+					boss.bossTargetTowerIds = if target then { target } else {}
 				end
 				table.insert(
 					events,
@@ -761,9 +920,11 @@ local function updateBosses(state: Types.MatchState, events: { Types.SimEvent })
 						entityId = boss.id,
 						enemyDefId = boss.defId,
 						cell = boss.bossTargetCell,
-						radius = def.radius,
+						radius = if def.mechanic == "dust_cloud" then (def.cloudLength or 3) / 2 else def.radius,
 						reason = def.mechanic,
 						resolveAt = boss.bossResolveAt,
+						towerIds = boss.bossTargetTowerIds,
+						s = boss.s,
 					})
 				)
 			end
@@ -792,26 +953,43 @@ local function updateBosses(state: Types.MatchState, events: { Types.SimEvent })
 					boss.bossArmorUntil = state.simTime + (def.duration or 5)
 					expiresAt = boss.bossArmorUntil
 				elseif def.mechanic == "summon" then
-					local count = def.summonCount or 0
-					local summonType = def.summonType or "corrisco"
-					local s = math.min(boss.s + 0.5, state.pathLength - 0.1)
-					summoned = {}
-					for _ = 1, count do
-						if #state.enemyOrder < Simulation.MAX_ENEMIES then
-							local child = spawnEnemy(state, summonType, s, events, { isSummon = true, bounty = 0 })
-							if child then
-								table.insert(summoned :: { number }, child.id)
-							end
+					summoned = summonAround(state, boss, def, events)
+				elseif def.mechanic == "frost_blast" or def.mechanic == "wrap" then
+					-- a torre marcada no aviso para de atirar e de dar aura; vendida no meio, nada acontece
+					local until_ = state.simTime + (def.duration or 2)
+					expiresAt = until_
+					dusted = {}
+					for _, tid in ipairs(boss.bossTargetTowerIds or {}) do
+						local t = state.towers[tid]
+						if t then
+							t.disabledUntil = math.max(t.disabledUntil, until_)
+							t.disabledReason = if def.mechanic == "frost_blast" then "frost" else "wrap"
+							table.insert(dusted :: { number }, tid)
 						end
 					end
+				elseif def.mechanic == "soak" then
+					boss.bossSoakUntil = state.simTime + (def.duration or 3)
+					expiresAt = boss.bossSoakUntil
+				elseif def.mechanic == "dust_cloud" then
+					local half = (def.cloudLength or 3) / 2
+					local until_ = state.simTime + (def.duration or 2)
+					table.insert(state.pathClouds, {
+						fromS = math.max(boss.s - half, 0),
+						toS = math.min(boss.s + half, state.pathLength),
+						expiresAt = until_,
+						bossId = boss.id,
+					})
+					expiresAt = until_
+					summoned = summonAround(state, boss, def, events)
 				end
+				boss.bossTargetTowerIds = nil
 				table.insert(
 					events,
 					event(state, "bossAbility", {
 						entityId = boss.id,
 						enemyDefId = boss.defId,
 						cell = boss.bossTargetCell,
-						radius = def.radius,
+						radius = if def.mechanic == "dust_cloud" then (def.cloudLength or 3) / 2 else def.radius,
 						reason = def.mechanic,
 						expiresAt = expiresAt,
 						entityIds = summoned,
@@ -828,12 +1006,34 @@ end
 -- Ataques
 -- ---------------------------------------------------------------------------
 
+-- Nuvem de pó: some quando vence. Nada além da mira usa isto (queimadura e Pulso continuam).
+local function pruneClouds(state: Types.MatchState)
+	local clouds = state.pathClouds
+	local i = 1
+	while i <= #clouds do
+		if clouds[i].expiresAt <= state.simTime then
+			table.remove(clouds, i)
+		else
+			i += 1
+		end
+	end
+end
+
+function Simulation.hiddenByCloud(state: Types.MatchState, s: number): boolean
+	for _, cloud in ipairs(state.pathClouds) do
+		if cloud.expiresAt > state.simTime and s >= cloud.fromS - 1e-9 and s <= cloud.toS + 1e-9 then
+			return true
+		end
+	end
+	return false
+end
+
 local function buildCandidates(state: Types.MatchState): { Combat.EnemyPos }
 	local path = getPath(state.mapId)
 	local list: { Combat.EnemyPos } = {}
 	for _, id in ipairs(state.enemyOrder) do
 		local e = state.enemies[id]
-		if e.alive then
+		if e.alive and not Simulation.hiddenByCloud(state, e.s) then
 			local px, py = Path.positionAt(path, e.s)
 			table.insert(list, { enemy = e, px = px, py = py })
 		end
@@ -843,6 +1043,9 @@ end
 
 local function towerHaste(state: Types.MatchState, tower: Types.Tower): number
 	return Combat.hasteFor(tower, towerList(state), function(other: Types.Tower): number?
+		if isDisabled(state, other) then
+			return nil
+		end
 		local stats = Catalog.getStateStats(other.defId, other.state)
 		return if stats then stats.haste else nil
 	end, function(other: Types.Tower): number
@@ -851,6 +1054,21 @@ local function towerHaste(state: Types.MatchState, tower: Types.Tower): number
 	end)
 end
 Simulation.towerHaste = towerHaste
+
+-- Aura de dano do Fofo: a maior em alcance, de torre não desligada.
+local function towerBoost(state: Types.MatchState, tower: Types.Tower): number
+	return Combat.boostFor(tower, towerList(state), function(other: Types.Tower): number?
+		if isDisabled(state, other) then
+			return nil
+		end
+		local stats = Catalog.getStateStats(other.defId, other.state)
+		return if stats then stats.damageBoost else nil
+	end, function(other: Types.Tower): number
+		local stats = Catalog.getStateStats(other.defId, other.state)
+		return if stats then stats.range else 0
+	end)
+end
+Simulation.towerBoost = towerBoost
 
 function Simulation.effectiveIntervalFor(state: Types.MatchState, tower: Types.Tower): number
 	local stats = Catalog.getStateStats(tower.defId, tower.state)
@@ -862,14 +1080,7 @@ function Simulation.effectiveIntervalFor(state: Types.MatchState, tower: Types.T
 	return Combat.effectiveInterval(stats.interval, haste, dusted, Simulation.DUST_FACTOR)
 end
 
-local function applyDamageToEnemy(
-	state: Types.MatchState,
-	enemy: Types.Enemy,
-	amount: number,
-	attackerUserId: number?,
-	supportOwnerUserId: number?,
-	supportFraction: number
-)
+local function applyDamageToEnemy(state: Types.MatchState, enemy: Types.Enemy, amount: number, attackerUserId: number?)
 	enemy.hp -= amount
 	if attackerUserId then
 		local st = state.stats[attackerUserId]
@@ -877,25 +1088,30 @@ local function applyDamageToEnemy(
 			st.damage += amount
 		end
 	end
-	if supportOwnerUserId and supportFraction > 0 then
-		local st = state.stats[supportOwnerUserId]
+end
+
+-- Parte do dano que existe por causa de uma aura (cadência ou dano) vai para o dono da aura.
+local function creditSupport(state: Types.MatchState, ownerUserId: number?, amount: number, fraction: number)
+	if ownerUserId and fraction > 0 then
+		local st = state.stats[ownerUserId]
 		if st then
-			st.supportBonusDamage += amount * supportFraction
+			st.supportBonusDamage += amount * fraction
 		end
 	end
 end
 
-local function findHasteSource(state: Types.MatchState, tower: Types.Tower, haste: number): number?
-	if haste <= 0 then
+-- Dono da aura que deu `value` a esta torre (o primeiro na ordem das torres, como sempre foi).
+local function findAuraSource(state: Types.MatchState, tower: Types.Tower, value: number, field: string): number?
+	if value <= 0 then
 		return nil
 	end
 	for _, id in ipairs(state.towerOrder) do
 		local other = state.towers[id]
-		if other.defId == "maestro" then
-			local stats = Catalog.getStateStats(other.defId, other.state)
+		if other.id ~= tower.id and not isDisabled(state, other) then
+			local stats = Catalog.getStateStats(other.defId, other.state) :: any
 			if
 				stats
-				and stats.haste == haste
+				and stats[field] == value
 				and Grid.distance(tower.x, tower.y, other.x, other.y) <= stats.range + 1e-9
 			then
 				return other.ownerUserId
@@ -903,6 +1119,27 @@ local function findHasteSource(state: Types.MatchState, tower: Types.Tower, hast
 		end
 	end
 	return nil
+end
+
+-- Picolé: congela o inimigo comum; o chefe só fica lento. Congelado não renova (sem trava eterna),
+-- e depois de descongelar há um tempo de imunidade.
+local function applyFreeze(
+	state: Types.MatchState,
+	enemy: Types.Enemy,
+	tower: Types.Tower,
+	stats: Types.TowerStateStats
+)
+	local duration = stats.freeze :: number
+	if enemy.isBoss then
+		Combat.applyEffect(enemy.slows, Balance.effects.frozenBossSlow, duration, tower.id, state.simTime)
+		return
+	end
+	if Combat.isFrozen(enemy, state.simTime) or state.simTime < enemy.freezeImmuneUntil then
+		return
+	end
+	enemy.freezeUntil = state.simTime + duration
+	enemy.freezeBonus = stats.frozenBonus or 0
+	enemy.freezeImmuneUntil = enemy.freezeUntil + Balance.effects.freezeImmunity
 end
 
 local function fireTower(
@@ -916,9 +1153,12 @@ local function fireTower(
 	events: { Types.SimEvent }
 )
 	tower.attackSeq += 1
+	local now = state.simTime
 	local targets: { Combat.EnemyPos }
 	local falloff = 1
-	if stats.splash and stats.maxTargets then
+	if stats.allTargets then
+		targets = Combat.allInRange(tower, stats.range, candidates, stats.allTargets)
+	elseif stats.splash and stats.maxTargets then
 		local radius = stats.splash + circuitBonusFor(tower, "splash_radius_add")
 		targets = Combat.splashTargets(primary, candidates, radius, stats.maxTargets)
 	elseif stats.chains and stats.chainRadius and stats.chainFalloff then
@@ -932,40 +1172,107 @@ local function fireTower(
 	else
 		targets = { primary }
 	end
-	local supportOwner = findHasteSource(state, tower, haste)
-	local supportFraction = if haste > 0 then haste / (1 + haste) else 0
+	-- Holofote: cada acerto seguido no mesmo alvo esquenta o feixe; trocar de alvo zera
+	local focusBonus = 0
+	if stats.focusRamp and stats.focusMax then
+		if tower.focusTargetId == primary.enemy.id then
+			tower.focusStacks += 1
+		else
+			tower.focusTargetId = primary.enemy.id
+			tower.focusStacks = 0
+		end
+		focusBonus = math.min(tower.focusStacks * stats.focusRamp, stats.focusMax)
+	end
+	local boost = towerBoost(state, tower)
+	local hasteOwner = findAuraSource(state, tower, haste, "haste")
+	local boostOwner = findAuraSource(state, tower, boost, "damageBoost")
+	local hasteFraction = if haste > 0 then haste / (1 + haste) else 0
+	local boostFraction = if boost > 0 then boost / (1 + boost) else 0
 	local slowedBonus = circuitBonusFor(tower, "damage_vs_slowed")
 	local hitList: { Types.AttackTarget } = {}
 	for k, target in ipairs(targets) do
 		local enemy = target.enemy
+		local enemyDef = if enemy.isBoss then nil else Catalog.getEnemy(enemy.defId)
+		-- Traça: com a esquiva pronta, este acerto erra inteiro (dano e efeitos)
+		if enemyDef and enemyDef.dodgeInterval and now >= enemy.dodgeReadyAt then
+			enemy.dodgeReadyAt = now + enemyDef.dodgeInterval
+			table.insert(hitList, { enemyId = enemy.id, damage = 0, index = k - 1, flag = 1 })
+			continue
+		end
+		local flag = 0
 		local circuitBonus = 0
-		if slowedBonus > 0 and Combat.isSlowed(enemy, state.simTime) then
+		if slowedBonus > 0 and Combat.isSlowed(enemy, now) then
 			circuitBonus = slowedBonus
 		end
-		local base = stats.damage * (falloff ^ (k - 1))
+		local base = stats.damage * (falloff ^ (k - 1)) * (1 + focusBonus)
 		local dmg = Combat.computeDamage({
 			baseDamage = base,
 			damageType = def.damageType,
 			bossBonus = stats.bossBonus,
 			circuitBonus = circuitBonus,
 			armorIgnore = stats.armorIgnore,
-			mark = Combat.activeMark(enemy, state.simTime),
-			armor = Combat.currentArmor(enemy, state.simTime),
+			mark = Combat.activeMark(enemy, now),
+			armor = Combat.currentArmor(enemy, now, Balance.effects.shredCap),
 			energyResistance = enemy.energyResistance,
 			isBoss = enemy.isBoss,
 			armorCap = Balance.effects.physicalArmorCap,
+			boost = boost,
+			frozenBonus = if Combat.isFrozen(enemy, now) then enemy.freezeBonus else 0,
 		})
-		applyDamageToEnemy(state, enemy, dmg, tower.ownerUserId, supportOwner, supportFraction)
-		if stats.slow and stats.slowDuration then
-			Combat.applyEffect(enemy.slows, stats.slow, stats.slowDuration, tower.id, state.simTime)
+		if enemy.isBoss and def.damageType == "energy" and enemy.bossSoakUntil > now then
+			-- Esponjão encharcado: a energia não fere e vira um pouco de cura (queimadura bloqueia)
+			local bossDef = Catalog.getBoss(enemy.defId)
+			local heal = dmg * (if bossDef then bossDef.soakHeal or 0 else 0)
+			if heal > 0 and not Combat.isHealBlocked(enemy, now) then
+				enemy.hp = math.min(enemy.maxHp, enemy.hp + heal)
+			end
+			dmg = 0
+			flag = 2
+		else
+			applyDamageToEnemy(state, enemy, dmg, tower.ownerUserId)
+			creditSupport(state, hasteOwner, dmg, hasteFraction)
+			creditSupport(state, boostOwner, dmg, boostFraction)
+		end
+		if stats.slow and stats.slowDuration and not (enemyDef and enemyDef.slowImmune) then
+			Combat.applyEffect(enemy.slows, stats.slow, stats.slowDuration, tower.id, now)
 		end
 		if stats.mark and stats.markDuration then
-			Combat.applyEffect(enemy.marks, stats.mark, stats.markDuration, tower.id, state.simTime)
+			Combat.applyEffect(enemy.marks, stats.mark, stats.markDuration, tower.id, now)
 		end
-		table.insert(hitList, { enemyId = enemy.id, damage = dmg, index = k - 1 })
+		if stats.shred and stats.shredDuration then
+			Combat.applyShred(enemy.shreds, stats.shred, stats.shredDuration, tower.id, now, stats.shredStacks)
+		end
+		if stats.burn and stats.burnDuration then
+			local dps = stats.burn * (1 + boost) * (1 + focusBonus)
+			Combat.applyBurn(enemy.burns, dps, stats.burnDuration, tower.id, tower.ownerUserId, now)
+		end
+		if stats.freeze then
+			applyFreeze(state, enemy, tower, stats)
+		end
+		-- empurrão: o alvo principal (ou o puxado), e todos da área no Salto Gigante
+		if stats.push and (k == 1 or stats.splash ~= nil) then
+			local distance = Combat.pushDistance(enemy, stats.push, now, Balance.effects)
+			if distance > 0 then
+				enemy.s -= distance
+				enemy.pushedTotal += distance
+				enemy.pushReadyAt = now + Balance.effects.pushCooldown
+				flag = 3
+			end
+		end
+		table.insert(
+			hitList,
+			{ enemyId = enemy.id, damage = dmg, index = k - 1, flag = if flag ~= 0 then flag else nil }
+		)
+	end
+	-- Enxame: a chama pula para os vizinhos do alvo principal (não é acerto: não gasta esquiva)
+	if stats.burnSpread and stats.burnSpreadRadius and stats.burn and stats.burnDuration then
+		local dps = stats.burn * (1 + boost)
+		for _, other in ipairs(Combat.spreadTargets(primary, candidates, stats.burnSpreadRadius, stats.burnSpread)) do
+			Combat.applyBurn(other.enemy.burns, dps, stats.burnDuration, tower.id, tower.ownerUserId, now)
+		end
 	end
 	if state.firstShotAt == nil then
-		state.firstShotAt = state.simTime
+		state.firstShotAt = now
 	end
 	table.insert(events, event(state, "attack", { towerId = tower.id, attackSeq = tower.attackSeq, targets = hitList }))
 end
@@ -982,14 +1289,19 @@ local function updateTowers(state: Types.MatchState, dt: number, events: { Types
 			if perUser then
 				perUser[tower.defId] = (perUser[tower.defId] or 0) + dt
 			end
-			if def.damageType == "none" then
+			if isDisabled(state, tower) then
+				-- desligada por chefe (Boneco de Poeira, Meia): não atira, não recarrega, não dá aura
+				continue
+			elseif def.damageType == "none" then
 				-- apoio: pulso cosmético no máximo uma vez por segundo, se há alguma torre de dano em alcance
 				local last = state.lastSupportPulseAt[id] or -math.huge
 				if state.simTime - last >= 1 then
 					for _, otherId in ipairs(state.towerOrder) do
 						local other = state.towers[otherId]
+						local otherDef = Catalog.getTower(other.defId)
 						if
-							other.defId ~= "maestro"
+							otherDef
+							and otherDef.damageType ~= "none"
 							and Grid.distance(tower.x, tower.y, other.x, other.y) <= stats.range + 1e-9
 						then
 							state.lastSupportPulseAt[id] = state.simTime
@@ -1006,7 +1318,12 @@ local function updateTowers(state: Types.MatchState, dt: number, events: { Types
 						candidates = buildCandidates(state)
 					end
 					local mode: Types.TargetMode = tower.targetMode
-					local primary = Combat.selectTarget(tower, stats.range, candidates :: { Combat.EnemyPos }, mode)
+					local list = candidates :: { Combat.EnemyPos }
+					-- Língua de Sogra puxa o inimigo comum mais forte; sem nenhum, ataca como as outras
+					local primary = if stats.grab then Combat.selectGrabTarget(tower, stats.range, list) else nil
+					if primary == nil then
+						primary = Combat.selectTarget(tower, stats.range, list, mode)
+					end
 					if primary then
 						local haste = towerHaste(state, tower)
 						local dusted = tower.dustUntil > state.simTime
@@ -1015,6 +1332,31 @@ local function updateTowers(state: Types.MatchState, dt: number, events: { Types
 						tower.cooldown = interval
 					end
 				end
+			end
+		end
+	end
+end
+
+-- Queimadura: dano de energia contínuo, creditado ao dono de quem acendeu. Esponjão encharcado
+-- absorve (sem dano), mas continua sem cura enquanto queima.
+local function updateBurns(state: Types.MatchState, dt: number)
+	local now = state.simTime
+	for _, id in ipairs(state.enemyOrder) do
+		local e = state.enemies[id]
+		if e.alive and #e.burns > 0 then
+			local burn = Combat.activeBurn(e, now)
+			if burn and not (e.isBoss and e.bossSoakUntil > now) then
+				local dmg = Combat.computeDamage({
+					baseDamage = burn.strength * dt,
+					damageType = "energy",
+					mark = Combat.activeMark(e, now),
+					armor = 0,
+					energyResistance = e.energyResistance,
+					isBoss = e.isBoss,
+					armorCap = Balance.effects.physicalArmorCap,
+					frozenBonus = if Combat.isFrozen(e, now) then e.freezeBonus else 0,
+				})
+				applyDamageToEnemy(state, e, dmg, burn.ownerUserId)
 			end
 		end
 	end
@@ -1098,8 +1440,10 @@ function Simulation.step(state: Types.MatchState, dtOverride: number?): { Types.
 		onBaseDestroyed(state, events)
 		return events
 	end
+	pruneClouds(state)
 	updateHealing(state, events)
 	updateBosses(state, events)
+	updateBurns(state, dt)
 	updateTowers(state, dt, events)
 	processDeaths(state, events)
 
@@ -1231,6 +1575,10 @@ function Simulation.placeTower(
 		dustUntil = 0,
 		attackSeq = 0,
 		activeSeconds = 0,
+		disabledUntil = 0,
+		disabledReason = nil,
+		focusTargetId = nil,
+		focusStacks = 0,
 	}
 	state.towers[id] = tower
 	table.insert(state.towerOrder, id)
@@ -1386,7 +1734,7 @@ function Simulation.castPulse(state: Types.MatchState, userId: number): (Types.C
 				isBoss = enemy.isBoss,
 				armorCap = Balance.effects.physicalArmorCap,
 			})
-			applyDamageToEnemy(state, enemy, dmg, userId, nil, 0)
+			applyDamageToEnemy(state, enemy, dmg, userId)
 			Combat.applyEffect(enemy.slows, pulse.slow, pulse.slowDuration, Simulation.PULSE_SOURCE_ID, state.simTime)
 			table.insert(hits, { enemyId = enemy.id, damage = dmg, index = 0 })
 		end
@@ -1552,7 +1900,12 @@ function Simulation.applyRetry(state: Types.MatchState): (Types.CommandResult, {
 		local t = state.towers[id]
 		t.cooldown = 0
 		t.dustUntil = 0
+		t.disabledUntil = 0
+		t.disabledReason = nil
+		t.focusTargetId = nil
+		t.focusStacks = 0
 	end
+	state.pathClouds = {}
 	state.baseHP = Balance.baseHP
 	state.retryUsed = true
 	state.assisted = true
@@ -1604,6 +1957,7 @@ function Simulation.devJumpToWave(
 		table.insert(events, event(state, "despawn", { entityId = id }))
 	end
 	state.trainingQueue = {}
+	state.pathClouds = {}
 	state.waveIndex = target - 1
 	state.phase = "Intermission"
 	state.phaseEndsAt = state.simTime

@@ -52,6 +52,8 @@ python3 tools/import_balance.py          # valida dados/balanceamento_v1.json e 
 python3 tools/export_assets.py           # exports normalizados dos 40 PNGs em assets/export (originais preservados)
 python3 tools/export_enemy_assets.py     # exports dos 11 PNGs de inimigos/chefes (128 px) e chefes (256 px)
 python3 tools/merge_enemy_index.py       # acrescenta os 11 registros ao asset_index.json e ao registro de runtime
+python3 tools/export_order_v2.py         # exports da encomenda v2 (215 PNGs de Assets_Encomenda_v2) + order_v2_manifest.json
+python3 tools/merge_order_v2_index.py    # acrescenta as 215 fontes ao asset_index.json e ao registro de runtime
 python3 tools/update_asset_registry.py   # atualiza runtime_asset_registry.json e gera Config/Assets.luau (só com IDs de uploads reais)
 python3 tools/import_ui_tokens.py        # gera Config/UiTokens.luau e Config/UiMotion.luau do pacote de UI
 python3 tools/export_ui_icons.py         # exporta os 24 ícones para assets/export/ui e gera Config/UiIcons.luau
@@ -68,6 +70,23 @@ gerado traz `image = nil` e o cliente desenha o glifo de reserva. A tabela de up
 `docs/MANUAL_ACTIONS.md`.
 
 `import_balance.py` falha com código 1 se houver ID desconhecido, custo inválido, salto de evolução, caminho diagonal, bloqueio sobre caminho ou célula fora da grade. Os módulos gerados carregam o sha256 do JSON de origem.
+
+`export_order_v2.py` trata a encomenda de arte v2 (`Assets_Encomenda_v2/`, 215 PNGs copiados do
+Drive com hash conferido): poses e quadros das seis torres novas (fonte 512, jogo 128, retrato 256),
+quadros `windup`/`fire`/`pulse` das seis torres atuais, `walk_b`/`ability` de inimigos e chefes, os
+oito personagens novos, 23 efeitos (128 ou 256 px), Farol danificado e crítico e as seis cenas de mapa
+(1024x683 para upload). Um quadro sempre usa a transformação da pose do mesmo estado, então as poses
+já publicadas não mudam. Ele grava `assets/export/order_v2_manifest.json` (fonte, sha256, escala, pés,
+desvio desenhado de cada quadro em relação à pose) e as pranchas `review_v2_towers_desktop.png`,
+`review_v2_towers_mobile.png` (48 px, régua do celular), `review_v2_enemies_*.png` e `review_v2_fx.png`.
+`update_asset_registry.py` lê esse manifesto e emite `frames` por pose em `Config/Assets.luau`; sem
+`rbxassetid` no `upload_log.json`, nenhum quadro é emitido e o jogo fica só com a pose.
+
+Para encaixar uma cena nova: `python3 tools/fit_map_scene.py <arte.png> --overlay g.png --expect <mapa>`.
+Quando a arte foge do gabarito (piso em xadrez, tapete, colunas a mais), meça as costuras e passe
+`--field X0 Y0 PASSO_X PASSO_Y`; a ferramenta nunca estica a imagem e informa o desvio que sobra
+(`maxDriftCells`). Os valores vão para `assets/export/map_scene_overrides.json` (cena sem `image` não
+liga `includesPath`, para a trilha desenhada por código não sumir).
 
 `export_enemy_assets.py` normaliza as 11 poses de `Assets_Inimigos_Bosses_v1/` com apoio em (0,5; 0,82) e calcula `frameWidthCells` por tipo, de modo que a largura visível em células corresponda a `enemy_visuals.json`. Ele grava `assets/export/enemy_export_manifest.json` e as pranchas `review_enemies_light.png` e `review_enemies_dark.png` (conferência sobre fundo claro e escuro). `tools/generate_placeholder_enemies.py` continua existindo, mas os placeholders procedurais deixaram de ser usados: `update_asset_registry.py` só os emite para chaves sem arte real.
 

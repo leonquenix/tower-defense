@@ -318,3 +318,61 @@ linha a linha, está em `docs/UI_COVERAGE.md`; em resumo:
 Nenhuma dessas linhas foi marcada como aprovada. A interface está implementada e integrada; a
 validação em dispositivo e com várias pessoas continua sendo trabalho manual descrito em
 `docs/MANUAL_ACTIONS.md`.
+
+## 9. Encomenda de arte v2 (2026-10-01)
+
+### 9.1 Executado fora do Studio
+
+| Verificação | Comando | Resultado |
+| --- | --- | --- |
+| Testes Lune (todos os specs) | `.toolchain/bin/lune run tests/run.luau` | **240 aprovados, 0 reprovados** (eram 209; +31 em `16_expansion_v2`) |
+| Análise estrita | `luau-lsp analyze ... src/` | sem erros |
+| Lint | `.toolchain/bin/selene src/` | 0 erros, 0 avisos |
+| Formatação | `.toolchain/bin/stylua --check src/` | ok |
+| Dados | `python3 tools/import_balance.py` | ok; validações novas de estado de torre, habilidade, `mapGroups` e efeitos |
+| Fachadas Wally | `python3 tools/check_package_facades.py` | 3 referências alinhadas |
+| Cobertura de UI | `python3 tools/check_ui_coverage.py` | 49/49 implementadas, 8 no Studio (sem mudança) |
+| Exports | `python3 tools/export_order_v2.py` | 215 exports de 215 fontes, nenhum recortado |
+| Registro | `python3 tools/update_asset_registry.py` | 266/266 com ID |
+| Build | `rojo build default.project.json -o build/QuintalEmGuarda.rbxl` | ok (534 KB) |
+
+O spec `16_expansion_v2` cobre: catálogo (12 torres, rotas e comprimento dos mapas novos, ordem da
+campanha, `mapGroups`); raspagem (renovação, acúmulo da Escova de Aço, teto, Rei Ferrugem);
+queimadura (duração, crédito ao dono, a mais forte vale, bloqueio da cura do Remendo, Holofote,
+Enxame sem gastar esquiva); empurrão (recarga, teto, início do caminho, chefe, Língua de Sogra);
+Pião em todos no alcance; congelamento (duração, imunidade, chefe só lento, Geladeira, Novelo);
+aura do Fofo (maior vale, desligado não ajuda) e cura do Farol (teto e vida máxima, estrela intacta);
+esquiva da Traça; Boneco de Poeira (alvo, desligar, cancelamento por morte); Esponjão (absorção,
+cura, físico passa, queimadura bloqueia); Meia (alvo vendido no aviso); Traça Rainha (nuvem, alvos
+escondidos, invocação, expiração); fio (`fx`, `dr`, `flag`, evento `baseHeal`); Retomada (religa e
+apaga nuvens); compatibilidade do perfil com a campanha reordenada; e uma onda real com três Picolés
+e três Pulas que **termina** (controle não trava a partida).
+
+Conferência visual feita por imagem (não no motor): pranchas `assets/export/review_v2_*` (as torres em
+48 px, régua do celular, continuam legíveis e os quadros assentam na linha da pose) e sobreposições
+da grade nas seis cenas (`tools/fit_map_scene.py --overlay`).
+
+### 9.2 Executado no Roblox Studio
+
+O único Studio conectado tinha **outro projeto** aberto (place local, PlaceId 0, em Play). Nada foi
+alterado nele; só se usou a conta logada para:
+
+- **Upload** de 245 arquivos (`upload_image`, arquivos servidos por HTTP local): 245 IDs devolvidos,
+  gravados em `assets/export/upload_log.json`.
+- **Existência**: `MarketplaceService:GetProductInfo` nos 245 → 245 imagens (tipo 1) da conta
+  4407810154, a mesma dona das poses originais. Zero problemas.
+- **Carregamento**: `ContentProvider:PreloadAsync` devolveu `Failure` para os 245 — e também para
+  dois assets antigos que o jogo já usa e foram verificados em 18/09. A falha é do ambiente (place de
+  outro dono/sem permissão de uso), então o carregamento **não** está verificado; ver MANUAL_ACTIONS.
+- O estado temporário criado na sessão (`_G`) foi apagado depois da leitura.
+
+### 9.3 Não executado
+
+- Partida no place do Quintal em Guarda (o Studio não estava com ele aberto): fluxo completo de
+  vitória e derrota com as torres e chefes novos, quadros e efeitos em 1x/2x e com movimento
+  reduzido, cooperação com comandos duplicados, perfis existentes, interface em computador e celular,
+  falha de carregamento de imagem e limpeza de objetos no fim da partida. O código trata esses casos
+  (quadro só entra depois de carregar, efeitos em pool com teto e limpos na troca de mapa/fim), mas
+  nenhum foi observado no motor.
+- Balanceamento: nenhum número novo foi validado em jogo.
+- Moderação dos 245 uploads (assíncrona).

@@ -36,6 +36,7 @@ return ByteNet.defineNamespace("quintal", function()
 		ab = ByteNet.float32,
 		ar = ByteNet.float32,
 		er = ByteNet.float32,
+		fx = ByteNet.uint8,
 	})
 
 	local tower = ByteNet.struct({
@@ -50,6 +51,8 @@ return ByteNet.defineNamespace("quintal", function()
 		cp = ByteNet.optional(ByteNet.uint32),
 		ci = ByteNet.uint8,
 		du = ByteNet.float32,
+		dis = ByteNet.float32,
+		dr = ByteNet.uint8,
 	})
 
 	local participant = ByteNet.struct({
@@ -96,7 +99,7 @@ return ByteNet.defineNamespace("quintal", function()
 		preview = ByteNet.array(group),
 	})
 
-	local target = ByteNet.struct({ e = ByteNet.uint32, d = ByteNet.float32, i = ByteNet.uint8 })
+	local target = ByteNet.struct({ e = ByteNet.uint32, d = ByteNet.float32, i = ByteNet.uint8, f = ByteNet.uint8 })
 
 	local event = ByteNet.struct({
 		k = ByteNet.uint8,

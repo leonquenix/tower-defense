@@ -124,6 +124,8 @@ local function evaluateCell(towerId: string, x: number, y: number): (boolean, st
 			dustUntil = 0,
 			attackSeq = 0,
 			activeSeconds = 0,
+			disabledUntil = 0,
+			focusStacks = 0,
 		})
 	end
 	local hypothetical: Types.Tower = {
@@ -142,6 +144,8 @@ local function evaluateCell(towerId: string, x: number, y: number): (boolean, st
 		dustUntil = 0,
 		attackSeq = 0,
 		activeSeconds = 0,
+		disabledUntil = 0,
+		focusStacks = 0,
 	}
 	local preview = Circuits.preview(towers, hypothetical, Catalog.getCircuitFor)
 	return true, nil, if preview then preview.partnerId else nil

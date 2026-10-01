@@ -1,7 +1,14 @@
 --!strict
--- Movimentos procedurais das torres (animation_plan.json): repouso, ataque/apoio, construção e melhoria.
+-- Movimentos das torres (animation_plan.json): repouso, ataque/apoio, construção e melhoria.
 -- Atua só na imagem filha do contêiner lógico; a célula e a seleção não se movem.
 -- Tempo em segundos de simulação (o chamador avança dt x velocidade). Nunca decide dano.
+--
+-- Encomenda v2: cada estado pode ter quadros desenhados (Assets.frame): antecipação ("windup") e
+-- disparo ("fire", ou "pulse" nas torres de apoio). O ataque confirmado pelo servidor vira
+-- pose -> antecipação -> disparo -> pose; o recuo procedural continua por cima. Quadro que não
+-- carregou (FramePreload) não entra: a torre fica na pose, como antes da encomenda.
+local FramePreload = require(script.Parent.FramePreload)
+
 local TowerAnimator = {}
 TowerAnimator.__index = TowerAnimator
 
@@ -48,7 +55,46 @@ local PLAN: { [string]: { idle: IdleSpec, action: ActionSpec } } = {
 			minPulseInterval = 1,
 		},
 	},
+	-- encomenda v2 (mesma régua de amplitude das atuais; os quadros desenhados fazem o resto)
+	escova = {
+		idle = { period = 1.3, scaleY = { 1, 1.02 }, scaleX = { 1, 1 }, rotation = { 0, 0 } },
+		action = { kind = "attack", duration = 0.2, recoilPx = 3, scaleYMin = 0.96, scaleUniformMax = 1 },
+	},
+	lumi = {
+		idle = { period = 1.7, scaleY = { 1, 1.015 }, scaleX = { 1, 1 }, rotation = { -1, 1 } },
+		action = { kind = "attack", duration = 0.26, recoilPx = 1, scaleYMin = 1, scaleUniformMax = 1 },
+	},
+	pula = {
+		idle = { period = 1.5, scaleY = { 0.98, 1.02 }, scaleX = { 1, 1 }, rotation = { 0, 0 } },
+		action = { kind = "attack", duration = 0.34, recoilPx = 0, scaleYMin = 0.9, scaleUniformMax = 1 },
+	},
+	piao = {
+		idle = { period = 0.9, scaleY = { 1, 1 }, scaleX = { 1, 1 }, rotation = { -2, 2 } },
+		action = { kind = "attack", duration = 0.3, recoilPx = 0, scaleYMin = 0.97, scaleUniformMax = 1 },
+	},
+	picole = {
+		idle = { period = 2.1, scaleY = { 1, 1.012 }, scaleX = { 1, 1 }, rotation = { 0, 0 } },
+		action = { kind = "attack", duration = 0.32, recoilPx = 2, scaleYMin = 1, scaleUniformMax = 1 },
+	},
+	fofo = {
+		idle = { period = 1.9, scaleY = { 1, 1.02 }, scaleX = { 1, 1.01 }, rotation = { 0, 0 } },
+		action = {
+			kind = "support",
+			duration = 0.4,
+			recoilPx = 0,
+			scaleYMin = 1,
+			scaleUniformMax = 1.04,
+			minPulseInterval = 1,
+		},
+	},
 }
+
+-- Quadros desenhados de um estado (as chaves são as ações de Assets.frame).
+export type Frames = { windup: string?, fire: string? }
+
+-- Fatia do ataque em que cada quadro aparece: antecipação no começo, disparo no meio.
+TowerAnimator.WINDUP_END = 0.25
+TowerAnimator.FIRE_END = 0.75
 
 TowerAnimator.BUILD_DURATION = 0.18
 TowerAnimator.UPGRADE_DURATION = 0.35
@@ -78,6 +124,10 @@ export type Animator = typeof(setmetatable(
 		lastPulseAt: number,
 		facing: number, -- 1 direita, -1 esquerda (recuo do disparo)
 		anchorY: number,
+		poseImage: string, -- textura do estado atual (a pose)
+		frames: Frames, -- quadros desenhados do estado atual
+		shown: string, -- textura em tela agora (evita reatribuir a cada quadro)
+		reducedMotion: boolean,
 	},
 	TowerAnimator
 ))
@@ -103,8 +153,30 @@ function TowerAnimator.new(
 		lastPulseAt = -math.huge,
 		facing = 1,
 		anchorY = anchorY,
+		poseImage = "",
+		frames = {},
+		shown = "",
+		reducedMotion = false,
 	}, TowerAnimator)
 	return self
+end
+
+local function show(self: Animator, image: string)
+	if image ~= "" and self.shown ~= image then
+		self.shown = image
+		self.image.Image = image
+	end
+end
+
+local function requestFrames(frames: Frames)
+	local ids: { string } = {}
+	if frames.windup then
+		table.insert(ids, frames.windup)
+	end
+	if frames.fire then
+		table.insert(ids, frames.fire)
+	end
+	FramePreload.request(ids)
 end
 
 -- Vira a torre para o lado do alvo espelhando a textura no próprio eixo: com largura negativa
@@ -120,17 +192,39 @@ local function applyFacing(self: Animator)
 end
 
 -- Troca a textura do estado (ao criar a torre e a cada melhoria), mantendo o lado atual.
-function TowerAnimator.setImage(self: Animator, image: string, frameWidth: number?, frameHeight: number?)
+function TowerAnimator.setImage(
+	self: Animator,
+	image: string,
+	frameWidth: number?,
+	frameHeight: number?,
+	frames: Frames?
+)
 	if frameWidth then
 		self.frameWidth = frameWidth
 	end
 	if frameHeight then
 		self.frameHeight = frameHeight
 	end
-	if image ~= "" and self.image.Image ~= image then
-		self.image.Image = image
-	end
+	self.poseImage = image
+	self.frames = frames or {}
+	requestFrames(self.frames)
+	show(self, image)
 	applyFacing(self)
+end
+
+-- Quadro que deve estar em tela na fração `t` de um ataque (nil = pose).
+function TowerAnimator.frameAt(frames: Frames, t: number, reducedMotion: boolean): string?
+	if t < TowerAnimator.WINDUP_END then
+		-- com movimento reduzido não há antecipação: o ataque é um único quadro de disparo
+		if not reducedMotion and FramePreload.ready(frames.windup) then
+			return frames.windup
+		end
+		return nil
+	end
+	if t < TowerAnimator.FIRE_END and FramePreload.ready(frames.fire) then
+		return frames.fire
+	end
+	return nil
 end
 
 local function applyTransform(self: Animator, sx: number, sy: number, offsetPx: number, rotation: number)
@@ -186,8 +280,19 @@ function TowerAnimator.playBuild(self: Animator)
 end
 
 -- Melhoria: cancela ação atual, troca a textura uma vez no meio da transição e preserva o apoio.
-function TowerAnimator.playUpgrade(self: Animator, newImage: string, frameWidth: number?, frameHeight: number?)
+-- Os quadros do estado novo passam a valer na mesma hora (um ataque durante a melhoria é ignorado).
+function TowerAnimator.playUpgrade(
+	self: Animator,
+	newImage: string,
+	frameWidth: number?,
+	frameHeight: number?,
+	frames: Frames?
+)
 	TowerAnimator.restore(self)
+	show(self, self.poseImage)
+	self.poseImage = newImage
+	self.frames = frames or {}
+	requestFrames(self.frames)
 	if frameWidth then
 		self.frameWidth = frameWidth
 	end
@@ -215,13 +320,17 @@ function TowerAnimator.update(self: Animator, simDt: number, reducedMotion: bool
 		local t = (self.time - action.startedAt) / action.duration
 		if t >= 1 then
 			if action.kind == "upgrade" and not action.swapped and action.pendingImage then
-				self.image.Image = action.pendingImage
+				show(self, action.pendingImage)
 			end
 			self.action = nil
 			TowerAnimator.restore(self)
+			show(self, self.poseImage)
 		else
 			local spec = self.plan.action
 			local pxScale = displayPixels / 128
+			if action.kind == "attack" or action.kind == "support" then
+				show(self, TowerAnimator.frameAt(self.frames, t, reducedMotion) or self.poseImage)
+			end
 			if action.kind == "attack" then
 				if reducedMotion then
 					TowerAnimator.restore(self)
@@ -245,7 +354,7 @@ function TowerAnimator.update(self: Animator, simDt: number, reducedMotion: bool
 				applyTransform(self, s, s, 0, 0)
 			elseif action.kind == "upgrade" then
 				if t >= 0.5 and not action.swapped and action.pendingImage then
-					self.image.Image = action.pendingImage
+					show(self, action.pendingImage)
 					action.swapped = true
 				end
 				local glow = math.sin(t * math.pi)
@@ -271,6 +380,7 @@ end
 function TowerAnimator.destroy(self: Animator)
 	self.action = nil
 	TowerAnimator.restore(self)
+	show(self, self.poseImage)
 end
 
 function TowerAnimator.plan(defId: string): { idle: IdleSpec, action: ActionSpec }?

@@ -8,6 +8,13 @@
 -- partida, então 1x e 2x usam o mesmo relógio lógico). Nunca decide dano, cura ou recompensa.
 --
 -- Prioridade de apresentação (guia, página 16): remoção > habilidade > impacto > movimento > repouso.
+--
+-- Encomenda v2: quadros desenhados por tipo (Assets.frame) — "walk_b" (segundo passo, alternado com
+-- a pose no ritmo do ciclo) e, nos chefes, "ability" (durante o aviso e na resolução). Quadro que
+-- não carregou não entra (FramePreload). O ciclo de passo para com movimento reduzido; o quadro de
+-- habilidade continua, porque é aviso e não enfeite.
+local FramePreload = require(script.Parent.FramePreload)
+
 local EnemyAnimator = {}
 EnemyAnimator.__index = EnemyAnimator
 
@@ -54,7 +61,46 @@ local MOTION: { [string]: MotionSpec } = {
 		scaleX = { 1, 1 },
 	},
 	breu = { kind = "sway", period = 2, offsetPx = 1, rotation = 1, scaleY = { 1, 1.01 }, scaleX = { 1, 1 } },
+	-- encomenda v2 (Assets_Encomenda_v2/manifesto_encomenda_v2.json, campo motion)
+	migalha = { kind = "run", period = 0.3, offsetPx = 1.5, rotation = 1, scaleY = { 1, 1.01 }, scaleX = { 1, 1 } },
+	floquinho = { kind = "float", period = 1.2, offsetPx = 2, rotation = 2, scaleY = { 1, 1.01 }, scaleX = { 1, 1 } },
+	novelo = {
+		kind = "squash",
+		period = 0.9,
+		offsetPx = 1,
+		rotation = 0,
+		scaleY = { 0.98, 1.01 },
+		scaleX = { 1, 1.015 },
+	},
+	traca = { kind = "float", period = 0.5, offsetPx = 2, rotation = 1, scaleY = { 1, 1.01 }, scaleX = { 1, 1 } },
+	boneco_poeira = {
+		kind = "stomp",
+		period = 1.6,
+		offsetPx = 0.8,
+		rotation = 0,
+		scaleY = { 1, 1.01 },
+		scaleX = { 1, 1 },
+	},
+	esponjao = {
+		kind = "squash",
+		period = 1.4,
+		offsetPx = 0.8,
+		rotation = 0,
+		scaleY = { 0.98, 1.01 },
+		scaleX = { 1, 1.012 },
+	},
+	meia = { kind = "sway", period = 1.5, offsetPx = 1, rotation = 2, scaleY = { 1, 1.01 }, scaleX = { 1, 1 } },
+	traca_rainha = {
+		kind = "float",
+		period = 1.8,
+		offsetPx = 1.5,
+		rotation = 1,
+		scaleY = { 1, 1.01 },
+		scaleX = { 1, 1 },
+	},
 }
+
+export type Frames = { walk_b: string?, ability: string? }
 
 local DEFAULT: MotionSpec =
 	{ kind = "sway", period = 1.2, offsetPx = 1, rotation = 0, scaleY = { 1, 1.01 }, scaleX = { 1, 1 } }
@@ -62,7 +108,7 @@ local DEFAULT: MotionSpec =
 EnemyAnimator.HIT_DURATION = 0.12 -- escurecimento curto no impacto
 EnemyAnimator.SHAKE_DURATION = 0.12 -- tremor lateral do Casulo ao morrer
 EnemyAnimator.TELEGRAPH_DURATION = 0.25 -- compressão do Aspirador ao iniciar o aviso
-EnemyAnimator.ABILITY_DURATION = 0.2 -- estufar do Rei Ferrugem ao ativar a armadura
+EnemyAnimator.ABILITY_DURATION = 0.4 -- estufar na resolução da habilidade (o quadro desenhado fica junto)
 EnemyAnimator.SPAWN_DURATION = 0.18 -- entrada dos Corriscos invocados por Breu
 EnemyAnimator.HIT_COLOR = Color3.fromRGB(150, 150, 160)
 
@@ -79,6 +125,10 @@ export type Animator = typeof(setmetatable(
 		anchorY: number,
 		visualScale: number, -- 0.7 nos filhos do Casulo
 		baseColor: Color3,
+		poseImage: string,
+		frames: Frames,
+		shown: string,
+		telegraphing: boolean, -- aviso de chefe em andamento (quadro de habilidade)
 	},
 	EnemyAnimator
 ))
@@ -107,7 +157,38 @@ function EnemyAnimator.new(
 		anchorY = anchorY,
 		visualScale = visualScale,
 		baseColor = Color3.new(1, 1, 1),
+		poseImage = "",
+		frames = {},
+		shown = "",
+		telegraphing = false,
 	}, EnemyAnimator)
+end
+
+local function show(self: Animator, image: string)
+	if image ~= "" and self.shown ~= image then
+		self.shown = image
+		self.image.Image = image
+	end
+end
+
+-- Textura da pose e quadros do tipo (ao adquirir do pool). Pede o carregamento dos quadros.
+function EnemyAnimator.setImages(self: Animator, pose: string, frames: Frames?)
+	self.poseImage = pose
+	self.frames = frames or {}
+	self.shown = ""
+	local ids: { string } = {}
+	if self.frames.walk_b then
+		table.insert(ids, self.frames.walk_b)
+	end
+	if self.frames.ability then
+		table.insert(ids, self.frames.ability)
+	end
+	FramePreload.request(ids)
+	show(self, pose)
+end
+
+function EnemyAnimator.setTelegraphing(self: Animator, value: boolean)
+	self.telegraphing = value
 end
 
 -- Reaproveitamento no pool: zera tempo, ação e transformações.
@@ -119,6 +200,7 @@ function EnemyAnimator.reset(self: Animator, entityId: string, entityKey: number
 	self.action = nil
 	self.anchorY = anchorY
 	self.visualScale = visualScale
+	self.telegraphing = false
 	EnemyAnimator.restore(self)
 end
 
@@ -136,6 +218,23 @@ end
 function EnemyAnimator.restore(self: Animator)
 	applyTransform(self, 1, 1, 0, 0, 0)
 	self.image.ImageColor3 = self.baseColor
+	show(self, self.poseImage)
+end
+
+-- Quadro do instante: habilidade (aviso ou resolução) > segundo passo no ciclo > pose.
+local function pickFrame(self: Animator, reducedMotion: boolean): string
+	local action = self.action
+	local abilityNow = self.telegraphing or (action ~= nil and action.kind == "ability")
+	if abilityNow and FramePreload.ready(self.frames.ability) then
+		return self.frames.ability :: string
+	end
+	if not reducedMotion and FramePreload.ready(self.frames.walk_b) then
+		local cycle = (self.time + self.phase) / self.spec.period
+		if math.floor(cycle * 2) % 2 == 1 then
+			return self.frames.walk_b :: string
+		end
+	end
+	return self.poseImage
 end
 
 function EnemyAnimator.playHit(self: Animator)
@@ -167,6 +266,7 @@ end
 
 function EnemyAnimator.update(self: Animator, simDt: number, reducedMotion: boolean)
 	self.time += simDt
+	show(self, pickFrame(self, reducedMotion))
 	local action = self.action
 	if action then
 		local t = (self.time - action.startedAt) / action.duration

@@ -177,3 +177,42 @@ Hub.
 19b. Decidir se os **cosméticos de domínio** (adesivo aos 30, título aos 100 e aparência aos 250) ganham arte própria. O servidor já concede os IDs ao cruzar cada marco (`ProfileSchema.applyMatchResult`), mas a arte não existe: a tela 08 mostra "Arte final ainda não produzida nesta versão" e mantém o Equipar indisponível em vez de oferecer um produto inexistente.
 20. Definir se `DEV_ALLOWLIST` (MatchService) recebe UserIds de QA fora do Studio.
 21. Decidir política de telemetria (AnalyticsService está preparado; eventos são enviados só fora do Studio e nunca interrompem o jogo).
+
+## Encomenda de arte v2 — o que falta depois da integração (2026-10-01)
+
+Integrado e enviado nesta data: 215 imagens + 30 retratos (245 uploads, conta 4407810154), dados,
+mecânicas, quadros e efeitos. Pendências, na ordem em que valem a pena:
+
+V1. **Abrir o place do Quintal em Guarda no Studio e verificar o carregamento** (o Studio desta sessão
+    estava com outro projeto aberto; lá até os assets antigos devolviam `Failure`). Sincronizar pelo
+    Rojo (porta 34873, ver memória do projeto) ou abrir `build/QuintalEmGuarda.rbxl`, dar Play, jogar
+    uma partida curta e ler, no Explorer, os atributos do jogador local `QG_FramesReady`,
+    `QG_FramesFailed` e `QG_FramesLoading` (publicados por `View/FramePreload`): carregando tem de ir
+    a zero e falhas tem de ser 0. Com falha, o jogo continua na pose e no visual provisório.
+V2. **Roteiro de Play** (nada disso foi observado no motor): treino com o seletor de inimigo
+    (Traça esquiva, Novelo ignora Goma, Esponjão absorve Voltz, Boneco congela as torres caras, Meia
+    enrola a mais próxima, Traça Rainha esconde o trecho), as seis torres até L3A/L3B, uma fase de cada
+    mapa novo (conferir que o desenho do caminho cai nas células da grade), vitória e derrota, 2x,
+    movimento reduzido ligado, layout compacto (emulador 780x360) e dois clientes.
+V3. **Moderação**: conferir no Creator Hub → Development Items → Images os 245 uploads de 01/10
+    (o nome aparecia como `###` no momento do envio, o que é normal antes da moderação).
+V4. **Correções de arte** (o jogo funciona como está; são ajustes de encaixe):
+    - `map_inverno_scene_v001.png`: campo desenhado com **17 colunas** (o gabarito tem 16) e ladrilho
+      4% mais alto que largo. Hoje a coluna 0 da arte fica na moldura (piso visível onde não se
+      constrói) e o encaixe deixa 0,12 célula de desvio nos cantos. Pedir `_v002` com 16 colunas
+      seguindo `docs/encomenda_arte/mapas/inverno_template.png`; depois rodar
+      `fit_map_scene.py --expect inverno` e voltar a rota para o gabarito, se a arte seguir.
+    - `map_porao_scene_v001.png`: ladrilho 5% mais alto que largo (desvio de 0,15 célula nos cantos).
+    - `map_oficina_scene_v001.png`: engrenagem em (1,4) que o gabarito não tem — hoje é bloqueio. Se
+      a célula deve ser livre, pedir a arte sem a engrenagem e tirar (1,4) de `blocked`.
+    - `tower_picole_L3B_windup_v001.png`: o conteúdo encosta na borda direita da fonte; conferir se a
+      geladeira foi cortada.
+V5. **Balanceamento**: todos os números da expansão são provisórios (bloco `expansionV2` do JSON).
+    Playtest das 12 fases novas e das torres novas contra as atuais; em especial Pião (24 alvos),
+    Picolé L3A e o Coração Remendado.
+V6. **Circuitos das torres novas**: a encomenda sugere "Lixa e Flecha" (Escovinha + Dardo), "Cola
+    Quente" (Lumi + Goma), "Arremesso" (Pula + Pipoca), "Ciranda" (Pião + Maestro) e "Quebra-Gelo"
+    (Picolé + Pipoca). Não foram adotados: cada um pede um efeito novo e uma decisão de design.
+V7. **Versionar as fontes**: `Assets_Encomenda_v2/` tem 174 MB de PNG. Decidir se entra no git
+    (como as fontes v1) ou fica fora com cópia controlada; o pipeline só precisa dos arquivos no disco.
+V8. **Ícone e thumbnails de divulgação** (P3 da encomenda): depois do jogo pronto, com captura real.

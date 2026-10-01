@@ -41,6 +41,7 @@ export type WireEnemy = {
 	ab: number,
 	ar: number,
 	er: number,
+	fx: number,
 }
 
 export type WireTower = {
@@ -55,7 +56,19 @@ export type WireTower = {
 	cp: number?,
 	ci: number,
 	du: number,
+	dis: number,
+	dr: number, -- 0 ligada, 1 rajada gelada, 2 enrolada
 }
+
+-- Motivo de torre desligada num byte.
+local DISABLED_REASONS = { "frost", "wrap" }
+
+local function reasonToId(reason: string?): number
+	if reason == nil then
+		return 0
+	end
+	return table.find(DISABLED_REASONS, reason) or 0
+end
 
 export type WireParticipant = {
 	u: number,
@@ -101,7 +114,7 @@ export type WireSnapshot = {
 	preview: { WireGroup },
 }
 
-export type WireTarget = { e: number, d: number, i: number }
+export type WireTarget = { e: number, d: number, i: number, f: number }
 
 export type WireEvent = {
 	k: number,
@@ -172,6 +185,7 @@ function Codec.encodeSnapshot(snapshot: Types.MatchSnapshot): WireSnapshot
 			ab = e.ab,
 			ar = e.ar,
 			er = e.er,
+			fx = e.fx,
 		})
 	end
 	local towers: { WireTower } = {}
@@ -188,6 +202,8 @@ function Codec.encodeSnapshot(snapshot: Types.MatchSnapshot): WireSnapshot
 			cp = t.cp,
 			ci = Enums.toId(Enums.circuit, t.ci),
 			du = t.du,
+			dis = t.dis,
+			dr = reasonToId(t.dr),
 		})
 	end
 	local parts: { WireParticipant } = {}
@@ -258,6 +274,7 @@ function Codec.decodeSnapshot(wire: WireSnapshot): Types.MatchSnapshot
 			ab = e.ab,
 			ar = e.ar,
 			er = e.er,
+			fx = e.fx,
 		})
 	end
 	local towers: { Types.TowerSnapshot } = {}
@@ -274,6 +291,8 @@ function Codec.decodeSnapshot(wire: WireSnapshot): Types.MatchSnapshot
 			cp = t.cp,
 			ci = Enums.toValue(Enums.circuit, t.ci),
 			du = t.du,
+			dis = t.dis,
+			dr = if t.dr > 0 then DISABLED_REASONS[t.dr] else nil,
 		})
 	end
 	local parts: { Types.ParticipantSnapshot } = {}
@@ -333,7 +352,7 @@ function Codec.encodeEvent(e: Types.NetEvent): WireEvent
 	local kindId = Enums.toId(Enums.event, e.kind)
 	local targets: { WireTarget } = {}
 	for _, t in ipairs(e.targets or {}) do
-		table.insert(targets, { e = t.enemyId, d = t.damage, i = t.index })
+		table.insert(targets, { e = t.enemyId, d = t.damage, i = t.index, f = t.flag or 0 })
 	end
 	local cell = e.cell
 	return {
@@ -368,7 +387,7 @@ end
 function Codec.decodeEvent(wire: WireEvent): Types.NetEvent
 	local targets: { Types.AttackTarget } = {}
 	for _, t in ipairs(wire.targets) do
-		table.insert(targets, { enemyId = t.e, damage = t.d, index = t.i })
+		table.insert(targets, { enemyId = t.e, damage = t.d, index = t.i, flag = if t.f ~= 0 then t.f else nil })
 	end
 	local cell: Types.Cell? = nil
 	if wire.cellX ~= nil and wire.cellY ~= nil then

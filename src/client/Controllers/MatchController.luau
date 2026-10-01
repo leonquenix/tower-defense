@@ -28,6 +28,7 @@ export type EnemyView = {
 	armorBonus: number, -- reforço ativo do Rei Ferrugem
 	armor: number, -- armadura atual efetiva
 	energyResistance: number,
+	fx: number, -- estados visíveis (Snapshot.FX): queimando, congelado, raspado, encharcado, escondido
 	samples: { { t: number, s: number, v: number } },
 	lastSeen: number,
 }
@@ -147,6 +148,7 @@ local function applySnapshot(snapshot: Types.MatchSnapshot)
 				armorBonus = e.ab,
 				armor = e.ar,
 				energyResistance = e.er,
+				fx = e.fx,
 				samples = {},
 				lastSeen = now,
 			}
@@ -161,6 +163,7 @@ local function applySnapshot(snapshot: Types.MatchSnapshot)
 		ev.armorBonus = e.ab
 		ev.armor = e.ar
 		ev.energyResistance = e.er
+		ev.fx = e.fx
 		ev.lastSeen = now
 		local samples = ev.samples
 		local last = samples[#samples]

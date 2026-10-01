@@ -1,8 +1,8 @@
 {
-  "elapsedSeconds": 0.021883166627958417,
+  "elapsedSeconds": 0.031444583320990205,
   "failed": 0,
   "failures": {},
-  "passed": 209,
+  "passed": 240,
   "suites": [
     {
       "name": "Grid",
@@ -1099,7 +1099,191 @@
           "ok": true
         }
       ]
+    },
+    {
+      "name": "Encomenda v2 / catálogo",
+      "tests": [
+        {
+          "name": "seis torres novas com cinco estados, dois ramos e o nível de desbloqueio da encomenda",
+          "ok": true
+        },
+        {
+          "name": "rotas dos mapas novos, comprimento e chefe de cada um",
+          "ok": true
+        },
+        {
+          "name": "campanha segue a casa: Jardim, Oficina, Inverno, Cozinha, Quarto, Sótão, Porão",
+          "ok": true
+        },
+        {
+          "name": "grupos do mapa entram só no mapa certo e a partir da onda indicada",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Escovinha / armadura raspada",
+      "tests": [
+        {
+          "name": "raspa, renova pela mesma torre e some ao fim da duração",
+          "ok": true
+        },
+        {
+          "name": "Escova de Aço acumula até quatro raspadas e o total respeita shredCap",
+          "ok": true
+        },
+        {
+          "name": "raspa o Rei Ferrugem por cima do reforço de armadura",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Lumi / queimadura e bloqueio de cura",
+      "tests": [
+        {
+          "name": "queima pelo tempo da duração, credita o dono e não soma com outra Lumi",
+          "ok": true
+        },
+        {
+          "name": "inimigo queimando não recebe a cura do Remendo",
+          "ok": true
+        },
+        {
+          "name": "Holofote esquenta no mesmo alvo e zera ao trocar",
+          "ok": true
+        },
+        {
+          "name": "Enxame acende os vizinhos do alvo sem gastar a esquiva da Traça",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Pula / empurrão",
+      "tests": [
+        {
+          "name": "empurra para trás no caminho, com recarga, teto e sem sair da rota",
+          "ok": true
+        },
+        {
+          "name": "chefe resiste: só bossPushFactor do empurrão",
+          "ok": true
+        },
+        {
+          "name": "Língua de Sogra puxa o inimigo comum mais forte, nunca o chefe",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Pião / todos no alcance",
+      "tests": [
+        {
+          "name": "acerta todo inimigo elegível no alcance e nenhum fora dele",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Picolé / congelamento",
+      "tests": [
+        {
+          "name": "congela, solta no tempo certo e respeita a imunidade (a partida não trava)",
+          "ok": true
+        },
+        {
+          "name": "chefe não congela: fica só lento, com a redução de chefe",
+          "ok": true
+        },
+        {
+          "name": "Geladeira: congelado leva dano extra de qualquer torre",
+          "ok": true
+        },
+        {
+          "name": "Novelo: a lentidão da Goma não pega, o congelamento pega",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Fofo / aura de dano e cura do Farol",
+      "tests": [
+        {
+          "name": "aumenta o dano vizinho; dois Fofos valem o maior; Fofo desligado não ajuda",
+          "ok": true
+        },
+        {
+          "name": "Coração Remendado devolve vida ao Farol no fim da onda, com teto e sem passar do máximo",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Traça / esquiva",
+      "tests": [
+        {
+          "name": "erra o primeiro acerto, leva o seguinte e volta a esquivar depois de 3 s",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Chefes novos",
+      "tests": [
+        {
+          "name": "Boneco de Poeira marca as torres mais caras e congela por 2 s; elas não atiram",
+          "ok": true
+        },
+        {
+          "name": "morte do chefe no meio do aviso cancela a rajada",
+          "ok": true
+        },
+        {
+          "name": "Esponjão encharcado absorve energia e se cura; físico passa; queimadura bloqueia a cura",
+          "ok": true
+        },
+        {
+          "name": "Meia Sem Par enrola a torre mais próxima; vendida no aviso, nada quebra",
+          "ok": true
+        },
+        {
+          "name": "Traça Rainha esconde um trecho (torres não miram lá) e invoca traças",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Replicação e Retomada",
+      "tests": [
+        {
+          "name": "fx, torre desligada e alvo esquivado sobrevivem ao fio",
+          "ok": true
+        },
+        {
+          "name": "Retomada religa as torres e apaga as nuvens",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Perfil / compatibilidade da campanha reordenada",
+      "tests": [
+        {
+          "name": "quem já tinha estrelas no Sótão continua com ele aberto; a fase nova abre pela anterior",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "Controle não trava a partida",
+      "tests": [
+        {
+          "name": "onda real com três Picolés e três Pulas no começo do caminho termina",
+          "ok": true
+        }
+      ]
     }
   ],
-  "timestamp": "2026-09-28T08:34:43Z"
+  "timestamp": "2026-10-01T22:14:25Z"
 }

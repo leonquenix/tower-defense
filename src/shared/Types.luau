@@ -44,6 +44,23 @@ export type TowerStateStats = {
 	chainRadius: number?,
 	chainFalloff: number?,
 	haste: number?,
+	-- encomenda v2 (Escovinha, Lumi, Pula, Pião, Picolé, Fofo)
+	shred: number?, -- armadura raspada (absoluta) por acerto
+	shredDuration: number?,
+	shredStacks: number?, -- acúmulo da mesma torre (Escova de Aço)
+	burn: number?, -- queimadura em dano por segundo; enquanto dura, o alvo não recebe cura
+	burnDuration: number?,
+	focusRamp: number?, -- Holofote: bônus por acerto seguido no mesmo alvo
+	focusMax: number?,
+	burnSpread: number?, -- Enxame: vizinhos que também pegam fogo
+	burnSpreadRadius: number?,
+	push: number?, -- empurrão em células para trás no caminho
+	grab: number?, -- Língua de Sogra: puxa o inimigo comum mais forte
+	allTargets: number?, -- Pião: acerta todos no alcance (teto de alvos)
+	freeze: number?, -- segundos de congelamento (chefe só fica lento)
+	frozenBonus: number?, -- dano extra em quem está congelado por esta torre
+	damageBoost: number?, -- Fofo: aura de dano
+	baseHeal: number?, -- Coração Remendado: vida devolvida ao Farol por onda vencida
 }
 
 export type TowerDef = {
@@ -73,6 +90,8 @@ export type EnemyDef = {
 	healRadius: number?,
 	healInterval: number?,
 	splitOnDeath: number?,
+	slowImmune: boolean?, -- Novelo: lentidão não pega (congelamento pega)
+	dodgeInterval: number?, -- Traça: esquiva o primeiro acerto a cada N segundos
 }
 
 export type BossDef = {
@@ -92,6 +111,9 @@ export type BossDef = {
 	extraArmor: number?,
 	summonType: string?,
 	summonCount: number?,
+	targetCount: number?, -- Boneco de Poeira: torres congeladas pela rajada
+	soakHeal: number?, -- Esponjão: fração do dano de energia absorvido que vira cura
+	cloudLength: number?, -- Traça Rainha: trecho do caminho escondido (células)
 }
 
 export type WaveGroup = { enemy: string, count: number }
@@ -105,6 +127,10 @@ export type WaveDef = {
 	income: number,
 }
 
+-- Grupo extra que o mapa acrescenta à onda global a partir de fromWave:
+-- count + floor(perWave x (onda - fromWave)) inimigos, depois dos grupos da tabela.
+export type MapGroup = { enemy: string, fromWave: number, count: number, perWave: number }
+
 export type MapDef = {
 	id: string,
 	name: string,
@@ -113,6 +139,7 @@ export type MapDef = {
 	path: { Cell },
 	blocked: { Cell },
 	boss: string,
+	mapGroups: { MapGroup },
 }
 
 export type DifficultyDef = { hp: number, speed: number, winButtons: number }
@@ -142,6 +169,15 @@ export type EffectsDef = {
 	hasteStacking: string,
 	slowStacking: string,
 	markStacking: string,
+	shredCap: number, -- teto da armadura raspada somada às fontes
+	pushCooldown: number, -- segundos em que o inimigo empurrado não é empurrado de novo
+	maxPushPerEnemy: number, -- teto do empurrão total na vida do inimigo (células)
+	bossPushFactor: number, -- fração do empurrão que pega em chefe
+	freezeImmunity: number, -- segundos sem novo congelamento depois de descongelar
+	frozenBossSlow: number, -- lentidão aplicada ao chefe no lugar do congelamento
+	damageBoostStacking: string,
+	burnStacking: string,
+	baseHealPerWaveCap: number, -- teto de vida que o Farol recupera por onda
 }
 
 export type RewardsDef = {
@@ -299,6 +335,17 @@ export type TimedEffect = {
 	sourceTowerId: number,
 }
 
+-- Queimadura: dano por segundo creditado ao dono da torre que acendeu (mesmo se ela for vendida).
+export type BurnEffect = {
+	strength: number,
+	expiresAt: number,
+	sourceTowerId: number,
+	ownerUserId: number,
+}
+
+-- Nuvem de pó da Traça Rainha: trecho do caminho onde as torres não miram.
+export type PathCloud = { fromS: number, toS: number, expiresAt: number, bossId: number }
+
 export type Enemy = {
 	id: number,
 	defId: string,
@@ -325,6 +372,17 @@ export type Enemy = {
 	bossTelegraphing: boolean,
 	bossResolveAt: number,
 	bossTargetCell: Cell?,
+	bossTargetTowerIds: { number }?, -- torres marcadas no aviso (Boneco de Poeira, Meia)
+	bossSoakUntil: number, -- Esponjão: até quando absorve energia
+	-- efeitos da encomenda v2
+	shreds: { TimedEffect }, -- armadura raspada (Escovinha)
+	burns: { BurnEffect }, -- queimadura (Lumi): enquanto houver, nada cura este inimigo
+	freezeUntil: number, -- congelado (Picolé): velocidade zero
+	freezeBonus: number, -- dano extra enquanto congelado (Geladeira)
+	freezeImmuneUntil: number, -- depois de descongelar, um tempo sem novo congelamento
+	pushReadyAt: number, -- quando pode ser empurrado de novo
+	pushedTotal: number, -- células já empurradas na vida (teto em effects.maxPushPerEnemy)
+	dodgeReadyAt: number, -- Traça: quando a próxima esquiva está pronta
 }
 
 export type Tower = {
@@ -343,6 +401,12 @@ export type Tower = {
 	dustUntil: number,
 	attackSeq: number,
 	activeSeconds: number, -- tempo colocada (para domínio)
+	-- desligada por chefe: "frost" (Boneco de Poeira) ou "wrap" (Meia). Não atira nem dá aura.
+	disabledUntil: number,
+	disabledReason: string?,
+	-- Holofote: alvo atual e acertos seguidos nele
+	focusTargetId: number?,
+	focusStacks: number,
 }
 
 export type WaveRuntime = {
@@ -464,6 +528,8 @@ export type MatchState = {
 	supportAllowed: boolean,
 	supportUsedBy: { [number]: boolean },
 	assisted: boolean,
+	-- nuvens de pó ativas (Traça Rainha)
+	pathClouds: { PathCloud },
 }
 
 export type Checkpoint = {
@@ -483,7 +549,8 @@ export type TrainingSpawn = { defId: string, at: number }
 -- Eventos emitidos pela simulação (apresentação e telemetria)
 -- ---------------------------------------------------------------------------
 
-export type AttackTarget = { enemyId: number, damage: number, index: number }
+-- flag: 0 acerto normal, 1 esquiva (Traça), 2 absorvido (Esponjão encharcado)
+export type AttackTarget = { enemyId: number, damage: number, index: number, flag: number? }
 
 export type SimEvent = {
 	kind: string,
@@ -632,6 +699,7 @@ export type EnemySnapshot = {
 	ab: number, -- bônus de armadura ativo do chefe (Rei Ferrugem)
 	ar: number, -- armadura atual efetiva (base + bônus)
 	er: number, -- resistência de energia atual
+	fx: number, -- estados visíveis (Snapshot.FX: queimando, congelado, raspado, encharcado, escondido)
 }
 
 export type TowerSnapshot = {
@@ -646,6 +714,8 @@ export type TowerSnapshot = {
 	cp: number?, -- circuit partner id
 	ci: string?, -- circuit id
 	du: number, -- dustUntil
+	dis: number, -- disabledUntil (Boneco de Poeira, Meia)
+	dr: string?, -- motivo: "frost" | "wrap"
 }
 
 export type ParticipantSnapshot = {

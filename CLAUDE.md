@@ -191,3 +191,36 @@ objetivo). Números em `balanceamento_v1.json`: `progression`, `retention`, `sho
   confirma depois de `PlayerDataService.saveAndConfirm`. Sem `productId` no JSON, a compra fica
   oculta. Nunca reaproveite a chave de um produto para outra entrega.
 - Retomada e Reforço não existem na fase 1 (guia) nem no treino.
+
+## Encomenda de arte v2 (2026-10-01)
+
+As 215 imagens da encomenda estão em `Assets_Encomenda_v2/` (cópia do Drive, hashes conferidos;
+inventário, validação e progresso junto; `manifesto_encomenda_v2.json` é a configuração visual,
+espelhada à mão nos animadores). Pipeline: `tools/export_order_v2.py` →
+`tools/merge_order_v2_index.py` → `tools/update_asset_registry.py`. Regra do export: **um quadro usa
+a transformação da pose do mesmo estado** (o gerador manteve o enquadramento); as poses antigas
+publicadas não mudam. `Assets.frame(key, ação)` devolve o quadro publicado (`windup`, `fire`,
+`pulse`, `walk_b`, `ability`) e `View/FramePreload` só deixa trocar textura depois que o quadro
+carregou de verdade. `View/FxSprites` desenha projéteis, impactos e estados em ImageLabels
+reaproveitados; sem imagem, o renderizador volta ao visual procedural de antes.
+
+Jogo: seis torres (escova, lumi, pula, piao, picole, fofo), quatro inimigos (migalha, floquinho,
+novelo, traca), quatro chefes (boneco_poeira `frost_blast`, esponjao `soak`, meia `wrap`,
+traca_rainha `dust_cloud`), mapas inverno/cozinha/quarto/porao e a Oficina com rota nova. Os números
+novos são **balanceamento provisório** (bloco `expansionV2` do JSON). Mecânicas em `Rules/Combat`
+(raspagem, queimadura, empurrão, aura de dano) e `Sim/Simulation` (congelamento, torre desligada,
+nuvem de pó, cura do Farol no fim da onda); testes em `tests/specs/16_expansion_v2.spec.luau`.
+`mapGroups` acrescenta inimigos do mapa à onda global (`Simulation.waveFor`). O snapshot leva `fx`
+(bits de `Snapshot.FX`) por inimigo e `dis`/`dr` por torre; o alvo do ataque leva `flag`
+(1 esquiva, 2 absorvido, 3 empurrado).
+
+Campanha: a ordem do vetor é a da casa (Jardim, Oficina, Inverno, Cozinha, Quarto, Sótão, Porão);
+ids nunca mudam de dono e **fase com estrela nunca fecha** (`campaignUnlocked`), o que preserva quem
+já tinha o Sótão. Circuitos sugeridos na encomenda para as torres novas **não** foram adotados.
+
+Cenas: `tools/fit_map_scene.py` ganhou passo por eixo, refino pelo centro do corredor, encaixe
+quadrado com desvio relatado (`maxDriftCells`), `--field` (medição assistida) e `--expect`. Inverno
+(17 colunas) e Porão (ladrilho 5% alto) pedem correção de arte; detalhes em
+`assets/export/map_scene_overrides.json` e `docs/MANUAL_ACTIONS.md`. Os 245 uploads (exports +
+retratos) foram feitos pela conta 4407810154 e existem como imagem; o carregamento no place do
+grupo ainda não foi verificado.

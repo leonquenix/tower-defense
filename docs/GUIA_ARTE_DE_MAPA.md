@@ -39,13 +39,14 @@ caixa, tronco), senão o jogador vê grama limpa e leva uma recusa sem entender.
 - Bloqueadas: (1,8), (2,8), (11,0), (12,0), (0,9).
 - Última célula do caminho: **(15,8)** — é onde o jogo desenha o Farol. Não desenhe farol nenhum.
 
-### Oficina de Lata (`oficina`)
+### Oficina de Lata (`oficina`) — rota nova da encomenda v2
 
-- Rota: entra na **borda esquerda, linha 7** → direita até a coluna 3 → sobe até a linha 2 →
-  direita até a coluna 7 → desce até a linha 7 → direita até a coluna 11 → sobe até a linha 3 →
-  direita até a coluna 15 e sai. São 30 células.
-- Bloqueadas: (0,0), (1,0), (14,9), (15,9), (8,9).
-- Última célula: **(15,3)**.
+- Rota: entra na **borda esquerda, linha 2** → direita até a coluna 13 → desce até a linha 5 →
+  **esquerda** até a coluna 2 → desce até a linha 8 → direita até a coluna 15 e sai. São 44 células.
+- Bloqueadas: (0,0), (14,0), (15,0), (6,3), (1,4), (9,4), (10,6), (5,7), (0,9), (1,9). A (1,4) não
+  estava no gabarito: a arte entregue desenhou uma engrenagem ali.
+- Última célula: **(15,8)**. Até 30/09 a Oficina usava a cena de neve com outra rota; a neve virou o
+  Quintal de Inverno.
 
 ### Sótão das Estrelas (`sotao`)
 
@@ -54,6 +55,18 @@ caixa, tronco), senão o jogador vê grama limpa e leva uma recusa sem entender.
   → direita até a coluna 14 → desce até a linha 6 → direita até a coluna 15 e sai. São 39 células.
 - Bloqueadas: (8,0), (9,0), (6,9), (7,9), (15,0).
 - Última célula: **(15,6)**.
+
+### Mapas da encomenda v2 (gabaritos em `docs/encomenda_arte/mapas/`)
+
+| Mapa | Rota | Bloqueadas | Farol |
+| --- | --- | --- | --- |
+| Quintal de Inverno (`inverno`) | (0,6)→(3,6)→(3,2)→(11,2)→(11,7)→(15,7) — 25 células | (0,0) (14,0) (15,0) (15,9) e o lago (5..9, 4..5) | (15,7) |
+| Cozinha da Madrugada (`cozinha`) | (0,1)→(3,1)→(3,3)→(6,3)→(6,5)→(9,5)→(9,7)→(12,7)→(12,5)→(15,5) — 24 | (8,1) (9,1) (1,6) (1,7) (14,2) (15,2) (5,8) (4,9) (14,8) | (15,5) |
+| Quarto de Brinquedos (`quarto`) | (0,6)→(3,6)→(3,1)→(13,1)→(13,4)→(6,4)→(6,7)→(15,7) — 41 | (8,2) (9,2) (0,0) (1,0) (15,0) (15,1) (10,9) (11,9) | (15,7) |
+| Porão da Poeira (`porao`) | (0,1)→(2,1)→(2,8)→(5,8)→(5,1)→(8,1)→(8,8)→(11,8)→(11,1)→(14,1)→(14,7)→(15,7) — 50 | (0,0) (15,0) (0,9) (15,9) (3,0) (12,9) | (15,7) |
+
+O Inverno segue a arte entregue, que tem 17 colunas: a primeira vertical caiu em x=3 e o lago tem
+5 de largura (o gabarito pedia x=4 e 4 de largura). A versão `_v002` deve voltar a 16 colunas.
 
 ## 3. Pedido pronto para colar
 

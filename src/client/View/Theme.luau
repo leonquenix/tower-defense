@@ -63,6 +63,11 @@ Theme.pathColors = {
 	jardim = { Theme.colors.sand, Theme.colors.sandDark },
 	oficina = { Theme.colors.tape, Theme.colors.tapeDark },
 	sotao = { Theme.colors.night, Theme.colors.nightDark },
+	-- mapas da encomenda v2: só valem enquanto a cena desenhada não é publicada
+	inverno = { Color3.fromHex("EFC98A"), Color3.fromHex("B88A4A") },
+	cozinha = { Color3.fromHex("FFF6E3"), Color3.fromHex("C9A97A") },
+	quarto = { Color3.fromHex("E9CFA0"), Color3.fromHex("9A7046") },
+	porao = { Color3.fromHex("EADFC8"), Color3.fromHex("8E8AA0") },
 }
 
 Theme.fonts = {
@@ -100,6 +105,13 @@ Theme.towerColors = {
 	goma = Color3.fromHex("7EE0C8"),
 	voltz = Color3.fromHex("63CDE8"),
 	maestro = Color3.fromHex("FF775E"),
+	-- encomenda v2 (paletas da seção 5): azul-real, lima, vermelho, ardósia e caramelo
+	escova = Color3.fromHex("3FC1B0"),
+	lumi = Color3.fromHex("3D6FD6"),
+	pula = Color3.fromHex("8BC34A"),
+	piao = Color3.fromHex("D8453B"),
+	picole = Color3.fromHex("34507A"),
+	fofo = Color3.fromHex("D9A066"),
 }
 
 Theme.towerGlyphs = {
@@ -109,6 +121,12 @@ Theme.towerGlyphs = {
 	goma = "G",
 	voltz = "V",
 	maestro = "M",
+	escova = "E",
+	lumi = "U",
+	pula = "J",
+	piao = "O",
+	picole = "C",
+	fofo = "F",
 }
 
 return Theme

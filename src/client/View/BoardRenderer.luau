@@ -6,6 +6,8 @@ local TweenService = game:GetService("TweenService")
 
 local Types = require(ReplicatedStorage.Shared.Types)
 local Assets = require(ReplicatedStorage.Shared.Config.Assets)
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local Snapshot = require(ReplicatedStorage.Shared.Sim.Snapshot)
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Grid = require(ReplicatedStorage.Shared.Math.Grid)
@@ -18,6 +20,8 @@ local BoardTransform = require(script.Parent.BoardTransform)
 local SpritePool = require(script.Parent.SpritePool)
 local TowerAnimator = require(script.Parent.TowerAnimator)
 local EnemyAnimator = require(script.Parent.EnemyAnimator)
+local FxSprites = require(script.Parent.FxSprites)
+local FramePreload = require(script.Parent.FramePreload)
 local MatchController = require(script.Parent.Parent.Controllers.MatchController)
 
 local BoardRenderer = {}
@@ -29,6 +33,11 @@ local BOSS_CELLS = 1.9
 local PROP_CELLS = 1.5
 local BASE_CELLS = 1.9
 local MAX_DAMAGE_NUMBERS = 30
+-- Farol pela vida confirmada pelo servidor (encomenda v2, seção 9): abaixo de 50% danificado,
+-- abaixo de 20% crítico. Sem a arte publicada, continua o Farol inteiro.
+local BASE_DAMAGED_BELOW = 0.5
+local BASE_CRITICAL_BELOW = 0.2
+local FX = Snapshot.FX
 local Z =
 	{ ground = 1, path = 10, cells = 15, circuits = 20, shadows = 30, entities = 100, effects = 1200, selection = 1300 }
 
@@ -39,6 +48,10 @@ type TowerVisual = {
 	shadow: Frame,
 	badge: TextLabel,
 	dust: TextLabel,
+	-- desligada por chefe: bloco de gelo (Boneco de Poeira) ou laço (Meia), com prazo do servidor
+	ice: ImageLabel,
+	disabledUntil: number,
+	disabledReason: string?,
 	animator: TowerAnimator.Animator,
 	data: Types.TowerSnapshot,
 	depth: number,
@@ -57,6 +70,9 @@ type EnemyVisual = {
 	healMark: TextLabel, -- remendo recebido
 	name: TextLabel,
 	stroke: UIStroke,
+	-- estados desenhados por cima (encomenda v2): gelo do Picolé e faísca da queimadura
+	ice: ImageLabel,
+	burn: ImageLabel,
 	animator: EnemyAnimator.Animator,
 	frameCells: number,
 	id: number,
@@ -115,6 +131,13 @@ export type Renderer = typeof(setmetatable(
 		basePulseHint: TextLabel?,
 		basePulseCharge: number?,
 		lastSim: number,
+		-- efeitos desenhados e Farol por estágio
+		fx: FxSprites.FxSprites?,
+		baseImage: ImageLabel?,
+		baseStage: string,
+		-- marcas do aviso de chefe sobre torres e trecho do caminho (por chefe)
+		telegraphMarks: { [number]: { Instance } },
+		lastClock: number,
 	},
 	BoardRenderer
 ))
@@ -186,6 +209,11 @@ function BoardRenderer.new(transform: BoardTransform.BoardTransform): Renderer
 		basePulseHint = nil,
 		basePulseCharge = nil,
 		lastSim = 0,
+		fx = nil,
+		baseImage = nil,
+		baseStage = "",
+		telegraphMarks = {},
+		lastClock = os.clock(),
 	}, BoardRenderer)
 
 	self.enemyPool = SpritePool.new(function(): EnemyVisual
@@ -201,6 +229,8 @@ function BoardRenderer.new(transform: BoardTransform.BoardTransform): Renderer
 		v.badge.Visible = false
 		v.healMark.Visible = false
 		v.healUntil = 0
+		v.ice.Visible = false
+		v.burn.Visible = false
 		-- cancela feedback antigo: o objeto pode voltar como outra entidade no passo seguinte
 		v.animator:restore()
 	end)
@@ -287,6 +317,15 @@ local function towerImageFrame(defId: string, state: string): (string, number, n
 	return (entry.image or "") :: string, entry.width, entry.height
 end
 
+-- Quadros desenhados do estado: antecipação e disparo (o disparo das torres de apoio é "pulse").
+local function towerFrames(defId: string, state: string): TowerAnimator.Frames
+	local key = Assets.towerKey(defId, state)
+	return {
+		windup = Assets.frame(key, "windup"),
+		fire = Assets.frame(key, "fire") or Assets.frame(key, "pulse"),
+	}
+end
+
 function BoardRenderer.setMap(self: Renderer, mapId: string)
 	self.mapId = mapId
 	self.path = Simulation.getPath(mapId)
@@ -305,6 +344,19 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 	self.dotPool = SpritePool.new(self.dotPool.factory, self.dotPool.reset)
 	self.activeNumbers = 0
 	self.damageAgg = {}
+	self.telegraphMarks = {}
+	self.fx = FxSprites.new(self.layers.effects, Z.effects + 4)
+	FxSprites.preloadAll()
+	self.baseImage = nil
+	self.baseStage = ""
+	local stageImages: { string } = {}
+	for _, key in ipairs({ "base_farol_pilha_danificado", "base_farol_pilha_critico" }) do
+		local image = Assets.image(key)
+		if image then
+			table.insert(stageImages, image)
+		end
+	end
+	FramePreload.request(stageImages)
 
 	-- chão com fundo sólido por baixo da margem transparente
 	local groundEntry = Assets.get(Assets.groundKey(mapId))
@@ -597,7 +649,38 @@ function BoardRenderer.setMap(self: Renderer, mapId: string)
 			BackgroundTransparency = 1,
 			ZIndex = Z.entities + math.floor((baseCell[2] + 0.15) * 100) + 5,
 		})
-		makeImage(baseHolder, "base_farol_pilha", BASE_CELLS, baseHolder.ZIndex)
+		local baseImage = makeImage(baseHolder, "base_farol_pilha", BASE_CELLS, baseHolder.ZIndex)
+		self.baseImage = baseImage
+	end
+end
+
+-- Farol inteiro, danificado ou crítico pela vida do snapshot. Só troca para arte já carregada.
+function BoardRenderer.updateBaseStage(self: Renderer, baseHP: number)
+	local image = self.baseImage
+	if not image then
+		return
+	end
+	local ratio = baseHP / math.max(Balance.baseHP, 1)
+	local key = if ratio < BASE_CRITICAL_BELOW
+		then "base_farol_pilha_critico"
+		elseif ratio < BASE_DAMAGED_BELOW then "base_farol_pilha_danificado"
+		else "base_farol_pilha"
+	if key == self.baseStage then
+		return
+	end
+	local wanted = Assets.image(key)
+	if key ~= "base_farol_pilha" and not FramePreload.ready(wanted) then
+		-- estágio sem arte pronta: fica no anterior (o crítico cai para o danificado, se houver)
+		local fallback = Assets.image("base_farol_pilha_danificado")
+		if key == "base_farol_pilha_critico" and FramePreload.ready(fallback) then
+			wanted = fallback
+		else
+			return
+		end
+	end
+	self.baseStage = key
+	if wanted then
+		image.Image = wanted
 	end
 end
 
@@ -660,6 +743,18 @@ function BoardRenderer.createTowerVisual(self: Renderer, data: Types.TowerSnapsh
 		Visible = false,
 		ZIndex = depth + 1,
 	})
+	-- torre desligada pelo Boneco de Poeira: bloco de gelo por cima do sprite
+	local ice = Instance.new("ImageLabel")
+	ice.Name = "Ice"
+	ice.BackgroundTransparency = 1
+	ice.ScaleType = Enum.ScaleType.Fit
+	ice.AnchorPoint = Vector2.new(0.5, 0.82)
+	ice.Position = UDim2.fromScale(0.5, 0.86)
+	ice.Size = UDim2.fromScale(0.62, 0.62)
+	ice.ImageTransparency = 0.25
+	ice.Visible = false
+	ice.ZIndex = depth + 1
+	ice.Parent = container
 	local entryAsset = Assets.get(key)
 	local animator = TowerAnimator.new(
 		image,
@@ -668,16 +763,24 @@ function BoardRenderer.createTowerVisual(self: Renderer, data: Types.TowerSnapsh
 		if entryAsset then entryAsset.width else nil,
 		if entryAsset then entryAsset.height else nil
 	)
-	animator:setImage(towerImageFrame(data.d, data.st))
-	-- a torre nasce com um salto curto e um anel de poeira na célula
+	local poseImage, frameWidth, frameHeight = towerImageFrame(data.d, data.st)
+	animator:setImage(poseImage, frameWidth, frameHeight, towerFrames(data.d, data.st))
+	-- a torre nasce com um salto curto e um anel de poeira na célula (desenhado quando há arte)
 	Juice.pop(container, 0.82)
-	Juice.ring(
-		self.layers.effects,
-		self.transform:logicalToScale(data.x, data.y),
-		0.4 / Grid.COLUMNS,
-		1.6 / Grid.COLUMNS,
-		Theme.towerColors[data.d] or Theme.colors.gold
-	)
+	local at = self.transform:logicalToScale(data.x, data.y)
+	local fx = self.fx
+	local drawn = fx ~= nil
+		and not self.reducedParticles
+		and fx:play({ name = "build_puff", at = at, size = 1.1, grow = 1.6, duration = 0.45 })
+	if not drawn then
+		Juice.ring(
+			self.layers.effects,
+			at,
+			0.4 / Grid.COLUMNS,
+			1.6 / Grid.COLUMNS,
+			Theme.towerColors[data.d] or Theme.colors.gold
+		)
+	end
 	return {
 		container = container,
 		image = image,
@@ -685,6 +788,9 @@ function BoardRenderer.createTowerVisual(self: Renderer, data: Types.TowerSnapsh
 		shadow = shadow,
 		badge = badge,
 		dust = dust,
+		ice = ice,
+		disabledUntil = 0,
+		disabledReason = nil,
 		animator = animator,
 		data = data,
 		depth = depth,
@@ -709,7 +815,7 @@ function BoardRenderer.syncTowers(self: Renderer, towers: { [number]: Types.Towe
 			if visual.data.st ~= data.st then
 				local img, frameWidth, frameHeight = towerImageFrame(data.d, data.st)
 				if img ~= "" then
-					visual.animator:playUpgrade(img, frameWidth, frameHeight)
+					visual.animator:playUpgrade(img, frameWidth, frameHeight, towerFrames(data.d, data.st))
 					visual.fallback.Visible = false
 				else
 					visual.fallback.Text = Theme.towerGlyphs[data.d] .. " " .. data.st
@@ -921,6 +1027,28 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 		Visible = false,
 		ZIndex = Z.entities + 5,
 	})
+	-- Picolé: bloco de gelo por cima; Lumi: faísca de queimadura no corpo (os dois só com arte pronta)
+	local ice = Instance.new("ImageLabel")
+	ice.Name = "Ice"
+	ice.BackgroundTransparency = 1
+	ice.ScaleType = Enum.ScaleType.Fit
+	ice.AnchorPoint = Vector2.new(0.5, 0.82)
+	ice.Position = UDim2.fromScale(0.5, 0.86)
+	ice.Size = UDim2.fromScale(0.78, 0.78)
+	ice.ImageTransparency = 0.3
+	ice.Visible = false
+	ice.ZIndex = Z.entities + 2
+	ice.Parent = container
+	local burn = Instance.new("ImageLabel")
+	burn.Name = "Burn"
+	burn.BackgroundTransparency = 1
+	burn.ScaleType = Enum.ScaleType.Fit
+	burn.AnchorPoint = Vector2.new(0.5, 0.5)
+	burn.Position = UDim2.fromScale(0.62, 0.42)
+	burn.Size = UDim2.fromScale(0.42, 0.42)
+	burn.Visible = false
+	burn.ZIndex = Z.entities + 2
+	burn.Parent = container
 	local healMark = Skin.label(container, "Heal", "✚", {
 		Size = UDim2.fromScale(0.3, 0.2),
 		Position = UDim2.fromScale(0.85, 0.1),
@@ -946,6 +1074,8 @@ function BoardRenderer.createEnemyVisual(self: Renderer): EnemyVisual
 		healMark = healMark,
 		name = name,
 		stroke = stroke,
+		ice = ice,
+		burn = burn,
 		animator = EnemyAnimator.new(image, "fiapo", 0, 0.82, 1),
 		frameCells = ENEMY_CELLS,
 		id = 0,
@@ -964,7 +1094,15 @@ local function enemyDisplayName(defId: string): string
 end
 
 -- Aviso de cada chefe: poeira (Aspirador), escudo (Rei Ferrugem), estrela (Breu).
-local BOSS_BADGE: { [string]: string } = { aspirador = "≋", rei_ferrugem = "⛨", breu = "★" }
+local BOSS_BADGE: { [string]: string } = {
+	aspirador = "≋",
+	rei_ferrugem = "⛨",
+	breu = "★",
+	boneco_poeira = "❄",
+	esponjao = "≈",
+	meia = "➰",
+	traca_rainha = "☁",
+}
 
 local function bossBadgeIcon(defId: string): string
 	return BOSS_BADGE[defId] or "!"
@@ -995,6 +1133,12 @@ local function resistIconFor(defId: string, isBoss: boolean): (string, Color3?)
 		if def.splitOnDeath then
 			return "❖", Theme.colors.gold
 		end
+		if def.slowImmune then
+			return "⊘", Theme.colors.cream
+		end
+		if def.dodgeInterval then
+			return "↯", Theme.colors.cream
+		end
 	end
 	return "", nil
 end
@@ -1008,8 +1152,9 @@ function BoardRenderer.acquireEnemy(self: Renderer, ev: MatchController.EnemyVie
 	visual.healUntil = 0
 	local key = Assets.enemyKey(ev.defId, ev.isBoss)
 	local entry = Assets.get(key)
-	visual.image.Image = if entry and entry.image then entry.image :: string else ""
-	visual.fallback.Visible = visual.image.Image == ""
+	local pose = if entry and entry.image then entry.image :: string else ""
+	visual.image.Image = pose
+	visual.fallback.Visible = pose == ""
 	visual.fallback.Text = ev.defId:sub(1, 2):upper()
 	-- largura do quadro por tipo: vem do export normalizado para que a largura visível em células
 	-- corresponda ao guia. Sem entrada (arte ainda não exportada) usa o tamanho genérico.
@@ -1025,6 +1170,7 @@ function BoardRenderer.acquireEnemy(self: Renderer, ev: MatchController.EnemyVie
 	visual.image.AnchorPoint = Vector2.new(0.5, anchorY)
 	visual.image.ImageTransparency = 0
 	visual.animator:reset(ev.defId, ev.id, anchorY, 1)
+	visual.animator:setImages(pose, { walk_b = Assets.frame(key, "walk_b"), ability = Assets.frame(key, "ability") })
 	visual.name.Visible = ev.isBoss
 	visual.name.Text = if ev.isBoss then enemyDisplayName(ev.defId) else ""
 	local icon, color = resistIconFor(ev.defId, ev.isBoss)
@@ -1073,7 +1219,21 @@ function BoardRenderer.playEnemyExit(self: Renderer, id: number, kind: "death" |
 	local tween =
 		TweenService:Create(visual.image, TweenInfo.new(duration, Enum.EasingStyle.Quad), { ImageTransparency = 1 })
 	tween:Play()
-	if kind == "death" and not self.reducedParticles then
+	local sprites = self.fx
+	local poofed = false
+	if kind == "death" and not self.reducedParticles and sprites then
+		-- poeira de morte desenhada em três quadros (encomenda v2): denso, maior, se desfazendo
+		poofed = sprites:play({
+			name = "dust_poof_1",
+			sequence = { "dust_poof_1", "dust_poof_2", "dust_poof_3" },
+			at = self.transform:logicalToScale(visual.px, visual.py - 0.3 * visual.frameCells),
+			size = visual.frameCells * 0.75,
+			grow = if self.reducedMotion then nil else visual.frameCells * 1.05,
+			duration = if self.reducedMotion then 0.3 else 0.45,
+			fadeFrom = 0.55,
+		})
+	end
+	if kind == "death" and not self.reducedParticles and (not poofed or visual.isBoss) then
 		-- estouro em leque + anel curto: a morte precisa ser lida de relance no meio da onda
 		local position = self.transform:logicalToScale(visual.px, visual.py - 0.25)
 		Juice.burst(self.layers.effects, position, {
@@ -1216,11 +1376,26 @@ function BoardRenderer.playAttack(self: Renderer, towerId: number, seq: number, 
 	if self.reducedParticles or not def then
 		return
 	end
-	local color = Theme.towerColors[visual.data.d] or Theme.colors.gold
+	local defId = visual.data.d
+	local color = Theme.towerColors[defId] or Theme.colors.gold
+	local sprites = self.fx
+	local stats = Catalog.getStateStats(defId, visual.data.st)
+	local function sprite(spec: FxSprites.Spec): boolean
+		return sprites ~= nil and sprites:play(spec)
+	end
+	local function at(x: number, y: number): UDim2
+		return self.transform:logicalToScale(x, y)
+	end
 	if def.damageType == "none" then
-		-- pulso de apoio discreto
-		local ring = ringFrame(self, tx, ty, 0.3, Theme.colors.coral, 2, Z.effects)
-		local stats = Catalog.getStateStats(visual.data.d, visual.data.st)
+		-- pulso de apoio: nota do Maestro ou coração do Fofo subindo, e o anel de alcance por baixo
+		sprite({
+			name = if defId == "fofo" then "heart" else "maestro_note",
+			at = at(tx, ty - 1.05),
+			to = if self.reducedMotion then nil else at(tx, ty - 1.6),
+			size = 0.55,
+			duration = 0.7,
+		})
+		local ring = ringFrame(self, tx, ty, 0.3, color, 2, Z.effects)
 		local range = if stats then stats.range else 2
 		local t = TweenService:Create(
 			ring,
@@ -1237,77 +1412,176 @@ function BoardRenderer.playAttack(self: Renderer, towerId: number, seq: number, 
 		end)
 		return
 	end
-	if visual.data.d == "voltz" then
-		-- corrente: linhas finas entre alvos sucessivos
+	if defId == "voltz" or defId == "lumi" then
+		-- corrente (Voltz) e feixe (Lumi): linhas curtas entre a torre e os alvos, desenhadas pelo jogo
+		local beam = defId == "lumi"
+		local width = if beam and visual.data.st == "L3A" then 0.12 else 0.08
 		local prevX, prevY = tx, ty - 0.5
-		for _, target in ipairs(targets) do
+		for i, target in ipairs(targets) do
 			local ex, ey = BoardRenderer.enemyPosition(self, target.enemyId)
-			if ex and ey then
+			if ex and ey and (target.flag or 0) ~= 1 then
 				local dx, dy = ex - prevX, (ey - 0.3) - prevY
 				local length = math.sqrt(dx * dx + dy * dy)
-				local line = Skin.frame(self.layers.effects, "Chain", {
-					Size = UDim2.fromScale(length / Grid.COLUMNS, 0.08 / Grid.ROWS),
-					Position = self.transform:logicalToScale((prevX + ex) / 2, (prevY + ey - 0.3) / 2),
+				local line = Skin.frame(self.layers.effects, if beam then "Beam" else "Chain", {
+					Size = UDim2.fromScale(length / Grid.COLUMNS, width / Grid.ROWS),
+					Position = at((prevX + ex) / 2, (prevY + ey - 0.3) / 2),
 					AnchorPoint = Vector2.new(0.5, 0.5),
-					BackgroundColor3 = Theme.colors.cyan,
+					BackgroundColor3 = if beam then Theme.colors.gold else Theme.colors.cyan,
 					Rotation = math.deg(math.atan2(dy, dx)),
 					ZIndex = Z.effects + 3,
 				})
-				task.delay(0.15, function()
+				task.delay(if beam then 0.12 else 0.15, function()
 					line:Destroy()
 				end)
-				prevX, prevY = ex, ey - 0.3
+				sprite({
+					name = if beam then "burn_spark" else "voltz_spark",
+					at = at(ex, ey - 0.35),
+					size = if beam then 0.5 else 0.45,
+					duration = 0.25,
+					rotation = if beam then math.deg(math.atan2(dy, dx)) else nil,
+				})
+				if not beam then
+					prevX, prevY = ex, ey - 0.3
+				elseif i == 1 then
+					-- o feixe do Lumi sai sempre da torre; a chama que pula é a queimadura, não o raio
+					prevX, prevY = tx, ty - 0.5
+				end
 			end
 		end
 		return
 	end
-	-- projétil breve até o alvo primário
+	if defId == "piao" then
+		-- giro em volta da própria célula, do tamanho do alcance
+		local range = if stats then stats.range else 1.5
+		if
+			not sprite({
+				name = "whirl",
+				at = at(tx, ty - 0.2),
+				size = 0.9,
+				grow = if self.reducedMotion then nil else range * 2,
+				duration = 0.32,
+				rotation = if self.reducedMotion then 0 else math.random(0, 359),
+				transparency = 0.15,
+			})
+		then
+			BoardRenderer.flashSplashCells(self, tx, ty, range, color)
+		end
+		return
+	end
+	if defId == "pula" then
+		sprite({ name = "boing", at = at(tx, ty - 0.1), size = 0.8, duration = 0.3 })
+	end
+	if defId == "escova" or defId == "pula" then
+		-- corpo a corpo: o golpe aparece no alvo, sem projétil
+		for i, target in ipairs(targets) do
+			local ex, ey = BoardRenderer.enemyPosition(self, target.enemyId)
+			if ex and ey and (target.flag or 0) ~= 1 and (i <= 6) then
+				local name = if defId == "escova" then "scrub_arc" else "hit_star"
+				if not sprite({ name = name, at = at(ex, ey - 0.35), size = 0.6, duration = 0.22 }) then
+					local ring = ringFrame(self, ex, ey - 0.3, 0.1, color, 2, Z.effects + 1)
+					task.delay(0.15, function()
+						ring:Destroy()
+					end)
+				end
+				if defId == "escova" and stats and stats.shred then
+					sprite({ name = "rust_flakes", at = at(ex + 0.15, ey - 0.25), size = 0.45, duration = 0.35 })
+				end
+			end
+		end
+		if stats and stats.splash and fx and fy then
+			BoardRenderer.flashSplashCells(self, fx, fy, stats.splash, color)
+		end
+		return
+	end
+	if defId == "lupa" then
+		sprite({
+			name = "lupa_glint",
+			at = at(tx + 0.25 * visual.animator.facing, ty - 0.75),
+			size = 0.5,
+			duration = 0.2,
+		})
+		if fx and fy then
+			sprite({ name = "hit_star", at = at(fx, fy - 0.35), size = 0.6, duration = 0.24 })
+		end
+		return
+	end
+	-- projétil breve até o alvo primário: dardo, pipoca, goma e o sopro do Picolé
 	if fx ~= nil and fy ~= nil then
 		local ex: number = fx
 		local ey: number = fy
+		local duration = if self.reducedMotion then 0.05 else 0.14
+		local projectile = if defId == "dardo"
+			then "dardo_dart"
+			elseif defId == "pipoca" then "pipoca_kernel"
+			elseif defId == "goma" then "goma_blob"
+			elseif defId == "picole" then "frost_burst"
+			else nil
+		local angle = math.deg(math.atan2((ey - 0.35) - (ty - 0.6), ex - tx))
+		local flew = projectile ~= nil
+			and sprite({
+				name = projectile :: string,
+				at = at(tx, ty - 0.6),
+				to = at(ex, ey - 0.35),
+				size = if defId == "picole" then 0.8 elseif defId == "pipoca" then 0.42 else 0.5,
+				rotation = angle,
+				duration = duration,
+				fadeFrom = 0.9,
+			})
+		local function impact()
+			if sprites ~= self.fx then
+				return -- o mapa mudou no meio do voo
+			end
+			local splash = if stats then stats.splash else nil
+			if splash then
+				BoardRenderer.flashSplashCells(self, ex, ey, splash, color)
+			end
+			local name = if defId == "pipoca"
+				then "pipoca_pop"
+				elseif defId == "goma" and splash then "goma_puddle"
+				elseif defId == "picole" then "frost_burst"
+				else "hit_star"
+			local size = if splash then splash * 2 else 0.6
+			if
+				sprite({
+					name = name,
+					at = at(ex, ey - (if name == "goma_puddle" then 0.05 else 0.3)),
+					size = size * 0.6,
+					grow = if self.reducedMotion then nil else size,
+					duration = if name == "goma_puddle" then 0.6 else 0.28,
+					transparency = if name == "goma_puddle" then 0.25 else 0,
+					zOffset = if name == "goma_puddle" then -2 else 0,
+				})
+			then
+				return
+			end
+			-- visual provisório: anel no ponto de impacto
+			local ring = ringFrame(self, ex, ey - 0.3, if splash then 0.2 else 0.1, color, 2, Z.effects + 1)
+			local t = TweenService:Create(
+				ring,
+				TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+				{ Size = cellsToScale(if splash then splash * 2 else 0.6) }
+			)
+			t:Play()
+			t.Completed:Once(function()
+				ring:Destroy()
+			end)
+		end
+		if flew then
+			task.delay(duration, impact)
+			return
+		end
+		-- visual provisório (arte não publicada): bolinha da cor da torre
 		local dot = self.dotPool:acquire()
 		dot.BackgroundColor3 = color
-		dot.Size = if visual.data.d == "pipoca" then cellsToScale(0.28) else cellsToScale(0.16)
-		dot.Position = self.transform:logicalToScale(tx, ty - 0.6)
+		dot.Size = if defId == "pipoca" then cellsToScale(0.28) else cellsToScale(0.16)
+		dot.Position = at(tx, ty - 0.6)
 		dot.Visible = true
-		local duration = if self.reducedMotion then 0.05 else 0.14
-		local tween = TweenService:Create(
-			dot,
-			TweenInfo.new(duration, Enum.EasingStyle.Linear),
-			{ Position = self.transform:logicalToScale(ex, ey - 0.35) }
-		)
+		local tween =
+			TweenService:Create(dot, TweenInfo.new(duration, Enum.EasingStyle.Linear), { Position = at(ex, ey - 0.35) })
 		tween:Play()
 		tween.Completed:Once(function()
 			self.dotPool:release(dot)
-			local stats = Catalog.getStateStats(visual.data.d, visual.data.st)
-			if stats and stats.splash then
-				BoardRenderer.flashSplashCells(self, ex, ey, stats.splash, color)
-				local ring = ringFrame(self, ex, ey - 0.2, 0.2, color, 3, Z.effects + 1)
-				local t = TweenService:Create(
-					ring,
-					TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-					{ Size = cellsToScale(stats.splash * 2) }
-				)
-				t:Play()
-				local stroke = ring:FindFirstChildOfClass("UIStroke")
-				if stroke then
-					TweenService:Create(stroke, TweenInfo.new(0.22), { Transparency = 1 }):Play()
-				end
-				t.Completed:Once(function()
-					ring:Destroy()
-				end)
-			else
-				local ring = ringFrame(self, ex, ey - 0.3, 0.1, color, 2, Z.effects + 1)
-				local t = TweenService:Create(
-					ring,
-					TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-					{ Size = cellsToScale(0.6) }
-				)
-				t:Play()
-				t.Completed:Once(function()
-					ring:Destroy()
-				end)
-			end
+			impact()
 		end)
 	end
 end
@@ -1510,7 +1784,19 @@ function BoardRenderer.playLevelUp(self: Renderer, x: number, y: number, state: 
 			Juice.ring(self.layers.effects, at, 0.02, 0.24, Theme.colors.glowWarm)
 		end
 	end)
-	Juice.burst(self.layers.effects, at, { count = 16, color = gold, spread = 0.07, rise = 0.05 })
+	local sprites = self.fx
+	local starred = sprites ~= nil
+		and not self.reducedParticles
+		and sprites:play({
+			name = "upgrade_stars",
+			at = at,
+			size = 1.0,
+			grow = if self.reducedMotion then nil else 1.8,
+			duration = 0.55,
+		})
+	if not starred then
+		Juice.burst(self.layers.effects, at, { count = 16, color = gold, spread = 0.07, rise = 0.05 })
+	end
 	Juice.floatText(self.layers.effects, at, state, Theme.colors.goldText, true)
 	-- clarão: um disco claro que cresce e some em cima da célula
 	local flash = Skin.frame(self.layers.effects, "LevelUpFlash", {
@@ -1569,21 +1855,102 @@ function BoardRenderer.playPulse(self: Renderer)
 	end)
 end
 
+-- Células do caminho entre duas distâncias (nuvem de pó da Traça Rainha).
+local function pathSpan(self: Renderer, fromS: number, toS: number): { { number } }
+	local path = self.path
+	local out: { { number } } = {}
+	if not path then
+		return out
+	end
+	local s = math.max(fromS, 0)
+	while s <= toS + 1e-6 do
+		local px, py = Path.positionAt(path, s)
+		table.insert(out, { px, py })
+		s += 0.5
+	end
+	return out
+end
+
+-- Marcas do aviso que não cabem num círculo: torres alvo (rajada, enrolar) e trecho do caminho.
+local function clearTelegraphMarks(self: Renderer, entityId: number)
+	local marks = self.telegraphMarks[entityId]
+	if marks then
+		for _, mark in ipairs(marks) do
+			mark:Destroy()
+		end
+		self.telegraphMarks[entityId] = nil
+	end
+end
+
+local function addTelegraphMarks(
+	self: Renderer,
+	entityId: number,
+	reason: string?,
+	towerIds: { number }?,
+	s: number?,
+	radius: number?
+)
+	local marks: { Instance } = {}
+	local glyph = if reason == "frost_blast" then "❄" elseif reason == "wrap" then "➰" else "!"
+	for _, towerId in ipairs(towerIds or {}) do
+		local tower = self.towers[towerId]
+		if tower then
+			local ring = ringFrame(self, tower.data.x, tower.data.y, 0.62, Theme.colors.danger, 3, Z.effects + 2)
+			ring.BackgroundColor3 = Theme.colors.danger
+			ring.BackgroundTransparency = 0.82
+			Skin.label(ring, "Icon", glyph, {
+				Size = UDim2.fromScale(0.42, 0.42),
+				Position = UDim2.fromScale(0.5, 0.05),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				TextScaled = true,
+				TextXAlignment = Enum.TextXAlignment.Center,
+				TextColor3 = Theme.colors.cream,
+				TextStrokeTransparency = 0,
+				TextStrokeColor3 = Theme.colors.danger,
+				ZIndex = Z.effects + 3,
+			})
+			table.insert(marks, ring)
+		end
+	end
+	if reason == "dust_cloud" and s and radius then
+		for _, point in ipairs(pathSpan(self, s - radius, s + radius)) do
+			local cell = Skin.frame(self.layers.cells, "CloudWarning", {
+				Size = cellsToScale(0.7),
+				Position = self.transform:logicalToScale(point[1], point[2]),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				BackgroundColor3 = Theme.colors.danger,
+				BackgroundTransparency = 0.7,
+				ZIndex = Z.cells + 3,
+			})
+			Skin.corner(cell, 999)
+			table.insert(marks, cell)
+		end
+	end
+	if #marks > 0 then
+		self.telegraphMarks[entityId] = marks
+	end
+end
+
 function BoardRenderer.setTelegraph(
 	self: Renderer,
 	entityId: number,
 	cell: Types.Cell?,
 	radius: number?,
-	active: boolean
+	active: boolean,
+	reason: string?,
+	towerIds: { number }?,
+	s: number?
 )
 	local existing = self.telegraphRings[entityId]
 	if existing then
 		existing:Destroy()
 		self.telegraphRings[entityId] = nil
 	end
+	clearTelegraphMarks(self, entityId)
 	if not active then
 		return
 	end
+	addTelegraphMarks(self, entityId, reason, towerIds, s, radius)
 	local boss = self.enemies[entityId]
 	if boss and not boss.dying then
 		boss.animator:playTelegraph()
@@ -1644,7 +2011,9 @@ function BoardRenderer.playAbility(
 	radius: number?,
 	expiresAt: number?,
 	entityIds: { number }?,
-	simNow: number?
+	simNow: number?,
+	towerIds: { number }?,
+	s: number?
 )
 	BoardRenderer.setTelegraph(self, entityId, nil, nil, false)
 	local boss = self.enemies[entityId]
@@ -1670,6 +2039,72 @@ function BoardRenderer.playAbility(
 		t.Completed:Once(function()
 			ring:Destroy()
 		end)
+	elseif (mechanic == "frost_blast" or mechanic == "wrap") and towerIds then
+		-- torres desligadas: o prazo vem do servidor; o gelo/laço some sozinho quando ele vence
+		for _, towerId in ipairs(towerIds) do
+			local tower = self.towers[towerId]
+			if tower then
+				tower.disabledUntil = math.max(tower.disabledUntil, expiresAt or 0)
+				tower.disabledReason = if mechanic == "frost_blast" then "frost" else "wrap"
+				if mechanic == "frost_blast" and boss and not self.reducedParticles and self.fx then
+					local fx = self.fx :: FxSprites.FxSprites
+					local dx, dy = tower.data.x - boss.px, tower.data.y - boss.py
+					fx:play({
+						name = "frost_burst",
+						at = self.transform:logicalToScale(boss.px, boss.py - 0.6),
+						to = self.transform:logicalToScale(tower.data.x, tower.data.y - 0.4),
+						size = 0.9,
+						rotation = math.deg(math.atan2(dy, dx)),
+						duration = if self.reducedMotion then 0.1 else 0.3,
+						fadeFrom = 0.85,
+					})
+				end
+			end
+		end
+	elseif mechanic == "soak" and boss then
+		local ring = ringFrame(self, boss.px, boss.py - 0.4, 0.9, Theme.colors.cyan, 4, Z.effects + 2)
+		local t = TweenService:Create(ring, TweenInfo.new(0.4, Enum.EasingStyle.Quad), { Size = cellsToScale(2.6) })
+		t:Play()
+		t.Completed:Once(function()
+			ring:Destroy()
+		end)
+	elseif mechanic == "dust_cloud" and s and radius then
+		-- nuvem: poeira desenhada sobre o trecho do caminho, pelo prazo do servidor
+		local duration = 2
+		if expiresAt and simNow then
+			duration = math.max(0.3, expiresAt - simNow)
+		end
+		local fx = self.fx
+		for _, point in ipairs(pathSpan(self, s - radius, s + radius)) do
+			local at = self.transform:logicalToScale(point[1], point[2] - 0.2)
+			local drawn = fx ~= nil
+				and fx:play({
+					name = "dust_poof_2",
+					at = at,
+					size = 1.1,
+					duration = duration,
+					transparency = 0.25,
+					fadeFrom = 0.8,
+					zOffset = 10,
+				})
+			if not drawn then
+				local puff = Skin.frame(self.layers.effects, "Cloud", {
+					Size = cellsToScale(1.0),
+					Position = at,
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundColor3 = Theme.colors.enemy,
+					BackgroundTransparency = 0.45,
+					ZIndex = Z.effects + 12,
+				})
+				Skin.corner(puff, 999)
+				task.delay(duration, function()
+					puff:Destroy()
+				end)
+			end
+		end
+		for _, id in ipairs(entityIds or {}) do
+			BoardRenderer.playEnemySpawnIn(self, id)
+		end
 	elseif mechanic == "summon" and entityIds then
 		-- anel no ponto de invocação e entrada dos Corriscos
 		local first = entityIds[1]
@@ -1951,9 +2386,20 @@ function BoardRenderer.applyFrame(self: Renderer, view: MatchController.MatchVie
 		if e.kind == "attack" and e.towerId and e.attackSeq and e.targets then
 			BoardRenderer.playAttack(self, e.towerId, e.attackSeq, e.targets)
 			for _, t in ipairs(e.targets) do
-				BoardRenderer.showDamage(self, e.towerId, t.enemyId, t.damage, false)
-				BoardRenderer.playEnemyHit(self, t.enemyId)
+				local flag = t.flag or 0
+				if flag == 1 or flag == 2 then
+					-- esquiva da Traça / energia absorvida pelo Esponjão: sem número de dano
+					BoardRenderer.showFlag(self, t.enemyId, flag)
+				else
+					BoardRenderer.showDamage(self, e.towerId, t.enemyId, t.damage, false)
+					BoardRenderer.playEnemyHit(self, t.enemyId)
+					if flag == 3 then
+						BoardRenderer.playPush(self, t.enemyId)
+					end
+				end
 			end
+		elseif e.kind == "baseHeal" and e.amount then
+			BoardRenderer.playBaseHeal(self, e.amount)
 		elseif e.kind == "support" and e.towerId and e.attackSeq then
 			BoardRenderer.playAttack(self, e.towerId, e.attackSeq, {})
 		elseif e.kind == "death" and e.entityId then
@@ -1973,7 +2419,7 @@ function BoardRenderer.applyFrame(self: Renderer, view: MatchController.MatchVie
 		elseif e.kind == "heal" and e.entityId then
 			BoardRenderer.playHeal(self, e.entityId, e.entityIds, simNow)
 		elseif e.kind == "bossTelegraph" and e.entityId then
-			BoardRenderer.setTelegraph(self, e.entityId, e.cell, e.radius, true)
+			BoardRenderer.setTelegraph(self, e.entityId, e.cell, e.radius, true, e.reason, e.towerIds, e.s)
 		elseif e.kind == "bossAbility" and e.entityId then
 			BoardRenderer.playAbility(
 				self,
@@ -1983,7 +2429,9 @@ function BoardRenderer.applyFrame(self: Renderer, view: MatchController.MatchVie
 				e.radius,
 				e.expiresAt,
 				e.entityIds,
-				simNow
+				simNow,
+				e.towerIds,
+				e.s
 			)
 		elseif e.kind == "bossCancel" and e.entityId then
 			-- morte ou escape durante o aviso: nada é resolvido e o círculo sai da tela
@@ -1996,10 +2444,73 @@ function BoardRenderer.applyFrame(self: Renderer, view: MatchController.MatchVie
 			BoardRenderer.releaseEnemy(self, id)
 		end
 	end
-	-- poeira nas torres
+	-- poeira nas torres; prazo de torre desligada vindo do snapshot completo
 	for _, visual in pairs(self.towers) do
 		visual.dust.Visible = visual.data.du > snapshot.simTime
+		if visual.data.dis > visual.disabledUntil then
+			visual.disabledUntil = visual.data.dis
+			visual.disabledReason = visual.data.dr or visual.disabledReason
+		end
 	end
+	BoardRenderer.updateBaseStage(self, snapshot.baseHP)
+end
+
+-- Esquiva (Traça) ou absorção (Esponjão encharcado): texto curto no inimigo, sem número.
+function BoardRenderer.showFlag(self: Renderer, enemyId: number, flag: number)
+	local visual = self.enemies[enemyId]
+	if not visual or visual.dying or not self.damageNumbers then
+		return
+	end
+	local key = if flag == 1 then "hud.dodge" else "hud.absorbed"
+	Juice.floatText(
+		self.layers.effects,
+		self.transform:logicalToScale(visual.px, visual.py - 0.9),
+		Localization.get(key),
+		if flag == 1 then Theme.colors.cream else Theme.colors.cyan
+	)
+end
+
+-- Empurrão do Pula: rajada desenhada no inimigo, apontando para trás no caminho.
+function BoardRenderer.playPush(self: Renderer, enemyId: number)
+	local visual = self.enemies[enemyId]
+	local path = self.path
+	local fx = self.fx
+	if not visual or visual.dying or not path or not fx or self.reducedParticles then
+		return
+	end
+	local view = MatchController.current()
+	local ev = if view then view.enemies[enemyId] else nil
+	local dx, dy = 1, 0
+	if ev then
+		dx, dy = Path.directionAt(path, MatchController.enemyS(ev, MatchController.renderTime()))
+	end
+	fx:play({
+		name = "push",
+		at = self.transform:logicalToScale(visual.px + dx * 0.3, visual.py - 0.35 + dy * 0.3),
+		size = 0.7,
+		rotation = math.deg(math.atan2(-dy, -dx)),
+		duration = 0.3,
+	})
+end
+
+-- Coração Remendado: o Farol recebeu vida no fim da onda.
+function BoardRenderer.playBaseHeal(self: Renderer, amount: number)
+	local base = self.baseCell
+	if not base then
+		return
+	end
+	local at = self.transform:logicalToScale(base[1], base[2] - 1.0)
+	local fx = self.fx
+	if fx and not self.reducedParticles then
+		fx:play({
+			name = "heart",
+			at = at,
+			to = if self.reducedMotion then nil else self.transform:logicalToScale(base[1], base[2] - 1.6),
+			size = 0.8,
+			duration = 0.9,
+		})
+	end
+	Juice.floatText(self.layers.effects, at, "+" .. tostring(math.floor(amount + 0.5)), Theme.colors.teal)
 end
 
 function BoardRenderer.update(self: Renderer, dt: number)
@@ -2011,10 +2522,34 @@ function BoardRenderer.update(self: Renderer, dt: number)
 	local renderTime = MatchController.renderTime()
 	local simDt = dt * view.snapshot.speedMultiplier
 	local cellPx = self.transform:cellPixels()
+	local simNow = MatchController.estimateSimTime()
+	local iceImage = FxSprites.image("ice_block")
 	for _, visual in pairs(self.towers) do
 		visual.animator:update(simDt, self.reducedMotion, cellPx * TOWER_CELLS)
+		-- desligada por chefe: gelo (Boneco de Poeira) ou tom de laço (Meia), até o prazo
+		local disabled = visual.disabledUntil > simNow
+		local frost = disabled and visual.disabledReason == "frost"
+		visual.ice.Visible = frost and iceImage ~= nil
+		if visual.ice.Visible and iceImage then
+			visual.ice.Image = iceImage
+		end
+		visual.image.ImageColor3 = if not disabled
+			then Color3.new(1, 1, 1)
+			elseif frost then Color3.fromRGB(175, 215, 255)
+			else Color3.fromRGB(190, 170, 225)
+		if disabled and not visual.ice.Visible then
+			visual.dust.Text = if frost then "❄" else "➰"
+			visual.dust.Visible = true
+		elseif not disabled and visual.dust.Text ~= "≋" then
+			visual.dust.Text = "≋"
+			visual.dust.Visible = visual.data.du > simNow
+		end
 	end
-	local simNow = MatchController.estimateSimTime()
+	local fx = self.fx
+	if fx then
+		fx:update(dt)
+	end
+	local burnImage = FxSprites.image("burn_spark")
 	-- contagem da próxima onda: só nas fases de espera e quando existe prazo de verdade
 	local snapshot = view.snapshot
 	local waiting = snapshot.phase == "Preparation" or snapshot.phase == "Intermission"
@@ -2051,14 +2586,45 @@ function BoardRenderer.update(self: Renderer, dt: number)
 				visual.name.ZIndex = depth + 3
 			end
 			-- movimento cosmético: um único controlador por entidade, no relógio da simulação
+			visual.animator:setTelegraphing(ev.telegraphing)
 			visual.animator:update(simDt, self.reducedMotion)
 			visual.hpFill.Size = UDim2.fromScale(math.clamp(ev.hp / math.max(ev.maxHp, 1), 0, 1), 1)
+			-- estados da encomenda v2 (servidor manda; aqui só se desenha)
+			local bits = ev.fx
+			local frozen = bit32.band(bits, FX.frozen) ~= 0
+			local burning = bit32.band(bits, FX.burning) ~= 0
+			local hidden = bit32.band(bits, FX.hidden) ~= 0
+			visual.ice.Visible = frozen and iceImage ~= nil
+			if visual.ice.Visible and iceImage then
+				visual.ice.Image = iceImage
+			end
+			visual.burn.Visible = burning and burnImage ~= nil
+			if visual.burn.Visible and burnImage then
+				visual.burn.Image = burnImage
+				visual.burn.ImageTransparency = if self.reducedMotion
+					then 0.1
+					else 0.15 + 0.25 * (math.sin(os.clock() * 14 + visual.id) + 1) / 2
+			end
+			-- escondido na nuvem de pó: as torres não miram; o inimigo fica translúcido
+			visual.image.ImageTransparency = if hidden then 0.55 else 0
 			local status = ""
 			if ev.slow > 0 then
 				status ..= "▼"
 			end
 			if ev.mark > 0 then
 				status ..= "◎"
+			end
+			if frozen and not visual.ice.Visible then
+				status ..= "❄"
+			end
+			if burning and not visual.burn.Visible then
+				status ..= "✹"
+			end
+			if bit32.band(bits, FX.shredded) ~= 0 then
+				status ..= "↓"
+			end
+			if bit32.band(bits, FX.soaking) ~= 0 then
+				status ..= "≈"
 			end
 			visual.status.Text = status
 			visual.status.TextColor3 = if ev.mark > 0 and ev.slow <= 0 then Theme.colors.gold else Theme.colors.cyan
@@ -2119,6 +2685,10 @@ function BoardRenderer.nearestEnemy(self: Renderer, px: number, py: number, radi
 end
 
 function BoardRenderer.destroy(self: Renderer)
+	local fx = self.fx
+	if fx then
+		fx:clear()
+	end
 	for _, f in pairs(self.layers) do
 		f:Destroy()
 	end

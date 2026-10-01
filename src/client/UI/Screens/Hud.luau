@@ -599,11 +599,36 @@ return function(scope: Kit.Scope, props: Props): Frame
 	-- Em grade a altura é contada à mão: o painel nasce escondido (doca encolhida) e o
 	-- AutomaticSize do Roblox não refaz a conta do UIGridLayout ao aparecer — a segunda fileira
 	-- de torres ficava cortada.
-	local dockGridSize = scope:Computed(function(use)
+	-- No treino a equipe vira o catálogo inteiro (doze torres): acima do limite de fileiras a
+	-- lista rola dentro da doca em vez de sair pela borda da tela.
+	local towerGap = if M.towerColumns > 1 then 6 else 8
+	local maxTowerRows = if M.towerColumns > 1 then 2 else 6
+	local towerRows = scope:Computed(function(use)
 		local count = math.max(#Kit.read(use, loadout), 1)
-		local rows = math.ceil(count / M.towerColumns)
-		return UDim2.fromOffset(M.towerPanelW, 20 + rows * M.towerCardH + (rows - 1) * 6)
+		return math.min(math.ceil(count / M.towerColumns), maxTowerRows)
 	end)
+	local towerListHeight = scope:Computed(function(use)
+		local rows: number = use(towerRows)
+		return rows * M.towerCardH + (rows - 1) * towerGap
+	end)
+	local dockGridSize = scope:Computed(function(use)
+		return UDim2.fromOffset(M.towerPanelW, 20 + use(towerListHeight))
+	end)
+	local towerList = Kit.scroller(scope, {
+		Name = "TowerList",
+		Size = scope:Computed(function(use)
+			return UDim2.new(1, 0, 0, use(towerListHeight))
+		end),
+		ScrollBarThickness = 4,
+		LayoutOrder = 1,
+		ZIndex = 11,
+		[Children] = {
+			if M.towerColumns > 1
+				then Kit.grid(scope, UDim2.new(0.5, -3, 0, M.towerCardH), towerGap)
+				else Kit.list(scope, { Padding = UDim.new(0, towerGap) }),
+			cards,
+		},
+	})
 
 	local towerPanel = Kit.panel(scope, {
 		name = "Towers",
@@ -626,10 +651,8 @@ return function(scope: Kit.Scope, props: Props): Frame
 		gloss = false,
 		zIndex = 10,
 		-- Uma coluna no computador; no compacto uma grade de duas, porque a área útil do celular
-		-- é baixa e quatro cartões empilhados subiam até os botões do topo.
-		layout = if M.towerColumns > 1
-			then Kit.grid(scope, UDim2.fromOffset((M.towerPanelW - 20 - 6) / 2, M.towerCardH), 6)
-			else Kit.list(scope, { Padding = UDim.new(0, 8) }),
+		-- é baixa e quatro cartões empilhados subiam até os botões do topo (grade em TowerList).
+		layout = Kit.list(scope, { Padding = UDim.new(0, if M.towerColumns > 1 then 0 else 8) }),
 		children = Kit.children(
 			Kit.caption(scope, {
 				Name = "Title",
@@ -643,7 +666,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 				LayoutOrder = 0,
 				ZIndex = 11,
 			}),
-			cards
+			towerList
 		),
 		overlay = if M.dockCollapsible
 			then Kit.children(Kit.button(scope, {
@@ -1471,6 +1494,19 @@ return function(scope: Kit.Scope, props: Props): Frame
 		})),
 	})
 
+	-- Treino: qualquer inimigo ou chefe do catálogo (os da encomenda v2 inclusive), um por vez.
+	local trainingTargets: { string } = {}
+	for _, e in ipairs(Balance.enemies) do
+		table.insert(trainingTargets, e.id)
+	end
+	for _, b in ipairs(Balance.bosses) do
+		table.insert(trainingTargets, b.id)
+	end
+	local trainingPick = scope:Value(1)
+	local function trainingEnemy(): string
+		return trainingTargets[peek(trainingPick)] or "fiapo"
+	end
+
 	local trainingPanel = Kit.panel(scope, {
 		name = "Training",
 		blocking = true,
@@ -1490,14 +1526,28 @@ return function(scope: Kit.Scope, props: Props): Frame
 				ZIndex = 21,
 			}),
 			Kit.button(scope, {
-				name = "Spawn1",
-				text = L("hud.trainingSpawn1"),
-				kind = "secondary",
+				name = "PickEnemy",
+				text = scope:Computed(function(use)
+					local id = trainingTargets[use(trainingPick)] or "fiapo"
+					return L("hud.trainingEnemy", { name = L("enemy." .. id) })
+				end),
+				kind = "ghost",
 				size = UDim2.new(1, 0, 0, 44),
 				layoutOrder = 2,
 				zIndex = 21,
 				onActivate = function()
-					GameFlow.trainingSpawn("fiapo", 1)
+					trainingPick:set(peek(trainingPick) % #trainingTargets + 1)
+				end,
+			}),
+			Kit.button(scope, {
+				name = "Spawn1",
+				text = L("hud.trainingSpawn1"),
+				kind = "secondary",
+				size = UDim2.new(1, 0, 0, 44),
+				layoutOrder = 3,
+				zIndex = 21,
+				onActivate = function()
+					GameFlow.trainingSpawn(trainingEnemy(), 1)
 				end,
 			}),
 			Kit.button(scope, {
@@ -1505,10 +1555,10 @@ return function(scope: Kit.Scope, props: Props): Frame
 				text = L("hud.trainingSpawn10"),
 				kind = "secondary",
 				size = UDim2.new(1, 0, 0, 44),
-				layoutOrder = 3,
+				layoutOrder = 4,
 				zIndex = 21,
 				onActivate = function()
-					GameFlow.trainingSpawn("fiapo", 10)
+					GameFlow.trainingSpawn(trainingEnemy(), 10)
 				end,
 			}),
 			Kit.button(scope, {
@@ -1516,7 +1566,7 @@ return function(scope: Kit.Scope, props: Props): Frame
 				text = L("hud.trainingClear"),
 				kind = "danger",
 				size = UDim2.new(1, 0, 0, 44),
-				layoutOrder = 4,
+				layoutOrder = 5,
 				zIndex = 21,
 				onActivate = GameFlow.trainingClear,
 			})

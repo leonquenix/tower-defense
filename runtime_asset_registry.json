@@ -9,7 +9,7 @@
       "exportFile": "assets/export/props/base_farol_pilha_256.png",
       "robloxAssetId": 79969401785343,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 256,
       "uploadedHeight": 256,
@@ -18,7 +18,12 @@
         0.82
       ],
       "checkedInStudio": false,
-      "exportSha256": "39987c7456c5a74fdae9abbf294f2b306a956a40963c989a010be83d2aaec167"
+      "exportSha256": "39987c7456c5a74fdae9abbf294f2b306a956a40963c989a010be83d2aaec167",
+      "frameKeys": [
+        "base_farol_pilha_critico",
+        "base_farol_pilha_danificado"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "prop_jardim_pedra_papelao",
@@ -176,14 +181,14 @@
         123,
         147
       ],
-      "sceneSource": "Assets_Mapas_v2/neve_v2.png",
-      "sceneSha256": "a5d3754c8732ac73c0ca4af7582879f23611377e7291a26723eb8891c8e7b400",
-      "sceneImage": "rbxassetid://111075982166008",
+      "sceneSource": "Assets_Encomenda_v2/mapas/map_oficina_scene_v001.png",
+      "sceneSha256": "c0cd6b5f07100902f20b7f4a817fcd43888c58c43ae390a2a3179985b89582e6",
+      "sceneImage": "rbxassetid://128395026849598",
       "scenePlayRect": [
-        0.0521,
-        0.1341,
-        0.6716,
-        0.8269
+        0.0823,
+        0.1076,
+        0.9215,
+        0.8943
       ]
     },
     {
@@ -207,6 +212,15 @@
         67,
         58,
         75
+      ],
+      "sceneSource": "Assets_Encomenda_v2/mapas/map_sotao_scene_v001.png",
+      "sceneSha256": "a8ac3e0df1d9778a9c6e188ddb25cee63a96f18ab9ce35701247001a051af278",
+      "sceneImage": "rbxassetid://92368775672048",
+      "scenePlayRect": [
+        0.0831,
+        0.1097,
+        0.9171,
+        0.8916
       ]
     },
     {
@@ -215,7 +229,7 @@
       "exportFile": "assets/export/game/tower_dardo_L0_128.png",
       "robloxAssetId": 109049378155335,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -226,7 +240,12 @@
       "checkedInStudio": false,
       "exportSha256": "56269cac1fcafe2ed030b4a69b0d17edd3ebb1be5def9fcdbb0d877169136128",
       "portraitExportFile": "assets/export/portraits/tower_dardo_L0_256.png",
-      "portraitRobloxAssetId": 119867848039219
+      "portraitRobloxAssetId": 119867848039219,
+      "frameKeys": [
+        "tower_dardo_L0_fire",
+        "tower_dardo_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_dardo_L1",
@@ -234,7 +253,7 @@
       "exportFile": "assets/export/game/tower_dardo_L1_128.png",
       "robloxAssetId": 107353491140749,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -245,7 +264,12 @@
       "checkedInStudio": false,
       "exportSha256": "8a4f5117edc8e883e9e8f67ce18f560a374dfdb0ac3b9e53aa89a58ec7fb9f79",
       "portraitExportFile": "assets/export/portraits/tower_dardo_L1_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_dardo_L1_fire",
+        "tower_dardo_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_dardo_L2",
@@ -253,7 +277,7 @@
       "exportFile": "assets/export/game/tower_dardo_L2_128.png",
       "robloxAssetId": 136390139230697,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -264,7 +288,12 @@
       "checkedInStudio": false,
       "exportSha256": "e7359bb8e21b6e02d638285743af645535290a3e0b470cca8a7e1a50edc97f0c",
       "portraitExportFile": "assets/export/portraits/tower_dardo_L2_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_dardo_L2_fire",
+        "tower_dardo_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_dardo_L3A",
@@ -272,7 +301,7 @@
       "exportFile": "assets/export/game/tower_dardo_L3A_128.png",
       "robloxAssetId": 112094368119729,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -283,7 +312,12 @@
       "checkedInStudio": false,
       "exportSha256": "0a1d8da985efd28f652b34f41cdbb18220597ab917fda07de71c1a5945072f29",
       "portraitExportFile": "assets/export/portraits/tower_dardo_L3A_256.png",
-      "portraitRobloxAssetId": 77890368353314
+      "portraitRobloxAssetId": 77890368353314,
+      "frameKeys": [
+        "tower_dardo_L3A_fire",
+        "tower_dardo_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_dardo_L3B",
@@ -291,7 +325,7 @@
       "exportFile": "assets/export/game/tower_dardo_L3B_128.png",
       "robloxAssetId": 127099354530622,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -302,7 +336,12 @@
       "checkedInStudio": false,
       "exportSha256": "a2a0b1651ab2f2b44d3abe0ff98837cb9d372db862d194e26d3868b28281d2a4",
       "portraitExportFile": "assets/export/portraits/tower_dardo_L3B_256.png",
-      "portraitRobloxAssetId": 119526494492898
+      "portraitRobloxAssetId": 119526494492898,
+      "frameKeys": [
+        "tower_dardo_L3B_fire",
+        "tower_dardo_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_goma_L0",
@@ -310,7 +349,7 @@
       "exportFile": "assets/export/game/tower_goma_L0_128.png",
       "robloxAssetId": 119881300831714,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -321,7 +360,12 @@
       "checkedInStudio": false,
       "exportSha256": "0c77b613006b49f04f08b2418be5dc48e55e185a611d78fc83f0ab2cc34d8649",
       "portraitExportFile": "assets/export/portraits/tower_goma_L0_256.png",
-      "portraitRobloxAssetId": 115281024400066
+      "portraitRobloxAssetId": 115281024400066,
+      "frameKeys": [
+        "tower_goma_L0_fire",
+        "tower_goma_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_goma_L1",
@@ -329,7 +373,7 @@
       "exportFile": "assets/export/game/tower_goma_L1_128.png",
       "robloxAssetId": 101596025650618,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -340,7 +384,12 @@
       "checkedInStudio": false,
       "exportSha256": "a06e26663e97c9f1dfa16d677a43ee69523619691a4a29aeb72517171849bb8b",
       "portraitExportFile": "assets/export/portraits/tower_goma_L1_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_goma_L1_fire",
+        "tower_goma_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_goma_L2",
@@ -348,7 +397,7 @@
       "exportFile": "assets/export/game/tower_goma_L2_128.png",
       "robloxAssetId": 70776480079949,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -359,7 +408,12 @@
       "checkedInStudio": false,
       "exportSha256": "d90f8027322b530511fd477f3816ba3951098ae9a20379be3074918e48c927dc",
       "portraitExportFile": "assets/export/portraits/tower_goma_L2_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_goma_L2_fire",
+        "tower_goma_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_goma_L3A",
@@ -367,7 +421,7 @@
       "exportFile": "assets/export/game/tower_goma_L3A_128.png",
       "robloxAssetId": 104682311502671,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -378,7 +432,12 @@
       "checkedInStudio": false,
       "exportSha256": "125b9e6e845dc7f7989c7067f91c9ae7f7f59de048653ee78efc53dc2a3f4917",
       "portraitExportFile": "assets/export/portraits/tower_goma_L3A_256.png",
-      "portraitRobloxAssetId": 80311326480751
+      "portraitRobloxAssetId": 80311326480751,
+      "frameKeys": [
+        "tower_goma_L3A_fire",
+        "tower_goma_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_goma_L3B",
@@ -386,7 +445,7 @@
       "exportFile": "assets/export/game/tower_goma_L3B_128.png",
       "robloxAssetId": 108710162818500,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -397,7 +456,12 @@
       "checkedInStudio": false,
       "exportSha256": "2ee5ce8fe1446f5b50c41f70b95a794316e8faf5d68e93c9945a778e100328dc",
       "portraitExportFile": "assets/export/portraits/tower_goma_L3B_256.png",
-      "portraitRobloxAssetId": 99855392713474
+      "portraitRobloxAssetId": 99855392713474,
+      "frameKeys": [
+        "tower_goma_L3B_fire",
+        "tower_goma_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_lupa_L0",
@@ -405,7 +469,7 @@
       "exportFile": "assets/export/game/tower_lupa_L0_128.png",
       "robloxAssetId": 77463591269226,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -416,7 +480,12 @@
       "checkedInStudio": false,
       "exportSha256": "48dc5fa163f8f690126ce2abbd03d7ee68c9919144987a841659cc890c612ab4",
       "portraitExportFile": "assets/export/portraits/tower_lupa_L0_256.png",
-      "portraitRobloxAssetId": 120597573757686
+      "portraitRobloxAssetId": 120597573757686,
+      "frameKeys": [
+        "tower_lupa_L0_fire",
+        "tower_lupa_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_lupa_L1",
@@ -424,7 +493,7 @@
       "exportFile": "assets/export/game/tower_lupa_L1_128.png",
       "robloxAssetId": 89146742413789,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -435,7 +504,12 @@
       "checkedInStudio": false,
       "exportSha256": "ab139bd822e633b0470382a9320501fbb9931f0b0d81de28671d22c3906f9358",
       "portraitExportFile": "assets/export/portraits/tower_lupa_L1_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_lupa_L1_fire",
+        "tower_lupa_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_lupa_L2",
@@ -443,7 +517,7 @@
       "exportFile": "assets/export/game/tower_lupa_L2_128.png",
       "robloxAssetId": 119707686743885,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -454,7 +528,12 @@
       "checkedInStudio": false,
       "exportSha256": "cd5ba6a3e69aeb1818bd1e707af5cd0a56490bd9f7f800837b9c0edf0a8a5553",
       "portraitExportFile": "assets/export/portraits/tower_lupa_L2_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_lupa_L2_fire",
+        "tower_lupa_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_lupa_L3A",
@@ -462,7 +541,7 @@
       "exportFile": "assets/export/game/tower_lupa_L3A_128.png",
       "robloxAssetId": 122434067391535,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -473,7 +552,12 @@
       "checkedInStudio": false,
       "exportSha256": "dcb08afb68cbf2fd795e97e89e21966b08da660b64df14562a0201c6c572f367",
       "portraitExportFile": "assets/export/portraits/tower_lupa_L3A_256.png",
-      "portraitRobloxAssetId": 132822243380673
+      "portraitRobloxAssetId": 132822243380673,
+      "frameKeys": [
+        "tower_lupa_L3A_fire",
+        "tower_lupa_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_lupa_L3B",
@@ -481,7 +565,7 @@
       "exportFile": "assets/export/game/tower_lupa_L3B_128.png",
       "robloxAssetId": 137602180826011,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -492,7 +576,12 @@
       "checkedInStudio": false,
       "exportSha256": "f7fba9058c512837e6333824a451d4f069dd7fcdce07472812032ccffdd2ad32",
       "portraitExportFile": "assets/export/portraits/tower_lupa_L3B_256.png",
-      "portraitRobloxAssetId": 137477907676246
+      "portraitRobloxAssetId": 137477907676246,
+      "frameKeys": [
+        "tower_lupa_L3B_fire",
+        "tower_lupa_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_maestro_L0",
@@ -500,7 +589,7 @@
       "exportFile": "assets/export/game/tower_maestro_L0_128.png",
       "robloxAssetId": 116299318295400,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -511,7 +600,12 @@
       "checkedInStudio": false,
       "exportSha256": "dc0b537af6ebd983e14dfe8a51e3de69dc857ed12edc25f601bb1735e59b40d5",
       "portraitExportFile": "assets/export/portraits/tower_maestro_L0_256.png",
-      "portraitRobloxAssetId": 95316772901632
+      "portraitRobloxAssetId": 95316772901632,
+      "frameKeys": [
+        "tower_maestro_L0_pulse",
+        "tower_maestro_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_maestro_L1",
@@ -519,7 +613,7 @@
       "exportFile": "assets/export/game/tower_maestro_L1_128.png",
       "robloxAssetId": 110358295570735,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -530,7 +624,12 @@
       "checkedInStudio": false,
       "exportSha256": "83a106c165c6b6dfe2825141577f8b691bf63c7328040c514a597dcc77cbcb70",
       "portraitExportFile": "assets/export/portraits/tower_maestro_L1_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_maestro_L1_pulse",
+        "tower_maestro_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_maestro_L2",
@@ -538,7 +637,7 @@
       "exportFile": "assets/export/game/tower_maestro_L2_128.png",
       "robloxAssetId": 86540446416732,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -549,7 +648,12 @@
       "checkedInStudio": false,
       "exportSha256": "347ea3dcea8d13a62a85c5b602317c6b6fb1512a6e2b488cac0525645869b0c6",
       "portraitExportFile": "assets/export/portraits/tower_maestro_L2_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_maestro_L2_pulse",
+        "tower_maestro_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_maestro_L3A",
@@ -557,7 +661,7 @@
       "exportFile": "assets/export/game/tower_maestro_L3A_128.png",
       "robloxAssetId": 104417017607556,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -568,7 +672,12 @@
       "checkedInStudio": false,
       "exportSha256": "0383fd7ea46b543c3a5883dcb0161813d870ab2b7d384dae4ab4bcc6fecb7a7d",
       "portraitExportFile": "assets/export/portraits/tower_maestro_L3A_256.png",
-      "portraitRobloxAssetId": 124096693686275
+      "portraitRobloxAssetId": 124096693686275,
+      "frameKeys": [
+        "tower_maestro_L3A_pulse",
+        "tower_maestro_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_maestro_L3B",
@@ -576,7 +685,7 @@
       "exportFile": "assets/export/game/tower_maestro_L3B_128.png",
       "robloxAssetId": 76659270108148,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -587,7 +696,12 @@
       "checkedInStudio": false,
       "exportSha256": "4b7abed1e90cef8bffeb4ff6c3f40eb2f8a7255d65a2717de1f8e9103b79ecb2",
       "portraitExportFile": "assets/export/portraits/tower_maestro_L3B_256.png",
-      "portraitRobloxAssetId": 125941647327754
+      "portraitRobloxAssetId": 125941647327754,
+      "frameKeys": [
+        "tower_maestro_L3B_pulse",
+        "tower_maestro_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_pipoca_L0",
@@ -595,7 +709,7 @@
       "exportFile": "assets/export/game/tower_pipoca_L0_128.png",
       "robloxAssetId": 106846770955664,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -606,7 +720,12 @@
       "checkedInStudio": false,
       "exportSha256": "98096747ddd78e7ca316fbace02efd70a77687b5a3a8d4f23b3769d725f533b7",
       "portraitExportFile": "assets/export/portraits/tower_pipoca_L0_256.png",
-      "portraitRobloxAssetId": 88097207003308
+      "portraitRobloxAssetId": 88097207003308,
+      "frameKeys": [
+        "tower_pipoca_L0_fire",
+        "tower_pipoca_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_pipoca_L1",
@@ -614,7 +733,7 @@
       "exportFile": "assets/export/game/tower_pipoca_L1_128.png",
       "robloxAssetId": 97923583387387,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -625,7 +744,12 @@
       "checkedInStudio": false,
       "exportSha256": "7d3a4b1539a0338bb30d577b1527193e3886935bb2e08b025fe69397841184ea",
       "portraitExportFile": "assets/export/portraits/tower_pipoca_L1_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_pipoca_L1_fire",
+        "tower_pipoca_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_pipoca_L2",
@@ -633,7 +757,7 @@
       "exportFile": "assets/export/game/tower_pipoca_L2_128.png",
       "robloxAssetId": 70870540800205,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -644,7 +768,12 @@
       "checkedInStudio": false,
       "exportSha256": "a2ae6843879b7cf9649802d624eef6d23db754c4947709d6e429f899f02e85a2",
       "portraitExportFile": "assets/export/portraits/tower_pipoca_L2_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_pipoca_L2_fire",
+        "tower_pipoca_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_pipoca_L3A",
@@ -652,7 +781,7 @@
       "exportFile": "assets/export/game/tower_pipoca_L3A_128.png",
       "robloxAssetId": 100316279692581,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -663,7 +792,12 @@
       "checkedInStudio": false,
       "exportSha256": "9654c06ca52e3f52fc3c0c35678bfd9989cd7b776e0097a2bf6c073ce789f045",
       "portraitExportFile": "assets/export/portraits/tower_pipoca_L3A_256.png",
-      "portraitRobloxAssetId": 91337554625020
+      "portraitRobloxAssetId": 91337554625020,
+      "frameKeys": [
+        "tower_pipoca_L3A_fire",
+        "tower_pipoca_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_pipoca_L3B",
@@ -671,7 +805,7 @@
       "exportFile": "assets/export/game/tower_pipoca_L3B_128.png",
       "robloxAssetId": 119379098334799,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -682,7 +816,12 @@
       "checkedInStudio": false,
       "exportSha256": "24603208e3c52b489dea26b2da55658ec553c762694d7ccf4aaff9c130b84859",
       "portraitExportFile": "assets/export/portraits/tower_pipoca_L3B_256.png",
-      "portraitRobloxAssetId": 134009875421983
+      "portraitRobloxAssetId": 134009875421983,
+      "frameKeys": [
+        "tower_pipoca_L3B_fire",
+        "tower_pipoca_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_voltz_L0",
@@ -690,7 +829,7 @@
       "exportFile": "assets/export/game/tower_voltz_L0_128.png",
       "robloxAssetId": 71826619386011,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -701,7 +840,12 @@
       "checkedInStudio": false,
       "exportSha256": "bdc3b3621c76c31d1fcce2fe51789c66aa9e66a4b056a082fe70c00e32e5fea8",
       "portraitExportFile": "assets/export/portraits/tower_voltz_L0_256.png",
-      "portraitRobloxAssetId": 127380082820816
+      "portraitRobloxAssetId": 127380082820816,
+      "frameKeys": [
+        "tower_voltz_L0_fire",
+        "tower_voltz_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_voltz_L1",
@@ -709,7 +853,7 @@
       "exportFile": "assets/export/game/tower_voltz_L1_128.png",
       "robloxAssetId": 117676850585023,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -720,7 +864,12 @@
       "checkedInStudio": false,
       "exportSha256": "56ce99606514330f5185b4e2e81e9cfd5ef82678f6b7e8e1f5d020c566b1e827",
       "portraitExportFile": "assets/export/portraits/tower_voltz_L1_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_voltz_L1_fire",
+        "tower_voltz_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_voltz_L2",
@@ -728,7 +877,7 @@
       "exportFile": "assets/export/game/tower_voltz_L2_128.png",
       "robloxAssetId": 84100633287020,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -739,7 +888,12 @@
       "checkedInStudio": false,
       "exportSha256": "44a244b85c427f8f0fee45ae8405d33a506db34d500e52af5a46dddc945ad64d",
       "portraitExportFile": "assets/export/portraits/tower_voltz_L2_256.png",
-      "portraitRobloxAssetId": null
+      "portraitRobloxAssetId": null,
+      "frameKeys": [
+        "tower_voltz_L2_fire",
+        "tower_voltz_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_voltz_L3A",
@@ -747,7 +901,7 @@
       "exportFile": "assets/export/game/tower_voltz_L3A_128.png",
       "robloxAssetId": 89914590558945,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -758,7 +912,12 @@
       "checkedInStudio": false,
       "exportSha256": "9587b447482a817761db7e5ececb60924f2bd8cb5e2c7805c54614e7019927cd",
       "portraitExportFile": "assets/export/portraits/tower_voltz_L3A_256.png",
-      "portraitRobloxAssetId": 84725709725727
+      "portraitRobloxAssetId": 84725709725727,
+      "frameKeys": [
+        "tower_voltz_L3A_fire",
+        "tower_voltz_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "tower_voltz_L3B",
@@ -766,7 +925,7 @@
       "exportFile": "assets/export/game/tower_voltz_L3B_128.png",
       "robloxAssetId": 126725093370127,
       "status": "uploaded",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "uploadedWidth": 128,
       "uploadedHeight": 128,
@@ -777,14 +936,19 @@
       "checkedInStudio": false,
       "exportSha256": "e62900c66ab1a824404763b7954af18da944201b683e67259097a86c6b958d77",
       "portraitExportFile": "assets/export/portraits/tower_voltz_L3B_256.png",
-      "portraitRobloxAssetId": 83141527644561
+      "portraitRobloxAssetId": 83141527644561,
+      "frameKeys": [
+        "tower_voltz_L3B_fire",
+        "tower_voltz_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
     },
     {
       "assetKey": "enemy_fiapo_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_fiapo_base_v001.png",
       "exportFile": "assets/export/enemies/enemy_fiapo_base_128.png",
       "exportSha256": "7558dfcefd4907b09924e2b0bbd5c4d052bd3dda7745b27e8b42d83cf287926e",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -794,19 +958,22 @@
       "frameWidthCells": 0.8973,
       "entityId": "fiapo",
       "entityType": "enemy",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 96760892978018,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 128,
-      "uploadedHeight": 128
+      "uploadedHeight": 128,
+      "frameKeys": [
+        "enemy_fiapo_walk_b"
+      ]
     },
     {
       "assetKey": "enemy_corrisco_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_corrisco_base_v001.png",
       "exportFile": "assets/export/enemies/enemy_corrisco_base_128.png",
       "exportSha256": "a7a6534a1de7c5d475d8ce7466cf8f936d64dec87fb4dd46f91ea451c7c6224b",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -816,19 +983,22 @@
       "frameWidthCells": 1.3432,
       "entityId": "corrisco",
       "entityType": "enemy",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 137840903114922,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 128,
-      "uploadedHeight": 128
+      "uploadedHeight": 128,
+      "frameKeys": [
+        "enemy_corrisco_walk_b"
+      ]
     },
     {
       "assetKey": "enemy_bolota_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_bolota_base_v001.png",
       "exportFile": "assets/export/enemies/enemy_bolota_base_128.png",
       "exportSha256": "572187affc5c9f51e0831a3b36d424308c139c1a3d0e9cf73998466469c6840d",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -838,19 +1008,22 @@
       "frameWidthCells": 1.6565,
       "entityId": "bolota",
       "entityType": "enemy",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 70924701636605,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 128,
-      "uploadedHeight": 128
+      "uploadedHeight": 128,
+      "frameKeys": [
+        "enemy_bolota_walk_b"
+      ]
     },
     {
       "assetKey": "enemy_latinha_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_latinha_base_v001.png",
       "exportFile": "assets/export/enemies/enemy_latinha_base_128.png",
       "exportSha256": "1be3781dc9969692af96523834fdf7ffd389b43e0cb33b7b6a958ac126c0b697",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -860,19 +1033,22 @@
       "frameWidthCells": 1.3424,
       "entityId": "latinha",
       "entityType": "enemy",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 134622259971412,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 128,
-      "uploadedHeight": 128
+      "uploadedHeight": 128,
+      "frameKeys": [
+        "enemy_latinha_walk_b"
+      ]
     },
     {
       "assetKey": "enemy_nevoa_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_nevoa_base_v001.png",
       "exportFile": "assets/export/enemies/enemy_nevoa_base_128.png",
       "exportSha256": "03900e3697feea5961e05f1076b1bb5e143ee50947220420351d574451515a70",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -882,19 +1058,22 @@
       "frameWidthCells": 1.1762,
       "entityId": "nevoa",
       "entityType": "enemy",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 139783246736347,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 128,
-      "uploadedHeight": 128
+      "uploadedHeight": 128,
+      "frameKeys": [
+        "enemy_nevoa_walk_b"
+      ]
     },
     {
       "assetKey": "enemy_remendo_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_remendo_base_v001.png",
       "exportFile": "assets/export/enemies/enemy_remendo_base_128.png",
       "exportSha256": "5b0f823c87d7f9eda07b36fcc21da3a652345f540c309b2114e40c241114b048",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -904,19 +1083,22 @@
       "frameWidthCells": 1.5948,
       "entityId": "remendo",
       "entityType": "enemy",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 132403473311586,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 128,
-      "uploadedHeight": 128
+      "uploadedHeight": 128,
+      "frameKeys": [
+        "enemy_remendo_walk_b"
+      ]
     },
     {
       "assetKey": "enemy_casulo_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_casulo_base_v001.png",
       "exportFile": "assets/export/enemies/enemy_casulo_base_128.png",
       "exportSha256": "95849f16522410c5a7dc3d06e824b6b80a5d511aeeeaad92e16de398076f1e7e",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -926,19 +1108,22 @@
       "frameWidthCells": 1.453,
       "entityId": "casulo",
       "entityType": "enemy",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 76127081859620,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 128,
-      "uploadedHeight": 128
+      "uploadedHeight": 128,
+      "frameKeys": [
+        "enemy_casulo_walk_b"
+      ]
     },
     {
       "assetKey": "enemy_brutamontes_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/inimigos/enemy_brutamontes_base_v001.png",
       "exportFile": "assets/export/enemies/enemy_brutamontes_base_128.png",
       "exportSha256": "9a93c6006a0eb9696e2434464f6ca9385af18044cbb5c5af0f920ffcfd2fa267",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -948,19 +1133,22 @@
       "frameWidthCells": 1.4857,
       "entityId": "brutamontes",
       "entityType": "enemy",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 133198055129249,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 128,
-      "uploadedHeight": 128
+      "uploadedHeight": 128,
+      "frameKeys": [
+        "enemy_brutamontes_walk_b"
+      ]
     },
     {
       "assetKey": "boss_aspirador_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/bosses/boss_aspirador_base_v001.png",
       "exportFile": "assets/export/bosses/boss_aspirador_base_256.png",
       "exportSha256": "48cc19c8b8c1df67b10cf0c1249a0ce5da2f0e9279dbcdac7bc3a25afddbf842",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -970,19 +1158,23 @@
       "frameWidthCells": 2.6636,
       "entityId": "aspirador",
       "entityType": "boss",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 81465921210268,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 256,
-      "uploadedHeight": 256
+      "uploadedHeight": 256,
+      "frameKeys": [
+        "boss_aspirador_ability",
+        "boss_aspirador_walk_b"
+      ]
     },
     {
       "assetKey": "boss_rei_ferrugem_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/bosses/boss_rei_ferrugem_base_v001.png",
       "exportFile": "assets/export/bosses/boss_rei_ferrugem_base_256.png",
       "exportSha256": "18ae3895dfab6ce407b5271495b8f914834bc6d5d1146050db867a12159c7ce4",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -992,19 +1184,23 @@
       "frameWidthCells": 2.4094,
       "entityId": "rei_ferrugem",
       "entityType": "boss",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 84414479944054,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 256,
-      "uploadedHeight": 256
+      "uploadedHeight": 256,
+      "frameKeys": [
+        "boss_rei_ferrugem_ability",
+        "boss_rei_ferrugem_walk_b"
+      ]
     },
     {
       "assetKey": "boss_breu_base",
       "sourceFile": "Assets_Inimigos_Bosses_v1/bosses/boss_breu_base_v001.png",
       "exportFile": "assets/export/bosses/boss_breu_base_256.png",
       "exportSha256": "374437010a52a15ab4c95fad2671e2af042adac7c941b469e60e3a5e01bf500d",
-      "renderMode": "single_static",
+      "renderMode": "pose_plus_frames",
       "frameCount": 1,
       "runtimeAnchor": [
         0.5,
@@ -1014,12 +1210,3983 @@
       "frameWidthCells": 1.9644,
       "entityId": "breu",
       "entityType": "boss",
-      "drawnAnimationStatus": "not_produced",
+      "drawnAnimationStatus": "partial_pose_plus_frames",
       "robloxAssetId": 134870836730815,
       "status": "uploaded",
       "checkedInStudio": false,
       "uploadedWidth": 256,
-      "uploadedHeight": 256
+      "uploadedHeight": 256,
+      "frameKeys": [
+        "boss_breu_ability",
+        "boss_breu_walk_b"
+      ]
+    },
+    {
+      "assetKey": "base_farol_pilha_critico",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/farol/base_farol_pilha_critico_v001.png",
+      "exportFile": "assets/export/props/base_farol_pilha_critico_256.png",
+      "exportSha256": "d0006b87d3ccf46e5e64bf0b17ce8b045ca2fe88d04797f1f06b4aef82226b9c",
+      "renderMode": "frame",
+      "frameOf": "base_farol_pilha",
+      "action": "critico",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "base_farol_pilha_danificado",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/farol/base_farol_pilha_danificado_v001.png",
+      "exportFile": "assets/export/props/base_farol_pilha_danificado_256.png",
+      "exportSha256": "60efd5fa085b2550f849b9ccc653d6e4629f7c22ea62f677d4dd29e129959212",
+      "renderMode": "frame",
+      "frameOf": "base_farol_pilha",
+      "action": "danificado",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "boss_aspirador_ability",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_aspirador_ability_v001.png",
+      "exportFile": "assets/export/bosses/boss_aspirador_ability_256.png",
+      "exportSha256": "c5adc896fd5fe58867f68e1dece2215e6ff5460967099df69551f3e4facf5421",
+      "renderMode": "frame",
+      "frameOf": "boss_aspirador_base",
+      "action": "ability",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "aspirador",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_aspirador_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_aspirador_walk_b_v001.png",
+      "exportFile": "assets/export/bosses/boss_aspirador_walk_b_256.png",
+      "exportSha256": "c9801a9ef7f7d9205ac5d025cc953f290276cbb86ce7b342f817c14453268a9e",
+      "renderMode": "frame",
+      "frameOf": "boss_aspirador_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "aspirador",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_boneco_poeira_ability",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_boneco_poeira_ability_v001.png",
+      "exportFile": "assets/export/bosses/boss_boneco_poeira_ability_256.png",
+      "exportSha256": "0c1501b4f9406d5ed8ab6e2ee7505927bcca4b30cdd4bcbd81698e424a81a81b",
+      "renderMode": "frame",
+      "frameOf": "boss_boneco_poeira_base",
+      "action": "ability",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "boneco_poeira",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_boneco_poeira_base",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_boneco_poeira_base_v001.png",
+      "exportFile": "assets/export/bosses/boss_boneco_poeira_base_256.png",
+      "exportSha256": "dfe7ea00bad4a77636d05cce5f79c16b53fe8104258572795747e84cfff8e10e",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "base",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "visibleWidthCells": 1.5,
+      "frameWidthCells": 1.9794,
+      "entityId": "boneco_poeira",
+      "entityType": "boss",
+      "frameKeys": [
+        "boss_boneco_poeira_ability",
+        "boss_boneco_poeira_walk_b"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "boss_boneco_poeira_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_boneco_poeira_walk_b_v001.png",
+      "exportFile": "assets/export/bosses/boss_boneco_poeira_walk_b_256.png",
+      "exportSha256": "e9b790cfca0b25bac2c0ff9605c6ea354ccdb594939c428db00e68e62e054eca",
+      "renderMode": "frame",
+      "frameOf": "boss_boneco_poeira_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "boneco_poeira",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_breu_ability",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_breu_ability_v001.png",
+      "exportFile": "assets/export/bosses/boss_breu_ability_256.png",
+      "exportSha256": "61091e750a868bcbf7f82ce84ddec54038a9d79438cd1627a7327c03d19e2cd8",
+      "renderMode": "frame",
+      "frameOf": "boss_breu_base",
+      "action": "ability",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "breu",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_breu_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_breu_walk_b_v001.png",
+      "exportFile": "assets/export/bosses/boss_breu_walk_b_256.png",
+      "exportSha256": "ec5112fed269fe4a43e356efc7773207b479ffe029ac2aa35c72b6e51a04b74f",
+      "renderMode": "frame",
+      "frameOf": "boss_breu_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "breu",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_esponjao_ability",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_esponjao_ability_v001.png",
+      "exportFile": "assets/export/bosses/boss_esponjao_ability_256.png",
+      "exportSha256": "2b23a5afdc0da36bccbf4b9c96298036e269fda6c376933d7ac015e1d7cd2c75",
+      "renderMode": "frame",
+      "frameOf": "boss_esponjao_base",
+      "action": "ability",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "esponjao",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_esponjao_base",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_esponjao_base_v001.png",
+      "exportFile": "assets/export/bosses/boss_esponjao_base_256.png",
+      "exportSha256": "950054c4247ab6c62a23b64d8dc26a03fc37320ba46e7b9d8f3cd1dd4fd01cc6",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "base",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "visibleWidthCells": 1.6,
+      "frameWidthCells": 2.5129,
+      "entityId": "esponjao",
+      "entityType": "boss",
+      "frameKeys": [
+        "boss_esponjao_ability",
+        "boss_esponjao_walk_b"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "boss_esponjao_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_esponjao_walk_b_v001.png",
+      "exportFile": "assets/export/bosses/boss_esponjao_walk_b_256.png",
+      "exportSha256": "339a3506b01de697cbfe01aaab0d69924035d00e653d0ef7dab33a497feace56",
+      "renderMode": "frame",
+      "frameOf": "boss_esponjao_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "esponjao",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_meia_ability",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_meia_ability_v001.png",
+      "exportFile": "assets/export/bosses/boss_meia_ability_256.png",
+      "exportSha256": "c19a0bc460ea9b002a07b176b8d173e799de0112d6658282c84450c810e479a3",
+      "renderMode": "frame",
+      "frameOf": "boss_meia_base",
+      "action": "ability",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "meia",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_meia_base",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_meia_base_v001.png",
+      "exportFile": "assets/export/bosses/boss_meia_base_256.png",
+      "exportSha256": "333c126ea7d84ee716eb19da4ddc3d9589a917202f0f841251219680f927a139",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "base",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "visibleWidthCells": 1.4,
+      "frameWidthCells": 2.7152,
+      "entityId": "meia",
+      "entityType": "boss",
+      "frameKeys": [
+        "boss_meia_ability",
+        "boss_meia_walk_b"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "boss_meia_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_meia_walk_b_v001.png",
+      "exportFile": "assets/export/bosses/boss_meia_walk_b_256.png",
+      "exportSha256": "9bf1be3b5c0830cc5f69f17c3897d9a9551db4d3df0030994d0449c5a488c197",
+      "renderMode": "frame",
+      "frameOf": "boss_meia_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "meia",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_rei_ferrugem_ability",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_rei_ferrugem_ability_v001.png",
+      "exportFile": "assets/export/bosses/boss_rei_ferrugem_ability_256.png",
+      "exportSha256": "d91d04b4329c69d83e276b50ad754a69f5be2ff03e401031959f8a080a6d631e",
+      "renderMode": "frame",
+      "frameOf": "boss_rei_ferrugem_base",
+      "action": "ability",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "rei_ferrugem",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_rei_ferrugem_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_rei_ferrugem_walk_b_v001.png",
+      "exportFile": "assets/export/bosses/boss_rei_ferrugem_walk_b_256.png",
+      "exportSha256": "848367f66a82232b5a72784b45adf288e8bfb6da5bac7e70343b3e8fe47743e7",
+      "renderMode": "frame",
+      "frameOf": "boss_rei_ferrugem_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "rei_ferrugem",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_traca_rainha_ability",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_traca_rainha_ability_v001.png",
+      "exportFile": "assets/export/bosses/boss_traca_rainha_ability_256.png",
+      "exportSha256": "0bff5703a219a4589c08909df515764f6d72299bc4288d97881fb4f2c7ba01db",
+      "renderMode": "frame",
+      "frameOf": "boss_traca_rainha_base",
+      "action": "ability",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "traca_rainha",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "boss_traca_rainha_base",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_traca_rainha_base_v001.png",
+      "exportFile": "assets/export/bosses/boss_traca_rainha_base_256.png",
+      "exportSha256": "13508f8ce13025f39e9d93cd5c7e9bb0d97efadede51d7e0e4d6417b21b2eacf",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "base",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "visibleWidthCells": 2.0,
+      "frameWidthCells": 3.103,
+      "entityId": "traca_rainha",
+      "entityType": "boss",
+      "frameKeys": [
+        "boss_traca_rainha_ability",
+        "boss_traca_rainha_walk_b"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "boss_traca_rainha_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_traca_rainha_walk_b_v001.png",
+      "exportFile": "assets/export/bosses/boss_traca_rainha_walk_b_256.png",
+      "exportSha256": "232ed171468367a770823ec2aa9f4beea96dbe6e144fdb73ed5660ed299a6f46",
+      "renderMode": "frame",
+      "frameOf": "boss_traca_rainha_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "traca_rainha",
+      "entityType": "boss"
+    },
+    {
+      "assetKey": "enemy_bolota_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_bolota_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_bolota_walk_b_128.png",
+      "exportSha256": "0fb8d30a60bd9b875c89ceb45c50cb3d7405bbc68ca17f52fe352188e9b2a099",
+      "renderMode": "frame",
+      "frameOf": "enemy_bolota_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "bolota",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_brutamontes_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_brutamontes_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_brutamontes_walk_b_128.png",
+      "exportSha256": "8490d768a9a0ff0b4c31806e4bca3fc226ec387b0a6168fd2b1469053c51728a",
+      "renderMode": "frame",
+      "frameOf": "enemy_brutamontes_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "brutamontes",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_casulo_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_casulo_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_casulo_walk_b_128.png",
+      "exportSha256": "c04678bb7af6b3be57bd1c467b6b393c016a960c0866b8b8e7e4dbc443bd72de",
+      "renderMode": "frame",
+      "frameOf": "enemy_casulo_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "casulo",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_corrisco_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_corrisco_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_corrisco_walk_b_128.png",
+      "exportSha256": "22f2e33ae6ca2e03cddf1c65a832565d36dea93fe3cc5fa25525f4e098518540",
+      "renderMode": "frame",
+      "frameOf": "enemy_corrisco_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "corrisco",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_fiapo_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_fiapo_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_fiapo_walk_b_128.png",
+      "exportSha256": "5b0976a67252164cbbcb3f57f67bceb80eebc6db8e28d5a62b2cd813bc47e741",
+      "renderMode": "frame",
+      "frameOf": "enemy_fiapo_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "fiapo",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_floquinho_base",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_floquinho_base_v001.png",
+      "exportFile": "assets/export/enemies/enemy_floquinho_base_128.png",
+      "exportSha256": "99ace9432219980549509505a57ca494407abd670254949b2dc997aa789bd704",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "base",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "visibleWidthCells": 0.72,
+      "frameWidthCells": 0.9404,
+      "entityId": "floquinho",
+      "entityType": "enemy",
+      "frameKeys": [
+        "enemy_floquinho_walk_b"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "enemy_floquinho_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_floquinho_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_floquinho_walk_b_128.png",
+      "exportSha256": "10e6307c3a53d35a69b05047d5e7730e09b78af9b44285a3876073f462ee2e24",
+      "renderMode": "frame",
+      "frameOf": "enemy_floquinho_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "floquinho",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_latinha_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_latinha_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_latinha_walk_b_128.png",
+      "exportSha256": "6dfc97356c158f9820cf2a507e86afc59cba45361e3bebdb2a7f2921bd4c0d88",
+      "renderMode": "frame",
+      "frameOf": "enemy_latinha_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "latinha",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_migalha_base",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_migalha_base_v001.png",
+      "exportFile": "assets/export/enemies/enemy_migalha_base_128.png",
+      "exportSha256": "d9f6cc5c4a557cece458ab09516fe9a0fd5a6ef35a8596b2c4cc98eb004accde",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "base",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "visibleWidthCells": 0.55,
+      "frameWidthCells": 0.7736,
+      "entityId": "migalha",
+      "entityType": "enemy",
+      "frameKeys": [
+        "enemy_migalha_walk_b"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "enemy_migalha_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_migalha_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_migalha_walk_b_128.png",
+      "exportSha256": "2c95a5b42875328e156b9e082eed776b771746d2e423b3fe6f79895f717feff7",
+      "renderMode": "frame",
+      "frameOf": "enemy_migalha_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "migalha",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_nevoa_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_nevoa_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_nevoa_walk_b_128.png",
+      "exportSha256": "bb2a51095c975dd345cc8ad16bdd607c5e6f08cc15883e441ccd5cae24d3f58e",
+      "renderMode": "frame",
+      "frameOf": "enemy_nevoa_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "nevoa",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_novelo_base",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_novelo_base_v001.png",
+      "exportFile": "assets/export/enemies/enemy_novelo_base_128.png",
+      "exportSha256": "74e0462bb7b87740a75eb8cb9ea4a2b9b0c2cd40075856ddd928326c98d16eed",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "base",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "visibleWidthCells": 0.78,
+      "frameWidthCells": 1.1218,
+      "entityId": "novelo",
+      "entityType": "enemy",
+      "frameKeys": [
+        "enemy_novelo_walk_b"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "enemy_novelo_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_novelo_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_novelo_walk_b_128.png",
+      "exportSha256": "91ce0989e6e7e9e2cfdc37d4b23a91afb5a7998ad9da8c422253eee28cc0068e",
+      "renderMode": "frame",
+      "frameOf": "enemy_novelo_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "novelo",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_remendo_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_remendo_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_remendo_walk_b_128.png",
+      "exportSha256": "684cbfea08da836a950482e67cf9c5d67b11b92ad7556bba089be7b7b2f6a256",
+      "renderMode": "frame",
+      "frameOf": "enemy_remendo_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "remendo",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "enemy_traca_base",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_traca_base_v001.png",
+      "exportFile": "assets/export/enemies/enemy_traca_base_128.png",
+      "exportSha256": "049275c06fd60c9e239d13bb0d4df167fbd0cbda8df33c14c56d6193d7a92ac1",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "base",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "visibleWidthCells": 0.82,
+      "frameWidthCells": 1.0602,
+      "entityId": "traca",
+      "entityType": "enemy",
+      "frameKeys": [
+        "enemy_traca_walk_b"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "enemy_traca_walk_b",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_traca_walk_b_v001.png",
+      "exportFile": "assets/export/enemies/enemy_traca_walk_b_128.png",
+      "exportSha256": "2e9790112fde10f527bf99cd992b174e838d2d695ba86883bac5fd693ec897ec",
+      "renderMode": "frame",
+      "frameOf": "enemy_traca_base",
+      "action": "walk_b",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "entityId": "traca",
+      "entityType": "enemy"
+    },
+    {
+      "assetKey": "fx_boing",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_boing_v001.png",
+      "exportFile": "assets/export/fx/fx_boing_256.png",
+      "exportSha256": "a687ad5dee3ba37e581a63c1c98c59c7611d24632e7834c3711a247ea521adce",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "boing",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_build_puff",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_build_puff_v001.png",
+      "exportFile": "assets/export/fx/fx_build_puff_256.png",
+      "exportSha256": "b4ec537b027f0672ecb11267d431760d1c943bb404341fe3db0f4d9ec55bb34e",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "build_puff",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_burn_spark",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_burn_spark_v001.png",
+      "exportFile": "assets/export/fx/fx_burn_spark_128.png",
+      "exportSha256": "f85802fa7bb74c714a1d4aae96740ac04d4a38636bf08683e1c8092b662a9ba4",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "burn_spark",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_dardo_dart",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_dardo_dart_v001.png",
+      "exportFile": "assets/export/fx/fx_dardo_dart_128.png",
+      "exportSha256": "cba7a6d270228b138b21da350aa409b75cb60dfe0ac2000807fdf92e8610f618",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "dardo_dart",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_dust_poof_1",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_dust_poof_1_v001.png",
+      "exportFile": "assets/export/fx/fx_dust_poof_1_256.png",
+      "exportSha256": "425107b0bdfe8060c5bf9d498a589c280d7650662403257352329e8d5940abba",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "dust_poof_1",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_dust_poof_2",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_dust_poof_2_v001.png",
+      "exportFile": "assets/export/fx/fx_dust_poof_2_256.png",
+      "exportSha256": "58464561ebf51a9f3e61038344a50cce3d316158b7ccf8e84f22a9708da210bc",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "dust_poof_2",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_dust_poof_3",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_dust_poof_3_v001.png",
+      "exportFile": "assets/export/fx/fx_dust_poof_3_256.png",
+      "exportSha256": "6077d638ec7244af1a0e205d2aafe681dda8b811e952f118390fe59497b15eba",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "dust_poof_3",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_frost_burst",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_frost_burst_v001.png",
+      "exportFile": "assets/export/fx/fx_frost_burst_256.png",
+      "exportSha256": "85c71944a1ca6b0d43832ad369464914ad44330c7d14d137fb542b6af85f5a93",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "frost_burst",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_goma_blob",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_goma_blob_v001.png",
+      "exportFile": "assets/export/fx/fx_goma_blob_128.png",
+      "exportSha256": "138fcc52479c34835f0502f55cccfed821ff84fb37e152044af78667fb8f272f",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "goma_blob",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_goma_puddle",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_goma_puddle_v001.png",
+      "exportFile": "assets/export/fx/fx_goma_puddle_256.png",
+      "exportSha256": "7d0eabce06330c47907c40f5ccbbb79830109dfe276edfc42181a13b08497371",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "goma_puddle",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_heart",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_heart_v001.png",
+      "exportFile": "assets/export/fx/fx_heart_128.png",
+      "exportSha256": "079371b6c8ba79526b7849ffaa7b80be205e62388b37dbf6dff4aa0dace5ce20",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "heart",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_hit_star",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_hit_star_v001.png",
+      "exportFile": "assets/export/fx/fx_hit_star_128.png",
+      "exportSha256": "4c49fa6aa159eb1b70e11cab65ceabb81be6111d685ea160eb09e13eccd43f05",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "hit_star",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_ice_block",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_ice_block_v001.png",
+      "exportFile": "assets/export/fx/fx_ice_block_128.png",
+      "exportSha256": "758b319c5ce9c7040ffabf0b5d94727f7a90450793c3454caf0ce677b540c49c",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "ice_block",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_lupa_glint",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_lupa_glint_v001.png",
+      "exportFile": "assets/export/fx/fx_lupa_glint_128.png",
+      "exportSha256": "6cc9c487fc443787276f99a76d164394990ba1dc0c60bc32e61c4a0301c995a1",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "lupa_glint",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_maestro_note",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_maestro_note_v001.png",
+      "exportFile": "assets/export/fx/fx_maestro_note_128.png",
+      "exportSha256": "2b32b218ba690ea949d1b2b0c36f2ef3d87b03f006963eaf95f337827c3ade10",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "maestro_note",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_pipoca_kernel",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_pipoca_kernel_v001.png",
+      "exportFile": "assets/export/fx/fx_pipoca_kernel_128.png",
+      "exportSha256": "3c8adbb87502d7d39d85118b132613b429151a866b8b9af0379f875a517d4a83",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "pipoca_kernel",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_pipoca_pop",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_pipoca_pop_v001.png",
+      "exportFile": "assets/export/fx/fx_pipoca_pop_256.png",
+      "exportSha256": "6a6840c011fac34226eaf7f1426ac5142d73fd7556c1d47db224149a6bc10298",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "pipoca_pop",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_push",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_push_v001.png",
+      "exportFile": "assets/export/fx/fx_push_256.png",
+      "exportSha256": "108a498eec0f08d0c1aacc041fe2e028252920ff0d5f846f1b8087af0361ae01",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "push",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_rust_flakes",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_rust_flakes_v001.png",
+      "exportFile": "assets/export/fx/fx_rust_flakes_256.png",
+      "exportSha256": "ef3c2baa9ae9705e3a6e1c530a8c391b21dd64c2e5e4a61f54de18a08b461450",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "rust_flakes",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_scrub_arc",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_scrub_arc_v001.png",
+      "exportFile": "assets/export/fx/fx_scrub_arc_256.png",
+      "exportSha256": "66ffd5b3b246f892f70ed887b3ac98f12c7a112093b2c78915335130863ba22e",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "scrub_arc",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_upgrade_stars",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_upgrade_stars_v001.png",
+      "exportFile": "assets/export/fx/fx_upgrade_stars_256.png",
+      "exportSha256": "5c8ac25043dba375fbd243e8940de77508b1380ed2e642912a26287cf5fcbfa2",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "upgrade_stars",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_voltz_spark",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_voltz_spark_v001.png",
+      "exportFile": "assets/export/fx/fx_voltz_spark_128.png",
+      "exportSha256": "e4fffc4f89a15ccbcba94dc22cfc872eb683a515b0d3a3ed09950fe717b490ec",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "voltz_spark",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "fx_whirl",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_whirl_v001.png",
+      "exportFile": "assets/export/fx/fx_whirl_256.png",
+      "exportSha256": "ff24959c47a2e623456fe049b922141db0655b2858094f597d52926a27166e2e",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "whirl",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "assetKey": "map_cozinha_scene",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_cozinha_scene_v001.png",
+      "exportFile": "assets/export/scenes/map_cozinha_scene_1024x683.png",
+      "exportSha256": "f0be101248e72dbdb421cc94060bbe6c3f5c1e59d386cec17e5a5ca466c06d92",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "scene",
+      "frameCount": 1,
+      "runtimeAnchor": null,
+      "backingColor": [
+        206,
+        207,
+        198
+      ]
+    },
+    {
+      "assetKey": "map_inverno_scene",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_inverno_scene_v001.png",
+      "exportFile": "assets/export/scenes/map_inverno_scene_1024x683.png",
+      "exportSha256": "e6454dd7e82dad759be9e59f647818a0d042b2577a738dd7470a7daecc44b1eb",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "scene",
+      "frameCount": 1,
+      "runtimeAnchor": null,
+      "backingColor": [
+        182,
+        210,
+        225
+      ]
+    },
+    {
+      "assetKey": "map_oficina_scene",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_oficina_scene_v001.png",
+      "exportFile": "assets/export/scenes/map_oficina_scene_1024x683.png",
+      "exportSha256": "f7fc004c2f27353bc203c413aeb758fceecca063a54692ba593f4d8ba8060ad0",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "scene",
+      "frameCount": 1,
+      "runtimeAnchor": null,
+      "backingColor": [
+        138,
+        150,
+        159
+      ]
+    },
+    {
+      "assetKey": "map_porao_scene",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_porao_scene_v001.png",
+      "exportFile": "assets/export/scenes/map_porao_scene_1024x683.png",
+      "exportSha256": "f66bb48bb98ee708848a7558d8f2fd408c86a62b483181971dfce7db194de889",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "scene",
+      "frameCount": 1,
+      "runtimeAnchor": null,
+      "backingColor": [
+        161,
+        144,
+        145
+      ]
+    },
+    {
+      "assetKey": "map_quarto_scene",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_quarto_scene_v001.png",
+      "exportFile": "assets/export/scenes/map_quarto_scene_1024x683.png",
+      "exportSha256": "f8f793bd0a390831478927bdcc642fdb69014140b3ba86c6194f268142f6d488",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "scene",
+      "frameCount": 1,
+      "runtimeAnchor": null,
+      "backingColor": [
+        195,
+        156,
+        107
+      ]
+    },
+    {
+      "assetKey": "map_sotao_scene",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_sotao_scene_v001.png",
+      "exportFile": "assets/export/scenes/map_sotao_scene_1024x683.png",
+      "exportSha256": "d910cd40d5ddf344320e95c57cda4d47871f57e49cefc432c46cd8d8ff15fd67",
+      "renderMode": "single_static",
+      "frameOf": null,
+      "action": "scene",
+      "frameCount": 1,
+      "runtimeAnchor": null,
+      "backingColor": [
+        133,
+        114,
+        114
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L0_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L0_fire_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L0_fire_128.png",
+      "exportSha256": "556e39b4fb3169d75dcdbc6a6ee89ec7a952d865d036dc7e4488a455362bdf4a",
+      "renderMode": "frame",
+      "frameOf": "tower_dardo_L0",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L0_windup_128.png",
+      "exportSha256": "0516c9eff91dee1cf1d560df2da6f908ad1e0930ca450d5311134c138db36ab3",
+      "renderMode": "frame",
+      "frameOf": "tower_dardo_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L1_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L1_fire_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L1_fire_128.png",
+      "exportSha256": "0c5375bbf7e493e4f2d87e6e82172324aeaea1d190bd834fad35720a51bdcca4",
+      "renderMode": "frame",
+      "frameOf": "tower_dardo_L1",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L1_windup_128.png",
+      "exportSha256": "4f984b5ab1a32e4256dffecaa2467340d7a852648427586c1dc0b5e296eb576a",
+      "renderMode": "frame",
+      "frameOf": "tower_dardo_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L2_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L2_fire_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L2_fire_128.png",
+      "exportSha256": "bea4d6c9263523b345adc4964136e15a845a5d937b628175b5fdf5df6419e2d0",
+      "renderMode": "frame",
+      "frameOf": "tower_dardo_L2",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L2_windup_128.png",
+      "exportSha256": "8400d48e09b51122243b2dadf682b7d8279c8c2c33fe85ea1fca49a2cac27e9d",
+      "renderMode": "frame",
+      "frameOf": "tower_dardo_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L3A_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L3A_fire_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L3A_fire_128.png",
+      "exportSha256": "13ac3f2c3c7e12077a517d79f5761be6f3f54d9aa64ef0685a8efeff4baaeb1c",
+      "renderMode": "frame",
+      "frameOf": "tower_dardo_L3A",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L3A_windup_128.png",
+      "exportSha256": "1a8b5a158af9286fa3a8c2ba378be9efed42bc209b440c47a579dc1676fbc80d",
+      "renderMode": "frame",
+      "frameOf": "tower_dardo_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L3B_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L3B_fire_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L3B_fire_128.png",
+      "exportSha256": "c0db3b88a07db46bd7195024540461339387fb43409433e64db44ae98242d6ac",
+      "renderMode": "frame",
+      "frameOf": "tower_dardo_L3B",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_dardo_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_dardo_L3B_windup_128.png",
+      "exportSha256": "a024ad4006a828c294b121bdcc2d8c0e55c70c26d08656410246d30dc10bbc58",
+      "renderMode": "frame",
+      "frameOf": "tower_dardo_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_escova_L0",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L0_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L0_128.png",
+      "exportSha256": "b3987d5e06d167de7b25e93934bfa3878c9f7d77112e7b7263b7164c9dada9fa",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_escova_L0_256.png",
+      "frameKeys": [
+        "tower_escova_L0_fire",
+        "tower_escova_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_escova_L0_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L0_fire_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L0_fire_128.png",
+      "exportSha256": "ed98b637e48e19da928d4fdbc4a931fabc89cae26c652e7ae26887f3c546a96a",
+      "renderMode": "frame",
+      "frameOf": "tower_escova_L0",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_escova_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L0_windup_128.png",
+      "exportSha256": "c95486fc7cf553ec447badc9b03742c21c15ac2a9e34519e619979cce2c2c59d",
+      "renderMode": "frame",
+      "frameOf": "tower_escova_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_escova_L1",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L1_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L1_128.png",
+      "exportSha256": "672d6148565d4c22fb158d1d99595e1596dc06c2049e00fb2d4320055fcf2a66",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_escova_L1_256.png",
+      "frameKeys": [
+        "tower_escova_L1_fire",
+        "tower_escova_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_escova_L1_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L1_fire_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L1_fire_128.png",
+      "exportSha256": "3dc7992c045d12fe08a9cf820de6e5c63e146da4d5dba25888aa4b2377a8e8a6",
+      "renderMode": "frame",
+      "frameOf": "tower_escova_L1",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_escova_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L1_windup_128.png",
+      "exportSha256": "416d23639e938386cd7a46b07a1c51758f4a8c3166e7d95bc4f581627a3a6257",
+      "renderMode": "frame",
+      "frameOf": "tower_escova_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_escova_L2",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L2_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L2_128.png",
+      "exportSha256": "9a5cb112d177399a876cffc9254d19e4c338479c02434f0effa5ca6099988874",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_escova_L2_256.png",
+      "frameKeys": [
+        "tower_escova_L2_fire",
+        "tower_escova_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_escova_L2_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L2_fire_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L2_fire_128.png",
+      "exportSha256": "057ac4c4802a334e880c969d460a0e32f9f235afcd2186f3c8f704dc819288c6",
+      "renderMode": "frame",
+      "frameOf": "tower_escova_L2",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_escova_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L2_windup_128.png",
+      "exportSha256": "edcbdc600f3728319281baa5fe74af006018d4f9ef38c5e1be1abe549ea6cc6e",
+      "renderMode": "frame",
+      "frameOf": "tower_escova_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_escova_L3A",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L3A_128.png",
+      "exportSha256": "f25aabfe3a991f95e89223380d9f551f422b5188e57815493ef00764dd339772",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_escova_L3A_256.png",
+      "frameKeys": [
+        "tower_escova_L3A_fire",
+        "tower_escova_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_escova_L3A_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3A_fire_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L3A_fire_128.png",
+      "exportSha256": "881cfe6f48b60cbc1c8269a99a7d56b4e152385828fbee967ec99585e6170686",
+      "renderMode": "frame",
+      "frameOf": "tower_escova_L3A",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_escova_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L3A_windup_128.png",
+      "exportSha256": "d4a81c1270f427b7e50a046fcdcfa1290373055809f487f10bc858a0189e8b30",
+      "renderMode": "frame",
+      "frameOf": "tower_escova_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_escova_L3B",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L3B_128.png",
+      "exportSha256": "a3731760d40c2a67f8e697189413b79ca182b25015e84eb0fe0bb0ec6cab3472",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_escova_L3B_256.png",
+      "frameKeys": [
+        "tower_escova_L3B_fire",
+        "tower_escova_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_escova_L3B_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3B_fire_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L3B_fire_128.png",
+      "exportSha256": "52a3ec5e16d16643326de14b3e37ef3cb1933c900e0be2db56728742211317a6",
+      "renderMode": "frame",
+      "frameOf": "tower_escova_L3B",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_escova_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_escova_L3B_windup_128.png",
+      "exportSha256": "3f8f345220976179c01cf214ed14d6913d4d0090e2b92da92fce02647956742a",
+      "renderMode": "frame",
+      "frameOf": "tower_escova_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_fofo_L0",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L0_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L0_128.png",
+      "exportSha256": "41f3175ffdb2373300dad98aa81569b6b3ca641e074869d6abc9681116461e99",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_fofo_L0_256.png",
+      "frameKeys": [
+        "tower_fofo_L0_pulse",
+        "tower_fofo_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_fofo_L0_pulse",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L0_pulse_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L0_pulse_128.png",
+      "exportSha256": "fd9160c94a755cc4b69186262eb6e6adae9e858ca4d7b6fe9dae7fd7f3e9f3a2",
+      "renderMode": "frame",
+      "frameOf": "tower_fofo_L0",
+      "action": "pulse",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_fofo_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L0_windup_128.png",
+      "exportSha256": "9d310438772cbfcea8bca6c535a2645a557d7869135aea5f4ddd36ed052b0ecb",
+      "renderMode": "frame",
+      "frameOf": "tower_fofo_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_fofo_L1",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L1_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L1_128.png",
+      "exportSha256": "f0026f270bcea6bc988101acfa3cd1eceeab397b900881551e83dbc5e0fa9ee8",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_fofo_L1_256.png",
+      "frameKeys": [
+        "tower_fofo_L1_pulse",
+        "tower_fofo_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_fofo_L1_pulse",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L1_pulse_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L1_pulse_128.png",
+      "exportSha256": "531dcdc7d081b0dda43d58381bdfdceed8085ccc85c05423b2fda2993bc7dd65",
+      "renderMode": "frame",
+      "frameOf": "tower_fofo_L1",
+      "action": "pulse",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_fofo_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L1_windup_128.png",
+      "exportSha256": "942858f28dedaf6d9e4375c8207c5dfaaf12b05a09a2ab722a981e81b17d52a1",
+      "renderMode": "frame",
+      "frameOf": "tower_fofo_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_fofo_L2",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L2_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L2_128.png",
+      "exportSha256": "c8044f488068f04542ae95a9118c1440c7ed9523eaf2d2a468d1ffc8bff36984",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_fofo_L2_256.png",
+      "frameKeys": [
+        "tower_fofo_L2_pulse",
+        "tower_fofo_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_fofo_L2_pulse",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L2_pulse_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L2_pulse_128.png",
+      "exportSha256": "96953177c1c7dee7670a0b897b1e260b573498d43ba190acc3410b3ebca2f4f8",
+      "renderMode": "frame",
+      "frameOf": "tower_fofo_L2",
+      "action": "pulse",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_fofo_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L2_windup_128.png",
+      "exportSha256": "21324c8bb6833ca82b1395cbb07aecb9938780151fa18335918bfc58e6ddc413",
+      "renderMode": "frame",
+      "frameOf": "tower_fofo_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_fofo_L3A",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L3A_128.png",
+      "exportSha256": "37cc6cf4fb4cbc91d521219d94907423e063954b2dee1cdda2541400acf45b0b",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_fofo_L3A_256.png",
+      "frameKeys": [
+        "tower_fofo_L3A_pulse",
+        "tower_fofo_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_fofo_L3A_pulse",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3A_pulse_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L3A_pulse_128.png",
+      "exportSha256": "faeeddc7fa308b67f2be0efc20c7d6a4dad6674af262a2628e5226b0d4e204fe",
+      "renderMode": "frame",
+      "frameOf": "tower_fofo_L3A",
+      "action": "pulse",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_fofo_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L3A_windup_128.png",
+      "exportSha256": "672791a43513eef1bcdf3c63104808931025c213bbf57b402138d127e9cc3d37",
+      "renderMode": "frame",
+      "frameOf": "tower_fofo_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_fofo_L3B",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L3B_128.png",
+      "exportSha256": "0cc67193bb2032bb8d003da4a29fccebc1c8bb869cd94b0c6d4d5e98bf5d7f91",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_fofo_L3B_256.png",
+      "frameKeys": [
+        "tower_fofo_L3B_pulse",
+        "tower_fofo_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_fofo_L3B_pulse",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3B_pulse_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L3B_pulse_128.png",
+      "exportSha256": "5f4cc5c6978d3d393089f3630ed9c8a70f872be38e4b196be3a7da96b04b3b36",
+      "renderMode": "frame",
+      "frameOf": "tower_fofo_L3B",
+      "action": "pulse",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_fofo_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_fofo_L3B_windup_128.png",
+      "exportSha256": "2fe9d61c788cc3b8de4a8c6dc8ed7a40d1804fee999e340b629bdfc0a6631285",
+      "renderMode": "frame",
+      "frameOf": "tower_fofo_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_goma_L0_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L0_fire_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L0_fire_128.png",
+      "exportSha256": "a1a826e4265c0324a62ee87541b7d87657079246fdda81e241f0b0e5229376a6",
+      "renderMode": "frame",
+      "frameOf": "tower_goma_L0",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_goma_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L0_windup_128.png",
+      "exportSha256": "4f5565642c77adad53646c2ec918e0915baa9d0ce527ee4f43368608a603e82f",
+      "renderMode": "frame",
+      "frameOf": "tower_goma_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_goma_L1_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L1_fire_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L1_fire_128.png",
+      "exportSha256": "18f7b9edad32854ebc7fc7bbcce6ad03f43a7a8d05993baeb8c6a4e0d31f31b6",
+      "renderMode": "frame",
+      "frameOf": "tower_goma_L1",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_goma_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L1_windup_128.png",
+      "exportSha256": "b16c86c2c0e7c0f16c806efe9bb37b24d201ba3f3509972c37f173ea2566defd",
+      "renderMode": "frame",
+      "frameOf": "tower_goma_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_goma_L2_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L2_fire_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L2_fire_128.png",
+      "exportSha256": "11c380b68e4f346e993f51d90352b4b738580b9706c10eceb420521d439d0ae2",
+      "renderMode": "frame",
+      "frameOf": "tower_goma_L2",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_goma_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L2_windup_128.png",
+      "exportSha256": "00fc60ff718c481b3ce346062bc6003b1ca7f482fa5803c00f81a01842e1e5d7",
+      "renderMode": "frame",
+      "frameOf": "tower_goma_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_goma_L3A_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L3A_fire_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L3A_fire_128.png",
+      "exportSha256": "a397acebbe9befdcf2801bf3869f2b9e13037458b83e89e708aef32280b04faf",
+      "renderMode": "frame",
+      "frameOf": "tower_goma_L3A",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_goma_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L3A_windup_128.png",
+      "exportSha256": "8202fa05d422e0cd75ec04178306d74e74c5ee8ca4a975cb319732518de82e2e",
+      "renderMode": "frame",
+      "frameOf": "tower_goma_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_goma_L3B_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L3B_fire_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L3B_fire_128.png",
+      "exportSha256": "8b36d047065ea4b5ddb102f7a11bef398a989e10d4ad00c70c42f699a48ec2bf",
+      "renderMode": "frame",
+      "frameOf": "tower_goma_L3B",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_goma_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_goma_L3B_windup_128.png",
+      "exportSha256": "307c0f8be11683b066a1a4d1e010bb36eb24dd4cb030040bfc222b3f65a6a1ce",
+      "renderMode": "frame",
+      "frameOf": "tower_goma_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lumi_L0",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L0_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L0_128.png",
+      "exportSha256": "5bf97940e342a404877db7912209a8aaa636a32684b2e8dc821917a5dd4230e4",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_lumi_L0_256.png",
+      "frameKeys": [
+        "tower_lumi_L0_fire",
+        "tower_lumi_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_lumi_L0_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L0_fire_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L0_fire_128.png",
+      "exportSha256": "2f242621b5c0869810f8776c843a0b076dfb9b942ec136274dd65fb3a9c6016c",
+      "renderMode": "frame",
+      "frameOf": "tower_lumi_L0",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lumi_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L0_windup_128.png",
+      "exportSha256": "7601fedd0a66a26da35077b761015d03e4106dff7bb3a79c838798e5b0c4f1b4",
+      "renderMode": "frame",
+      "frameOf": "tower_lumi_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lumi_L1",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L1_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L1_128.png",
+      "exportSha256": "2a3be1f36e7cdce0663651e436de315414979fec1108e84f3823a13013b00d3a",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_lumi_L1_256.png",
+      "frameKeys": [
+        "tower_lumi_L1_fire",
+        "tower_lumi_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_lumi_L1_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L1_fire_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L1_fire_128.png",
+      "exportSha256": "6372891855c7dcd071d1a50b33865649b0a34bedb022e1bd6da70fc458912000",
+      "renderMode": "frame",
+      "frameOf": "tower_lumi_L1",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lumi_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L1_windup_128.png",
+      "exportSha256": "36666cec8c623970c6599e99e8da9e934a39612e7c630db55434b6d83a8e8e7a",
+      "renderMode": "frame",
+      "frameOf": "tower_lumi_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lumi_L2",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L2_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L2_128.png",
+      "exportSha256": "3ab6a0d1b9ae28915bcc6df060ef5a0ff7963766cde80f5638baebc1dece49bc",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_lumi_L2_256.png",
+      "frameKeys": [
+        "tower_lumi_L2_fire",
+        "tower_lumi_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_lumi_L2_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L2_fire_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L2_fire_128.png",
+      "exportSha256": "32b43704bb6348e4128030ca26f10538130903a0c24a9f7461ec5a7c42b136f1",
+      "renderMode": "frame",
+      "frameOf": "tower_lumi_L2",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lumi_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L2_windup_128.png",
+      "exportSha256": "d58ad9c7461d10b121443eaba5cf24f66ffe923d44fa569ec7cf9818aa6af16b",
+      "renderMode": "frame",
+      "frameOf": "tower_lumi_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lumi_L3A",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L3A_128.png",
+      "exportSha256": "725029ecf6d5a9f8c9ea5d22578c5fa255a792d66cc0de7be36886799c6bea78",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_lumi_L3A_256.png",
+      "frameKeys": [
+        "tower_lumi_L3A_fire",
+        "tower_lumi_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_lumi_L3A_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3A_fire_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L3A_fire_128.png",
+      "exportSha256": "b5cbdd76cef9ece5651ec476fd39beb42b5f3b5d1f0407f4958d76f6e4e7e478",
+      "renderMode": "frame",
+      "frameOf": "tower_lumi_L3A",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lumi_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L3A_windup_128.png",
+      "exportSha256": "fcb1edde501c757c9574c5e0bbe1a3d9e0483df16b9096ffd26f3523708b7308",
+      "renderMode": "frame",
+      "frameOf": "tower_lumi_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lumi_L3B",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L3B_128.png",
+      "exportSha256": "18f168abcfd3aadb89d22c2cc206fea7b8bcd663031b38b0563f625d1cb44a8f",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_lumi_L3B_256.png",
+      "frameKeys": [
+        "tower_lumi_L3B_fire",
+        "tower_lumi_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_lumi_L3B_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3B_fire_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L3B_fire_128.png",
+      "exportSha256": "93fbaf7597808d68a4295ce28b2eca970eb2e2250c55a60d103b2f6ffe391be0",
+      "renderMode": "frame",
+      "frameOf": "tower_lumi_L3B",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lumi_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_lumi_L3B_windup_128.png",
+      "exportSha256": "fdbbb6002cb0aa949036cb4ae0a9d8fd377d7db6ba33df927a0c28282e877d6b",
+      "renderMode": "frame",
+      "frameOf": "tower_lumi_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lupa_L0_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L0_fire_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L0_fire_128.png",
+      "exportSha256": "ee692c6c18deadf3315463e9b9a2d0b5372e1db0cb385a1fd2062e901a8e3ba9",
+      "renderMode": "frame",
+      "frameOf": "tower_lupa_L0",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lupa_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L0_windup_128.png",
+      "exportSha256": "fa46bdff1422d1d8bf5b50ad1eee7425817f12b7b95939e7163469159ba50e4a",
+      "renderMode": "frame",
+      "frameOf": "tower_lupa_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lupa_L1_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L1_fire_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L1_fire_128.png",
+      "exportSha256": "ae5899f0299b4f3ce54744cfc4e585d9d12ab0dc7cae1c1402067c125be4bf87",
+      "renderMode": "frame",
+      "frameOf": "tower_lupa_L1",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lupa_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L1_windup_128.png",
+      "exportSha256": "007fd3b7dd7ae46a8407e349a55961eefea08a34c4462e17d45b922548b6d801",
+      "renderMode": "frame",
+      "frameOf": "tower_lupa_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lupa_L2_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L2_fire_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L2_fire_128.png",
+      "exportSha256": "539c3ef1447015bc39ff442f6932a3cfe55967ff53f821a336efd51940947e50",
+      "renderMode": "frame",
+      "frameOf": "tower_lupa_L2",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lupa_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L2_windup_128.png",
+      "exportSha256": "3f803f450d7130aa3e1027b1a8f392f0f0c2a9bbbfa7d00fb4d082b13d908504",
+      "renderMode": "frame",
+      "frameOf": "tower_lupa_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lupa_L3A_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L3A_fire_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L3A_fire_128.png",
+      "exportSha256": "5bfcb90c1d983422c8a9c0e843ecb1fce8e5bf48f334a5636ac962b2798895d5",
+      "renderMode": "frame",
+      "frameOf": "tower_lupa_L3A",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lupa_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L3A_windup_128.png",
+      "exportSha256": "fe0bc7da2f1a815452740fa657e31ca6901552a3efb827ae785779a75ffdf87a",
+      "renderMode": "frame",
+      "frameOf": "tower_lupa_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lupa_L3B_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L3B_fire_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L3B_fire_128.png",
+      "exportSha256": "992d553e005a72d6383e2621e8ed44b6ebe476501d0626e55e3fdd716019cb3d",
+      "renderMode": "frame",
+      "frameOf": "tower_lupa_L3B",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_lupa_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_lupa_L3B_windup_128.png",
+      "exportSha256": "38ce02c292731c18fe5b4ffe9a50b92311a894b34d4271b6cf38716d0016b7b9",
+      "renderMode": "frame",
+      "frameOf": "tower_lupa_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_maestro_L0_pulse",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L0_pulse_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L0_pulse_128.png",
+      "exportSha256": "cebeb28f7534800c4f8d334f7684190ec105c4d245308e922b1b9ee6093ab578",
+      "renderMode": "frame",
+      "frameOf": "tower_maestro_L0",
+      "action": "pulse",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_maestro_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L0_windup_128.png",
+      "exportSha256": "1ddcdd8b49d8838c0e7b87d44dfc1fbee26d2b6e37082fef018f83491a0af677",
+      "renderMode": "frame",
+      "frameOf": "tower_maestro_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_maestro_L1_pulse",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L1_pulse_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L1_pulse_128.png",
+      "exportSha256": "c8036780d688bd168eb0e30f3000248badc173330dc5b412a80955d359978131",
+      "renderMode": "frame",
+      "frameOf": "tower_maestro_L1",
+      "action": "pulse",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_maestro_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L1_windup_128.png",
+      "exportSha256": "c40be518e4f1cdea79a22223413dfb502cc70fe8e6539761b840106b692b2cb6",
+      "renderMode": "frame",
+      "frameOf": "tower_maestro_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_maestro_L2_pulse",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L2_pulse_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L2_pulse_128.png",
+      "exportSha256": "296dc707a385963fad6ccd31daec5c75bec77580233c10774e921c69504c1dcc",
+      "renderMode": "frame",
+      "frameOf": "tower_maestro_L2",
+      "action": "pulse",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_maestro_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L2_windup_128.png",
+      "exportSha256": "7839384370f26c853c7030b9a87aa476c28ee26d626ba9382259793be20b05cb",
+      "renderMode": "frame",
+      "frameOf": "tower_maestro_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_maestro_L3A_pulse",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L3A_pulse_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L3A_pulse_128.png",
+      "exportSha256": "63b74ebb08f9c6bb6d656a95f90e96a355b92b2a0e07dab31af5ac9b6aa3eea8",
+      "renderMode": "frame",
+      "frameOf": "tower_maestro_L3A",
+      "action": "pulse",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_maestro_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L3A_windup_128.png",
+      "exportSha256": "d4ea25741659e986468c649fd92f8559408852775df31173b852d95046cc6de5",
+      "renderMode": "frame",
+      "frameOf": "tower_maestro_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_maestro_L3B_pulse",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L3B_pulse_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L3B_pulse_128.png",
+      "exportSha256": "296e07e60e0a20c75988165012d809f6e6e3436177f1a4e1ea47001154da5b46",
+      "renderMode": "frame",
+      "frameOf": "tower_maestro_L3B",
+      "action": "pulse",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_maestro_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_maestro_L3B_windup_128.png",
+      "exportSha256": "23900e422c434dfd799ac7813ba89306f11fddffc3079170bc6fdd02e6f71dbf",
+      "renderMode": "frame",
+      "frameOf": "tower_maestro_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_piao_L0",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L0_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L0_128.png",
+      "exportSha256": "9dbc97345ac3ef46a8392f86f9d0f5751d57c0bdbf72d8b5f131b3d3a5677826",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_piao_L0_256.png",
+      "frameKeys": [
+        "tower_piao_L0_fire",
+        "tower_piao_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_piao_L0_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L0_fire_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L0_fire_128.png",
+      "exportSha256": "8be9e9ea4d50d07f3cdf9fde36b4fe89328ca04c0c397876501f9646b459359c",
+      "renderMode": "frame",
+      "frameOf": "tower_piao_L0",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_piao_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L0_windup_128.png",
+      "exportSha256": "46d1c0893272a29795eae342b595fd02492d055b40b0d70c91574f5aafb539d0",
+      "renderMode": "frame",
+      "frameOf": "tower_piao_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_piao_L1",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L1_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L1_128.png",
+      "exportSha256": "8b94e7ef34940e0883f2772dac7efa54233396a9b90ebbdf34932877edfa8cac",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_piao_L1_256.png",
+      "frameKeys": [
+        "tower_piao_L1_fire",
+        "tower_piao_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_piao_L1_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L1_fire_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L1_fire_128.png",
+      "exportSha256": "5abd0dcbfd6c30ff03cff94d4204e067d87c9dde533a9b8be01c277203a0beef",
+      "renderMode": "frame",
+      "frameOf": "tower_piao_L1",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_piao_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L1_windup_128.png",
+      "exportSha256": "8b89eb4e1acf9529de7a27f60c494f5a4bd7a48afce3ff85959bf81b6a2d80d2",
+      "renderMode": "frame",
+      "frameOf": "tower_piao_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_piao_L2",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L2_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L2_128.png",
+      "exportSha256": "83807370234aca1540a0b339cfff5709dd654762a9e2b13b848020a70e9eb571",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_piao_L2_256.png",
+      "frameKeys": [
+        "tower_piao_L2_fire",
+        "tower_piao_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_piao_L2_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L2_fire_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L2_fire_128.png",
+      "exportSha256": "df21ec95c72490d65636228204e46d791dcdf8fa2e7b7a0578fc80ef2505b49b",
+      "renderMode": "frame",
+      "frameOf": "tower_piao_L2",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_piao_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L2_windup_128.png",
+      "exportSha256": "242bf96188b7e9ff42ff57ce462f4511e0083cfff9cd2abebd9d1546fed4f9d9",
+      "renderMode": "frame",
+      "frameOf": "tower_piao_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_piao_L3A",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L3A_128.png",
+      "exportSha256": "79a86d493d5f350a7484dce356f971278f67ddb126abeb1a337bd23b12b6291a",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_piao_L3A_256.png",
+      "frameKeys": [
+        "tower_piao_L3A_fire",
+        "tower_piao_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_piao_L3A_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3A_fire_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L3A_fire_128.png",
+      "exportSha256": "2c38d6965eab981af65722cdc00ff26299db0161fe0f587174f82a8e418a12d4",
+      "renderMode": "frame",
+      "frameOf": "tower_piao_L3A",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_piao_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L3A_windup_128.png",
+      "exportSha256": "94dfad7ac444b61fc5e21a1d9dff7ca66209b86b1dbc83d5f98278642fa4a710",
+      "renderMode": "frame",
+      "frameOf": "tower_piao_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_piao_L3B",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L3B_128.png",
+      "exportSha256": "d2a3e3f0ce144783af9cc42293e6568a51014cab5472b2d7a2cc6d5a09eef281",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_piao_L3B_256.png",
+      "frameKeys": [
+        "tower_piao_L3B_fire",
+        "tower_piao_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_piao_L3B_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3B_fire_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L3B_fire_128.png",
+      "exportSha256": "1b6925a22513d459c42e0b4eb5b950c46bfc8930a738996d0365e7b40d48e82b",
+      "renderMode": "frame",
+      "frameOf": "tower_piao_L3B",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_piao_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_piao_L3B_windup_128.png",
+      "exportSha256": "cd8b8e31cf790ce4075c3f589465058597545424290a2eb7b8aecbc62208a0af",
+      "renderMode": "frame",
+      "frameOf": "tower_piao_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_picole_L0",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L0_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L0_128.png",
+      "exportSha256": "e6c0e3db0b7e675eee2a623ba793026bd3f3aae18da3be6ec1f6dba4ee53530b",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_picole_L0_256.png",
+      "frameKeys": [
+        "tower_picole_L0_fire",
+        "tower_picole_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_picole_L0_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L0_fire_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L0_fire_128.png",
+      "exportSha256": "389dd9388e18c33ae49a2891d002c1a039ac6df0d936e4fde3696bab22e31e15",
+      "renderMode": "frame",
+      "frameOf": "tower_picole_L0",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_picole_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L0_windup_128.png",
+      "exportSha256": "0c93be1cf000447ab92e213c0cb7217a66b2ea9dca259e3895236559d7a6b1f1",
+      "renderMode": "frame",
+      "frameOf": "tower_picole_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_picole_L1",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L1_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L1_128.png",
+      "exportSha256": "9bcd0af7698aad94438e52032fe3272321fe86d4a76df1ca0b63a626427d1936",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_picole_L1_256.png",
+      "frameKeys": [
+        "tower_picole_L1_fire",
+        "tower_picole_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_picole_L1_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L1_fire_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L1_fire_128.png",
+      "exportSha256": "9d09f13531aa4ef26f280d6ae1c441b94118e188c2e9dbc3828fcecfb6155dbb",
+      "renderMode": "frame",
+      "frameOf": "tower_picole_L1",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_picole_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L1_windup_128.png",
+      "exportSha256": "287da4c6327e907c748c042eaa83469bfb8aaf0e700ef9b4c68e3989901eda50",
+      "renderMode": "frame",
+      "frameOf": "tower_picole_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_picole_L2",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L2_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L2_128.png",
+      "exportSha256": "eb09d3179921de13926a0725ebb87abfb75478ac6ff26918cdfebe76128bd8f3",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_picole_L2_256.png",
+      "frameKeys": [
+        "tower_picole_L2_fire",
+        "tower_picole_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_picole_L2_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L2_fire_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L2_fire_128.png",
+      "exportSha256": "1fa5c4e41340cd24f257681c2a0356ca99e382c2c649cbb207298eebbf3d3fa6",
+      "renderMode": "frame",
+      "frameOf": "tower_picole_L2",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_picole_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L2_windup_128.png",
+      "exportSha256": "d4d40b950e94c0ab37254c503513dfe4aa3f1548448d4a9f3dcac4eb18fe07f0",
+      "renderMode": "frame",
+      "frameOf": "tower_picole_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_picole_L3A",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L3A_128.png",
+      "exportSha256": "a7cb4093abe2561c3dd6355b27aaac8938cb87422244979e089c5bcd10f8fd0f",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_picole_L3A_256.png",
+      "frameKeys": [
+        "tower_picole_L3A_fire",
+        "tower_picole_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_picole_L3A_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3A_fire_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L3A_fire_128.png",
+      "exportSha256": "258a25fe5ddecf41ee787ec89f4a1dd5ebb3c8a66e5d0739b5d8b4e50ad7b139",
+      "renderMode": "frame",
+      "frameOf": "tower_picole_L3A",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_picole_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L3A_windup_128.png",
+      "exportSha256": "35c502fd911c2e1088209fe2388f949de5fb81cc0729faaaef134187c6418c0f",
+      "renderMode": "frame",
+      "frameOf": "tower_picole_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_picole_L3B",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L3B_128.png",
+      "exportSha256": "1debcd62a634e6e3e35f8935bad8944a9223dd9b7506f6fe3ceedf90a57b93b9",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_picole_L3B_256.png",
+      "frameKeys": [
+        "tower_picole_L3B_fire",
+        "tower_picole_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_picole_L3B_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3B_fire_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L3B_fire_128.png",
+      "exportSha256": "a9bc6816046df8b0d35839a3765a0949638c58bf9a35f9da63152e1eb7627c4f",
+      "renderMode": "frame",
+      "frameOf": "tower_picole_L3B",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_picole_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_picole_L3B_windup_128.png",
+      "exportSha256": "5f3a577e6974f152a7c71cec529c79b59455f922d65dd182c9eecaeb355eb6a1",
+      "renderMode": "frame",
+      "frameOf": "tower_picole_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pipoca_L0_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L0_fire_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L0_fire_128.png",
+      "exportSha256": "a8b55c45825ac4c8a82d875d9797470e09a6b45f41ed739e75c28c3ff90dc5c0",
+      "renderMode": "frame",
+      "frameOf": "tower_pipoca_L0",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pipoca_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L0_windup_128.png",
+      "exportSha256": "b9bd481d296da90bb932f520ef6d7c325c42f4b1ece278e5d4b02b8fe813b563",
+      "renderMode": "frame",
+      "frameOf": "tower_pipoca_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pipoca_L1_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L1_fire_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L1_fire_128.png",
+      "exportSha256": "fa1e24fa7dfa3c3c18dc151387fb7f59fcd03313defc93a1cdc81c49d350efec",
+      "renderMode": "frame",
+      "frameOf": "tower_pipoca_L1",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pipoca_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L1_windup_128.png",
+      "exportSha256": "35fcba0ff800ab8d16d6d822d8cf27285292db53708a27a86b0a813742afe3ce",
+      "renderMode": "frame",
+      "frameOf": "tower_pipoca_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pipoca_L2_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L2_fire_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L2_fire_128.png",
+      "exportSha256": "c1114fc15f749078807a757feadbf8c8356f9bf5dab1595ac143c1394acf153b",
+      "renderMode": "frame",
+      "frameOf": "tower_pipoca_L2",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pipoca_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L2_windup_128.png",
+      "exportSha256": "ebeaa9ccd5510aa751584e0ce4f8a80a50f31dea9f47ee0ec6f03a6ee6b62d92",
+      "renderMode": "frame",
+      "frameOf": "tower_pipoca_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pipoca_L3A_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L3A_fire_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L3A_fire_128.png",
+      "exportSha256": "7f882d56a6a62984363c67414c3c6637d7fef1b84189bfcaf960328ae23a4bc9",
+      "renderMode": "frame",
+      "frameOf": "tower_pipoca_L3A",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pipoca_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L3A_windup_128.png",
+      "exportSha256": "7315ca0a7255c4799358901efacde9633f16c5aa03835e1b4d39f0543576e66f",
+      "renderMode": "frame",
+      "frameOf": "tower_pipoca_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pipoca_L3B_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L3B_fire_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L3B_fire_128.png",
+      "exportSha256": "7243ad0a377ca3c83d17a0c7f60e4855db9594f4ebe8cdcee77718acf67ea0c3",
+      "renderMode": "frame",
+      "frameOf": "tower_pipoca_L3B",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pipoca_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_pipoca_L3B_windup_128.png",
+      "exportSha256": "7c7f608d876ea8b99c619f836a99d3e369a9998a4b6383edb0596d114755c7ed",
+      "renderMode": "frame",
+      "frameOf": "tower_pipoca_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pula_L0",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L0_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L0_128.png",
+      "exportSha256": "558c8a403757a5a81de16b88af9d2b9c79cfcd8278ab08718ed86be8f9a6056a",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_pula_L0_256.png",
+      "frameKeys": [
+        "tower_pula_L0_fire",
+        "tower_pula_L0_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_pula_L0_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L0_fire_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L0_fire_128.png",
+      "exportSha256": "ed6eef120f8f49bacfc017f6f281abef67bab49b717bb284aed64a7ae89b031c",
+      "renderMode": "frame",
+      "frameOf": "tower_pula_L0",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pula_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L0_windup_128.png",
+      "exportSha256": "61387674e0391383ce6bcb65c05c2fb9d4f89f285440ba6b12e1cb3d88def804",
+      "renderMode": "frame",
+      "frameOf": "tower_pula_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pula_L1",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L1_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L1_128.png",
+      "exportSha256": "bdea5909c232d642f65699e79f6259816dad7c5202e835347bba6fed8ee6241c",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_pula_L1_256.png",
+      "frameKeys": [
+        "tower_pula_L1_fire",
+        "tower_pula_L1_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_pula_L1_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L1_fire_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L1_fire_128.png",
+      "exportSha256": "8eac13f9f4b573b47a9251c1094e6709814c1cccbf08cdc67ff698a189cd8c56",
+      "renderMode": "frame",
+      "frameOf": "tower_pula_L1",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pula_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L1_windup_128.png",
+      "exportSha256": "ecf796840831affc7a07bfcd1d203344afd123fbd78bc50638e4b6129acc8ce4",
+      "renderMode": "frame",
+      "frameOf": "tower_pula_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pula_L2",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L2_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L2_128.png",
+      "exportSha256": "87f1162c8ad139c71834fe25cd38d2c941901194ff3ffb169de41300e13059d8",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_pula_L2_256.png",
+      "frameKeys": [
+        "tower_pula_L2_fire",
+        "tower_pula_L2_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_pula_L2_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L2_fire_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L2_fire_128.png",
+      "exportSha256": "6e713064164cfde68afe97b00a73ff70cadb3cdec25974f40b6f8111cccdb712",
+      "renderMode": "frame",
+      "frameOf": "tower_pula_L2",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pula_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L2_windup_128.png",
+      "exportSha256": "11ca8c1b535c8d86e09d0e0c5a22b9356de876d6070f1148b6f047057ffc0675",
+      "renderMode": "frame",
+      "frameOf": "tower_pula_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pula_L3A",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3A_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L3A_128.png",
+      "exportSha256": "6928345e37ea1939ca2e93c200649ed0a429237b525c6b37af432c99e77decdb",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_pula_L3A_256.png",
+      "frameKeys": [
+        "tower_pula_L3A_fire",
+        "tower_pula_L3A_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_pula_L3A_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3A_fire_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L3A_fire_128.png",
+      "exportSha256": "a589afd6114c64bbd5f0128b04f53327d717bf0b9a130d0a03d6cdfabf621005",
+      "renderMode": "frame",
+      "frameOf": "tower_pula_L3A",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pula_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L3A_windup_128.png",
+      "exportSha256": "b6b6a545cf9d701fc2a03360a101a54279420058ce50878ff55a4191505be553",
+      "renderMode": "frame",
+      "frameOf": "tower_pula_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pula_L3B",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3B_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L3B_128.png",
+      "exportSha256": "f172e8385e7b91043c041b8c1c395c0da8ab6cc001c9b93079203e372e39280c",
+      "renderMode": "pose_plus_frames",
+      "frameOf": null,
+      "action": "pose",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ],
+      "portraitExportFile": "assets/export/portraits/tower_pula_L3B_256.png",
+      "frameKeys": [
+        "tower_pula_L3B_fire",
+        "tower_pula_L3B_windup"
+      ],
+      "drawnAnimationStatus": "partial_pose_plus_frames"
+    },
+    {
+      "assetKey": "tower_pula_L3B_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3B_fire_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L3B_fire_128.png",
+      "exportSha256": "c25d8b3c3d2138dec21b809a2d9da8e09d25c236ec34cda06c31a2ddcd0b10c1",
+      "renderMode": "frame",
+      "frameOf": "tower_pula_L3B",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_pula_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_pula_L3B_windup_128.png",
+      "exportSha256": "5773ee12a16627b92dd03adaf34da1bd0566eda30c3a04ef3353857c57a8a257",
+      "renderMode": "frame",
+      "frameOf": "tower_pula_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_voltz_L0_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L0_fire_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L0_fire_128.png",
+      "exportSha256": "8dd4a3a2dc434f74376c6ea1bf7a308ed5bc44f797300560393821ba6c0849c8",
+      "renderMode": "frame",
+      "frameOf": "tower_voltz_L0",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_voltz_L0_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L0_windup_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L0_windup_128.png",
+      "exportSha256": "c2b1d356a3f5f512b45b68694124dba320096c1121b77209ee49677c2d36d2be",
+      "renderMode": "frame",
+      "frameOf": "tower_voltz_L0",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_voltz_L1_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L1_fire_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L1_fire_128.png",
+      "exportSha256": "4a0ca8472fa301b1bfb84ca09686184c5509d6ca4e5dc4d3b57aa8d3bb0724b6",
+      "renderMode": "frame",
+      "frameOf": "tower_voltz_L1",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_voltz_L1_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L1_windup_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L1_windup_128.png",
+      "exportSha256": "ee8d28f1535f9ce8e0b1bf37a9ad9f35a5446def0a0474cdca5291edf01c2221",
+      "renderMode": "frame",
+      "frameOf": "tower_voltz_L1",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_voltz_L2_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L2_fire_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L2_fire_128.png",
+      "exportSha256": "bac2de92443e072e4f32c8370861bf779c182a64678798a17bb344ed7c96474c",
+      "renderMode": "frame",
+      "frameOf": "tower_voltz_L2",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_voltz_L2_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L2_windup_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L2_windup_128.png",
+      "exportSha256": "ff699c86e8387374acec6edf9a89833c098a905b797573b92303e676a59a56b7",
+      "renderMode": "frame",
+      "frameOf": "tower_voltz_L2",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_voltz_L3A_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L3A_fire_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L3A_fire_128.png",
+      "exportSha256": "6807cdc904049b1c785899062d20367618c9bfa862eaafd2896313b5b7d1f8c3",
+      "renderMode": "frame",
+      "frameOf": "tower_voltz_L3A",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_voltz_L3A_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L3A_windup_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L3A_windup_128.png",
+      "exportSha256": "a466f3bbf035eb62dc6bcfc326f1f987bc1814709fb0d41efc8475935280c349",
+      "renderMode": "frame",
+      "frameOf": "tower_voltz_L3A",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_voltz_L3B_fire",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L3B_fire_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L3B_fire_128.png",
+      "exportSha256": "9227a60f5af90782b894dbf3248f25c6e9e6f0730aceaead3214f8b4a9f4b4d4",
+      "renderMode": "frame",
+      "frameOf": "tower_voltz_L3B",
+      "action": "fire",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
+    },
+    {
+      "assetKey": "tower_voltz_L3B_windup",
+      "robloxAssetId": null,
+      "status": "exported_pending_upload",
+      "checkedInStudio": false,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L3B_windup_v001.png",
+      "exportFile": "assets/export/game/tower_voltz_L3B_windup_128.png",
+      "exportSha256": "cefd4bb9df622ac9c9308dcc18044305827f1270815262b1bee435d74ed5b0b1",
+      "renderMode": "frame",
+      "frameOf": "tower_voltz_L3B",
+      "action": "windup",
+      "frameCount": 1,
+      "runtimeAnchor": [
+        0.5,
+        0.82
+      ]
     }
   ],
   "schemaNotes": "Campos adicionais: exportSha256, portraitExportFile, portraitRobloxAssetId, uploadFile, backingColor, visibleWidthCells/frameWidthCells (inimigos e chefes). Status: pending_upload | exported_pending_upload | uploaded. checkedInStudio só após carregamento verificado.",

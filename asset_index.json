@@ -3,7 +3,7 @@
   "project": "Quintal em Guarda",
   "documentVersion": "1.1",
   "pathBase": "directory containing this file (Tower Defense root)",
-  "sourceAssetCount": 51,
+  "sourceAssetCount": 266,
   "assets": [
     {
       "assetKey": "base_farol_pilha",
@@ -1424,6 +1424,6223 @@
         ],
         "preserveOriginal": true
       }
+    },
+    {
+      "assetKey": "base_farol_pilha_critico",
+      "displayName": "Farol de Pilha (crítico)",
+      "category": "cenario",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "critico",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "base_farol_pilha",
+      "sourceFile": "Assets_Encomenda_v2/farol/base_farol_pilha_critico_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "234457b7f6f4df83ddcbe3010c91fe22b877e940318c2382dd1bcda9387c4733",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "base_farol_pilha_danificado",
+      "displayName": "Farol de Pilha (danificado)",
+      "category": "cenario",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "danificado",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "base_farol_pilha",
+      "sourceFile": "Assets_Encomenda_v2/farol/base_farol_pilha_danificado_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "0d7df7f6536209d111ab1442f7cfe1b5b21c26d4de502d2ba585de17d00f5ee2",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_aspirador_ability",
+      "displayName": "Aspirador Rabugento (habilidade)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "ability",
+      "entityId": "aspirador",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_aspirador_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_aspirador_ability_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "8bf8d1a0fa325bfee661e148b09eae4179df6d3d72e998aeac7e4f90af64b8c0",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_aspirador_walk_b",
+      "displayName": "Aspirador Rabugento (segundo passo)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "aspirador",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_aspirador_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_aspirador_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9471f63384239ac9892825cc0afd2df6f44dc9e311782c2d39ad8c1eefe146b9",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_boneco_poeira_ability",
+      "displayName": "Boneco de Poeira (habilidade)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "ability",
+      "entityId": "boneco_poeira",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_boneco_poeira_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_boneco_poeira_ability_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9592af10f67896cdab5883af9fbe89a33c8ebef2329f77cb1afc7f7105d0f76f",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_boneco_poeira_base",
+      "displayName": "Boneco de Poeira",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "base",
+      "entityId": "boneco_poeira",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_boneco_poeira_base_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "cb62e817cc4562658b7d4c7c45cbfcef0dab49d289af5c2d68332366c0f40bf0",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_boneco_poeira_walk_b",
+      "displayName": "Boneco de Poeira (segundo passo)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "boneco_poeira",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_boneco_poeira_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_boneco_poeira_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "685d237010bf1fe368a71b629756f0bb22f31fc964ef6fada7317adf7f258bd6",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_breu_ability",
+      "displayName": "Breu debaixo da cama (habilidade)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "ability",
+      "entityId": "breu",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_breu_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_breu_ability_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "759a7a0793b16e7f41c355bc350767bc0dccb4c6c3e817c5aef63c243cc1f363",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_breu_walk_b",
+      "displayName": "Breu debaixo da cama (segundo passo)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "breu",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_breu_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_breu_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "11d001b778206107807bf32e9f72f77787c4637ddd7dc41751bfb4389b1aa812",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_esponjao_ability",
+      "displayName": "Esponjão (habilidade)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "ability",
+      "entityId": "esponjao",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_esponjao_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_esponjao_ability_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "a4340736d04ecab17440228e03bc51733158782ca6b303485016ebd2b0c64143",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_esponjao_base",
+      "displayName": "Esponjão",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "base",
+      "entityId": "esponjao",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_esponjao_base_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "22b9ccadfa596fe2c6e138ddc7a407054534db8c86ffe2a323600ea1921985f6",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_esponjao_walk_b",
+      "displayName": "Esponjão (segundo passo)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "esponjao",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_esponjao_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_esponjao_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "fdfd01ddd462d07eecb46dbfb34404b22ecb5923a1ad27efc9cbda69a4a575bb",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_meia_ability",
+      "displayName": "Meia Sem Par (habilidade)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "ability",
+      "entityId": "meia",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_meia_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_meia_ability_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4fadf0d489b32d9ec659272cf00a4ff0556a7bf5cd232de2bfc5acda3fa96c1e",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_meia_base",
+      "displayName": "Meia Sem Par",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "base",
+      "entityId": "meia",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_meia_base_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "180b97a84caf3c80f32c4396ae85d085a7fc4c0c610f2cc6bc0cd4b163454df1",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_meia_walk_b",
+      "displayName": "Meia Sem Par (segundo passo)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "meia",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_meia_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_meia_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "83b5087f770f4c67445ca6945b97d865290a3a5ae3f53266911de613cdd60217",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_rei_ferrugem_ability",
+      "displayName": "Rei Ferrugem (habilidade)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "ability",
+      "entityId": "rei_ferrugem",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_rei_ferrugem_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_rei_ferrugem_ability_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "ce593043e6a72d47a5afb8951989d50e5fa5bbbe5334c5b09f3175b2dd292199",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_rei_ferrugem_walk_b",
+      "displayName": "Rei Ferrugem (segundo passo)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "rei_ferrugem",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_rei_ferrugem_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_rei_ferrugem_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "2408fd18c95a321e7b6196a6f7d0f4b1c795ea7e0ecaaf841ec9bbfacc625dda",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_traca_rainha_ability",
+      "displayName": "Traça Rainha (habilidade)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "ability",
+      "entityId": "traca_rainha",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_traca_rainha_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_traca_rainha_ability_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9e53c7e8ed9b2b63929e2358ee8fc70bf08544ea643465a155055cc3c83ddcc8",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_traca_rainha_base",
+      "displayName": "Traça Rainha",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "base",
+      "entityId": "traca_rainha",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_traca_rainha_base_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "b1b06392ecd72513d49a4e7f1327bb6737f2a6a7e98954a8e8fa1d9453e09af1",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "boss_traca_rainha_walk_b",
+      "displayName": "Traça Rainha (segundo passo)",
+      "category": "chefes",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "traca_rainha",
+      "entityType": "boss",
+      "mapId": null,
+      "frameOf": "boss_traca_rainha_base",
+      "sourceFile": "Assets_Encomenda_v2/chefes/boss_traca_rainha_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "cecd711b1a220202fa333eccc798289e1efb6171eadc1116bb5d67893df1ba48",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_bolota_walk_b",
+      "displayName": "Bolota (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "bolota",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_bolota_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_bolota_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "8a563aab680cfe218d1db9c82db7951b3df6cbda8b41538a560b2063e02eb5fb",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_brutamontes_walk_b",
+      "displayName": "Brutamontes (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "brutamontes",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_brutamontes_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_brutamontes_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "c4e3da65425682a6d6635cb69adf5b17583f0a57712becc764991830c1496bdd",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_casulo_walk_b",
+      "displayName": "Casulo (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "casulo",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_casulo_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_casulo_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "1ef80daeeb4ca8f93139e86ab091adb0dda16b47ed0b4b7bcba2df180d642884",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_corrisco_walk_b",
+      "displayName": "Corrisco (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "corrisco",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_corrisco_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_corrisco_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "c1a2f22c74664747e6496b8f1660c599facb6628c478e48de5a577efcbd13b0b",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_fiapo_walk_b",
+      "displayName": "Fiapo (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "fiapo",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_fiapo_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_fiapo_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "8b010a6814f1580102238fa97e64174013604a6d04209e2683087d8d1d5e50ad",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_floquinho_base",
+      "displayName": "Floquinho",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "base",
+      "entityId": "floquinho",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_floquinho_base_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "69154948361cecf08d876c8ba74f1e6d5865e24226968b9ea3c495a45c2e3217",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_floquinho_walk_b",
+      "displayName": "Floquinho (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "floquinho",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_floquinho_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_floquinho_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4c5261917df0519709fc2720461f545fdcf9f508bc7f1b91e359a5d5b0fa8ad9",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_latinha_walk_b",
+      "displayName": "Latinha (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "latinha",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_latinha_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_latinha_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "5fc4eeed479c71a071a5f980dcaf7d831feb91d3596eb8d352f1b04493a9ac28",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_migalha_base",
+      "displayName": "Migalha",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "base",
+      "entityId": "migalha",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_migalha_base_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "19921e8f2bfc645c876e4629d069868b4711d0a3accd1750ca8932e670ccee46",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_migalha_walk_b",
+      "displayName": "Migalha (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "migalha",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_migalha_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_migalha_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "06b318757810def0c812be4f05c20c8b754fd4531492350c60582e4a267bdcb0",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_nevoa_walk_b",
+      "displayName": "Névoa (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "nevoa",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_nevoa_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_nevoa_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "6dafac287d3dee80ebefcb5c2dbc553c47ccdb923d58ee19a29827c6fab750d5",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_novelo_base",
+      "displayName": "Novelo",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "base",
+      "entityId": "novelo",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_novelo_base_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "6d1d9636f489a8cc369e2ca23fb950ddbed0e134e0e15e66e00d6d0c3c3d8d50",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_novelo_walk_b",
+      "displayName": "Novelo (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "novelo",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_novelo_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_novelo_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4a9278ea84b0c53dd6bee9e6a0a968745427818ebfb7440f05683f97439d2750",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_remendo_walk_b",
+      "displayName": "Remendo (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "remendo",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_remendo_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_remendo_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "d06cf63ff3e5afcfea15ec71a338cda0bb14b029c0e94304998d173b02f3fdb6",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_traca_base",
+      "displayName": "Traça",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "base",
+      "entityId": "traca",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_traca_base_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "278fec7eaf37932ded3e3d384621ad88d41e00706b7e0a03d3cf838f91887d47",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "enemy_traca_walk_b",
+      "displayName": "Traça (segundo passo)",
+      "category": "inimigos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "walk_b",
+      "entityId": "traca",
+      "entityType": "enemy",
+      "mapId": null,
+      "frameOf": "enemy_traca_base",
+      "sourceFile": "Assets_Encomenda_v2/inimigos/enemy_traca_walk_b_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "1e9f656bf54c3ba063b0917376ce50045fa1b7746b3903b4ed85a2e2380b0170",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_boing",
+      "displayName": "fx_boing",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "boing",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_boing_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "a8189be6e4ed5190ec631bd51cc63084900b85f60397ef27689b5470c2af87cb",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_build_puff",
+      "displayName": "fx_build_puff",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "build_puff",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_build_puff_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "71eec6dac79957d33dcab5d9ffba43cbc5f9c3c1496cec7249660d251dff0606",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_burn_spark",
+      "displayName": "fx_burn_spark",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "burn_spark",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_burn_spark_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "be9eba1c6ae04cb291d37186537158eef925eb88f6b3d735bbe1a32eebbfb498",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_dardo_dart",
+      "displayName": "fx_dardo_dart",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "dardo_dart",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_dardo_dart_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "6b0a90c8fc65a105c5c505e7fd75468571570859e051776343953da318352c7a",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_dust_poof_1",
+      "displayName": "fx_dust_poof_1",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "dust_poof_1",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_dust_poof_1_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "dfb14a637ec41c1efa4e0fdb608cb13b56f31231ebd056e68e3ad1b5e5e4cc05",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_dust_poof_2",
+      "displayName": "fx_dust_poof_2",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "dust_poof_2",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_dust_poof_2_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "fae6b2e7894756a2b68693726665ca5fcbb18a746d1d994ba9993b358270b02c",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_dust_poof_3",
+      "displayName": "fx_dust_poof_3",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "dust_poof_3",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_dust_poof_3_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "1208668188e7978e4598f99e5d9c49a04126a4a541eba0dc7711d87dff39e1d5",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_frost_burst",
+      "displayName": "fx_frost_burst",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "frost_burst",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_frost_burst_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "f5b922336cceea6e83e5314c043d39dc081d3a5cf1a77ea57b447bc8c45cc094",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_goma_blob",
+      "displayName": "fx_goma_blob",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "goma_blob",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_goma_blob_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "e3875d3858f632430cb5e9bf967b7fdca46403694263ba892fce3fd6e4d8430d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_goma_puddle",
+      "displayName": "fx_goma_puddle",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "goma_puddle",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_goma_puddle_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "b8303f49b54fe52dcad4dfb0a947091b0335a4bd8b47002d7b2061720b713b82",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_heart",
+      "displayName": "fx_heart",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "heart",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_heart_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "a7a401432e722a32104db880bc5f12c10df7e10fa21777b870eb34d29fe503e1",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_hit_star",
+      "displayName": "fx_hit_star",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "hit_star",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_hit_star_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "b57b88eec1fe9b90c2cdaf7f33b671e11e6af8242cfb5695d74e30cb1b8488b4",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_ice_block",
+      "displayName": "fx_ice_block",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "ice_block",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_ice_block_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "54ba022ab10a231045e0e1cab3a26e8ed7c91e80417c1d3ce21bed5ada29479d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_lupa_glint",
+      "displayName": "fx_lupa_glint",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "lupa_glint",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_lupa_glint_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "f628ee65aabfa269d5480af0ba08bb25c2299e6b7bbb60343dc233a9f1b57111",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_maestro_note",
+      "displayName": "fx_maestro_note",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "maestro_note",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_maestro_note_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4541bb485c9fab6b82bc284efb25d693b7469b190c9b6305a9c922d5743a74ae",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_pipoca_kernel",
+      "displayName": "fx_pipoca_kernel",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "pipoca_kernel",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_pipoca_kernel_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "f81291ebb62772ddfb15035a401af80d18b5980c7cb40675683756c70662d250",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_pipoca_pop",
+      "displayName": "fx_pipoca_pop",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "pipoca_pop",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_pipoca_pop_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4d7bdd4098285856978139345218884bbeeac6504fa6c0f86ebe611430b29340",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_push",
+      "displayName": "fx_push",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "push",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_push_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "dfb34ce88b7457ebcfe7272fd9fe2841f26e269a2cf2b233ff52ed4d2f46ebc6",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_rust_flakes",
+      "displayName": "fx_rust_flakes",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "rust_flakes",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_rust_flakes_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "db96734ee10e139ca7f24813dd829470f535e33e0bdc10071e8374aaa20c776a",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_scrub_arc",
+      "displayName": "fx_scrub_arc",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "scrub_arc",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_scrub_arc_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4f12fc116a96383c26a87858ecb665b91baecf74b78830e732a8dea3a508af9f",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_upgrade_stars",
+      "displayName": "fx_upgrade_stars",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "upgrade_stars",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_upgrade_stars_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "d72a62f4d4fbd73abad858ea7aefde310bb9f57d41469d28487cc2f76b17e550",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_voltz_spark",
+      "displayName": "fx_voltz_spark",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "voltz_spark",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_voltz_spark_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "1d4ae6497280871197acab5a6ff1ca6535606bdaac56683c3ab67b537ce51654",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "fx_whirl",
+      "displayName": "fx_whirl",
+      "category": "efeitos",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "whirl",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/efeitos/fx_whirl_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "f2c04b15d1d3a5d6123f00674503a6b15b79d619f46f47c4fbad87f7459efcdd",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 256,
+        "targetFrameHeight": 256,
+        "targetAnchor": [
+          0.5,
+          0.5
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "map_cozinha_scene",
+      "displayName": "Cozinha da Madrugada — cena",
+      "category": "mapas",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "scene",
+      "entityId": null,
+      "entityType": null,
+      "mapId": "cozinha",
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_cozinha_scene_v001.png",
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": false,
+      "sha256": "af9d846f2c28ce76ed404fbeb40f93a70e3432b99f3549dfac060d63496964c6",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 1024,
+        "targetFrameHeight": 683,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "map_inverno_scene",
+      "displayName": "Quintal de Inverno — cena",
+      "category": "mapas",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "scene",
+      "entityId": null,
+      "entityType": null,
+      "mapId": "inverno",
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_inverno_scene_v001.png",
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": false,
+      "sha256": "eb66e8de4b24d80baaf421373e0cdc246e4cfbb25c84a89c5e14da2c2c38b27c",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 1024,
+        "targetFrameHeight": 683,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "map_oficina_scene",
+      "displayName": "Oficina de Lata — cena",
+      "category": "mapas",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "scene",
+      "entityId": null,
+      "entityType": null,
+      "mapId": "oficina",
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_oficina_scene_v001.png",
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": false,
+      "sha256": "c0cd6b5f07100902f20b7f4a817fcd43888c58c43ae390a2a3179985b89582e6",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 1024,
+        "targetFrameHeight": 683,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "map_porao_scene",
+      "displayName": "Porão da Poeira — cena",
+      "category": "mapas",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "scene",
+      "entityId": null,
+      "entityType": null,
+      "mapId": "porao",
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_porao_scene_v001.png",
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": false,
+      "sha256": "535124f4165e36fe17c10bc0041167c33d0caa4e1a563fe4b8f3f7faad3b7be1",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 1024,
+        "targetFrameHeight": 683,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "map_quarto_scene",
+      "displayName": "Quarto de Brinquedos — cena",
+      "category": "mapas",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "scene",
+      "entityId": null,
+      "entityType": null,
+      "mapId": "quarto",
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_quarto_scene_v001.png",
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": false,
+      "sha256": "acfad7eefebacc44c6fc46fa097e522d3faca54780e2dbdca68d18239675d363",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 1024,
+        "targetFrameHeight": 683,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "map_sotao_scene",
+      "displayName": "Sótão das Estrelas — cena",
+      "category": "mapas",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": null,
+      "state": null,
+      "action": "scene",
+      "entityId": null,
+      "entityType": null,
+      "mapId": "sotao",
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/mapas/map_sotao_scene_v001.png",
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": false,
+      "sha256": "a8ac3e0df1d9778a9c6e188ddb25cee63a96f18ab9ce35701247001a051af278",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 1024,
+        "targetFrameHeight": 683,
+        "targetAnchor": null,
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L0_fire",
+      "displayName": "Dardo · L0 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "dardo",
+      "state": "L0",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_dardo_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L0_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "3c4b6fe44d3508217f3b467abbec86c7b14fa8cf3c1d60d2de20719961183328",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L0_windup",
+      "displayName": "Dardo · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "dardo",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_dardo_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "63357cde3b97eca15927edc24a4530659e210d335a5b609a76e0b083f9c1c5a2",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L1_fire",
+      "displayName": "Dardo · L1 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "dardo",
+      "state": "L1",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_dardo_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L1_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "2d07b3093ddb4b5740df1d55cce9ec44c93805e18c407a1765945180223da9d9",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L1_windup",
+      "displayName": "Dardo · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "dardo",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_dardo_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "ba342c932164ba23226b3963528f2e2e7b9c420c129f5f1010253457caaa17f1",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L2_fire",
+      "displayName": "Dardo · L2 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "dardo",
+      "state": "L2",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_dardo_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L2_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "dd6a31090f4de026cb6d9f69cd879ca446cfdd37993dba2560b58a6503093157",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L2_windup",
+      "displayName": "Dardo · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "dardo",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_dardo_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "ad682aa408258b3c62838d5d94540cb05841ca5e71d3c8f364222b48fbf8b835",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L3A_fire",
+      "displayName": "Dardo · L3A (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "dardo",
+      "state": "L3A",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_dardo_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L3A_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9877da646de49749414358c10f59be68080490a1ff1fd17ea9e67818bd085900",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L3A_windup",
+      "displayName": "Dardo · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "dardo",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_dardo_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "d78b9a4da2cfc61f9244ff6706eaac85a8e292a0062ba45c321c6c921e2b9e15",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L3B_fire",
+      "displayName": "Dardo · L3B (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "dardo",
+      "state": "L3B",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_dardo_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L3B_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "a4d40238bb3409d84c4486b7fd56d4eaa65e782b6a968b3bc306de873a2ffad9",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_dardo_L3B_windup",
+      "displayName": "Dardo · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "dardo",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_dardo_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_dardo_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "dbbbd862fbd793d9a8ab19c0d727428091127f6e991b31832f08bb0d579b46c6",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L0",
+      "displayName": "Escovinha · L0",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L0",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L0_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "288b5dcc855a91d678a10bc7d51f48d8e71e00276550cf4b20e11b7c724ab139",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L0_fire",
+      "displayName": "Escovinha · L0 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L0",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_escova_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L0_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "1c98258d62285eb0d6aa5722b5bbe89d0e5200b473317c76102b73892209083f",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L0_windup",
+      "displayName": "Escovinha · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_escova_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "6269729542911bd03b8bae599d3e64df5db096709634c6dbfe2873f30003d2fb",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L1",
+      "displayName": "Escovinha · L1",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L1",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L1_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "fbea02c9b7bc2697f423f1e32531145bb92baa580e740abea12f644d51f710fd",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L1_fire",
+      "displayName": "Escovinha · L1 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L1",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_escova_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L1_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4c342e6b52b04c748559faa828187af8af46bcd20acf641ffb012531515decac",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L1_windup",
+      "displayName": "Escovinha · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_escova_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "8bd6dfd35e0185ecbf070da1df7468b5a20d8564bb96292b89eb60b9936f03b2",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L2",
+      "displayName": "Escovinha · L2",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L2",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L2_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "49e676730f00a2b7dfe97e69405d07495e29d1fcd82d2f78bdd295dcf1dbf5c2",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L2_fire",
+      "displayName": "Escovinha · L2 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L2",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_escova_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L2_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "e8eab9ec5768f2c70f083bfa096076b6f3c9f41d5c10a3f97f4f8998e4a6de60",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L2_windup",
+      "displayName": "Escovinha · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_escova_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "71cbb1f69d71ea71bed7f79b2f7c99abd7a2406b576a065e2ec22a7eaa3b2acb",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L3A",
+      "displayName": "Escovinha · L3A",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L3A",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3A_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "cb7b9f2b0310e483d8e93d61b3bdcfd8274670ff41ccbb6f6b24066cb470aabb",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L3A_fire",
+      "displayName": "Escovinha · L3A (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L3A",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_escova_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3A_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "37613c2b138cac1601e61ef0772e73d3896183bca3fc31f6f9c04b106f37b31d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L3A_windup",
+      "displayName": "Escovinha · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_escova_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "e3d8b78a02748c68452071a4e72f63cabae7972e58096390f4265b8e47340eff",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L3B",
+      "displayName": "Escovinha · L3B",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L3B",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3B_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "6137646ab5a95ed3774d1966ba21aa6d38180b5550a5a1463921aa3fc3ee10e4",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L3B_fire",
+      "displayName": "Escovinha · L3B (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L3B",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_escova_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3B_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "5f03bf7ef3373ef92be2b55f3ecccc0a7109babaa4c1ad32510ce77a4650b519",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_escova_L3B_windup",
+      "displayName": "Escovinha · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "escova",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_escova_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_escova_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "50a504b7f65dcb9db0877eee07fe534678e4ab89b32e9c078adddca9d7cc8cd9",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L0",
+      "displayName": "Fofo · L0",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L0",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L0_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "50817d457c4657667481598015a27691481693030ba823c7ce08b0d6e7887663",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L0_pulse",
+      "displayName": "Fofo · L0 (pulso de apoio)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L0",
+      "action": "pulse",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_fofo_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L0_pulse_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "112724d72eb28253fcf9ceb9f81c385d48f4e1d02d178ff8b7c2448c471966b8",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L0_windup",
+      "displayName": "Fofo · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_fofo_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "31cae1c8489a5ba591c4b5d31cfc0c57581fc78358da163f3033ede66b41cfee",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L1",
+      "displayName": "Fofo · L1",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L1",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L1_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4d3e87ff0e050812feadaede52f5dae242cecc90d1ca3d0f47aabae1cc535e46",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L1_pulse",
+      "displayName": "Fofo · L1 (pulso de apoio)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L1",
+      "action": "pulse",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_fofo_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L1_pulse_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "cf5a2a02a2c5843d7d7b31e8f7099b9121dc04d4be5a4624d0651cb5f0ed862b",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L1_windup",
+      "displayName": "Fofo · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_fofo_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "81b0286d81c4e972c79e63da72ed52ebbc98ac99ca63b34347491484144cd181",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L2",
+      "displayName": "Fofo · L2",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L2",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L2_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "d88b5ba415316706c0d1ce2fc0709969defca5cd25421318042664bcd713c383",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L2_pulse",
+      "displayName": "Fofo · L2 (pulso de apoio)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L2",
+      "action": "pulse",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_fofo_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L2_pulse_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "385cb9d8e4f37f5123283e17f72b62d62837e2bd9b841189484b7afadc9166a7",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L2_windup",
+      "displayName": "Fofo · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_fofo_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "de63273ea1e5548500a28430edcd0c7da24cadaf3c91c6f0532308b967db3832",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L3A",
+      "displayName": "Fofo · L3A",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L3A",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3A_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "65d42ebafeec96da26105e56a3cebe0c1e26ece569558efde6022c0963b673ce",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L3A_pulse",
+      "displayName": "Fofo · L3A (pulso de apoio)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L3A",
+      "action": "pulse",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_fofo_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3A_pulse_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "d641fadc04c025bf29f2e6d5d398a012eef24ff41bfe7fad9eeb0dee53661ae5",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L3A_windup",
+      "displayName": "Fofo · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_fofo_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "7a5f6f5ceec7310b5fc7015a7134f6235ed6b64aff3bbca5008c59fcfb3d48c1",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L3B",
+      "displayName": "Fofo · L3B",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L3B",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3B_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "6c63e968a1f17f75ab7c9ca35521fde296667a6004742bc29e7ac4bf14fe111b",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L3B_pulse",
+      "displayName": "Fofo · L3B (pulso de apoio)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L3B",
+      "action": "pulse",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_fofo_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3B_pulse_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "44f7d51a6bbcfe8b8e6876472decf8c75e72d90fe4e0000835031ea16f9e3128",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_fofo_L3B_windup",
+      "displayName": "Fofo · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "fofo",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_fofo_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_fofo_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "16daa0aacad7e27e2b01ee7c54a2058221c8c3bbf1494770d9ef501ffe6fac10",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L0_fire",
+      "displayName": "Goma · L0 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "goma",
+      "state": "L0",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_goma_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L0_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "ce41cde58a2c4d93aebf534091d8d560a55b5af65a8d752b12e00a1a314a0938",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L0_windup",
+      "displayName": "Goma · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "goma",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_goma_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "48feecada42e69fd5db32b517bd7ac4eeb0dcc0bdde8931b0d47325f809f520a",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L1_fire",
+      "displayName": "Goma · L1 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "goma",
+      "state": "L1",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_goma_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L1_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "566f9c0fd2e1171bce95f939765eacddd82dd7655f4c21144a8dbd8add96c3da",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L1_windup",
+      "displayName": "Goma · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "goma",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_goma_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "376f8e5dc045b846eef8ba636cdecd8512b5033f1d27dea5479a6636033f1560",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L2_fire",
+      "displayName": "Goma · L2 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "goma",
+      "state": "L2",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_goma_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L2_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "a49e373ce15c983721911c9b4709a54b446e1eaa6023ce09e185e23e701a8f0a",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L2_windup",
+      "displayName": "Goma · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "goma",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_goma_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "e2a28f0913b87461d082a9ff3142f1c4659850c8db324be0c07864c0c23dbdb1",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L3A_fire",
+      "displayName": "Goma · L3A (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "goma",
+      "state": "L3A",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_goma_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L3A_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "7b7281c5ff4e87d29c5bd8537acd00496ad857c488ad94e314577c38ab212f1d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L3A_windup",
+      "displayName": "Goma · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "goma",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_goma_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "d78637fa6cb537a631f6ce601e1cf2bcc3927009ec93470ca15a7a8f2cf73be8",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L3B_fire",
+      "displayName": "Goma · L3B (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "goma",
+      "state": "L3B",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_goma_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L3B_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "d6bad8c9f33363a39bfd80646c6d07eb1e3f6f704893724ad987a6c66cf3b38a",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_goma_L3B_windup",
+      "displayName": "Goma · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "goma",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_goma_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_goma_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "065258531052e1d5d179c57ea5c895113da79e77b1dee02476d75953bcfd4b01",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L0",
+      "displayName": "Lumi · L0",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L0",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L0_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "bd903dfb84aaec7df9dc66fab7decda391562fd0038de4af320d120a6680a594",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L0_fire",
+      "displayName": "Lumi · L0 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L0",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lumi_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L0_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "f449a93bad62aeffd066fcee1136baa0eeb82fc67809610626b7a642428482cd",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L0_windup",
+      "displayName": "Lumi · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lumi_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "8cae64e7952409b89890d3ddac90a633a3b02f3039876379db6855ee74760bb0",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L1",
+      "displayName": "Lumi · L1",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L1",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L1_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "bf19dab16d23f76ebfee4163c3807fe8eccc527bba3628cd92342dff4143a910",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L1_fire",
+      "displayName": "Lumi · L1 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L1",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lumi_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L1_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "cb6af09dee889ae73b56cf83d61497d0ef8c2397681538a5a7d5e9037679dfc8",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L1_windup",
+      "displayName": "Lumi · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lumi_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "b801f4290519bef7f73c88ecb93cae3e1920c14ffe5aab1d8cfc965335bf8148",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L2",
+      "displayName": "Lumi · L2",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L2",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L2_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4c0bf730aea7e08fd152d8c5b4ada901c9570a7da10f3c65402bc906281c9794",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L2_fire",
+      "displayName": "Lumi · L2 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L2",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lumi_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L2_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "b68cf46012ced5f572f5f4f449ff93bc222008125ca33620fb7402d7a5b23e9d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L2_windup",
+      "displayName": "Lumi · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lumi_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "e7561a673de233ff7ff56adb5434bf104659d4acac912f19bcc9e188925c289c",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L3A",
+      "displayName": "Lumi · L3A",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L3A",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3A_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "22855e5b442f10bf83c6c140ba839c047a3931ea962cb9724bd013ad35f7efee",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L3A_fire",
+      "displayName": "Lumi · L3A (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L3A",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lumi_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3A_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "bbb43c539a50222db1dd293ff49cb5aff7f77719ea02c8eced708acb2870351d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L3A_windup",
+      "displayName": "Lumi · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lumi_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "10ae81205d83aba3e9b1b7175536928783a378e6cc04ba03f4a637051cdfa66e",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L3B",
+      "displayName": "Lumi · L3B",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L3B",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3B_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "253911aa40181c3fbc68061a3c277a17c2b20e7f126755fded870dcb248c21ad",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L3B_fire",
+      "displayName": "Lumi · L3B (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L3B",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lumi_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3B_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "869ea33303351d851e3ed149aa619727affb198f1a3686bd3243db5d86208eae",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lumi_L3B_windup",
+      "displayName": "Lumi · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lumi",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lumi_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lumi_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "b84c914c72be920de4f48a969fd2bbbb203c1f919b37ea9af3be5e0ee7b6a818",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L0_fire",
+      "displayName": "Lupa · L0 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lupa",
+      "state": "L0",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lupa_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L0_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "f7125e5a85153c671eb0a34ef7d1e5831376cffc7e573c471be53a578313f0ff",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L0_windup",
+      "displayName": "Lupa · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lupa",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lupa_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "49bce58f82c918fe9389fe0216a3e613973c0002959af295add53cc701389093",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L1_fire",
+      "displayName": "Lupa · L1 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lupa",
+      "state": "L1",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lupa_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L1_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "b7f416976834006d28358dc5b6f2e49be36acc0b74befcfc81dbf10800b4fef8",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L1_windup",
+      "displayName": "Lupa · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lupa",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lupa_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "bbd35223387aec01adf6c36ec1b36197ab55aef2e5e8de900dfa98b62521f1f8",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L2_fire",
+      "displayName": "Lupa · L2 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lupa",
+      "state": "L2",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lupa_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L2_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "27318c1d798189be0fbbc82e41155c869f4dff0840e80b085aea67c45224cb10",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L2_windup",
+      "displayName": "Lupa · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lupa",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lupa_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "bc4fc1f218e99c0dca1e408c5377e56c8859818f7c6d866540db5390c90f1ce4",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L3A_fire",
+      "displayName": "Lupa · L3A (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lupa",
+      "state": "L3A",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lupa_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L3A_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "a1554e011479812158dcf90f911453d20fa50f5cd59c2a0611421ee00c532b73",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L3A_windup",
+      "displayName": "Lupa · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lupa",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lupa_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "5d01102d8fb06fa665974e2f12dcc78dc1a004b1b00b77f9cdf602f4f288e655",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L3B_fire",
+      "displayName": "Lupa · L3B (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lupa",
+      "state": "L3B",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lupa_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L3B_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "49436f505b638f60c2dcac870e46d5d58f98a41f0ea84abd558e2e355818ea68",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_lupa_L3B_windup",
+      "displayName": "Lupa · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "lupa",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_lupa_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_lupa_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "0482d394fd233f25a81655bd08ea72058c3bf1f490189d32b8231bc3c4347b50",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L0_pulse",
+      "displayName": "Maestro · L0 (pulso de apoio)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "maestro",
+      "state": "L0",
+      "action": "pulse",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_maestro_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L0_pulse_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "f8b9e09ac11143b20fe35847952b51914c57003dfbc1a65d1571d96e91edc8e3",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L0_windup",
+      "displayName": "Maestro · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "maestro",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_maestro_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "43bbf77b2fe102775907b153c1a8ff4d0bb229cafba59adc8c7517547d64d175",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L1_pulse",
+      "displayName": "Maestro · L1 (pulso de apoio)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "maestro",
+      "state": "L1",
+      "action": "pulse",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_maestro_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L1_pulse_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "695f780664e75980058c609f84ff404b47f5a0d2e20b0a95ef04e10ef5782e84",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L1_windup",
+      "displayName": "Maestro · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "maestro",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_maestro_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "f7144900b9f74cd08cc9892d6a9ca6efd60cf233fe0bc0758d64206c99f70283",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L2_pulse",
+      "displayName": "Maestro · L2 (pulso de apoio)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "maestro",
+      "state": "L2",
+      "action": "pulse",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_maestro_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L2_pulse_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "db03ecc61888856aa38f402cf63b406683cb2543baf40f4494cdfd2c0b97284a",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L2_windup",
+      "displayName": "Maestro · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "maestro",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_maestro_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "5277e2c419cebaed68bea90fa1b94c993e54bd6e80000ecd86d0c420854aa7e1",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L3A_pulse",
+      "displayName": "Maestro · L3A (pulso de apoio)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "maestro",
+      "state": "L3A",
+      "action": "pulse",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_maestro_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L3A_pulse_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "62e9bd431d813262d884f70290216f5267c797b7ae4b140513decb4c860ecc87",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L3A_windup",
+      "displayName": "Maestro · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "maestro",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_maestro_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "d8ff4095e9781b8543073a723343c1210bcc15442a7024e548275ff39abbd01d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L3B_pulse",
+      "displayName": "Maestro · L3B (pulso de apoio)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "maestro",
+      "state": "L3B",
+      "action": "pulse",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_maestro_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L3B_pulse_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "7ffc99916a6a5c1e67cc905deb1aa0a425e675a80248f78ce9366a03a312aeb3",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_maestro_L3B_windup",
+      "displayName": "Maestro · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "maestro",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_maestro_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_maestro_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "60f8c996d19f642d2066141ded5dbcd4d6ca3f552b8decfb99f4873eac82935c",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L0",
+      "displayName": "Pião · L0",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L0",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L0_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "505e78e074a3cda859ef6f5ba2793719f1eb6eb6b1e402292e7b81c8e7923274",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L0_fire",
+      "displayName": "Pião · L0 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L0",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_piao_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L0_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9af214fdb8d19024cea5fd11e1bd196224befd34efed9b970f569852fc6989a8",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L0_windup",
+      "displayName": "Pião · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_piao_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "041b84c41adc56cb51df3538b74d1f1c9bcd50223942c23c703ddd65de6947b7",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L1",
+      "displayName": "Pião · L1",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L1",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L1_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "b11836d2b54fb0c8954fe83ce7a87f7503edfbb94e2b2ead4903881172d18e70",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L1_fire",
+      "displayName": "Pião · L1 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L1",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_piao_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L1_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "2b2f0de4a03d25bbe0bb4dd33074b4004d2c31f2f2f7e474db665853877c6e49",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L1_windup",
+      "displayName": "Pião · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_piao_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "8f4882514ccda14bc20d2ab8166635c1ec92b65c543db6fe6726a449a78c8285",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L2",
+      "displayName": "Pião · L2",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L2",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L2_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "7a7b17bbd266bfca657d806098d7171ca99db63bdb82c851e0786280c583572e",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L2_fire",
+      "displayName": "Pião · L2 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L2",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_piao_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L2_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "acd739b21f2f1ad88fa8059ed9cb20bf0443eed265084fbdcb035f4c2f0a8c90",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L2_windup",
+      "displayName": "Pião · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_piao_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "dfabb6ff079b341932806eb4a13aec34175a1da3a04e28d8ae9ba5239a9e7214",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L3A",
+      "displayName": "Pião · L3A",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L3A",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3A_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "18297cf0b46de335b58106a389f994e4ada5171f5a702b4b1acd3ef0f49fc7aa",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L3A_fire",
+      "displayName": "Pião · L3A (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L3A",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_piao_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3A_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9fc16bf564063d2b7940b57d16ce0d2bb43cbf11329f3987fa500a98a964f19e",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L3A_windup",
+      "displayName": "Pião · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_piao_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "8b666e711368a4fb6cf0211b9400c1740e902374a5a7ebe4c114b66874dd497b",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L3B",
+      "displayName": "Pião · L3B",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L3B",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3B_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "130c0e56279878548fc72bea1d16d7dd90ab27c981b7d041bdcfda4d2525395d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L3B_fire",
+      "displayName": "Pião · L3B (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L3B",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_piao_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3B_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9e5a54ffe0ba4b6de3c68dcf9eaa356252b3238212a2572f07849f63f9dea0ec",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_piao_L3B_windup",
+      "displayName": "Pião · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "piao",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_piao_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_piao_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "6d465f7d95388ea3d09e1d23fdea7f0faf712affc507b4a16bcb0d7bf756a6fc",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L0",
+      "displayName": "Picolé · L0",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L0",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L0_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "1a44b7dae3c5f8353f39616373d4ab3e9b3b2e3bce716366becb7660816296c3",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L0_fire",
+      "displayName": "Picolé · L0 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L0",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_picole_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L0_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "2997dac25a664ce548d3a3c0b8449ed6aa8cd1c9e9ad6b96d0f1be0876a7968a",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L0_windup",
+      "displayName": "Picolé · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_picole_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "f1a228f47cea6fa6ae67edd917a374b7b6e0115aa386c752ece405889d1bb90d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L1",
+      "displayName": "Picolé · L1",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L1",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L1_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "aeebf0439c4664cfc197fc389f628c805c7f3b50b25ff2dfbc1588cb933a7667",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L1_fire",
+      "displayName": "Picolé · L1 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L1",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_picole_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L1_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "6501df59787bddf46d21ef968b6f6cf912fef5b8f06058623f7f53d043865938",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L1_windup",
+      "displayName": "Picolé · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_picole_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9c3e83a54d8a1e3521f05ca76c252146448bf785fdbf7a3a4aa952f7d1b44995",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L2",
+      "displayName": "Picolé · L2",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L2",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L2_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "cf23d95b8f6d13fcc9dbdb14918cd56f1c448e61940bdf447cc1e755ef4914f7",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L2_fire",
+      "displayName": "Picolé · L2 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L2",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_picole_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L2_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "dc572373e21cc2dda35137e67dc626c0d05e51bb0458e17f86e2655f501d21cd",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L2_windup",
+      "displayName": "Picolé · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_picole_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "301abeeb92d5650364f6e1a00d9b4f86515388db735e49a4cc5a1605b3e9be53",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L3A",
+      "displayName": "Picolé · L3A",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L3A",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3A_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "40391b18148f63d57865eb94c616b18b339c62cebd5d669bbb57bf590072a8c4",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L3A_fire",
+      "displayName": "Picolé · L3A (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L3A",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_picole_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3A_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "21f3c1ffb16c39a02fd34a32385224d447acf1d770ea321d436e32b14f783999",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L3A_windup",
+      "displayName": "Picolé · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_picole_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "82c7aae3040bc6ae6baa82e0be03773f0650446c98955cb49057022fff2ae0d8",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L3B",
+      "displayName": "Picolé · L3B",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L3B",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3B_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "c9e9eee5c9e8dae9432f8179d812aacf91be43b45cc8c33956a4cf8259e10b77",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L3B_fire",
+      "displayName": "Picolé · L3B (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L3B",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_picole_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3B_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "91120ec99f2e2dc978456b19fa455e718142ad6a96e5b9d3c173569aeeec967d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_picole_L3B_windup",
+      "displayName": "Picolé · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "picole",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_picole_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_picole_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4574bc3dc690c6176516a90d8d6e224f4f605da01514331af23170f277135523",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L0_fire",
+      "displayName": "Pipoca · L0 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pipoca",
+      "state": "L0",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pipoca_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L0_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "4727d146e9baf37bbe222502f10c25898f4a744367b93106b8cdc9a5868aba51",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L0_windup",
+      "displayName": "Pipoca · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pipoca",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pipoca_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "28b1a903e0f019c1e97c6475acbf4797cb05dbf6c6033350848052b58ae15d82",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L1_fire",
+      "displayName": "Pipoca · L1 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pipoca",
+      "state": "L1",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pipoca_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L1_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "c1dee716b1e496640d79f779b27492e26371d6545c90fe9b1687d7ac41561050",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L1_windup",
+      "displayName": "Pipoca · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pipoca",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pipoca_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "72f924ec4f7d6c34dfc4de707863129b3f0b726e1976f9bf9f48fcb11645377d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L2_fire",
+      "displayName": "Pipoca · L2 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pipoca",
+      "state": "L2",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pipoca_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L2_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "1bb6bcbaab0a7f7c053f4c27205674528c22a6eb69ef24f26b258aebfed0e5e4",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L2_windup",
+      "displayName": "Pipoca · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pipoca",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pipoca_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "c67aaa69cc1b7d3c3790b4a04e6a0094a96249d006d15ba9522236d293dca692",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L3A_fire",
+      "displayName": "Pipoca · L3A (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pipoca",
+      "state": "L3A",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pipoca_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L3A_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9426e7b50279f2869374b2f46718e4f44f085fe65fcf9dd25b654c01dc67c62a",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L3A_windup",
+      "displayName": "Pipoca · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pipoca",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pipoca_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "7b09dac629e23e92c79b3159933724ab12f2a62a946af8841380f3f8043893d4",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L3B_fire",
+      "displayName": "Pipoca · L3B (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pipoca",
+      "state": "L3B",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pipoca_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L3B_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "1bd750eb1525d79b5dc812281c181a0905a1dcdd01e1fe5ae1eb0187b152f44e",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pipoca_L3B_windup",
+      "displayName": "Pipoca · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pipoca",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pipoca_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pipoca_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9a90c452b09445ace895a6272c24b140a02d1ba3f5ebef238e65de81dea03cbd",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L0",
+      "displayName": "Pula · L0",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L0",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L0_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "fee7a69cd7bf7d93aa3e3791c3f9f3b555bb92c811b2492073ee5b0d48fe225a",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L0_fire",
+      "displayName": "Pula · L0 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L0",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pula_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L0_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "a96a27b921a01b657d03d8c6a2ec990a98757f25cfe67733e65828d5be1a4726",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L0_windup",
+      "displayName": "Pula · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pula_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "01be53fbb68bfcdfb19650d4a8513979a3967feee502893879bc69855a4d7a7c",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L1",
+      "displayName": "Pula · L1",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L1",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L1_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "a00fec8ba04a0e68d0533205e402c44665161f82e8b1f994a8e12a1198a7e175",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L1_fire",
+      "displayName": "Pula · L1 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L1",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pula_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L1_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "989e0061c30ef1d3b8efa3006983cddce4da93feb9bea84dc6b53073b0ccd423",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L1_windup",
+      "displayName": "Pula · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pula_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "dc125e0d2d40ee5e8c7d7f34673c2fb3481b32baa2cc7285e8ffc85ac9d8ee62",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L2",
+      "displayName": "Pula · L2",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L2",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L2_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "3edafbcb6b7d12f8eea6dc41a24d580c40abfa0f033b43c2eb600f8c88c425ab",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L2_fire",
+      "displayName": "Pula · L2 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L2",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pula_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L2_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "0ef084cf595a9ae7035e0f36db4566ff3c397d40847ff750e96c33f1d532af7f",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L2_windup",
+      "displayName": "Pula · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pula_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "67db0fb36b3ce86fa7829956383183249dba00c28fb139f77b582027e6321f0d",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L3A",
+      "displayName": "Pula · L3A",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L3A",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3A_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "1d4ce36df58502f4ae46d3c01607ab0466565f3f9f4f708383d9fde058d34202",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L3A_fire",
+      "displayName": "Pula · L3A (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L3A",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pula_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3A_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9203beef11efdd20eccfa3315f4f1bdb7d970dcf0f9063828ab29723d92f6ad8",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L3A_windup",
+      "displayName": "Pula · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pula_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "ad0e03cadee2c948d35ca8ff50408c70bf9dca9d3ec31078a4e2594b2d5b48d9",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L3B",
+      "displayName": "Pula · L3B",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L3B",
+      "action": "pose",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": null,
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3B_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "c85adab5f3cf937cf20a633ac0b42b30ad409e12fd65171eda46f58af0d255bc",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L3B_fire",
+      "displayName": "Pula · L3B (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L3B",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pula_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3B_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "7aff685b303bd398d6655393dc0f3a2806e6200a86f64cec5a525cdd1eec937e",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_pula_L3B_windup",
+      "displayName": "Pula · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "pula",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_pula_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_pula_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "cbeee33c1958695451dc824ce308ef465436c8d7d74950e5e3484b11cdfc30c2",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L0_fire",
+      "displayName": "Voltz · L0 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "voltz",
+      "state": "L0",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_voltz_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L0_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "044ffd562f4526199cbf72dac0863b0af0acc6b0631394e14312e111c9380d74",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L0_windup",
+      "displayName": "Voltz · L0 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "voltz",
+      "state": "L0",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_voltz_L0",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L0_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "5812edb9e0277581658f7fe9de2c59db7b4ee2dc36f6b005b9668a8ee8e60d12",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L1_fire",
+      "displayName": "Voltz · L1 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "voltz",
+      "state": "L1",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_voltz_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L1_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "61f1ba0fc4ae3ec2fda54e510d0c984b1a9a81b52df99bbd6ee0f6cbd3c63ca1",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L1_windup",
+      "displayName": "Voltz · L1 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "voltz",
+      "state": "L1",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_voltz_L1",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L1_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "398232ac16d3ddd288c0f9ea5848f4f60d1928eb1051fd4a35e2b369f738442f",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L2_fire",
+      "displayName": "Voltz · L2 (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "voltz",
+      "state": "L2",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_voltz_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L2_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "c744fa2b4b82f6fecef24557d6dd4b7cef7b7dfc2ced7f6f47e4cd03eb984ca4",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L2_windup",
+      "displayName": "Voltz · L2 (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "voltz",
+      "state": "L2",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_voltz_L2",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L2_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "b9e0363e077a1a5dc5d062ee3d652dad580bc0a43ad098288b4598c94005b885",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L3A_fire",
+      "displayName": "Voltz · L3A (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "voltz",
+      "state": "L3A",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_voltz_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L3A_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "cbce86db2dbcc9265db447dd3a54698369a4069f53ded7030676aa050cd661b8",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L3A_windup",
+      "displayName": "Voltz · L3A (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "voltz",
+      "state": "L3A",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_voltz_L3A",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L3A_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "96a85748a1959b13224d3df98a80af5f75ea2a3a2cb6ed3b20a45c96560dc31b",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L3B_fire",
+      "displayName": "Voltz · L3B (disparo)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "voltz",
+      "state": "L3B",
+      "action": "fire",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_voltz_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L3B_fire_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "840a447847787b03dd65d80696dd9a2fdd69a89eb862926c06ace7e0543e84a1",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
+    },
+    {
+      "assetKey": "tower_voltz_L3B_windup",
+      "displayName": "Voltz · L3B (antecipação)",
+      "category": "torres",
+      "pack": "Assets_Encomenda_v2",
+      "towerId": "voltz",
+      "state": "L3B",
+      "action": "windup",
+      "entityId": null,
+      "entityType": null,
+      "mapId": null,
+      "frameOf": "tower_voltz_L3B",
+      "sourceFile": "Assets_Encomenda_v2/torres/tower_voltz_L3B_windup_v001.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "sourceFrames": 1,
+      "alpha": true,
+      "sha256": "9664fd0c878ef817e8ddf03f3945699cdbe8fd0fa1b01cec1630bcbb5196bddd",
+      "normalization": {
+        "status": "exported",
+        "targetFrameWidth": 128,
+        "targetFrameHeight": 128,
+        "targetAnchor": [
+          0.5,
+          0.82
+        ],
+        "preserveOriginal": true
+      }
     }
   ],
   "towers": {
@@ -1468,6 +7685,48 @@
       "L2": "tower_maestro_L2",
       "L3A": "tower_maestro_L3A",
       "L3B": "tower_maestro_L3B"
+    },
+    "escova": {
+      "L0": "tower_escova_L0",
+      "L1": "tower_escova_L1",
+      "L2": "tower_escova_L2",
+      "L3A": "tower_escova_L3A",
+      "L3B": "tower_escova_L3B"
+    },
+    "lumi": {
+      "L0": "tower_lumi_L0",
+      "L1": "tower_lumi_L1",
+      "L2": "tower_lumi_L2",
+      "L3A": "tower_lumi_L3A",
+      "L3B": "tower_lumi_L3B"
+    },
+    "pula": {
+      "L0": "tower_pula_L0",
+      "L1": "tower_pula_L1",
+      "L2": "tower_pula_L2",
+      "L3A": "tower_pula_L3A",
+      "L3B": "tower_pula_L3B"
+    },
+    "piao": {
+      "L0": "tower_piao_L0",
+      "L1": "tower_piao_L1",
+      "L2": "tower_piao_L2",
+      "L3A": "tower_piao_L3A",
+      "L3B": "tower_piao_L3B"
+    },
+    "picole": {
+      "L0": "tower_picole_L0",
+      "L1": "tower_picole_L1",
+      "L2": "tower_picole_L2",
+      "L3A": "tower_picole_L3A",
+      "L3B": "tower_picole_L3B"
+    },
+    "fofo": {
+      "L0": "tower_fofo_L0",
+      "L1": "tower_fofo_L1",
+      "L2": "tower_fofo_L2",
+      "L3A": "tower_fofo_L3A",
+      "L3B": "tower_fofo_L3B"
     }
   },
   "maps": {
@@ -1481,27 +7740,51 @@
       "groundAssetKey": "map_oficina_ground",
       "gameplayConfig": "Pacote_Claude_Code/dados/balanceamento_v1.json",
       "pathSource": "maps entry selected by id",
-      "decorativePreview": "Assets_Quintal_em_Guarda_v1/layout_fases.json"
+      "decorativePreview": "Assets_Quintal_em_Guarda_v1/layout_fases.json",
+      "sceneAssetKey": "map_oficina_scene"
     },
     "sotao": {
       "groundAssetKey": "map_sotao_ground",
       "gameplayConfig": "Pacote_Claude_Code/dados/balanceamento_v1.json",
       "pathSource": "maps entry selected by id",
-      "decorativePreview": "Assets_Quintal_em_Guarda_v1/layout_fases.json"
+      "decorativePreview": "Assets_Quintal_em_Guarda_v1/layout_fases.json",
+      "sceneAssetKey": "map_sotao_scene"
+    },
+    "inverno": {
+      "groundAssetKey": "map_inverno_ground",
+      "sceneAssetKey": "map_inverno_scene",
+      "gameplayConfig": "Pacote_Claude_Code/dados/balanceamento_v1.json",
+      "pathSource": "maps entry selected by id"
+    },
+    "cozinha": {
+      "groundAssetKey": "map_cozinha_ground",
+      "sceneAssetKey": "map_cozinha_scene",
+      "gameplayConfig": "Pacote_Claude_Code/dados/balanceamento_v1.json",
+      "pathSource": "maps entry selected by id"
+    },
+    "quarto": {
+      "groundAssetKey": "map_quarto_ground",
+      "sceneAssetKey": "map_quarto_scene",
+      "gameplayConfig": "Pacote_Claude_Code/dados/balanceamento_v1.json",
+      "pathSource": "maps entry selected by id"
+    },
+    "porao": {
+      "groundAssetKey": "map_porao_ground",
+      "sceneAssetKey": "map_porao_scene",
+      "gameplayConfig": "Pacote_Claude_Code/dados/balanceamento_v1.json",
+      "pathSource": "maps entry selected by id"
     }
   },
   "baseAssetKey": "base_farol_pilha",
   "notIncluded": [
-    "enemy sprites",
-    "boss sprites",
-    "drawn animation frames",
-    "final atlases",
+    "atlas de 8 quadros por estado (a encomenda v2 trouxe pose + antecipação + disparo/pulso por estado)",
+    "quadros de inimigos além do segundo passo; chefes além de segundo passo e habilidade",
     "audio",
-    "skins",
-    "Roblox upload IDs"
+    "skins"
   ],
   "assetPacks": [
     "Assets_Quintal_em_Guarda_v1 (40 originais: torres, cenário e terrenos)",
-    "Assets_Inimigos_Bosses_v1 (11 originais: 8 inimigos e 3 chefes)"
+    "Assets_Inimigos_Bosses_v1 (11 originais: 8 inimigos e 3 chefes)",
+    "Assets_Encomenda_v2 (215 originais da encomenda v2: torres novas e quadros, inimigos e chefes, efeitos, Farol e mapas)"
   ]
 }

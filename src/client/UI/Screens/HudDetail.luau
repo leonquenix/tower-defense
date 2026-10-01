@@ -8,6 +8,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Catalog = require(ReplicatedStorage.Shared.Config.Catalog)
 local Localization = require(ReplicatedStorage.Shared.Config.Localization)
 local Types = require(ReplicatedStorage.Shared.Types)
+local Snapshot = require(ReplicatedStorage.Shared.Sim.Snapshot)
 local Fusion = require(ReplicatedStorage.Shared.Lib.Fusion)
 local Actions = require(script.Parent.Parent.Parent.State.Actions)
 local Atoms = require(script.Parent.Parent.Parent.State.Atoms)
@@ -69,8 +70,60 @@ local function statLines(def: Types.TowerDef, stats: Types.TowerStateStats): { s
 			})
 		)
 	end
+	-- encomenda v2
+	local function pct(v: number): number
+		return math.floor(v * 100 + 0.5)
+	end
+	if stats.shred and stats.shredDuration then
+		table.insert(lines, L("detail.shred", { value = pct(stats.shred), duration = decimal(stats.shredDuration, 1) }))
+	end
+	if stats.shredStacks then
+		table.insert(lines, L("detail.shredStacks", { value = stats.shredStacks }))
+	end
+	if stats.burn and stats.burnDuration then
+		table.insert(
+			lines,
+			L("detail.burn", { value = decimal(stats.burn, 1), duration = decimal(stats.burnDuration, 1) })
+		)
+	end
+	if stats.focusRamp and stats.focusMax then
+		table.insert(lines, L("detail.focus", { value = pct(stats.focusRamp), max = pct(stats.focusMax) }))
+	end
+	if stats.burnSpread then
+		table.insert(lines, L("detail.burnSpread", { value = stats.burnSpread }))
+	end
+	if stats.push then
+		table.insert(lines, L("detail.push", { value = decimal(stats.push, 1) }))
+	end
+	if stats.grab then
+		table.insert(lines, L("detail.grab"))
+	end
+	if stats.allTargets then
+		table.insert(lines, L("detail.allTargets"))
+	end
+	if stats.freeze then
+		table.insert(lines, L("detail.freeze", { value = decimal(stats.freeze, 1) }))
+	end
+	if stats.frozenBonus then
+		table.insert(lines, L("detail.frozenBonus", { value = pct(stats.frozenBonus) }))
+	end
+	if stats.damageBoost then
+		table.insert(lines, L("detail.damageBoost", { value = pct(stats.damageBoost) }))
+	end
+	if stats.baseHeal then
+		table.insert(lines, L("detail.baseHeal", { value = stats.baseHeal }))
+	end
 	return lines
 end
+
+-- Estados que o servidor marcou no inimigo (Snapshot.FX), em texto.
+local FX_LINES: { { bit: number, key: string } } = {
+	{ bit = Snapshot.FX.burning, key = "status.burning" },
+	{ bit = Snapshot.FX.frozen, key = "status.frozen" },
+	{ bit = Snapshot.FX.shredded, key = "status.shredded" },
+	{ bit = Snapshot.FX.soaking, key = "status.soaking" },
+	{ bit = Snapshot.FX.hidden, key = "status.hidden" },
+}
 
 return function(scope: Kit.Scope, props: Props): Frame
 	local towers = Bridge.use(scope, Atoms.towers)
@@ -131,6 +184,10 @@ return function(scope: Kit.Scope, props: Props): Frame
 			if current.ci then
 				table.insert(out, L("detail.circuit") .. ": " .. L("circuit." .. current.ci))
 			end
+			local snap = Kit.read(use, snapshot)
+			if current.dr and snap and current.dis > snap.simTime then
+				table.insert(out, L(if current.dr == "frost" then "status.towerFrost" else "status.towerWrap"))
+			end
 			if not (current.o == props.localUserId) then
 				table.insert(out, L("detail.notYours"))
 			end
@@ -156,8 +213,15 @@ return function(scope: Kit.Scope, props: Props): Frame
 					})
 				)
 			end
+			for _, line in ipairs(FX_LINES) do
+				if bit32.band(target.fx, line.bit) ~= 0 then
+					table.insert(out, L(line.key))
+				end
+			end
 			if Localization.has("enemy.trait." .. target.d) then
 				table.insert(out, L("enemy.trait." .. target.d))
+			elseif target.b and Localization.has("boss." .. target.d .. ".ability") then
+				table.insert(out, L("boss." .. target.d .. ".ability"))
 			end
 			return out
 		end

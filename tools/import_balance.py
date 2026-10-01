@@ -27,6 +27,24 @@ TARGETS = {"first", "last", "strongest", "closest", "none"}
 
 ITEMS = {"retry", "support"}
 
+# Campos de estado de torre que a simulação entende. Campo fora daqui é erro: um nome digitado
+# errado no JSON viraria uma mecânica que não liga.
+STAT_KEYS = {
+    "cost", "damage", "interval", "range", "splash", "maxTargets", "armorIgnore", "bossBonus", "mark",
+    "markDuration", "slow", "slowDuration", "chains", "chainRadius", "chainFalloff", "haste",
+    # encomenda v2
+    "shred", "shredDuration", "shredStacks", "burn", "burnDuration", "focusRamp", "focusMax",
+    "burnSpread", "burnSpreadRadius", "push", "grab", "allTargets", "freeze", "frozenBonus",
+    "damageBoost", "baseHeal",
+}
+# Habilidades de chefe que Simulation.updateBosses resolve.
+MECHANICS = {"dust_pulse", "armor_cycle", "summon", "frost_blast", "soak", "wrap", "dust_cloud"}
+EFFECT_KEYS = {
+    "slowCap", "bossSlowStrength", "physicalArmorCap", "hasteStacking", "slowStacking", "markStacking",
+    "shredCap", "pushCooldown", "maxPushPerEnemy", "bossPushFactor", "freezeImmunity", "frozenBossSlow",
+    "damageBoostStacking", "burnStacking", "baseHealPerWaveCap",
+}
+
 
 class ValidationError(Exception):
     pass
@@ -44,6 +62,47 @@ def validate_bundle(bundle, where, required=False):
             errors.append(f"{where}: chave desconhecida {key}")
         elif not isinstance(value, int) or value <= 0:
             errors.append(f"{where}: {key} deve ser inteiro positivo")
+    return errors
+
+
+def validate_stats(t, sid, st):
+    """Faixas e pares obrigatórios dos efeitos novos (Escovinha, Lumi, Pula, Pião, Picolé, Fofo)."""
+    where = f"{t['id']}.{sid}"
+    errors = []
+
+    def frac(key, lo=0.0, hi=1.0):
+        v = st.get(key)
+        if v is not None and not (lo < v <= hi):
+            errors.append(f"{where}: {key} fora de ({lo}, {hi}]")
+
+    def pair(a, b):
+        if (a in st) != (b in st):
+            errors.append(f"{where}: {a} e {b} andam juntos")
+
+    for key in ("shred", "frozenBonus", "focusRamp"):
+        frac(key)
+    frac("damageBoost", 0.0, 0.5)
+    pair("shred", "shredDuration")
+    pair("burn", "burnDuration")
+    pair("burnSpread", "burnSpreadRadius")
+    pair("focusRamp", "focusMax")
+    pair("splash", "maxTargets")
+    for key in ("shredStacks", "allTargets", "burnSpread", "baseHeal", "grab", "maxTargets", "chains"):
+        v = st.get(key)
+        if v is not None and (not isinstance(v, int) or v < 1):
+            errors.append(f"{where}: {key} deve ser inteiro >= 1")
+    for key in ("shredDuration", "burn", "burnDuration", "push", "freeze", "burnSpreadRadius", "focusMax"):
+        v = st.get(key)
+        if v is not None and v <= 0:
+            errors.append(f"{where}: {key} deve ser positivo")
+    if "shredStacks" in st and "shred" not in st:
+        errors.append(f"{where}: shredStacks sem shred")
+    if "grab" in st and "push" not in st:
+        errors.append(f"{where}: grab (puxão) precisa de push")
+    if ("damageBoost" in st or "baseHeal" in st) and t["damageType"] != "none":
+        errors.append(f"{where}: damageBoost/baseHeal só em torre de apoio")
+    if "allTargets" in st and ("splash" in st or "chains" in st):
+        errors.append(f"{where}: allTargets não combina com splash/chains")
     return errors
 
 
@@ -86,6 +145,10 @@ def validate(data):
         if set(t["states"].keys()) != set(STATES):
             errors.append(f"{t['id']}: estados {sorted(t['states'].keys())} != {STATES}")
         for sid, st in t["states"].items():
+            unknown = set(st) - STAT_KEYS
+            if unknown:
+                errors.append(f"{t['id']}.{sid}: campos desconhecidos {sorted(unknown)}")
+            errors.extend(validate_stats(t, sid, st))
             if not isinstance(st.get("cost"), (int, float)) or st["cost"] <= 0:
                 errors.append(f"{t['id']}.{sid}: custo inválido {st.get('cost')}")
             if st.get("interval", 0) < 0 or st.get("range", 0) <= 0:
@@ -113,11 +176,25 @@ def validate(data):
             errors.append(f"{e['id']}: armadura fora de [0,1)")
         if not 0 <= e.get("energyResistance", 0) < 1:
             errors.append(f"{e['id']}: energyResistance fora de [0,1)")
+        if "slowImmune" in e and not isinstance(e["slowImmune"], bool):
+            errors.append(f"{e['id']}: slowImmune deve ser booleano")
+        if e.get("dodgeInterval") is not None and e["dodgeInterval"] <= 0:
+            errors.append(f"{e['id']}: dodgeInterval deve ser positivo")
     for b in data["bosses"]:
         if b["period"] <= b["telegraph"]:
             errors.append(f"{b['id']}: period deve exceder telegraph")
-        if b["mechanic"] == "summon" and b.get("summonType") not in enemy_ids:
+        if b["mechanic"] not in MECHANICS:
+            errors.append(f"{b['id']}: habilidade desconhecida {b['mechanic']}")
+        if b["mechanic"] in ("summon", "dust_cloud") and b.get("summonType") not in enemy_ids:
             errors.append(f"{b['id']}: summonType desconhecido")
+        if b["mechanic"] in ("frost_blast", "soak", "wrap", "dust_cloud") and not b.get("duration", 0) > 0:
+            errors.append(f"{b['id']}: {b['mechanic']} precisa de duration positiva")
+        if b["mechanic"] == "frost_blast" and not (isinstance(b.get("targetCount"), int) and b["targetCount"] >= 1):
+            errors.append(f"{b['id']}: frost_blast precisa de targetCount inteiro >= 1")
+        if b["mechanic"] == "soak" and not (0 <= b.get("soakHeal", -1) <= 1):
+            errors.append(f"{b['id']}: soakHeal fora de [0,1]")
+        if b["mechanic"] == "dust_cloud" and not b.get("cloudLength", 0) > 0:
+            errors.append(f"{b['id']}: dust_cloud precisa de cloudLength positivo")
     for i, w in enumerate(data["waves"], start=1):
         if w["wave"] != i:
             errors.append(f"onda {i}: numeração {w['wave']} fora de ordem")
@@ -161,6 +238,13 @@ def validate(data):
                 errors.append(f"mapa {m['id']}: bloqueio sobre caminho {bt}")
         if m["unlock"] is not None and not m["unlock"].startswith("win:"):
             errors.append(f"mapa {m['id']}: regra de desbloqueio desconhecida {m['unlock']}")
+        for g in m.get("mapGroups", []):
+            if g.get("enemy") not in enemy_ids:
+                errors.append(f"mapa {m['id']}: mapGroups com inimigo desconhecido {g.get('enemy')}")
+            if not (isinstance(g.get("fromWave"), int) and 1 <= g["fromWave"] <= len(data["waves"])):
+                errors.append(f"mapa {m['id']}: mapGroups.fromWave fora da tabela")
+            if not (isinstance(g.get("count"), int) and g["count"] >= 1) or g.get("perWave", 0) < 0:
+                errors.append(f"mapa {m['id']}: mapGroups com count/perWave inválidos")
     for c in data["circuits"]:
         for tid in c["pair"]:
             if tid not in tower_ids:
@@ -259,6 +343,11 @@ def validate(data):
     for key in ("decisionSeconds", "promptGraceSeconds", "prepSeconds", "buttonsPrice"):
         if not isinstance(retry.get(key), (int, float)) or retry[key] <= 0:
             errors.append(f"shop.retry.{key} deve ser positivo")
+    missing_effects = EFFECT_KEYS - set(data["effects"])
+    if missing_effects:
+        errors.append(f"effects sem {sorted(missing_effects)}")
+    if not 0 < data["effects"].get("shredCap", 0) <= data["effects"].get("physicalArmorCap", 1):
+        errors.append("effects.shredCap deve estar em (0, physicalArmorCap]")
     if len(data["playerTowerLimitsByPartySize"]) != data["partyMax"]:
         errors.append("playerTowerLimitsByPartySize deve ter partyMax entradas")
     return errors
@@ -316,6 +405,7 @@ def main():
         maps.append({
             "id": m["id"], "name": m["name"], "unlock": m["unlock"], "hpMultiplier": m["hpMultiplier"],
             "path": m["path"], "blocked": m["blocked"], "boss": m["boss"],
+            "mapGroups": m.get("mapGroups", []),
             "pathCells": [list(c) for c in cells],
         })
     header2 = (

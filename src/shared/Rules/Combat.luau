@@ -16,6 +16,8 @@ export type DamageInput = {
 	energyResistance: number,
 	isBoss: boolean,
 	armorCap: number,
+	boost: number?, -- aura de dano (Fofo) da torre que atira
+	frozenBonus: number?, -- dano extra no alvo congelado (Geladeira)
 }
 
 function Combat.effectiveArmor(armor: number, armorIgnore: number?, armorCap: number): number
@@ -25,8 +27,8 @@ end
 
 function Combat.computeDamage(input: DamageInput): number
 	local bossBonus = if input.isBoss then (input.bossBonus or 0) else 0
-	local bonus = (1 + bossBonus) * (1 + (input.circuitBonus or 0))
-	local vulnerability = 1 + input.mark
+	local bonus = (1 + bossBonus) * (1 + (input.circuitBonus or 0)) * (1 + (input.boost or 0))
+	local vulnerability = (1 + input.mark) * (1 + (input.frozenBonus or 0))
 	local resistance = 0
 	if input.damageType == "physical" then
 		resistance = Combat.effectiveArmor(input.armor, input.armorIgnore, input.armorCap)
@@ -93,11 +95,116 @@ function Combat.applyEffect(
 	table.insert(effects, { strength = strength, expiresAt = expiresAt, sourceTowerId = sourceTowerId })
 end
 
-function Combat.currentArmor(enemy: Types.Enemy, simTime: number): number
+-- Armadura raspada ativa: a maior entre as fontes (cada Escovinha guarda a sua, e a Escova de Aço
+-- acumula na própria entrada), limitada por shredCap.
+function Combat.activeShred(enemy: Types.Enemy, simTime: number, shredCap: number?): number
+	return math.min(Combat.pruneAndMax(enemy.shreds, simTime), shredCap or 1)
+end
+
+-- Armadura atual: base + reforço do Rei Ferrugem - raspagem, nunca negativa.
+function Combat.currentArmor(enemy: Types.Enemy, simTime: number, shredCap: number?): number
+	local armor = enemy.armor
 	if enemy.isBoss and enemy.bossArmorUntil > simTime then
-		return enemy.armor + enemy.bossArmorBonus
+		armor += enemy.bossArmorBonus
 	end
-	return enemy.armor
+	if #enemy.shreds > 0 then
+		armor -= Combat.activeShred(enemy, simTime, shredCap)
+	end
+	return math.max(armor, 0)
+end
+
+-- Raspa a armadura. Sem acúmulo, a mesma fonte só renova; com acúmulo (stacks > 1) cada acerto
+-- soma `amount` até amount x stacks na entrada da própria torre, e renova a duração.
+function Combat.applyShred(
+	effects: { Types.TimedEffect },
+	amount: number,
+	duration: number,
+	sourceTowerId: number,
+	simTime: number,
+	stacks: number?
+)
+	local maxStacks = stacks or 1
+	if maxStacks <= 1 then
+		Combat.applyEffect(effects, amount, duration, sourceTowerId, simTime)
+		return
+	end
+	local expiresAt = simTime + duration
+	for _, e in ipairs(effects) do
+		if e.sourceTowerId == sourceTowerId then
+			if e.expiresAt <= simTime then
+				e.strength = amount
+			else
+				e.strength = math.min(e.strength + amount, amount * maxStacks)
+			end
+			e.expiresAt = expiresAt
+			return
+		end
+	end
+	table.insert(effects, { strength = amount, expiresAt = expiresAt, sourceTowerId = sourceTowerId })
+end
+
+-- Queimadura: uma entrada por torre. Reacender renova a duração e adota a força nova (a torre pode
+-- ter melhorado); entre torres diferentes vale a mais forte, sem somar.
+function Combat.applyBurn(
+	burns: { Types.BurnEffect },
+	dps: number,
+	duration: number,
+	sourceTowerId: number,
+	ownerUserId: number,
+	simTime: number
+)
+	local expiresAt = simTime + duration
+	for _, b in ipairs(burns) do
+		if b.sourceTowerId == sourceTowerId then
+			b.strength = dps
+			b.expiresAt = math.max(b.expiresAt, expiresAt)
+			b.ownerUserId = ownerUserId
+			return
+		end
+	end
+	table.insert(
+		burns,
+		{ strength = dps, expiresAt = expiresAt, sourceTowerId = sourceTowerId, ownerUserId = ownerUserId }
+	)
+end
+
+-- A queimadura mais forte ativa (poda as vencidas). nil quando nada queima.
+function Combat.activeBurn(enemy: Types.Enemy, simTime: number): Types.BurnEffect?
+	local best: Types.BurnEffect? = nil
+	local i = 1
+	local burns = enemy.burns
+	while i <= #burns do
+		local b = burns[i]
+		if b.expiresAt <= simTime then
+			table.remove(burns, i)
+		else
+			if best == nil or b.strength > best.strength then
+				best = b
+			end
+			i += 1
+		end
+	end
+	return best
+end
+
+-- Enquanto queima, o inimigo não recebe cura de ninguém (Remendo, Esponjão encharcado).
+function Combat.isHealBlocked(enemy: Types.Enemy, simTime: number): boolean
+	return Combat.activeBurn(enemy, simTime) ~= nil
+end
+
+function Combat.isFrozen(enemy: Types.Enemy, simTime: number): boolean
+	return enemy.freezeUntil > simTime
+end
+
+-- Quanto um empurrão realmente anda: zero em recarga ou com o teto da vida esgotado; chefe recebe
+-- só bossPushFactor. Nunca passa do começo do caminho (o inimigo não sai da rota).
+function Combat.pushDistance(enemy: Types.Enemy, push: number, simTime: number, effects: Types.EffectsDef): number
+	if simTime < enemy.pushReadyAt then
+		return 0
+	end
+	local amount = push * (if enemy.isBoss then effects.bossPushFactor else 1)
+	amount = math.min(amount, math.max(effects.maxPushPerEnemy - enemy.pushedTotal, 0), math.max(enemy.s, 0))
+	return math.max(amount, 0)
 end
 
 -- Intervalo efetivo com aura (maior haste) e poeira do Aspirador.
@@ -110,6 +217,28 @@ function Combat.effectiveInterval(baseInterval: number, haste: number, dusted: b
 end
 
 export type TowerPos = { x: number, y: number }
+
+-- Maior aura de dano (Fofo) em alcance. Mesma regra da cadência: vale a maior, sem somar, e a
+-- torre de apoio não reforça a si mesma.
+function Combat.boostFor(
+	tower: Types.Tower,
+	towers: { Types.Tower },
+	getBoost: (Types.Tower) -> number?,
+	getRange: (Types.Tower) -> number
+): number
+	local best = 0
+	for _, other in ipairs(towers) do
+		if other.id ~= tower.id then
+			local boost = getBoost(other)
+			if boost and boost > best then
+				if Grid.distance(tower.x, tower.y, other.x, other.y) <= getRange(other) + 1e-9 then
+					best = boost
+				end
+			end
+		end
+	end
+	return best
+end
 
 -- Maior haste de Maestros em alcance da torre (Maestro não acelera Maestro).
 function Combat.hasteFor(
@@ -174,6 +303,68 @@ function Combat.selectTarget(
 		end
 	end
 	return best
+end
+
+-- Língua de Sogra: o inimigo comum (não chefe) com mais vida no alcance. Empate: menor ID.
+function Combat.selectGrabTarget(tower: Types.Tower, range: number, candidates: { EnemyPos }): EnemyPos?
+	local best: EnemyPos? = nil
+	for _, c in ipairs(candidates) do
+		local e = c.enemy
+		if e.alive and not e.isBoss and Grid.distance(tower.x, tower.y, c.px, c.py) <= range + 1e-9 then
+			if
+				best == nil
+				or e.hp > best.enemy.hp + 1e-9
+				or (math.abs(e.hp - best.enemy.hp) <= 1e-9 and e.id < best.enemy.id)
+			then
+				best = c
+			end
+		end
+	end
+	return best
+end
+
+-- Pião: todos os inimigos no alcance, do mais adiantado para trás (empate: menor ID), até o teto.
+function Combat.allInRange(tower: Types.Tower, range: number, candidates: { EnemyPos }, cap: number): { EnemyPos }
+	local list: { EnemyPos } = {}
+	for _, c in ipairs(candidates) do
+		if c.enemy.alive and Grid.distance(tower.x, tower.y, c.px, c.py) <= range + 1e-9 then
+			table.insert(list, c)
+		end
+	end
+	table.sort(list, function(a, b)
+		if math.abs(a.enemy.s - b.enemy.s) > 1e-9 then
+			return a.enemy.s > b.enemy.s
+		end
+		return a.enemy.id < b.enemy.id
+	end)
+	while #list > cap do
+		table.remove(list)
+	end
+	return list
+end
+
+-- Alvos da queimadura que pula (Enxame): os mais próximos do alvo principal, sem ele.
+function Combat.spreadTargets(primary: EnemyPos, candidates: { EnemyPos }, radius: number, count: number): { EnemyPos }
+	local others: { { pos: EnemyPos, d: number } } = {}
+	for _, c in ipairs(candidates) do
+		if c.enemy.alive and c.enemy.id ~= primary.enemy.id then
+			local d = Grid.distance(primary.px, primary.py, c.px, c.py)
+			if d <= radius + 1e-9 then
+				table.insert(others, { pos = c, d = d })
+			end
+		end
+	end
+	table.sort(others, function(a, b)
+		if math.abs(a.d - b.d) > 1e-9 then
+			return a.d < b.d
+		end
+		return a.pos.enemy.id < b.pos.enemy.id
+	end)
+	local out: { EnemyPos } = {}
+	for i = 1, math.min(count, #others) do
+		table.insert(out, others[i].pos)
+	end
+	return out
 end
 
 -- Alvos de explosão: primário + mais próximos do centro do primário (raio inclusive), até maxTargets no total.

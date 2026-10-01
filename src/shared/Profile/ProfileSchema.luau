@@ -292,7 +292,9 @@ function ProfileSchema.campaignUnlocked(profile: Types.Profile, levelId: string)
 	local levels = Balance.campaign.levels
 	for index, level in ipairs(levels) do
 		if level.id == levelId then
-			if index == 1 then
+			-- Fase já vencida nunca fecha de novo: a encomenda v2 pôs Inverno, Cozinha e Quarto
+			-- antes do Sótão, e quem já tinha estrelas no Sótão continua com ele aberto.
+			if index == 1 or ProfileSchema.levelStars(profile, levelId) >= 1 then
 				return true
 			end
 			return ProfileSchema.levelStars(profile, levels[index - 1].id) >= 1
